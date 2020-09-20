@@ -11,17 +11,23 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { GameStatus } from "@/store/current-game/current-game.interface";
+import { ROUTES } from "@/router";
 
 @Component({})
 export default class App extends Vue {
   async created(): Promise<void> {
+    const currentRouteName = this.$route.name;
     const currentGame = JSON.parse(localStorage.getItem("currentGame") || "{}");
+
+    let routeToGo = ROUTES.HOME.name;
 
     if (currentGame && currentGame.status === GameStatus.IN_GAME) {
       await this.$store.dispatch("currentGame/resumeGame", currentGame);
-      await this.$router.push("/scribe-panel");
-    } else {
-      // await this.$router.push("/");
+      routeToGo = ROUTES.SCRIBE_PANEL.name;
+    }
+
+    if (currentRouteName !== routeToGo) {
+      await this.$router.push({ name: routeToGo });
     }
   }
 }

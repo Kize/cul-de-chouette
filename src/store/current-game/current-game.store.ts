@@ -1,4 +1,4 @@
-import { ActionContext, Module } from "vuex";
+import { Module } from "vuex";
 import {
   CurrentGameState,
   GameStatus,
@@ -7,16 +7,17 @@ import {
 } from "@/store/current-game/current-game.interface";
 import { byName, getNextPlayer, Player } from "@/domain/player";
 import {
+  BasicHistoryLineAction,
+  getAmount,
   HistoryLine,
   HistoryLineAction,
   HistoryLineApply,
   HistoryLineType,
+  isActionChouetteVelute,
   mapHistoryActionToApply
 } from "@/domain/history";
 
-type RootState = {};
-
-type CurrentGameActionContext = ActionContext<CurrentGameState, RootState>;
+export type RootState = {};
 
 export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
   namespaced: true,
@@ -101,10 +102,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     }
   },
   actions: {
-    async startGame(
-      { commit, dispatch }: CurrentGameActionContext,
-      data: StartGameData
-    ): Promise<void> {
+    async startGame({ commit, dispatch }, data: StartGameData): Promise<void> {
       const playerNames = data.playerNames.filter(name => name.length > 0);
 
       const hasOnlyUniqueNames =
@@ -167,15 +165,37 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       storage.setItem("currentGame", JSON.stringify(state));
     },
     playATurn({ state, commit, dispatch }, action: HistoryLineAction): void {
-      if (state.currentPlayerName === action.playerName) {
-        commit("addHistoryLine", mapHistoryActionToApply(action));
-        commit(
-          "setCurrentPlayerName",
-          getNextPlayer(state.players, action.playerName)
-        );
-
-        dispatch("saveGameToLocalStorage");
+      if (state.currentPlayerName !== action.playerName) {
+        return;
       }
+
+      if (isActionChouetteVelute(action)) {
+        if (action.shoutingPlayers.length === 1) {
+          const newAction: BasicHistoryLineAction = {
+            playerName: action.shoutingPlayers[0],
+            designation: HistoryLineType.CHOUETTE_VELUTE,
+            value: action.value
+          };
+          commit("addHistoryLine", mapHistoryActionToApply(newAction));
+        } else {
+          action.shoutingPlayers.forEach(playerName => {
+            const apply: HistoryLineApply = {
+              playerName,
+              designation: HistoryLineType.CHOUETTE_VELUTE,
+              amount: -getAmount(HistoryLineType.CHOUETTE_VELUTE, action.value)
+            };
+            commit("addHistoryLine", apply);
+          });
+        }
+      } else {
+        commit("addHistoryLine", mapHistoryActionToApply(action));
+      }
+      commit(
+        "setCurrentPlayerName",
+        getNextPlayer(state.players, action.playerName)
+      );
+
+      dispatch("saveGameToLocalStorage");
     },
     applyBevue({ state, commit, dispatch }, playerName: string): void {
       const player = state.players.find(byName(playerName));

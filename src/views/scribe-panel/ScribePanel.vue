@@ -23,7 +23,9 @@
           "
         >
           <v-card-title class="headline">
-            <span>{{ player.name }} - {{ getPlayerScore(player.name) }}</span>
+            <span>{{ player.name }}</span>
+            <v-divider vertical class="mx-6"></v-divider>
+            <span>Score: {{ getPlayerScore(player.name) }}</span>
 
             <v-spacer></v-spacer>
 
@@ -43,6 +45,7 @@
         <v-card-title class="headline"
           >Ajouter un joueur avec le Chante-Sloubi:
         </v-card-title>
+
         <v-card-text>
           <v-row>
             <v-col cols="5">
@@ -53,9 +56,7 @@
                 clearable
               ></v-text-field>
             </v-col>
-
             <v-spacer></v-spacer>
-
             <v-col cols="3">
               <v-text-field
                 v-model="sloubiForm.score"
@@ -64,6 +65,7 @@
                 clearable
               ></v-text-field>
             </v-col>
+            <v-spacer></v-spacer>
           </v-row>
 
           <v-row>

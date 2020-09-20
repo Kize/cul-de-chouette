@@ -4,18 +4,20 @@ import Home from "@/views/home/Home.vue";
 
 Vue.use(VueRouter);
 
+export const ROUTES = {
+  HOME: { name: "Home", path: "/" },
+  SCRIBE_PANEL: { name: "ScribePanel", path: "/scribe-panel" }
+};
+
 const routes: Array<RouteConfig> = [
   {
-    path: "/",
-    name: "Home",
+    path: ROUTES.HOME.path,
+    name: ROUTES.HOME.name,
     component: Home
   },
   {
-    path: "/scribe-panel",
-    name: "ScribePanel",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
+    path: ROUTES.SCRIBE_PANEL.path,
+    name: ROUTES.SCRIBE_PANEL.name,
     component: () =>
       import(
         /* webpackChunkName: "about" */ "../views/scribe-panel/ScribePanel.vue"

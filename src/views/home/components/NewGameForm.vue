@@ -68,6 +68,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { StartGameData } from "@/store/current-game/current-game.interface";
+import { ROUTES } from "@/router";
 
 @Component({
   components: {}
@@ -109,7 +110,7 @@ export default class NewGameForm extends Vue {
 
     try {
       await this.$store.dispatch("currentGame/startGame", data);
-      await this.$router.push("/scribe-panel");
+      await this.$router.push(ROUTES.SCRIBE_PANEL.path);
     } catch (error) {
       window.alert(error.message);
     }

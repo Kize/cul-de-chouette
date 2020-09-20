@@ -2,8 +2,8 @@
   <v-menu offset-y>
     <template v-slot:activator="{ on, attrs }">
       <v-btn
+        :disabled="disabled"
         tile
-        dark
         color="primary"
         large
         class="ma-2"
@@ -31,6 +31,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class MenuAction extends Vue {
   @Prop(String) label!: string;
   @Prop() options!: Array<string> | number;
+  @Prop() disabled!: boolean;
 
   chooseOption(option: string): void {
     this.$emit("click", option);

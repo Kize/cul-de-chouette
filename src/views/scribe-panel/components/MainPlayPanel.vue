@@ -1,96 +1,126 @@
 <template>
   <v-card tile class="mb-2">
     <v-card-text class="pa-1">
-      <MenuAction label="Chouette" :options="6" @click="playChouette">
+      <MenuAction
+        :disabled="cannotPlay()"
+        label="Chouette"
+        :options="6"
+        @click="basicPlay($event, playTypes.CHOUETTE)"
+      >
       </MenuAction>
 
       <MenuAction
+        :disabled="cannotPlay()"
         label="Velute"
         :options="[3, 4, 5, 6]"
-        @click="playVelute"
+        @click="basicPlay($event, playTypes.VELUTE)"
       ></MenuAction>
 
-      <MenuAction
-        label="Chouette Velute"
-        :options="[2, 4, 6]"
-        @click="playChouetteVelute"
+      <v-btn
+        :disabled="cannotPlay()"
+        tile
+        color="primary"
+        outlined
+        large
+        class="ma-2"
+        @click="showChouetteVeluteDialog = true"
       >
-      </MenuAction>
+        Chouette Velute
+      </v-btn>
 
       <MenuAction
+        :disabled="cannotPlay()"
         label="Cul de chouette"
         :options="6"
-        @click="playCulDeChouette"
+        @click="basicPlay($event, playTypes.CUL_DE_CHOUETTE)"
       >
       </MenuAction>
 
-      <v-btn tile color="primary" outlined large class="ma-2" @click="playSuite"
+      <v-btn
+        :disabled="cannotPlay()"
+        tile
+        color="primary"
+        outlined
+        large
+        class="ma-2"
+        @click="playSuite"
         >Suite
       </v-btn>
 
-      <v-btn tile color="primary" outlined large class="ma-2" @click="playNeant"
-        >Néant</v-btn
-      >
+      <v-btn
+        :disabled="cannotPlay()"
+        tile
+        color="primary"
+        outlined
+        large
+        class="ma-2"
+        @click="basicPlay($event, playTypes.NEANT)"
+        >Néant
+      </v-btn>
     </v-card-text>
+    <v-dialog v-model="showChouetteVeluteDialog" persistent max-width="800">
+      <ChouetteVeluteDialogCard
+        :current-player-name="player.name"
+        :player-names="playerNames()"
+        @cancel="showChouetteVeluteDialog = false"
+        @confirm="playChouetteVelute($event)"
+      >
+      </ChouetteVeluteDialogCard>
+    </v-dialog>
   </v-card>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { HistoryLineAction, HistoryLineType } from "@/domain/history";
+import {
+  ChouetteVeluteHistoryLineAction,
+  HistoryLineAction,
+  HistoryLineType
+} from "@/domain/history";
 import { Player } from "@/domain/player";
 import MenuAction from "@/components/MenuAction.vue";
+import { mapGetters } from "vuex";
+import ChouetteVeluteDialogCard, {
+  ChouetteVeluteForm
+} from "@/views/scribe-panel/components/ChouetteVeluteDialogCard.vue";
 
 @Component({
-  components: { MenuAction }
+  components: { ChouetteVeluteDialogCard, MenuAction },
+  computed: {
+    ...mapGetters("currentGame", ["canPlayerPlay", "players"])
+  }
 })
 export default class MainPlayPanel extends Vue {
   @Prop(Player) player!: Player;
+  readonly playTypes = HistoryLineType;
+  showChouetteVeluteDialog = false;
 
-  playChouette(value: number): void {
+  cannotPlay(): boolean {
+    return !this.canPlayerPlay(this.player.name);
+  }
+
+  playerNames(): Array<string> {
+    return this.players.map(player => player.name);
+  }
+
+  basicPlay(value: number, designation: HistoryLineType): void {
     const action: HistoryLineAction = {
       playerName: this.player.name,
-      designation: HistoryLineType.CHOUETTE,
+      designation,
       value
     };
     this.$store.dispatch("currentGame/playATurn", action);
   }
 
-  playVelute(value: number): void {
-    const action: HistoryLineAction = {
-      playerName: this.player.name,
-      designation: HistoryLineType.VELUTE,
-      value
-    };
-    this.$store.dispatch("currentGame/playATurn", action);
-  }
-
-  playCulDeChouette(value: number): void {
-    const action: HistoryLineAction = {
-      playerName: this.player.name,
-      designation: HistoryLineType.CUL_DE_CHOUETTE,
-      value
-    };
-    this.$store.dispatch("currentGame/playATurn", action);
-  }
-
-  playNeant(): void {
-    const action: HistoryLineAction = {
-      playerName: this.player.name,
-      designation: HistoryLineType.NEANT,
-      value: 0
-    };
-    this.$store.dispatch("currentGame/playATurn", action);
-  }
-
-  // TODO: handle multiplayer errors on this one.
-  playChouetteVelute(value: number): void {
-    const action: HistoryLineAction = {
+  playChouetteVelute(form: ChouetteVeluteForm): void {
+    const action: ChouetteVeluteHistoryLineAction = {
       playerName: this.player.name,
       designation: HistoryLineType.CHOUETTE_VELUTE,
-      value
+      value: form.value,
+      shoutingPlayers: form.playerNames
     };
     this.$store.dispatch("currentGame/playATurn", action);
+    this.showChouetteVeluteDialog = false;
   }
 
   playSuite(): void {

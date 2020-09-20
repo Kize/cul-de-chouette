@@ -19,13 +19,30 @@ export interface HistoryLineApply {
   amount: number;
 }
 
-export interface HistoryLineAction {
+export type HistoryLineAction =
+  | BasicHistoryLineAction
+  | ChouetteVeluteHistoryLineAction;
+
+export interface BasicHistoryLineAction {
   playerName: string;
   designation: HistoryLineType;
   value: number;
 }
 
-function getAmount(type: HistoryLineType, value: number): number {
+export interface ChouetteVeluteHistoryLineAction {
+  designation: HistoryLineType.CHOUETTE_VELUTE;
+  value: number;
+  playerName: string;
+  shoutingPlayers: Array<string>;
+}
+
+export function isActionChouetteVelute(
+  action: HistoryLineAction
+): action is ChouetteVeluteHistoryLineAction {
+  return action.designation === HistoryLineType.CHOUETTE_VELUTE;
+}
+
+export function getAmount(type: HistoryLineType, value: number): number {
   switch (type) {
     case HistoryLineType.NEANT:
       return 0;
@@ -44,7 +61,7 @@ function getAmount(type: HistoryLineType, value: number): number {
 }
 
 export function mapHistoryActionToApply(
-  action: HistoryLineAction
+  action: BasicHistoryLineAction
 ): HistoryLineApply {
   const amount = getAmount(action.designation, action.value);
   return {
