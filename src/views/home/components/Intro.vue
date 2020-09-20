@@ -1,18 +1,18 @@
 <template>
   <div>
     <h1>Le cul de chouette</h1>
-    <v-card>
+    <v-card class="my-4" color="grey lighten-5" shaped raised elevation="4">
       <v-card-title class="headline">Description</v-card-title>
 
       <v-card-text>
-        <p>
+        <p class="mb-2">
           Cette application permet de simplifier la vie du scribe lors d'une
           partie de Cul de Chouette. Elle suit les règles érigées par l'amicale
           lilloise du cul de chouette. Toute les règles ne sont pas encore
           forcément implémentées, cela va venir.
         </p>
 
-        <p>
+        <p class="mb-0">
           Vous pouvez ici débuter une partie, veuillez sélectionner les
           paramètres de la partie. Concernant les joueurs, l'ordre d'inscription
           déterminera l'ordre de jeu. <br />

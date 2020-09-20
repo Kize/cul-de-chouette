@@ -106,8 +106,8 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         throw new Error("Chaque joueur doit avoir un nom unique.");
       }
 
-      if (playerNames.length < 3) {
-        throw new Error("Il faut 3 joueurs minimum pour commencer une partie.");
+      if (playerNames.length < 2) {
+        throw new Error("Il faut 2 joueurs minimum pour commencer une partie.");
       }
 
       const newGame: CurrentGameState = {

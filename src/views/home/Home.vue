@@ -1,8 +1,12 @@
 <template>
-  <div class="home">
-    <Intro />
-    <NewGameForm />
-  </div>
+  <v-row>
+    <v-spacer></v-spacer>
+    <v-col cols="6">
+      <Intro />
+      <NewGameForm />
+    </v-col>
+    <v-spacer></v-spacer>
+  </v-row>
 </template>
 
 <script lang="ts">

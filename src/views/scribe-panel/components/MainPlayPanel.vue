@@ -1,5 +1,5 @@
 <template>
-  <v-card tile class="mb-1">
+  <v-card tile class="mb-2">
     <v-card-text class="pa-1">
       <MenuAction label="Chouette" :options="6" @click="playChouette">
       </MenuAction>
