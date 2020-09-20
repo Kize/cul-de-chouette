@@ -16,8 +16,7 @@ import {
   isActionChouetteVelute,
   mapHistoryActionToApply
 } from "@/domain/history";
-
-export type RootState = {};
+import { RootState } from "@/store/app.state";
 
 export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
   namespaced: true,
@@ -57,6 +56,11 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
           return score + line.amount;
         }, 0);
       };
+    },
+    getHighestPlayer(state, getters): Player {
+      return [...state.players].sort((a: Player, b: Player) => {
+        return getters.getPlayerScore(a) - getters.getPlayerScore(b);
+      })[0];
     }
   },
   mutations: {
@@ -161,6 +165,42 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     resumeGame({ commit }, currentGame: CurrentGameState): void {
       commit("setGame", currentGame);
     },
+    handleEndTurn({ state, commit, dispatch, getters }): void {
+      const highestPlayer = getters.getHighestPlayer;
+      const isGameFinished = getters.getPlayerScore(highestPlayer.name) >= 343;
+      console.log(highestPlayer.name, isGameFinished);
+      if (isGameFinished) {
+        commit("setGameStatus", GameStatus.FINISHED);
+      } else {
+        commit(
+          "setCurrentPlayerName",
+          getNextPlayer(state.players, state.currentPlayerName!)
+        );
+
+        dispatch("saveGameToLocalStorage");
+      }
+    },
+    handleEndGame({ state, commit }, storage = localStorage): void {
+      const game: CurrentGameState = {
+        name: state.name,
+        status: GameStatus.FINISHED,
+        players: state.players
+      };
+      const history: Array<CurrentGameState> = JSON.parse(
+        storage.getItem("games") || "[]"
+      );
+
+      history.push(game);
+      storage.setItem("games", JSON.stringify(history));
+
+      const nextGame: CurrentGameState = {
+        status: GameStatus.CREATION,
+        name: "",
+        players: []
+      };
+      storage.setItem("currentGame", JSON.stringify(nextGame));
+      commit("setGame", nextGame);
+    },
     saveGameToLocalStorage({ state }, storage = localStorage): void {
       storage.setItem("currentGame", JSON.stringify(state));
     },
@@ -190,12 +230,8 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       } else {
         commit("addHistoryLine", mapHistoryActionToApply(action));
       }
-      commit(
-        "setCurrentPlayerName",
-        getNextPlayer(state.players, action.playerName)
-      );
 
-      dispatch("saveGameToLocalStorage");
+      dispatch("handleEndTurn");
     },
     applyBevue({ state, commit, dispatch }, playerName: string): void {
       const player = state.players.find(byName(playerName));

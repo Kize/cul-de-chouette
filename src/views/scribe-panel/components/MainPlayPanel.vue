@@ -2,7 +2,6 @@
   <v-card tile class="mb-2">
     <v-card-text class="pa-1">
       <MenuAction
-        :disabled="cannotPlay()"
         label="Chouette"
         :options="6"
         @click="basicPlay($event, playTypes.CHOUETTE)"
@@ -10,14 +9,12 @@
       </MenuAction>
 
       <MenuAction
-        :disabled="cannotPlay()"
         label="Velute"
         :options="[3, 4, 5, 6]"
         @click="basicPlay($event, playTypes.VELUTE)"
       ></MenuAction>
 
       <v-btn
-        :disabled="cannotPlay()"
         tile
         color="primary"
         outlined
@@ -29,26 +26,17 @@
       </v-btn>
 
       <MenuAction
-        :disabled="cannotPlay()"
         label="Cul de chouette"
         :options="6"
         @click="basicPlay($event, playTypes.CUL_DE_CHOUETTE)"
       >
       </MenuAction>
 
-      <v-btn
-        :disabled="cannotPlay()"
-        tile
-        color="primary"
-        outlined
-        large
-        class="ma-2"
-        @click="playSuite"
+      <v-btn tile color="primary" outlined large class="ma-2" @click="playSuite"
         >Suite
       </v-btn>
 
       <v-btn
-        :disabled="cannotPlay()"
         tile
         color="primary"
         outlined
@@ -87,20 +75,16 @@ import ChouetteVeluteDialogCard, {
 @Component({
   components: { ChouetteVeluteDialogCard, MenuAction },
   computed: {
-    ...mapGetters("currentGame", ["canPlayerPlay", "players"])
+    ...mapGetters("currentGame", ["players"])
   }
 })
 export default class MainPlayPanel extends Vue {
   @Prop() player!: Player;
-  readonly playTypes = HistoryLineType;
+
   showChouetteVeluteDialog = false;
+  readonly playTypes = HistoryLineType;
 
   readonly players!: ReadonlyArray<Player>;
-  readonly canPlayerPlay!: (name: string) => boolean;
-
-  cannotPlay(): boolean {
-    return !this.canPlayerPlay(this.player.name);
-  }
 
   playerNames(): Array<string> {
     return this.players.map(player => player.name);

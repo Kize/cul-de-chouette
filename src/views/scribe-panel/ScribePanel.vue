@@ -160,7 +160,8 @@ export default class ScribePanel extends Vue {
         this.$router.push("/");
         break;
       case GameStatus.FINISHED:
-        window.alert("La partie est finie !");
+        window.confirm("La partie est finie !");
+        this.$store.dispatch("currentGame/handleEndGame");
         break;
     }
   }
