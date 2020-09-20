@@ -1,10 +1,11 @@
 export enum HistoryLineType {
   NEANT = "néant",
   BEVUE = "bévue",
+  CHOUETTE = "chouette",
   VELUTE = "velute",
   CHOUETTE_VELUTE = "chouette velute",
-  CHOUETTE = "chouette",
-  CUL_DE_CHOUETTE = "cul de chouette"
+  CUL_DE_CHOUETTE = "cul de chouette",
+  SLOUBI = "Sloubi"
 }
 
 export interface HistoryLine {

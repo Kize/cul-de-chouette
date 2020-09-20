@@ -2,6 +2,7 @@ import { ActionContext, Module } from "vuex";
 import {
   CurrentGameState,
   GameStatus,
+  SloubiActionPayload,
   StartGameData
 } from "@/store/current-game/current-game.interface";
 import { byName, getNextPlayer, Player } from "@/domain/player";
@@ -70,8 +71,15 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     setGameStatus(state, status: GameStatus): void {
       state.status = status;
     },
-    addPlayer(state, player: Player): void {
-      state.players.push({
+    addPlayer(
+      state,
+      { player, previousPlayer }: { player: Player; previousPlayer?: string }
+    ): void {
+      const indexToInsert = !previousPlayer
+        ? state.players.length
+        : state.players.findIndex(byName(previousPlayer)) + 1;
+
+      state.players.splice(indexToInsert, 0, {
         name: player.name,
         history: player.history,
         hasGrelottine: player.hasGrelottine
@@ -122,6 +130,34 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       };
 
       commit("setGame", newGame);
+      await dispatch("saveGameToLocalStorage");
+    },
+    async sloubi(
+      { state, commit, dispatch },
+      sloubi: SloubiActionPayload
+    ): Promise<void> {
+      if (state.currentPlayerName !== state.players[0].name) {
+        throw new Error("Le sloubi ne peut être tenté qu'en début de tour.");
+      }
+
+      if (state.players.length > 5) {
+        throw new Error("Le jeu n'autorise que 6 joueurs dans une partie.");
+      }
+
+      if (state.players.map(player => player.name).includes(sloubi.name)) {
+        throw new Error("Le nom de ce joueur est déjà pris.");
+      }
+
+      const player: Player = {
+        name: sloubi.name,
+        history: [
+          { designation: HistoryLineType.SLOUBI, amount: Number(sloubi.score) }
+        ],
+        hasGrelottine: false
+      };
+
+      commit("addPlayer", { player, previousPlayer: sloubi.previousPlayer });
+
       await dispatch("saveGameToLocalStorage");
     },
     resumeGame({ commit }, currentGame: CurrentGameState): void {

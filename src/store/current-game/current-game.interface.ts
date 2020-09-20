@@ -17,3 +17,9 @@ export interface CurrentGameState {
   currentPlayerName?: string;
   players: Array<Player>;
 }
+
+export interface SloubiActionPayload {
+  name: string;
+  score: number;
+  previousPlayer?: string;
+}

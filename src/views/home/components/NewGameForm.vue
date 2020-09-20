@@ -9,7 +9,8 @@
         <v-text-field
           v-model="gameName"
           label="Nom de la partie"
-          required
+          outlined
+          shaped
           clearable
         ></v-text-field>
       </v-card-text>
@@ -26,7 +27,6 @@
             <v-text-field
               v-model="playerNames[index]"
               :label="'Joueur ' + (index + 1)"
-              required
               clearable
               outlined
               :rules="rules"
@@ -75,7 +75,7 @@ import { StartGameData } from "@/store/current-game/current-game.interface";
 export default class NewGameForm extends Vue {
   gameName = `Partie du ${new Date().toLocaleString("FR-fr").split(" à ")[0]}`;
   playerNames: Array<string> = ["", "", ""];
-  rules = [v => v.length <= 10 || "10 caractères max."];
+  rules = [v => (v.length > 0 && v.length <= 10) || "10 caractères max."];
 
   canRemovePlayer(): boolean {
     return this.playerNames.length > 2;
