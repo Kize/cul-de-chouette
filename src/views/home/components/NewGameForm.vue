@@ -1,86 +1,45 @@
 <template>
-  <div class="new-game-form">
-    <h2>Créer d'une partie</h2>
+  <v-form ref="form" lazy-validation>
+    <h2>Créer une partie</h2>
 
-    <!--GAME INFO-->
-    <h3>Détails de la partie</h3>
+    <v-card>
+      <v-card-title class="headline"> Détails de la partie</v-card-title>
 
-    <!--GAME NAME FIELD-->
-    <div class="field is-horizontal">
-      <div class="field-label is-normal">
-        <label class="label">Nom de la partie</label>
-      </div>
-      <div class="field-body">
-        <div class="field is-expanded">
-          <div class="field has-addons">
-            <div class="control is-expanded">
-              <input
-                :class="{
-                  input: true,
-                  'is-danger': !gameName.length
-                }"
-                type="text"
-                v-model="gameName"
-              />
-            </div>
-            <div class="control">
-              <button class="button" @click="clearGameName">
-                <i class="fas fa-times"></i>
-              </button>
-            </div>
-          </div>
-          <p v-if="!gameName.length" class="help is-danger">
-            Le nom de la partie est requis.
-          </p>
+      <v-card-text>
+        <v-text-field
+          v-model="gameName"
+          label="Nom de la partie"
+          required
+          append-icon="mdi-close"
+          @click:append="clearGameName"
+        ></v-text-field>
+      </v-card-text>
+    </v-card>
+
+    <v-card>
+      <v-card-title class="headline">Liste des joueurs</v-card-title>
+
+      <v-card-text>
+        <div v-for="(player, index) of playerNames" :key="index">
+          <v-text-field
+            v-model="playerNames[index]"
+            :label="'Joueur ' + (index + 1)"
+            required
+            append-icon="mdi-close"
+            @click:append="removePlayer(index)"
+          ></v-text-field>
         </div>
-      </div>
-    </div>
+      </v-card-text>
 
-    <!--PLAYERS-->
-    <h3>Liste des joueurs</h3>
-    <div
-      v-for="(player, index) of playerNames"
-      :key="index"
-      class="field is-horizontal"
-    >
-      <div class="field-label is-normal">
-        <label :for="'playerName' + index" class="label"
-          >Joueur {{ index + 1 }}</label
-        >
-      </div>
-      <div class="field-body">
-        <div class="field is-expanded">
-          <div class="field has-addons">
-            <div class="control is-expanded">
-              <input
-                :class="{ input: true }"
-                type="text"
-                v-model="playerNames[index]"
-              />
-            </div>
-            <div class="control">
-              <button class="button" @click="removePlayer(index)">
-                <i class="fas fa-times"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      <v-card-actions>
+        <v-btn color="primary" @click="addPlayer">Ajouter un joueur</v-btn>
+      </v-card-actions>
+    </v-card>
 
-    <div class="field is-grouped is-grouped-centered">
-      <div class="control">
-        <button class="button is-info" @click="addPlayer">
-          Ajouter un joueur
-        </button>
-      </div>
-      <div class="control">
-        <button class="button is-primary" @click="createGame">
-          Créer la partie
-        </button>
-      </div>
-    </div>
-  </div>
+    <v-btn color="success" class="mr-4" @click="createGame">
+      Créer une partie
+    </v-btn>
+  </v-form>
 </template>
 
 <script lang="ts">

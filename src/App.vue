@@ -1,7 +1,11 @@
 <template>
-  <div id="app">
-    <router-view />
-  </div>
+  <v-app>
+    <v-main>
+      <v-container fluid>
+        <router-view></router-view>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <script lang="ts">
@@ -10,22 +14,20 @@ import { GameStatus } from "@/store/current-game/current-game.interface";
 
 @Component({})
 export default class App extends Vue {
-  async created(): void {
+  async created(): Promise<void> {
     const currentGame = JSON.parse(localStorage.getItem("currentGame") || "{}");
 
     if (currentGame && currentGame.status === GameStatus.IN_GAME) {
       await this.$store.dispatch("currentGame/resumeGame", currentGame);
       await this.$router.push("/scribe-panel");
     } else {
-      await this.$router.push("/");
+      // await this.$router.push("/");
     }
   }
 }
 </script>
 
 <style lang="scss">
-@import "~bulma/css/bulma.css";
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

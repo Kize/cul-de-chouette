@@ -1,6 +1,6 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import { CurrentGameStoreModule } from '@/store/current-game/current-game.store';
+import Vue from "vue";
+import Vuex from "vuex";
+import { CurrentGameStoreModule } from "@/store/current-game/current-game.store";
 
 Vue.use(Vuex);
 
@@ -9,6 +9,6 @@ export default new Vuex.Store({
   mutations: {},
   actions: {},
   modules: {
-    currentGame: CurrentGameStoreModule,
-  },
+    currentGame: CurrentGameStoreModule
+  }
 });
