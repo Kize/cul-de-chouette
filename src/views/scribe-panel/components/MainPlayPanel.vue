@@ -91,9 +91,12 @@ import ChouetteVeluteDialogCard, {
   }
 })
 export default class MainPlayPanel extends Vue {
-  @Prop(Player) player!: Player;
+  @Prop() player!: Player;
   readonly playTypes = HistoryLineType;
   showChouetteVeluteDialog = false;
+
+  readonly players!: ReadonlyArray<Player>;
+  readonly canPlayerPlay!: (name: string) => boolean;
 
   cannotPlay(): boolean {
     return !this.canPlayerPlay(this.player.name);

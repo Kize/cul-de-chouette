@@ -76,7 +76,9 @@ import { ROUTES } from "@/router";
 export default class NewGameForm extends Vue {
   gameName = `Partie du ${new Date().toLocaleString("FR-fr").split(" à ")[0]}`;
   playerNames: Array<string> = ["", "", ""];
-  rules = [v => (v.length > 0 && v.length <= 10) || "10 caractères max."];
+  rules = [
+    (v: string) => (v.length > 0 && v.length <= 10) || "10 caractères max."
+  ];
 
   canRemovePlayer(): boolean {
     return this.playerNames.length > 2;

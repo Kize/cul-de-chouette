@@ -24,7 +24,7 @@ import { Player } from "@/domain/player";
 
 @Component({})
 export default class MainActionsPanel extends Vue {
-  @Prop(Player) player!: Player;
+  @Prop() player!: Player;
 
   applyBevue(): void {
     this.$store.dispatch("currentGame/applyBevue", this.player.name);

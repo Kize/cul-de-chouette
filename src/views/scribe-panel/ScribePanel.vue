@@ -123,6 +123,7 @@ import {
 import { mapGetters } from "vuex";
 import MainActionsPanel from "./components/MainActionsPanel.vue";
 import MainPlayPanel from "./components/MainPlayPanel.vue";
+import { Player } from "@/domain/player";
 
 @Component({
   components: { MainPlayPanel, MainActionsPanel },
@@ -138,16 +139,18 @@ import MainPlayPanel from "./components/MainPlayPanel.vue";
 })
 export default class ScribePanel extends Vue {
   sloubiForm: SloubiActionPayload = {
-    previousPlayer: undefined,
-    playerName: "",
+    name: "",
     score: 0
   };
   showSloubiDialog = false;
-  rules = [v => (v?.length > 0 && v?.length <= 10) || "10 caractères max."];
+  rules = [
+    (v: string) => (v?.length > 0 && v?.length <= 10) || "10 caractères max."
+  ];
   errorSnackBar = {
     text: "",
     display: false
   };
+  players!: Array<Player>;
 
   @Watch("gameStatus")
   onGameStatusChange(newStatus: GameStatus): void {
