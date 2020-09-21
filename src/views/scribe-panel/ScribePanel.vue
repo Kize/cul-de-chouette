@@ -11,7 +11,7 @@
       </v-col>
       <v-col cols="4">
         <v-row justify="end">
-          <v-btn class="mx-2 my-1">
+          <v-btn class="mx-2 my-1" @click="showGrelottineDialog = true">
             Défi Grelottine !
           </v-btn>
           <v-btn class="mx-2 my-1" @click="showSloubiDialog = true">
@@ -63,6 +63,19 @@
       </SloubiDialogCard>
     </v-dialog>
 
+    <v-dialog
+      v-model="showGrelottineDialog"
+      fullscreen
+      hide-overlay
+      transition="dialog-bottom-transition"
+    >
+      <GrelottineDialogCard
+        :player-names="playerNames"
+        @cancel="showGrelottineDialog = false"
+        @confirm="applyGrelottine($event)"
+      ></GrelottineDialogCard>
+    </v-dialog>
+
     <v-snackbar v-model="errorSnackBar.display" :timeout="3000">
       {{ errorSnackBar.text }}
 
@@ -91,9 +104,15 @@ import MainActionsPanel from "./components/MainActionsPanel.vue";
 import MainPlayPanel from "./components/MainPlayPanel.vue";
 import { Player } from "@/domain/player";
 import SloubiDialogCard from "@/views/scribe-panel/dialogs/SloubiDialogCard.vue";
+import GrelottineDialogCard from "@/views/scribe-panel/dialogs/GrelottineDialogCard.vue";
 
 @Component({
-  components: { SloubiDialogCard, MainPlayPanel, MainActionsPanel },
+  components: {
+    GrelottineDialogCard,
+    SloubiDialogCard,
+    MainPlayPanel,
+    MainActionsPanel
+  },
   computed: {
     ...mapGetters("currentGame", [
       "gameName",
@@ -108,6 +127,7 @@ import SloubiDialogCard from "@/views/scribe-panel/dialogs/SloubiDialogCard.vue"
 })
 export default class ScribePanel extends Vue {
   showSloubiDialog = false;
+  showGrelottineDialog = false;
   errorSnackBar = {
     text: "",
     display: false
@@ -116,7 +136,6 @@ export default class ScribePanel extends Vue {
 
   @Watch("gameStatus")
   onGameStatusChange(newStatus: GameStatus): void {
-    console.log("hey", newStatus);
     switch (newStatus) {
       case GameStatus.CREATION:
         this.$router.push("/");
@@ -141,6 +160,10 @@ export default class ScribePanel extends Vue {
       this.errorSnackBar.text = error.message;
       this.errorSnackBar.display = true;
     }
+  }
+
+  applyGrelottine(event: any): void {
+    console.log("GRELOTTINE !", event);
   }
 }
 </script>
