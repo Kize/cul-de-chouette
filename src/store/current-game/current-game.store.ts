@@ -168,7 +168,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     handleEndTurn({ state, commit, dispatch, getters }): void {
       const highestPlayer = getters.getHighestPlayer;
       const isGameFinished = getters.getPlayerScore(highestPlayer.name) >= 343;
-      console.log(highestPlayer.name, isGameFinished);
+
       if (isGameFinished) {
         commit("setGameStatus", GameStatus.FINISHED);
       } else {
