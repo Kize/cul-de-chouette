@@ -90,7 +90,7 @@ import { mapGetters } from "vuex";
 import MainActionsPanel from "./components/MainActionsPanel.vue";
 import MainPlayPanel from "./components/MainPlayPanel.vue";
 import { Player } from "@/domain/player";
-import SloubiDialogCard from "@/views/scribe-panel/components/SloubiDialogCard.vue";
+import SloubiDialogCard from "@/views/scribe-panel/dialogs/SloubiDialogCard.vue";
 
 @Component({
   components: { SloubiDialogCard, MainPlayPanel, MainActionsPanel },

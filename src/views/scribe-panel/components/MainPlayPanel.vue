@@ -70,7 +70,7 @@ import MenuAction from "@/components/MenuAction.vue";
 import { mapGetters } from "vuex";
 import ChouetteVeluteDialogCard, {
   ChouetteVeluteForm
-} from "@/views/scribe-panel/components/ChouetteVeluteDialogCard.vue";
+} from "@/views/scribe-panel/dialogs/ChouetteVeluteDialogCard.vue";
 
 @Component({
   components: { ChouetteVeluteDialogCard, MenuAction },
