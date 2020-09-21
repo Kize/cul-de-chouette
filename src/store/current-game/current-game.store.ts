@@ -37,6 +37,9 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     players(state): Array<Player> {
       return state.players;
     },
+    playerNames(state): Array<string> {
+      return state.players.map(player => player.name);
+    },
     currentPlayerName(state): string | undefined {
       return state.currentPlayerName;
     },

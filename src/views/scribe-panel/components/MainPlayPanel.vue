@@ -49,7 +49,7 @@
     <v-dialog v-model="showChouetteVeluteDialog" persistent max-width="800">
       <ChouetteVeluteDialogCard
         :current-player-name="player.name"
-        :player-names="playerNames()"
+        :player-names="playerNames"
         @cancel="showChouetteVeluteDialog = false"
         @confirm="playChouetteVelute($event)"
       >
@@ -75,7 +75,7 @@ import ChouetteVeluteDialogCard, {
 @Component({
   components: { ChouetteVeluteDialogCard, MenuAction },
   computed: {
-    ...mapGetters("currentGame", ["players"])
+    ...mapGetters("currentGame", ["players", "playerNames"])
   }
 })
 export default class MainPlayPanel extends Vue {
@@ -85,10 +85,6 @@ export default class MainPlayPanel extends Vue {
   readonly playTypes = HistoryLineType;
 
   readonly players!: ReadonlyArray<Player>;
-
-  playerNames(): Array<string> {
-    return this.players.map(player => player.name);
-  }
 
   basicPlay(value: number, designation: HistoryLineType): void {
     const action: HistoryLineAction = {

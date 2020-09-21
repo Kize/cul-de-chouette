@@ -11,9 +11,9 @@
         >Bévue</v-btn
       >
 
-      <v-btn tile color="primary" outlined large class="ma-2"
-        >Défi Grelottine
-      </v-btn>
+      <!--      <v-btn tile color="primary" outlined large class="ma-2"-->
+      <!--        >Défi Grelottine-->
+      <!--      </v-btn>-->
     </v-card-text>
   </v-card>
 </template>

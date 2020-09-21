@@ -1,12 +1,25 @@
 <template>
   <div class="scribe-panel">
-    <h1 class="mb-6">
-      <span>Gestion des scores - {{ gameName }}</span>
-
-      <v-btn class="float-right mr-10" @click="showSloubiDialog = true">
-        Chante-Sloubi !
-      </v-btn>
-    </h1>
+    <v-row>
+      <v-col cols="6">
+        <h1 class="mb-6">Gestion des scores - {{ gameName }}</h1>
+      </v-col>
+      <v-col cols="2">
+        <v-btn>
+          Afficher l'historique
+        </v-btn>
+      </v-col>
+      <v-col cols="4">
+        <v-row justify="end">
+          <v-btn class="mx-2 my-1">
+            Défi Grelottine !
+          </v-btn>
+          <v-btn class="mx-2 my-1" @click="showSloubiDialog = true">
+            Chante-Sloubi !
+          </v-btn>
+        </v-row>
+      </v-col>
+    </v-row>
 
     <v-row class="mb-6" no-gutters>
       <v-col
@@ -41,60 +54,13 @@
     </v-row>
 
     <v-dialog v-model="showSloubiDialog" persistent max-width="800">
-      <v-card>
-        <v-card-title class="headline"
-          >Ajouter un joueur avec le Chante-Sloubi:
-        </v-card-title>
-
-        <v-card-text>
-          <v-row>
-            <v-col cols="5">
-              <v-text-field
-                v-model="sloubiForm.name"
-                label="Nom du nouveau joueur"
-                :rules="rules"
-                clearable
-              ></v-text-field>
-            </v-col>
-            <v-spacer></v-spacer>
-            <v-col cols="3">
-              <v-text-field
-                v-model="sloubiForm.score"
-                label="Score du Sloubi"
-                type="number"
-                clearable
-              ></v-text-field>
-            </v-col>
-            <v-spacer></v-spacer>
-          </v-row>
-
-          <v-row>
-            <v-col cols="3">
-              <v-select
-                :items="getPlayerNames()"
-                label="Joueur précédent"
-                clearable
-                v-model="sloubiForm.previousPlayer"
-              ></v-select>
-            </v-col>
-          </v-row>
-        </v-card-text>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="showSloubiDialog = false">
-            Annuler
-          </v-btn>
-          <v-btn
-            color="green darken-1"
-            text
-            @click="playSloubi"
-            :disabled="!sloubiForm.name"
-          >
-            Ajouter
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+      <SloubiDialogCard
+        :player-names="playerNames"
+        :current-player-name="currentPlayerName"
+        @cancel="showSloubiDialog = false"
+        @confirm="playSloubi($event)"
+      >
+      </SloubiDialogCard>
     </v-dialog>
 
     <v-snackbar v-model="errorSnackBar.display" :timeout="3000">
@@ -124,28 +90,24 @@ import { mapGetters } from "vuex";
 import MainActionsPanel from "./components/MainActionsPanel.vue";
 import MainPlayPanel from "./components/MainPlayPanel.vue";
 import { Player } from "@/domain/player";
+import SloubiDialogCard from "@/views/scribe-panel/components/SloubiDialogCard.vue";
 
 @Component({
-  components: { MainPlayPanel, MainActionsPanel },
+  components: { SloubiDialogCard, MainPlayPanel, MainActionsPanel },
   computed: {
     ...mapGetters("currentGame", [
       "gameName",
       "gameStatus",
       "players",
       "canPlayerPlay",
-      "getPlayerScore"
+      "getPlayerScore",
+      "currentPlayerName",
+      "playerNames"
     ])
   }
 })
 export default class ScribePanel extends Vue {
-  sloubiForm: SloubiActionPayload = {
-    name: "",
-    score: 0
-  };
   showSloubiDialog = false;
-  rules = [
-    (v: string) => (v?.length > 0 && v?.length <= 10) || "10 caractères max."
-  ];
   errorSnackBar = {
     text: "",
     display: false
@@ -171,19 +133,9 @@ export default class ScribePanel extends Vue {
     return Math.ceil(12 / playersNumber);
   }
 
-  getPlayerNames(): Array<string> {
-    return this.players.map(player => player.name);
-  }
-
-  async playSloubi(): Promise<void> {
+  async playSloubi(form: SloubiActionPayload): Promise<void> {
     try {
-      await this.$store.dispatch("currentGame/sloubi", { ...this.sloubiForm });
-      this.sloubiForm = {
-        name: "",
-        previousPlayer: undefined,
-        score: 0
-      };
-
+      await this.$store.dispatch("currentGame/sloubi", form);
       this.showSloubiDialog = false;
     } catch (error) {
       this.errorSnackBar.text = error.message;
