@@ -48,9 +48,7 @@
       transition="dialog-bottom-transition"
     >
       <GrelottineDialogCard
-        :player-names="playerNames"
-        @cancel="showGrelottineDialog = false"
-        @confirm="applyGrelottine($event)"
+        @close="showGrelottineDialog = false"
       ></GrelottineDialogCard>
     </v-dialog>
 
@@ -124,7 +122,7 @@ export default class ScribePanel extends Vue {
 
   getColumnSize(): number {
     const playersNumber = this.players.length;
-    return Math.ceil(12 / playersNumber);
+    return Math.floor(12 / playersNumber);
   }
 
   async playSloubi(form: SloubiActionPayload): Promise<void> {

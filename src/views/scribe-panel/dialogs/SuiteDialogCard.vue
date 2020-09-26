@@ -28,7 +28,7 @@
             step="1"
             label="Multiplicateur"
             v-model="form.multiplier"
-            :rules="inputNumberRules"
+            :rules="inputStrictlyPositiveIntegerRules"
             outlined
             dense
           ></v-text-field>
@@ -50,7 +50,7 @@
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import MainDialogCard from "@/components/MainDialogCard.vue";
 import {
-  inputNumberRules,
+  inputStrictlyPositiveIntegerRules,
   selectNameRules
 } from "@/domain/form-validation-rules";
 
@@ -77,7 +77,7 @@ export default class SuiteDialogCard extends Vue {
   isFormValid = true;
 
   readonly selectNameRules = selectNameRules;
-  readonly inputNumberRules = inputNumberRules;
+  readonly inputStrictlyPositiveIntegerRules = inputStrictlyPositiveIntegerRules;
 
   @Emit()
   cancel(): void {

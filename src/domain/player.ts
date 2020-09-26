@@ -22,4 +22,3 @@ export function byName(name: string) {
     return player.name === name;
   };
 }
-

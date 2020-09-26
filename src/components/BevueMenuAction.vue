@@ -12,12 +12,7 @@
       Une bévue a été appliquée pour {{ playerNameBevue }}
 
       <template v-slot:action="{ attrs }">
-        <v-btn
-          color="blue"
-          text
-          v-bind="attrs"
-          @click="snackBarDisplay = false"
-        >
+        <v-btn color="blue" v-bind="attrs" @click="snackBarDisplay = false">
           Okay
         </v-btn>
       </template>

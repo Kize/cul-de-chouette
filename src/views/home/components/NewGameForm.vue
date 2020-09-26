@@ -9,7 +9,8 @@
         <v-text-field
           label="Nom de la partie"
           v-model="gameName"
-          :rules="newPlayerNameRules"
+          :rules="newGameNameNameRules"
+          counter
           outlined
           shaped
           clearable
@@ -75,7 +76,10 @@
 import { Component, Vue } from "vue-property-decorator";
 import { StartGameData } from "@/store/current-game/current-game.interface";
 import { ROUTES } from "@/router";
-import { newPlayerNameRules } from "@/domain/form-validation-rules";
+import {
+  newGameNameNameRules,
+  newPlayerNameRules
+} from "@/domain/form-validation-rules";
 
 @Component({
   components: {}
@@ -86,6 +90,7 @@ export default class NewGameForm extends Vue {
   gameName = `Partie du ${new Date().toLocaleString("FR-fr").split(" à ")[0]}`;
   playerNames: Array<string> = ["", ""];
   readonly newPlayerNameRules = newPlayerNameRules;
+  readonly newGameNameNameRules = newGameNameNameRules;
 
   canRemovePlayer(): boolean {
     return this.playerNames.length > 2;

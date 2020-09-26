@@ -18,6 +18,7 @@ import {
   SuiteHistoryLineAction
 } from "@/domain/history";
 import { RootState } from "@/store/app.state";
+import { GrelottineActionPayload, GrelottineForm } from "@/domain/grelottine";
 
 export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
   namespaced: true,
@@ -33,6 +34,12 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
   getters: {
     playerNames(state): Array<string> {
       return state.players.map(player => player.name);
+    },
+    grelottinePlayers(state, getters): Array<string> {
+      return state.players
+        .filter(player => player.hasGrelottine)
+        .filter(player => getters.getPlayerScore(player.name) > 0)
+        .map(player => player.name);
     },
     isCurrentPlayer(state) {
       return (playerName: string): boolean => {
@@ -51,7 +58,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         }, 0);
       };
     },
-    getHighestPlayer(state, getters): Player {
+    highestPlayer(state, getters): Player {
       return [...state.players].sort((a: Player, b: Player) => {
         return getters.getPlayerScore(a) - getters.getPlayerScore(b);
       })[0];
@@ -100,6 +107,13 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         if (apply.designation === HistoryLineType.NEANT) {
           player.hasGrelottine = true;
         }
+      }
+    },
+    removeGrelottine(state, playerName: string): void {
+      const player = state.players.find(byName(playerName));
+
+      if (player) {
+        player.hasGrelottine = false;
       }
     }
   },
@@ -168,24 +182,28 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     resumeGame({ commit }, currentGame: CurrentGameState): void {
       commit("setGame", currentGame);
     },
-    handleEndTurn({ state, commit, dispatch, getters }): void {
-      const highestPlayer = getters.getHighestPlayer;
+    async checkEndGame({ commit, getters, dispatch }): Promise<boolean> {
+      const highestPlayer = getters.highestPlayer;
       const isGameFinished = getters.getPlayerScore(highestPlayer.name) >= 343;
 
       if (isGameFinished) {
         commit("setGameStatus", GameStatus.FINISHED);
       } else {
-        const nextPlayerName = getNextPlayer(
-          state.players,
-          state.currentPlayerName
+        await dispatch("saveGameToLocalStorage");
+      }
+
+      return isGameFinished;
+    },
+    async handleEndTurn({ state, commit, dispatch }): Promise<void> {
+      const isGameFinished = await dispatch("checkEndGame");
+
+      if (!isGameFinished) {
+        commit(
+          "setCurrentPlayerName",
+          getNextPlayer(state.players, state.currentPlayerName!)
         );
-        commit("setCurrentPlayerName", nextPlayerName);
 
-        if (nextPlayerName === state.players[0].name) {
-          commit("incrementTurnNumber");
-        }
-
-        dispatch("saveGameToLocalStorage");
+        await dispatch("saveGameToLocalStorage");
       }
     },
     handleEndGame({ state, commit }, storage = localStorage): void {
@@ -308,6 +326,46 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       }
 
       commit("addHistoryLine", historyLineApply);
+    },
+    async grelottineChallenge(
+      { state, commit, dispatch },
+      grelottineActionPayload: GrelottineActionPayload
+    ): Promise<void> {
+      if (grelottineActionPayload.challengedPlayerScore !== 0) {
+        const apply: HistoryLineApply = {
+          playerName: grelottineActionPayload.challengedPlayer,
+          designation: HistoryLineType.GRELOTTINE_SCORE,
+          amount: Number(grelottineActionPayload.challengedPlayerScore)
+        };
+        commit("addHistoryLine", apply);
+      }
+
+      let winner: string, looser: string;
+      if (grelottineActionPayload.isChallengePassed) {
+        winner = grelottineActionPayload.challengedPlayer;
+        looser = grelottineActionPayload.grelottin;
+      } else {
+        winner = grelottineActionPayload.grelottin;
+        looser = grelottineActionPayload.challengedPlayer;
+      }
+
+      const winnerApply: HistoryLineApply = {
+        playerName: winner,
+        designation: HistoryLineType.GRELOTTINE_CHALLENGE,
+        amount: grelottineActionPayload.amount
+      };
+      commit("addHistoryLine", winnerApply);
+
+      const looserApply: HistoryLineApply = {
+        playerName: looser,
+        designation: HistoryLineType.GRELOTTINE_CHALLENGE,
+        amount: -grelottineActionPayload.amount
+      };
+      commit("addHistoryLine", looserApply);
+
+      commit("removeGrelottine", grelottineActionPayload.grelottin);
+
+      await dispatch("checkEndGame");
     },
     applyBevue({ state, commit, dispatch }, playerName: string): void {
       const player = state.players.find(byName(playerName));

@@ -24,7 +24,7 @@
             min="1"
             step="1"
             v-model="form.score"
-            :rules="inputNumberRules"
+            :rules="inputStrictlyPositiveIntegerRules"
             clearable
           ></v-text-field>
         </v-col>
@@ -50,7 +50,7 @@ import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import { SloubiActionPayload } from "@/store/current-game/current-game.interface";
 import MainDialogCard from "@/components/MainDialogCard.vue";
 import {
-  inputNumberRules,
+  inputStrictlyPositiveIntegerRules,
   newPlayerNameRules
 } from "@/domain/form-validation-rules";
 
@@ -70,7 +70,7 @@ export default class SloubiDialogCard extends Vue {
   isFormValid = true;
 
   readonly newPlayerNameRules = newPlayerNameRules;
-  readonly inputNumberRules = inputNumberRules;
+  readonly inputStrictlyPositiveIntegerRules = inputStrictlyPositiveIntegerRules;
 
   @Emit()
   // eslint-disable-next-line @typescript-eslint/no-empty-function
