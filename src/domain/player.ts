@@ -22,3 +22,7 @@ export function byName(name: string) {
     return player.name === name;
   };
 }
+
+export const selectNameRules = [
+  (name?: string) => (name && name.length > 1) || "Le joueur est requis"
+];

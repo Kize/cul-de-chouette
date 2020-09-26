@@ -2,7 +2,7 @@
   <div class="scribe-panel">
     <v-row>
       <v-col cols="6">
-        <h1 class="mb-6">Gestion des scores - {{ gameName }}</h1>
+        <h1 class="mb-6">Gestion des scores - {{ name }}</h1>
       </v-col>
       <v-col cols="2">
         <v-btn>
@@ -27,29 +27,7 @@
         :key="player.name"
         :cols="getColumnSize()"
       >
-        <v-card
-          class="pa-3 mx-1"
-          tile
-          outlined
-          :color="
-            canPlayerPlay(player.name) ? 'blue lighten-3' : 'blue lighten-5'
-          "
-        >
-          <v-card-title class="headline">
-            <span>{{ player.name }}</span>
-            <v-divider vertical class="mx-6"></v-divider>
-            <span>Score: {{ getPlayerScore(player.name) }}</span>
-
-            <v-spacer></v-spacer>
-
-            <v-chip small color="primary" v-if="player.hasGrelottine"
-              >Grelottine
-            </v-chip>
-          </v-card-title>
-
-          <MainActionsPanel :player="player"></MainActionsPanel>
-          <MainPlayPanel :player="player"></MainPlayPanel>
-        </v-card>
+        <PlayerCard :player="player" />
       </v-col>
     </v-row>
 
@@ -99,30 +77,27 @@ import {
   GameStatus,
   SloubiActionPayload
 } from "@/store/current-game/current-game.interface";
-import { mapGetters } from "vuex";
-import MainActionsPanel from "./components/MainActionsPanel.vue";
-import MainPlayPanel from "./components/MainPlayPanel.vue";
+import { mapGetters, mapState } from "vuex";
 import { Player } from "@/domain/player";
 import SloubiDialogCard from "@/views/scribe-panel/dialogs/SloubiDialogCard.vue";
 import GrelottineDialogCard from "@/views/scribe-panel/dialogs/GrelottineDialogCard.vue";
+import PlayerCard from "@/views/scribe-panel/player-card/PlayerCard.vue";
 
 @Component({
   components: {
+    PlayerCard,
     GrelottineDialogCard,
-    SloubiDialogCard,
-    MainPlayPanel,
-    MainActionsPanel
+    SloubiDialogCard
   },
   computed: {
-    ...mapGetters("currentGame", [
-      "gameName",
-      "gameStatus",
-      "players",
-      "canPlayerPlay",
-      "getPlayerScore",
+    ...mapState("currentGame", [
       "currentPlayerName",
-      "playerNames"
-    ])
+      "name",
+      "status",
+      "players"
+    ]),
+
+    ...mapGetters("currentGame", ["getPlayerScore", "playerNames"])
   }
 })
 export default class ScribePanel extends Vue {
@@ -134,7 +109,7 @@ export default class ScribePanel extends Vue {
   };
   players!: Array<Player>;
 
-  @Watch("gameStatus")
+  @Watch("status")
   onGameStatusChange(newStatus: GameStatus): void {
     switch (newStatus) {
       case GameStatus.CREATION:

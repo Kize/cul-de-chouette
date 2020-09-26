@@ -4,6 +4,7 @@
       <MenuAction
         label="Chouette"
         :options="6"
+        :disabled="!isCurrentPlayer(player.name)"
         @click="basicPlay($event, playTypes.CHOUETTE)"
       >
       </MenuAction>
@@ -11,6 +12,7 @@
       <MenuAction
         label="Velute"
         :options="[3, 4, 5, 6]"
+        :disabled="!isCurrentPlayer(player.name)"
         @click="basicPlay($event, playTypes.VELUTE)"
       ></MenuAction>
 
@@ -20,6 +22,7 @@
         outlined
         large
         class="ma-2"
+        :disabled="!isCurrentPlayer(player.name)"
         @click="showChouetteVeluteDialog = true"
       >
         Chouette Velute
@@ -28,11 +31,19 @@
       <MenuAction
         label="Cul de chouette"
         :options="6"
+        :disabled="!isCurrentPlayer(player.name)"
         @click="basicPlay($event, playTypes.CUL_DE_CHOUETTE)"
       >
       </MenuAction>
 
-      <v-btn tile color="primary" outlined large class="ma-2" @click="playSuite"
+      <v-btn
+        tile
+        color="primary"
+        outlined
+        large
+        class="ma-2"
+        @click="showSuiteDialog = true"
+        :disabled="!isCurrentPlayer(player.name)"
         >Suite
       </v-btn>
 
@@ -42,10 +53,12 @@
         outlined
         large
         class="ma-2"
+        :disabled="!isCurrentPlayer(player.name)"
         @click="basicPlay($event, playTypes.NEANT)"
         >Néant
       </v-btn>
     </v-card-text>
+
     <v-dialog v-model="showChouetteVeluteDialog" persistent max-width="800">
       <ChouetteVeluteDialogCard
         :current-player-name="player.name"
@@ -55,6 +68,15 @@
       >
       </ChouetteVeluteDialogCard>
     </v-dialog>
+
+    <v-dialog v-model="showSuiteDialog" persistent max-width="800">
+      <SuiteDialogCard
+        :current-player-name="player.name"
+        :player-names="playerNames"
+        @cancel="showSuiteDialog = false"
+        @confirm="playSuite"
+      ></SuiteDialogCard>
+    </v-dialog>
   </v-card>
 </template>
 
@@ -63,34 +85,42 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import {
   ChouetteVeluteHistoryLineAction,
   HistoryLineAction,
-  HistoryLineType
+  HistoryLineType,
+  SuiteHistoryLineAction
 } from "@/domain/history";
 import { Player } from "@/domain/player";
 import MenuAction from "@/components/MenuAction.vue";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import ChouetteVeluteDialogCard, {
   ChouetteVeluteForm
 } from "@/views/scribe-panel/dialogs/ChouetteVeluteDialogCard.vue";
+import SuiteDialogCard, {
+  SuiteForm
+} from "@/views/scribe-panel/dialogs/SuiteDialogCard.vue";
 
 @Component({
-  components: { ChouetteVeluteDialogCard, MenuAction },
+  components: { SuiteDialogCard, ChouetteVeluteDialogCard, MenuAction },
   computed: {
-    ...mapGetters("currentGame", ["players", "playerNames"])
+    ...mapState("currentGame", ["players", "turnNumber"]),
+    ...mapGetters("currentGame", ["isCurrentPlayer", "playerNames"])
   }
 })
 export default class MainPlayPanel extends Vue {
   @Prop() player!: Player;
 
   showChouetteVeluteDialog = false;
+  showSuiteDialog = false;
   readonly playTypes = HistoryLineType;
 
   readonly players!: ReadonlyArray<Player>;
+  readonly turnNumber!: number;
 
   basicPlay(value: number, designation: HistoryLineType): void {
     const action: HistoryLineAction = {
       playerName: this.player.name,
       designation,
-      value
+      value,
+      turnNumber: this.turnNumber
     };
     this.$store.dispatch("currentGame/playATurn", action);
   }
@@ -100,14 +130,25 @@ export default class MainPlayPanel extends Vue {
       playerName: this.player.name,
       designation: HistoryLineType.CHOUETTE_VELUTE,
       value: form.value,
-      shoutingPlayers: form.playerNames
+      shoutingPlayers: form.playerNames,
+      turnNumber: this.turnNumber
     };
     this.$store.dispatch("currentGame/playATurn", action);
     this.showChouetteVeluteDialog = false;
   }
 
-  playSuite(): void {
-    window.alert("Pas codée encore :/");
+  playSuite(form: SuiteForm): void {
+    const action: SuiteHistoryLineAction = {
+      playerName: this.player.name,
+      designation: HistoryLineType.SUITE,
+      multiplier: form.multiplier,
+      loosingPlayerName: form.loosingPlayerName,
+      isVelute: form.isVelute,
+      turnNumber: this.turnNumber
+    };
+
+    this.$store.dispatch("currentGame/playATurn", action);
+    this.showSuiteDialog = false;
   }
 }
 </script>

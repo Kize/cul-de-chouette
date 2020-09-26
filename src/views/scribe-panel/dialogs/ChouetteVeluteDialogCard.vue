@@ -51,6 +51,11 @@ export interface ChouetteVeluteForm {
   playerNames: Array<string>;
 }
 
+const INITIAL_FORM: ChouetteVeluteForm = {
+  value: 2,
+  playerNames: []
+};
+
 @Component({
   components: {}
 })
@@ -58,17 +63,11 @@ export default class ChouetteVeluteDialogCard extends Vue {
   @Prop(String) currentPlayerName!: string;
   @Prop() playerNames!: Array<string>;
 
-  form: ChouetteVeluteForm = {
-    value: 2,
-    playerNames: []
-  };
+  form: ChouetteVeluteForm = { ...INITIAL_FORM };
 
   @Emit()
   cancel(): void {
-    this.form = {
-      value: 2,
-      playerNames: []
-    };
+    this.form = { ...INITIAL_FORM };
   }
 
   @Emit()

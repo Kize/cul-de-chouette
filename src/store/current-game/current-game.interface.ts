@@ -12,10 +12,11 @@ export interface StartGameData {
 }
 
 export interface CurrentGameState {
-  status: GameStatus;
   name: string;
-  currentPlayerName?: string;
+  status: GameStatus;
   players: Array<Player>;
+  currentPlayerName: string;
+  turnNumber: number;
 }
 
 export interface SloubiActionPayload {

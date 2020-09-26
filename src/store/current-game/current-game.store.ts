@@ -8,13 +8,14 @@ import {
 import { byName, getNextPlayer, Player } from "@/domain/player";
 import {
   BasicHistoryLineAction,
+  ChouetteVeluteHistoryLineAction,
   getAmount,
   HistoryLine,
   HistoryLineAction,
   HistoryLineApply,
   HistoryLineType,
-  isActionChouetteVelute,
-  mapHistoryActionToApply
+  mapHistoryActionToApply,
+  SuiteHistoryLineAction
 } from "@/domain/history";
 import { RootState } from "@/store/app.state";
 
@@ -24,26 +25,16 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     return {
       status: GameStatus.CREATION,
       name: "",
-      players: []
+      players: [],
+      currentPlayerName: "",
+      turnNumber: 1
     };
   },
   getters: {
-    gameName(state): string {
-      return state.name;
-    },
-    gameStatus(state): GameStatus {
-      return state.status;
-    },
-    players(state): Array<Player> {
-      return state.players;
-    },
     playerNames(state): Array<string> {
       return state.players.map(player => player.name);
     },
-    currentPlayerName(state): string | undefined {
-      return state.currentPlayerName;
-    },
-    canPlayerPlay(state) {
+    isCurrentPlayer(state) {
       return (playerName: string): boolean => {
         return playerName === state.currentPlayerName;
       };
@@ -79,6 +70,9 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     setGameStatus(state, status: GameStatus): void {
       state.status = status;
     },
+    incrementTurnNumber(state): void {
+      state.turnNumber += 1;
+    },
     addPlayer(
       state,
       { player, previousPlayer }: { player: Player; previousPlayer?: string }
@@ -99,7 +93,8 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       if (player) {
         player.history.push({
           designation: apply.designation,
-          amount: apply.amount
+          amount: apply.amount,
+          turnNumber: apply.turnNumber
         });
 
         if (apply.designation === HistoryLineType.NEANT) {
@@ -131,7 +126,8 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
           history: [],
           hasGrelottine: false
         })),
-        currentPlayerName: playerNames[0]
+        currentPlayerName: playerNames[0],
+        turnNumber: 1
       };
 
       commit("setGame", newGame);
@@ -156,7 +152,11 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       const player: Player = {
         name: sloubi.name,
         history: [
-          { designation: HistoryLineType.SLOUBI, amount: Number(sloubi.score) }
+          {
+            designation: HistoryLineType.SLOUBI,
+            amount: Number(sloubi.score),
+            turnNumber: state.turnNumber
+          }
         ],
         hasGrelottine: false
       };
@@ -175,10 +175,15 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       if (isGameFinished) {
         commit("setGameStatus", GameStatus.FINISHED);
       } else {
-        commit(
-          "setCurrentPlayerName",
-          getNextPlayer(state.players, state.currentPlayerName!)
+        const nextPlayerName = getNextPlayer(
+          state.players,
+          state.currentPlayerName
         );
+        commit("setCurrentPlayerName", nextPlayerName);
+
+        if (nextPlayerName === state.players[0].name) {
+          commit("incrementTurnNumber");
+        }
 
         dispatch("saveGameToLocalStorage");
       }
@@ -187,7 +192,9 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       const game: CurrentGameState = {
         name: state.name,
         status: GameStatus.FINISHED,
-        players: state.players
+        players: state.players,
+        currentPlayerName: state.currentPlayerName,
+        turnNumber: state.turnNumber
       };
       const history: Array<CurrentGameState> = JSON.parse(
         storage.getItem("games") || "[]"
@@ -199,7 +206,9 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       const nextGame: CurrentGameState = {
         status: GameStatus.CREATION,
         name: "",
-        players: []
+        players: [],
+        currentPlayerName: "",
+        turnNumber: 1
       };
       storage.setItem("currentGame", JSON.stringify(nextGame));
       commit("setGame", nextGame);
@@ -207,34 +216,98 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     saveGameToLocalStorage({ state }, storage = localStorage): void {
       storage.setItem("currentGame", JSON.stringify(state));
     },
-    playATurn({ state, commit, dispatch }, action: HistoryLineAction): void {
+    playATurn(
+      { state, commit, dispatch, getters },
+      action: HistoryLineAction
+    ): void {
       if (state.currentPlayerName !== action.playerName) {
         return;
       }
 
-      if (isActionChouetteVelute(action)) {
-        if (action.shoutingPlayers.length === 1) {
-          const newAction: BasicHistoryLineAction = {
-            playerName: action.shoutingPlayers[0],
-            designation: HistoryLineType.CHOUETTE_VELUTE,
-            value: action.value
-          };
-          commit("addHistoryLine", mapHistoryActionToApply(newAction));
-        } else {
-          action.shoutingPlayers.forEach(playerName => {
-            const apply: HistoryLineApply = {
-              playerName,
-              designation: HistoryLineType.CHOUETTE_VELUTE,
-              amount: -getAmount(HistoryLineType.CHOUETTE_VELUTE, action.value)
-            };
-            commit("addHistoryLine", apply);
-          });
-        }
-      } else {
-        commit("addHistoryLine", mapHistoryActionToApply(action));
+      switch (action.designation) {
+        case HistoryLineType.CHOUETTE_VELUTE:
+          dispatch("handleChouetteVeluteAction", action);
+          break;
+        case HistoryLineType.SUITE:
+          dispatch("handleSuiteAction", action);
+          break;
+        default:
+          commit("addHistoryLine", mapHistoryActionToApply(action));
       }
 
       dispatch("handleEndTurn");
+    },
+    handleChouetteVeluteAction(
+      { state, commit, dispatch, getters },
+      action: ChouetteVeluteHistoryLineAction
+    ): void {
+      if (action.shoutingPlayers.length === 1) {
+        const newAction: BasicHistoryLineAction = {
+          playerName: action.shoutingPlayers[0],
+          designation: HistoryLineType.CHOUETTE_VELUTE,
+          value: action.value,
+          turnNumber: getters.isCurrentPlayer(action.shoutingPlayers[0])
+            ? action.turnNumber
+            : undefined
+        };
+        commit("addHistoryLine", mapHistoryActionToApply(newAction));
+      } else {
+        action.shoutingPlayers.forEach(playerName => {
+          const historyLineApply = mapHistoryActionToApply({
+            playerName,
+            designation: HistoryLineType.CHOUETTE_VELUTE,
+            value: action.value,
+            turnNumber: getters.isCurrentPlayer(playerName)
+              ? action.turnNumber
+              : undefined
+          });
+
+          historyLineApply.amount = -historyLineApply.amount;
+          commit("addHistoryLine", historyLineApply);
+        });
+      }
+
+      if (!action.shoutingPlayers.includes(action.playerName)) {
+        commit(
+          "addHistoryLine",
+          mapHistoryActionToApply({
+            playerName: action.playerName,
+            designation: HistoryLineType.CHOUETTE_VELUTE,
+            value: 0,
+            turnNumber: action.turnNumber
+          })
+        );
+      }
+    },
+    handleSuiteAction(
+      { state, commit, dispatch, getters },
+      action: SuiteHistoryLineAction
+    ): void {
+      const isCurrentPlayerTheLooser =
+        action.loosingPlayerName === action.playerName;
+
+      if (!isCurrentPlayerTheLooser) {
+        const historyLineAction: HistoryLineAction = {
+          playerName: action.loosingPlayerName,
+          designation: HistoryLineType.SUITE,
+          value: action.multiplier * 10
+        };
+        commit("addHistoryLine", mapHistoryActionToApply(historyLineAction));
+      }
+
+      const value = isCurrentPlayerTheLooser ? action.multiplier * 10 : 0;
+      const historyLineApply = mapHistoryActionToApply({
+        playerName: action.playerName,
+        designation: HistoryLineType.SUITE,
+        value,
+        turnNumber: action.turnNumber
+      });
+
+      if (action.isVelute) {
+        historyLineApply.amount += getAmount(HistoryLineType.VELUTE, 3);
+      }
+
+      commit("addHistoryLine", historyLineApply);
     },
     applyBevue({ state, commit, dispatch }, playerName: string): void {
       const player = state.players.find(byName(playerName));
