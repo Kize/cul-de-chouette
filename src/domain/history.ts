@@ -1,6 +1,8 @@
 export enum HistoryLineType {
   NEANT = "néant",
   BEVUE = "bévue",
+  GRELOTTINE_CHALLENGE = "Défi de grelottine",
+  GRELOTTINE_SCORE = "Résultat lors d\'une grelottine",
   CHOUETTE = "chouette",
   VELUTE = "velute",
   SUITE = "suite",
