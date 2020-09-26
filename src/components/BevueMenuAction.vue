@@ -26,14 +26,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import MenuAction from "@/components/MenuAction.vue";
+import { mapGetters } from "vuex";
 
 @Component({
-  components: { MenuAction }
+  components: { MenuAction },
+  computed: {
+    ...mapGetters("currentGame", ["playerNames"])
+  }
 })
 export default class BevueMenuAction extends Vue {
-  @Prop() playerNames!: Array<string>;
+  readonly playerNames!: Array<string>;
 
   snackBarDisplay = false;
   playerNameBevue = "";

@@ -1,15 +1,18 @@
 <template>
-  <v-card>
-    <v-card-title>
-      Application de la Chouette Velute du joueur "{{ currentPlayerName }}"
-    </v-card-title>
-
-    <v-card-text>
+  <MainDialogCard
+    :title="`Application de la Chouette Velute du joueur ${currentPlayerName}`"
+    confirm-button-label="Confirmer la chouette velute"
+    :is-confirm-button-enabled="isFormValid"
+    @cancel="cancel"
+    @confirm="confirm"
+  >
+    <v-form ref="formRef" v-model="isFormValid">
       <v-row justify="center" dense>
         <v-col cols="10">
           <v-select
             label="Joueurs ayant disputé la chouette velute"
             v-model="form.playerNames"
+            :rules="selectPlayersRules"
             clearable
             multiple
             chips
@@ -29,22 +32,13 @@
           ></v-select>
         </v-col>
       </v-row>
-    </v-card-text>
-
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn color="green darken-1" text @click="cancel">
-        Annuler
-      </v-btn>
-      <v-btn color="green darken-1" text @click="confirm">
-        Confirmer la chouette velute
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+    </v-form>
+  </MainDialogCard>
 </template>
 
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
+import MainDialogCard from "@/components/MainDialogCard.vue";
 
 export interface ChouetteVeluteForm {
   value: number;
@@ -57,13 +51,19 @@ const INITIAL_FORM: ChouetteVeluteForm = {
 };
 
 @Component({
-  components: {}
+  components: { MainDialogCard }
 })
 export default class ChouetteVeluteDialogCard extends Vue {
   @Prop(String) currentPlayerName!: string;
   @Prop() playerNames!: Array<string>;
 
+  readonly selectPlayersRules = [
+    (names: Array<string>) =>
+      names.length > 0 || "Au moins un joueur est requis"
+  ];
+
   form: ChouetteVeluteForm = { ...INITIAL_FORM };
+  isFormValid = true;
 
   @Emit()
   cancel(): void {

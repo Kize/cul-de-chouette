@@ -1,25 +1,30 @@
 <template>
-  <v-card>
-    <v-card-title class="headline"
-      >Ajouter un joueur avec le Chante-Sloubi:
-    </v-card-title>
-
-    <v-card-text>
+  <MainDialogCard
+    title="Ajouter un joueur avec le Chante-Sloubi"
+    confirm-button-label="Ajouter"
+    :is-confirm-button-enabled="isFormValid"
+    @cancel="cancel"
+    @confirm="confirm"
+  >
+    <v-form ref="formRef" v-model="isFormValid">
       <v-row>
         <v-col cols="5">
           <v-text-field
-            v-model="form.name"
             label="Nom du nouveau joueur"
-            :rules="rules"
+            v-model="form.name"
             clearable
+            :rules="newPlayerNameRules"
           ></v-text-field>
         </v-col>
         <v-spacer></v-spacer>
         <v-col cols="3">
           <v-text-field
-            v-model="form.score"
             label="Score du Sloubi"
             type="number"
+            min="1"
+            step="1"
+            v-model="form.score"
+            :rules="inputNumberRules"
             clearable
           ></v-text-field>
         </v-col>
@@ -29,58 +34,47 @@
       <v-row>
         <v-col cols="3">
           <v-select
-            :items="playerNames"
             label="Joueur précédent"
             clearable
             v-model="form.previousPlayer"
+            :items="playerNames"
           ></v-select>
         </v-col>
       </v-row>
-    </v-card-text>
-
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn color="green darken-1" text @click="cancel">
-        Annuler
-      </v-btn>
-      <v-btn
-        color="green darken-1"
-        text
-        @click="confirm"
-        :disabled="!form.name"
-      >
-        Ajouter
-      </v-btn>
-    </v-card-actions>
-  </v-card>
+    </v-form>
+  </MainDialogCard>
 </template>
 
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import { SloubiActionPayload } from "@/store/current-game/current-game.interface";
+import MainDialogCard from "@/components/MainDialogCard.vue";
+import {
+  inputNumberRules,
+  newPlayerNameRules
+} from "@/domain/form-validation-rules";
+
+const INITIAL_FORM: SloubiActionPayload = {
+  name: "",
+  score: 1
+};
 
 @Component({
-  components: {}
+  components: { MainDialogCard }
 })
 export default class SloubiDialogCard extends Vue {
   @Prop(String) currentPlayerName!: string;
   @Prop() playerNames!: Array<string>;
 
-  form: SloubiActionPayload = {
-    name: "",
-    score: 0
-  };
-  readonly rules = [
-    (v: string) => (v?.length > 0 && v?.length <= 10) || "10 caractères max."
-  ];
+  form: SloubiActionPayload = { ...INITIAL_FORM };
+  isFormValid = true;
+
+  readonly newPlayerNameRules = newPlayerNameRules;
+  readonly inputNumberRules = inputNumberRules;
 
   @Emit()
-  cancel(): void {
-    this.form = {
-      name: "",
-      score: 0
-    };
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  cancel(): void {}
 
   @Emit()
   confirm(): SloubiActionPayload {
