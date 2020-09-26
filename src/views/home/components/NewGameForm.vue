@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" lazy-validation>
+  <v-form ref="formRef" v-model="isFormValid">
     <h2>Créer une partie</h2>
 
     <v-card color="grey lighten-3" class="my-4" tile>
@@ -7,8 +7,9 @@
 
       <v-card-text>
         <v-text-field
-          v-model="gameName"
           label="Nom de la partie"
+          v-model="gameName"
+          :rules="newPlayerNameRules"
           outlined
           shaped
           clearable
@@ -23,13 +24,13 @@
 
       <v-card-text class="pb-0">
         <v-row>
-          <v-col cols="3" v-for="(player, index) of playerNames" :key="index">
+          <v-col cols="3" v-for="(_, index) of playerNames" :key="index">
             <v-text-field
-              v-model="playerNames[index]"
               :label="'Joueur ' + (index + 1)"
+              v-model="playerNames[index]"
+              :rules="newPlayerNameRules"
               clearable
               outlined
-              :rules="rules"
               counter
               dense
               :append-outer-icon="
@@ -58,7 +59,12 @@
 
     <v-row class="pt-8">
       <v-spacer></v-spacer>
-      <v-btn color="success" class="mr-4" @click="createGame">
+      <v-btn
+        color="success"
+        class="mr-4"
+        @click="createGame"
+        :disabled="!isFormValid"
+      >
         Créer une partie
       </v-btn>
     </v-row>
@@ -69,16 +75,17 @@
 import { Component, Vue } from "vue-property-decorator";
 import { StartGameData } from "@/store/current-game/current-game.interface";
 import { ROUTES } from "@/router";
+import { newPlayerNameRules } from "@/domain/form-validation-rules";
 
 @Component({
   components: {}
 })
 export default class NewGameForm extends Vue {
+  isFormValid = true;
+
   gameName = `Partie du ${new Date().toLocaleString("FR-fr").split(" à ")[0]}`;
-  playerNames: Array<string> = ["", "", ""];
-  rules = [
-    (v: string) => (v.length > 0 && v.length <= 10) || "10 caractères max."
-  ];
+  playerNames: Array<string> = ["", ""];
+  readonly newPlayerNameRules = newPlayerNameRules;
 
   canRemovePlayer(): boolean {
     return this.playerNames.length > 2;
