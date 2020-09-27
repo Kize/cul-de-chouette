@@ -58,10 +58,19 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         }, 0);
       };
     },
-    highestPlayer(state, getters): Player {
-      return [...state.players].sort((a: Player, b: Player) => {
-        return getters.getPlayerScore(a) - getters.getPlayerScore(b);
-      })[0];
+    highestPlayer(state, getters): { name: string; score: number } {
+      return state.players
+        .map(player => ({
+          name: player.name,
+          score: getters.getPlayerScore(player.name)
+        }))
+        .reduce(
+          (bestPlayer, currentPlayer) =>
+            bestPlayer.score >= currentPlayer.score
+              ? bestPlayer
+              : currentPlayer,
+          { name: "", score: -1 }
+        );
     }
   },
   mutations: {
@@ -184,7 +193,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     },
     async checkEndGame({ commit, getters, dispatch }): Promise<boolean> {
       const highestPlayer = getters.highestPlayer;
-      const isGameFinished = getters.getPlayerScore(highestPlayer.name) >= 343;
+      const isGameFinished = highestPlayer.score >= 343;
 
       if (isGameFinished) {
         commit("setGameStatus", GameStatus.FINISHED);
