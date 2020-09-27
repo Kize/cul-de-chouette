@@ -16,7 +16,7 @@
               : 'light-blue lighten-5'
           "
         >
-          <v-card-title class="d-flex justify-center">
+          <v-card-title class="d-flex justify-space-around">
             <span>{{ player.name }}</span>
             <v-divider vertical class="mx-6"></v-divider>
             <span>Score: {{ getPlayerScore(player.name) }}</span>
@@ -24,7 +24,6 @@
 
           <v-card-text>
             <v-chip
-              small
               :color="player.hasGrelottine ? 'red' : 'dark darken-1'"
               outlined
               >Grelottine

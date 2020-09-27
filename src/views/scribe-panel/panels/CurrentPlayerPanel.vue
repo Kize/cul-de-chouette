@@ -1,5 +1,5 @@
 <template>
-  <v-card tile outlined color="indigo lighten-5">
+  <v-card outlined elevation="4" color="indigo lighten-5">
     <v-card-title class="headline">
       <span>{{ player.name }}</span>
       <v-divider vertical class="mx-6"></v-divider>
@@ -12,7 +12,7 @@
       </v-chip>
     </v-card-title>
 
-    <v-card-text class="pa-1">
+    <v-card-text>
       <MenuAction
         label="Chouette"
         :options="6"

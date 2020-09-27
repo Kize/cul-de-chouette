@@ -1,6 +1,6 @@
 <template>
-  <v-card tile class="mb-2">
-    <v-card-text class="pa-1">
+  <v-card outlined elevation="4" color="indigo lighten-5">
+    <v-card-text>
       <BevueMenuAction></BevueMenuAction>
     </v-card-text>
   </v-card>
