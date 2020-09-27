@@ -2,7 +2,7 @@
   <div class="scribe-panel">
     <v-row>
       <v-col cols="6">
-        <h1 class="mb-6">Gestion des scores - {{ name }}</h1>
+        <h1 class="mb-2">Gestion des scores - {{ name }}</h1>
       </v-col>
       <v-col cols="2">
         <v-btn>
@@ -21,8 +21,16 @@
       </v-col>
     </v-row>
 
-    <v-row class="mb-6" no-gutters v-for="player in players" :key="player.name">
-      <PlayerCard :player="player" />
+    <PlayersBanner :players="players"></PlayersBanner>
+
+    <v-row>
+      <v-col lg="6" md="12" sm="12">
+        <CurrentPlayerPanel :player="getCurrentPlayer()"></CurrentPlayerPanel>
+      </v-col>
+
+      <v-col lg="6" md="12" sm="12">
+        <MainActionsPanel :player="getCurrentPlayer()"></MainActionsPanel>
+      </v-col>
     </v-row>
 
     <v-dialog v-model="showSloubiDialog" persistent max-width="800">
@@ -73,11 +81,15 @@ import { mapGetters, mapState } from "vuex";
 import { Player } from "@/domain/player";
 import SloubiDialogCard from "@/views/scribe-panel/dialogs/SloubiDialogCard.vue";
 import GrelottineDialogCard from "@/views/scribe-panel/dialogs/GrelottineDialogCard.vue";
-import PlayerCard from "@/views/scribe-panel/player-card/PlayerCard.vue";
+import PlayersBanner from "@/views/scribe-panel/components/PlayersBanner.vue";
+import CurrentPlayerPanel from "@/views/scribe-panel/panels/CurrentPlayerPanel.vue";
+import MainActionsPanel from "@/views/scribe-panel/panels/MainActionsPanel.vue";
 
 @Component({
   components: {
-    PlayerCard,
+    CurrentPlayerPanel,
+    MainActionsPanel,
+    PlayersBanner,
     GrelottineDialogCard,
     SloubiDialogCard
   },
@@ -100,6 +112,7 @@ export default class ScribePanel extends Vue {
     display: false
   };
   players!: Array<Player>;
+  currentPlayerName!: string;
 
   @Watch("status")
   onGameStatusChange(newStatus: GameStatus): void {
@@ -112,6 +125,12 @@ export default class ScribePanel extends Vue {
         this.$store.dispatch("currentGame/handleEndGame");
         break;
     }
+  }
+
+  getCurrentPlayer(): Player {
+    return this.players.filter(
+      player => player.name === this.currentPlayerName
+    )[0];
   }
 
   async playSloubi(form: SloubiActionPayload): Promise<void> {

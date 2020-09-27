@@ -1,10 +1,21 @@
 <template>
-  <v-card tile class="mb-2">
+  <v-card tile outlined color="indigo lighten-5">
+    <v-card-title class="headline">
+      <span>{{ player.name }}</span>
+      <v-divider vertical class="mx-6"></v-divider>
+      <span>Score: {{ getPlayerScore(player.name) }}</span>
+
+      <v-spacer></v-spacer>
+
+      <v-chip small color="primary" v-if="player.hasGrelottine"
+        >Grelottine
+      </v-chip>
+    </v-card-title>
+
     <v-card-text class="pa-1">
       <MenuAction
         label="Chouette"
         :options="6"
-        :disabled="!isCurrentPlayer(player.name)"
         @click="basicPlay($event, playTypes.CHOUETTE)"
       >
       </MenuAction>
@@ -12,7 +23,6 @@
       <MenuAction
         label="Velute"
         :options="[3, 4, 5, 6]"
-        :disabled="!isCurrentPlayer(player.name)"
         @click="basicPlay($event, playTypes.VELUTE)"
       ></MenuAction>
 
@@ -22,7 +32,6 @@
         outlined
         large
         class="ma-2"
-        :disabled="!isCurrentPlayer(player.name)"
         @click="showChouetteVeluteDialog = true"
       >
         Chouette Velute
@@ -31,7 +40,6 @@
       <MenuAction
         label="Cul de chouette"
         :options="6"
-        :disabled="!isCurrentPlayer(player.name)"
         @click="basicPlay($event, playTypes.CUL_DE_CHOUETTE)"
       >
       </MenuAction>
@@ -43,7 +51,6 @@
         large
         class="ma-2"
         @click="showSuiteDialog = true"
-        :disabled="!isCurrentPlayer(player.name)"
         >Suite
       </v-btn>
 
@@ -53,7 +60,6 @@
         outlined
         large
         class="ma-2"
-        :disabled="!isCurrentPlayer(player.name)"
         @click="basicPlay($event, playTypes.NEANT)"
         >Néant
       </v-btn>
@@ -102,10 +108,14 @@ import SuiteDialogCard, {
   components: { SuiteDialogCard, ChouetteVeluteDialogCard, MenuAction },
   computed: {
     ...mapState("currentGame", ["players", "turnNumber"]),
-    ...mapGetters("currentGame", ["isCurrentPlayer", "playerNames"])
+    ...mapGetters("currentGame", [
+      "isCurrentPlayer",
+      "playerNames",
+      "getPlayerScore"
+    ])
   }
 })
-export default class MainPlayPanel extends Vue {
+export default class CurrentPlayerPanel extends Vue {
   @Prop() player!: Player;
 
   showChouetteVeluteDialog = false;

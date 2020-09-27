@@ -1,12 +1,28 @@
 <template>
   <div>
-    <MenuAction
-      label="Bévue"
-      :disabled="false"
-      :options="playerNames"
-      @click="applyBevue($event)"
-    >
-    </MenuAction>
+    <v-menu offset-y>
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          class="ma-2"
+          color="red accent-4"
+          dark
+          large
+          tile
+          v-bind="attrs"
+          v-on="on"
+          >Bévue
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item
+          v-for="value in playerNames"
+          :key="value"
+          @click="applyBevue(value)"
+        >
+          <v-list-item-title>{{ value }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
 
     <v-snackbar v-model="snackBarDisplay" :timeout="3000">
       Une bévue a été appliquée pour {{ playerNameBevue }}

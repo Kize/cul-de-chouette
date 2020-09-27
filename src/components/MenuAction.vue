@@ -4,7 +4,7 @@
       <v-btn
         :disabled="disabled"
         tile
-        color="primary"
+        :color="color || 'primary'"
         large
         class="ma-2"
         v-bind="attrs"
@@ -30,6 +30,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component({})
 export default class MenuAction extends Vue {
   @Prop(String) label!: string;
+  @Prop(String) color!: string;
   @Prop() options!: Array<string> | number;
   @Prop() disabled!: boolean;
 
