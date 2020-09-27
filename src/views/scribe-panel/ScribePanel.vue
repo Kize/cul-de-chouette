@@ -21,14 +21,8 @@
       </v-col>
     </v-row>
 
-    <v-row class="mb-6" no-gutters>
-      <v-col
-        v-for="player in players"
-        :key="player.name"
-        :cols="getColumnSize()"
-      >
-        <PlayerCard :player="player" />
-      </v-col>
+    <v-row class="mb-6" no-gutters v-for="player in players" :key="player.name">
+      <PlayerCard :player="player" />
     </v-row>
 
     <v-dialog v-model="showSloubiDialog" persistent max-width="800">
@@ -120,11 +114,6 @@ export default class ScribePanel extends Vue {
     }
   }
 
-  getColumnSize(): number {
-    const playersNumber = this.players.length;
-    return Math.floor(12 / playersNumber);
-  }
-
   async playSloubi(form: SloubiActionPayload): Promise<void> {
     try {
       await this.$store.dispatch("currentGame/sloubi", form);
@@ -133,10 +122,6 @@ export default class ScribePanel extends Vue {
       this.errorSnackBar.text = error.message;
       this.errorSnackBar.display = true;
     }
-  }
-
-  applyGrelottine(event: any): void {
-    console.log("GRELOTTINE !", event);
   }
 }
 </script>

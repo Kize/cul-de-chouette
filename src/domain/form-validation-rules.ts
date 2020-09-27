@@ -3,8 +3,8 @@ function isInteger(number: number): boolean {
 }
 
 export const newGameNameNameRules = [
-  (name?: string): boolean | string => {
-    if (name === undefined) {
+  (name?: string | null): boolean | string => {
+    if (name === undefined || name === null) {
       return "Un nom de partie est requis";
     } else if (name.length < 2) {
       return "2 caractères minimum";
@@ -17,8 +17,8 @@ export const newGameNameNameRules = [
 ];
 
 export const newPlayerNameRules = [
-  (name?: string): boolean | string => {
-    if (name === undefined) {
+  (name?: string | null): boolean | string => {
+    if (name === undefined || name === null) {
       return "Un prénom est requis";
     } else if (name.length < 2) {
       return "2 caractères minimum";

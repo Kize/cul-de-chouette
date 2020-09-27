@@ -25,6 +25,7 @@
               :hint="
                 form.grelottin ? `Score: ${getPlayerScore(form.grelottin)}` : ''
               "
+              no-data-text="Aucun joueur n'a de grelottine ou un score suffisant"
               persistent-hint
               clearable
               outlined
@@ -42,6 +43,7 @@
                   ? `Score: ${getPlayerScore(form.challengedPlayer)}`
                   : ''
               "
+              no-data-text="Aucun joueur n'a de grelottine ou un score suffisant"
               persistent-hint
               clearable
               outlined
