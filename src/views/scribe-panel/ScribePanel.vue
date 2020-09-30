@@ -10,11 +10,7 @@
         </v-btn>
       </v-col>
       <v-col cols="4">
-        <v-row justify="end">
-          <v-btn class="mx-2 my-1" @click="showGrelottineDialog = true">
-            Défi Grelottine !
-          </v-btn>
-        </v-row>
+        <v-row justify="end"></v-row>
       </v-col>
     </v-row>
 
@@ -33,44 +29,14 @@
         ></MainActionsPanel>
       </v-col>
     </v-row>
-
-    <v-dialog
-      v-model="showGrelottineDialog"
-      fullscreen
-      hide-overlay
-      transition="dialog-bottom-transition"
-    >
-      <GrelottineDialogCard
-        @close="showGrelottineDialog = false"
-      ></GrelottineDialogCard>
-    </v-dialog>
-
-    <v-snackbar v-model="errorSnackBar.display" :timeout="3000">
-      {{ errorSnackBar.text }}
-
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          color="blue"
-          text
-          v-bind="attrs"
-          @click="errorSnackBar.display = false"
-        >
-          Okay
-        </v-btn>
-      </template>
-    </v-snackbar>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import {
-  GameStatus,
-  SloubiActionPayload
-} from "@/store/current-game/current-game.interface";
+import { GameStatus } from "@/store/current-game/current-game.interface";
 import { mapGetters, mapState } from "vuex";
 import { Player } from "@/domain/player";
-import GrelottineDialogCard from "@/views/scribe-panel/dialogs/GrelottineDialogCard.vue";
 import PlayersBanner from "@/views/scribe-panel/components/PlayersBanner.vue";
 import CurrentPlayerPanel from "@/views/scribe-panel/panels/CurrentPlayerPanel.vue";
 import MainActionsPanel from "@/views/scribe-panel/panels/MainActionsPanel.vue";
@@ -79,8 +45,7 @@ import MainActionsPanel from "@/views/scribe-panel/panels/MainActionsPanel.vue";
   components: {
     CurrentPlayerPanel,
     MainActionsPanel,
-    PlayersBanner,
-    GrelottineDialogCard
+    PlayersBanner
   },
   computed: {
     ...mapState("currentGame", [
@@ -94,12 +59,6 @@ import MainActionsPanel from "@/views/scribe-panel/panels/MainActionsPanel.vue";
   }
 })
 export default class ScribePanel extends Vue {
-  showSloubiDialog = false;
-  showGrelottineDialog = false;
-  errorSnackBar = {
-    text: "",
-    display: false
-  };
   players!: Array<Player>;
   currentPlayerName!: string;
 
@@ -120,16 +79,6 @@ export default class ScribePanel extends Vue {
     return this.players.filter(
       player => player.name === this.currentPlayerName
     )[0];
-  }
-
-  async playSloubi(form: SloubiActionPayload): Promise<void> {
-    try {
-      await this.$store.dispatch("currentGame/sloubi", form);
-      this.showSloubiDialog = false;
-    } catch (error) {
-      this.errorSnackBar.text = error.message;
-      this.errorSnackBar.display = true;
-    }
   }
 }
 </script>

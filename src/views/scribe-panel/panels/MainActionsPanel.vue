@@ -5,7 +5,7 @@
         <BevueMenuAction></BevueMenuAction>
 
         <v-btn
-          class="mx-2 my-1"
+          class="ma-2"
           color="primary"
           tile
           outlined
@@ -13,6 +13,16 @@
           @click="showSloubiDialog = true"
         >
           Chante-Sloubi !
+        </v-btn>
+
+        <v-btn
+          class="ma-2"
+          color="yellow accent-4"
+          tile
+          large
+          @click="showGrelottineDialog = true"
+        >
+          Défi Grelottine !
         </v-btn>
       </v-card-text>
     </v-card>
@@ -25,6 +35,17 @@
         @confirm="playSloubi($event)"
       >
       </SloubiDialogCard>
+    </v-dialog>
+
+    <v-dialog
+      v-model="showGrelottineDialog"
+      fullscreen
+      hide-overlay
+      transition="dialog-bottom-transition"
+    >
+      <GrelottineDialogCard
+        @close="showGrelottineDialog = false"
+      ></GrelottineDialogCard>
     </v-dialog>
 
     <v-snackbar v-model="errorSnackBar.display" :timeout="3000">
@@ -51,11 +72,13 @@ import { SloubiActionPayload } from "@/store/current-game/current-game.interface
 import { Player } from "@/domain/player";
 import { mapGetters } from "vuex";
 import SloubiDialogCard from "@/views/scribe-panel/dialogs/SloubiDialogCard.vue";
+import GrelottineDialogCard from "@/views/scribe-panel/dialogs/GrelottineDialogCard.vue";
 
 @Component({
   components: {
     BevueMenuAction,
-    SloubiDialogCard
+    SloubiDialogCard,
+    GrelottineDialogCard
   },
   computed: {
     ...mapGetters("currentGame", ["playerNames"])
@@ -65,6 +88,8 @@ export default class MainActionsPanel extends Vue {
   @Prop() currentPlayer!: Player;
 
   showSloubiDialog = false;
+  showGrelottineDialog = false;
+
   errorSnackBar = {
     text: "",
     display: false
