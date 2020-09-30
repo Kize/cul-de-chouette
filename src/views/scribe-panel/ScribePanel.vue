@@ -14,9 +14,6 @@
           <v-btn class="mx-2 my-1" @click="showGrelottineDialog = true">
             Défi Grelottine !
           </v-btn>
-          <v-btn class="mx-2 my-1" @click="showSloubiDialog = true">
-            Chante-Sloubi !
-          </v-btn>
         </v-row>
       </v-col>
     </v-row>
@@ -25,23 +22,17 @@
 
     <v-row>
       <v-col lg="6" md="12" sm="12">
-        <CurrentPlayerPanel :player="getCurrentPlayer()"></CurrentPlayerPanel>
+        <CurrentPlayerPanel
+          :currentPlayer="getCurrentPlayer()"
+        ></CurrentPlayerPanel>
       </v-col>
 
       <v-col lg="6" md="12" sm="12">
-        <MainActionsPanel :player="getCurrentPlayer()"></MainActionsPanel>
+        <MainActionsPanel
+          :currentPlayer="getCurrentPlayer()"
+        ></MainActionsPanel>
       </v-col>
     </v-row>
-
-    <v-dialog v-model="showSloubiDialog" persistent max-width="800">
-      <SloubiDialogCard
-        :player-names="playerNames"
-        :current-player-name="currentPlayerName"
-        @cancel="showSloubiDialog = false"
-        @confirm="playSloubi($event)"
-      >
-      </SloubiDialogCard>
-    </v-dialog>
 
     <v-dialog
       v-model="showGrelottineDialog"
@@ -79,7 +70,6 @@ import {
 } from "@/store/current-game/current-game.interface";
 import { mapGetters, mapState } from "vuex";
 import { Player } from "@/domain/player";
-import SloubiDialogCard from "@/views/scribe-panel/dialogs/SloubiDialogCard.vue";
 import GrelottineDialogCard from "@/views/scribe-panel/dialogs/GrelottineDialogCard.vue";
 import PlayersBanner from "@/views/scribe-panel/components/PlayersBanner.vue";
 import CurrentPlayerPanel from "@/views/scribe-panel/panels/CurrentPlayerPanel.vue";
@@ -90,8 +80,7 @@ import MainActionsPanel from "@/views/scribe-panel/panels/MainActionsPanel.vue";
     CurrentPlayerPanel,
     MainActionsPanel,
     PlayersBanner,
-    GrelottineDialogCard,
-    SloubiDialogCard
+    GrelottineDialogCard
   },
   computed: {
     ...mapState("currentGame", [

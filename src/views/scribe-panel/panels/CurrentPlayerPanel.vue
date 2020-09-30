@@ -1,13 +1,13 @@
 <template>
   <v-card outlined elevation="4" color="indigo lighten-5">
     <v-card-title class="headline">
-      <span>{{ player.name }}</span>
+      <span>{{ currentPlayer.name }}</span>
       <v-divider vertical class="mx-6"></v-divider>
-      <span>Score: {{ getPlayerScore(player.name) }}</span>
+      <span>Score: {{ getPlayerScore(currentPlayer.name) }}</span>
 
       <v-spacer></v-spacer>
 
-      <v-chip small color="primary" v-if="player.hasGrelottine"
+      <v-chip small color="primary" v-if="currentPlayer.hasGrelottine"
         >Grelottine
       </v-chip>
     </v-card-title>
@@ -67,7 +67,7 @@
 
     <v-dialog v-model="showChouetteVeluteDialog" persistent max-width="800">
       <ChouetteVeluteDialogCard
-        :current-player-name="player.name"
+        :current-player-name="currentPlayer.name"
         :player-names="playerNames"
         @cancel="showChouetteVeluteDialog = false"
         @confirm="playChouetteVelute($event)"
@@ -77,7 +77,7 @@
 
     <v-dialog v-model="showSuiteDialog" persistent max-width="800">
       <SuiteDialogCard
-        :current-player-name="player.name"
+        :current-player-name="currentPlayer.name"
         :player-names="playerNames"
         @cancel="showSuiteDialog = false"
         @confirm="playSuite"
@@ -116,7 +116,7 @@ import SuiteDialogCard, {
   }
 })
 export default class CurrentPlayerPanel extends Vue {
-  @Prop() player!: Player;
+  @Prop() currentPlayer!: Player;
 
   showChouetteVeluteDialog = false;
   showSuiteDialog = false;
@@ -127,7 +127,7 @@ export default class CurrentPlayerPanel extends Vue {
 
   basicPlay(value: number, designation: HistoryLineType): void {
     const action: HistoryLineAction = {
-      playerName: this.player.name,
+      playerName: this.currentPlayer.name,
       designation,
       value,
       turnNumber: this.turnNumber
@@ -137,7 +137,7 @@ export default class CurrentPlayerPanel extends Vue {
 
   playChouetteVelute(form: ChouetteVeluteForm): void {
     const action: ChouetteVeluteHistoryLineAction = {
-      playerName: this.player.name,
+      playerName: this.currentPlayer.name,
       designation: HistoryLineType.CHOUETTE_VELUTE,
       value: form.value,
       shoutingPlayers: form.playerNames,
@@ -149,7 +149,7 @@ export default class CurrentPlayerPanel extends Vue {
 
   playSuite(form: SuiteForm): void {
     const action: SuiteHistoryLineAction = {
-      playerName: this.player.name,
+      playerName: this.currentPlayer.name,
       designation: HistoryLineType.SUITE,
       multiplier: form.multiplier,
       loosingPlayerName: form.loosingPlayerName,
