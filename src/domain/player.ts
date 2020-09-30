@@ -17,6 +17,20 @@ export function getNextPlayer(
   return nextPlayer ? nextPlayer.name : players[0].name;
 }
 
+export function computePlayerScore(
+  player: Player,
+  lastLineIndex?: number
+): number {
+  const history =
+    lastLineIndex === undefined
+      ? player.history
+      : player.history.slice(0, lastLineIndex + 1);
+
+  return history.reduce((score: number, line: HistoryLine) => {
+    return score + line.amount;
+  }, 0);
+}
+
 export function byName(name: string) {
   return (player: Player) => {
     return player.name === name;

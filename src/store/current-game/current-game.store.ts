@@ -5,7 +5,12 @@ import {
   SloubiActionPayload,
   StartGameData
 } from "@/store/current-game/current-game.interface";
-import { byName, getNextPlayer, Player } from "@/domain/player";
+import {
+  byName,
+  computePlayerScore,
+  getNextPlayer,
+  Player
+} from "@/domain/player";
 import {
   BasicHistoryLineAction,
   ChouetteVeluteHistoryLineAction,
@@ -53,9 +58,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
           return 0;
         }
 
-        return player.history.reduce((score: number, line: HistoryLine) => {
-          return score + line.amount;
-        }, 0);
+        return computePlayerScore(player);
       };
     },
     highestPlayer(state, getters): { name: string; score: number } {
@@ -207,10 +210,16 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       const isGameFinished = await dispatch("checkEndGame");
 
       if (!isGameFinished) {
-        commit(
-          "setCurrentPlayerName",
-          getNextPlayer(state.players, state.currentPlayerName!)
+        const nextPlayerName = getNextPlayer(
+          state.players,
+          state.currentPlayerName!
         );
+
+        commit("setCurrentPlayerName", nextPlayerName);
+
+        if (nextPlayerName === state.players[0].name) {
+          commit("incrementTurnNumber");
+        }
 
         await dispatch("saveGameToLocalStorage");
       }

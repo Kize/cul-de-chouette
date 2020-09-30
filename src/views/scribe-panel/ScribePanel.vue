@@ -1,18 +1,15 @@
 <template>
   <div class="scribe-panel">
-    <v-row>
-      <v-col cols="6">
-        <h1 class="mb-2">Gestion des scores - {{ name }}</h1>
-      </v-col>
-      <v-col cols="2">
-        <v-btn>
+    <v-app-bar flat class="d-flex justify-center">
+      <v-toolbar-title class="mr-8">
+        Gestion des scores - {{ name }}
+      </v-toolbar-title>
+      <router-link :to="currentGameHistoryRoutePath">
+        <v-btn tile small>
           Afficher l'historique
         </v-btn>
-      </v-col>
-      <v-col cols="4">
-        <v-row justify="end"></v-row>
-      </v-col>
-    </v-row>
+      </router-link>
+    </v-app-bar>
 
     <PlayersBanner :players="players"></PlayersBanner>
 
@@ -40,6 +37,7 @@ import { Player } from "@/domain/player";
 import PlayersBanner from "@/views/scribe-panel/components/PlayersBanner.vue";
 import CurrentPlayerPanel from "@/views/scribe-panel/panels/CurrentPlayerPanel.vue";
 import MainActionsPanel from "@/views/scribe-panel/panels/MainActionsPanel.vue";
+import { ROUTES } from "@/router";
 
 @Component({
   components: {
@@ -61,6 +59,7 @@ import MainActionsPanel from "@/views/scribe-panel/panels/MainActionsPanel.vue";
 export default class ScribePanel extends Vue {
   players!: Array<Player>;
   currentPlayerName!: string;
+  readonly currentGameHistoryRoutePath = ROUTES.CURRENT_GAME_HISTORY.path;
 
   @Watch("status")
   onGameStatusChange(newStatus: GameStatus): void {
