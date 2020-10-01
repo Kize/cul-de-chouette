@@ -121,7 +121,7 @@ En cas de grand nombre de joueurs (plus de 6), il est possible de jouer en doubl
 Si le nombre de joueurs est vraiment énorme, il est tout à fait possible de jouer par équipe de plus de 2 personnes, en sachant qu’il faut repartir les membres de chaque équipe de manière équivalente tout autour de la table.
 
 
-### Utilisation
+## Utilisation
 
 
 Les règles du jeu sont disponibles ici : 
