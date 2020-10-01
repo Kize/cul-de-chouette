@@ -40,6 +40,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 </h1>
 
 Les règles du jeu sont disponibles ici : [règles](https://lecoindujeu.com/jeu-de-societe/le-cul-de-chouette/)
+
 Sur cette interface, vous pouvez voir la description du projet.
 
 Plusieurs champs sont a saisir : 
@@ -48,3 +49,9 @@ Plusieurs champs sont a saisir :
 
 
 Une fois ces éléments saisie, vous pouvez lancer la partie.
+
+<h1 align="center">
+  <img src="img/partie.png" alt="partie">
+  <br />
+  Ecran principale d'une partie.
+</h1>
