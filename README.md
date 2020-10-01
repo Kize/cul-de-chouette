@@ -39,7 +39,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
   Page d'accueil actuelle.
 </h1>
 
-Les règles du jeu sont disponibles ici : [règles](https://lecoindujeu.com/jeu-de-societe/le-cul-de-chouette/)
+Les règles du jeu sont disponibles ici : [règles](https://docs.google.com/document/d/111XDCFHeqVqV-DvnJqJ31rp05tMZbmpxJWQDvPJdIHY/edit)
 
 Sur cette interface, vous pouvez voir la description du projet.
 
