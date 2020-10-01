@@ -27,3 +27,14 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+## French part 
+
+### Utilisation
+
+<h1 align="center">
+  <img src="img/accueil.png" alt="accueil">
+  <br />
+  Page d'accueil actuelle.
+</h1>
