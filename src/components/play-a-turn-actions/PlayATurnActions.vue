@@ -15,18 +15,6 @@
       @click="basicPlay($event, playTypes.VELUTE)"
     ></MenuAction>
 
-    <v-btn
-      tile
-      color="primary"
-      outlined
-      large
-      class="ma-2"
-      :disabled="!areActionsEnabled()"
-      @click="showChouetteVeluteDialog = true"
-    >
-      Chouette Velute
-    </v-btn>
-
     <MenuAction
       label="Cul de chouette"
       :disabled="!areActionsEnabled()"
@@ -42,13 +30,25 @@
       large
       class="ma-2"
       :disabled="!areActionsEnabled()"
+      @click="showChouetteVeluteDialog = true"
+    >
+      Chouette Velute
+    </v-btn>
+
+    <v-btn
+      tile
+      color="primary"
+      outlined
+      large
+      class="ma-2"
+      :disabled="!areActionsEnabled()"
       @click="showSuiteDialog = true"
       >Suite
     </v-btn>
 
     <v-btn
       tile
-      color="primary"
+      color="grey darken-4"
       outlined
       large
       class="ma-2"
