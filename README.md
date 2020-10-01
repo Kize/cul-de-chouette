@@ -3,15 +3,10 @@
 # Cul-de-chouette [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome#readme)
 
 
-## French part 
+## Descriptif du projet
 
 ### Utilisation
 
-<h1 align="center">
-  <img src="img/accueil.png" alt="accueil">
-  <br />
-  Page d'accueil actuelle.
-</h1>
 
 Les règles du jeu sont disponibles ici : [règles](https://docs.google.com/document/d/111XDCFHeqVqV-DvnJqJ31rp05tMZbmpxJWQDvPJdIHY/edit)
 
@@ -24,8 +19,3 @@ Plusieurs champs sont a saisir :
 
 Une fois ces éléments saisie, vous pouvez lancer la partie.
 
-<h1 align="center">
-  <img src="img/partie.png" alt="partie">
-  <br />
-  Ecran principale d'une partie.
-</h1>
