@@ -2,7 +2,6 @@ export enum HistoryLineType {
   NEANT = "néant",
   BEVUE = "bévue",
   GRELOTTINE_CHALLENGE = "Défi de grelottine",
-  GRELOTTINE_SCORE = "Résultat lors d\'une grelottine",
   CHOUETTE = "chouette",
   VELUTE = "velute",
   SUITE = "suite",
@@ -26,7 +25,8 @@ export interface HistoryLineApply {
 
 export type HistoryLineAction =
   | BasicHistoryLineAction
-  | ChouetteVeluteHistoryLineAction;
+  | ChouetteVeluteHistoryLineAction
+  | SuiteHistoryLineAction;
 
 export interface BasicHistoryLineAction {
   designation: HistoryLineType;
@@ -48,7 +48,7 @@ export interface SuiteHistoryLineAction {
   playerName: string;
   multiplier: number;
   loosingPlayerName: string;
-  isVelute: boolean
+  isVelute: boolean;
   turnNumber?: number;
 }
 
