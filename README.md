@@ -3,7 +3,7 @@
 # Cul-de-chouette [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome#readme)
 
 
-## Descriptif du projet
+# Descriptif du projet
 
 
 <h1 align="center">
@@ -16,14 +16,14 @@ Kaamelott est une série de fantasy médiévale. En premier lieu, il y a eu “D
 
 Ce court-métrage, inspiré par la légende arthurienne, est réalisé par Alexandre Astier. Son succès poussera ce dernier a créé plusieurs pilotes pour une série.
 
-## Le Cul de chouette
+# Le Cul de chouette
 
 Il faut savoir que le Cul de Chouette est un gag récurent dans les quatre premières saisons. Dans chacune d’elles, il est mentionné au cours d’un épisode.
 
 Le Cul de chouette est un jeu originaire de la série Kaamelott et se joue avec trois dés. Le but du jeu est d'atteindre ou dépasser 343 points, le score à atteindre provenant des initiales du nom du jeu (CDC), soit les 3e, 4e et 3e lettres de l'alphabet.
 
 
-## Descriptif du jeu
+# Descriptif du jeu
 
 Les [règles](https://docs.google.com/document/d/111XDCFHeqVqV-DvnJqJ31rp05tMZbmpxJWQDvPJdIHY/edit) sont définies ici.
 
@@ -121,7 +121,7 @@ En cas de grand nombre de joueurs (plus de 6), il est possible de jouer en doubl
 Si le nombre de joueurs est vraiment énorme, il est tout à fait possible de jouer par équipe de plus de 2 personnes, en sachant qu’il faut repartir les membres de chaque équipe de manière équivalente tout autour de la table.
 
 
-## Utilisation
+# Utilisation
 
 
 Les règles du jeu sont disponibles ici : 
