@@ -15,7 +15,6 @@ import {
   BasicHistoryLineAction,
   ChouetteVeluteHistoryLineAction,
   getAmount,
-  HistoryLine,
   HistoryLineAction,
   HistoryLineApply,
   HistoryLineType,
@@ -23,7 +22,10 @@ import {
   SuiteHistoryLineAction
 } from "@/domain/history";
 import { RootState } from "@/store/app.state";
-import { GrelottineActionPayload, GrelottineForm } from "@/domain/grelottine";
+import {
+  GrelottineActionPayload,
+  isGrelottineChallengeSuccessful
+} from "@/domain/grelottine";
 
 export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
   namespaced: true,
@@ -45,6 +47,11 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         .filter(player => player.hasGrelottine)
         .filter(player => getters.getPlayerScore(player.name) > 0)
         .map(player => player.name);
+    },
+    currentPlayer(state): Player {
+      return state.players.find(
+        player => player.name === state.currentPlayerName
+      )!;
     },
     isCurrentPlayer(state) {
       return (playerName: string): boolean => {
@@ -252,10 +259,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     saveGameToLocalStorage({ state }, storage = localStorage): void {
       storage.setItem("currentGame", JSON.stringify(state));
     },
-    playATurn(
-      { state, commit, dispatch, getters },
-      action: HistoryLineAction
-    ): void {
+    playATurn({ state, commit, dispatch }, action: HistoryLineAction): void {
       if (state.currentPlayerName !== action.playerName) {
         return;
       }
@@ -274,7 +278,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       dispatch("handleEndTurn");
     },
     handleChouetteVeluteAction(
-      { state, commit, dispatch, getters },
+      { commit, getters },
       action: ChouetteVeluteHistoryLineAction
     ): void {
       if (action.shoutingPlayers.length === 1) {
@@ -315,10 +319,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         );
       }
     },
-    handleSuiteAction(
-      { state, commit, dispatch, getters },
-      action: SuiteHistoryLineAction
-    ): void {
+    handleSuiteAction({ commit }, action: SuiteHistoryLineAction): void {
       const isCurrentPlayerTheLooser =
         action.loosingPlayerName === action.playerName;
 
@@ -346,20 +347,38 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       commit("addHistoryLine", historyLineApply);
     },
     async grelottineChallenge(
-      { state, commit, dispatch },
+      { commit, dispatch },
       grelottineActionPayload: GrelottineActionPayload
     ): Promise<void> {
-      if (grelottineActionPayload.challengedPlayerScore !== 0) {
-        const apply: HistoryLineApply = {
-          playerName: grelottineActionPayload.challengedPlayer,
-          designation: HistoryLineType.GRELOTTINE_SCORE,
-          amount: Number(grelottineActionPayload.challengedPlayerScore)
-        };
-        commit("addHistoryLine", apply);
+      switch (grelottineActionPayload.challengedPlayerAction.designation) {
+        case HistoryLineType.CHOUETTE_VELUTE:
+          dispatch(
+            "handleChouetteVeluteAction",
+            grelottineActionPayload.challengedPlayerAction
+          );
+          break;
+        case HistoryLineType.SUITE:
+          dispatch(
+            "handleSuiteAction",
+            grelottineActionPayload.challengedPlayerAction
+          );
+          break;
+        default:
+          commit(
+            "addHistoryLine",
+            mapHistoryActionToApply(
+              grelottineActionPayload.challengedPlayerAction
+            )
+          );
       }
 
+      const isChallengePassed = isGrelottineChallengeSuccessful(
+        grelottineActionPayload.challenge,
+        grelottineActionPayload.challengedPlayerAction
+      );
+
       let winner: string, looser: string;
-      if (grelottineActionPayload.isChallengePassed) {
+      if (isChallengePassed) {
         winner = grelottineActionPayload.challengedPlayer;
         looser = grelottineActionPayload.grelottin;
       } else {
@@ -370,14 +389,14 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       const winnerApply: HistoryLineApply = {
         playerName: winner,
         designation: HistoryLineType.GRELOTTINE_CHALLENGE,
-        amount: grelottineActionPayload.amount
+        amount: grelottineActionPayload.gambledAmount
       };
       commit("addHistoryLine", winnerApply);
 
       const looserApply: HistoryLineApply = {
         playerName: looser,
         designation: HistoryLineType.GRELOTTINE_CHALLENGE,
-        amount: -grelottineActionPayload.amount
+        amount: -grelottineActionPayload.gambledAmount
       };
       commit("addHistoryLine", looserApply);
 

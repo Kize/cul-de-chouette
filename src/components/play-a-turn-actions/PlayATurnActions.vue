@@ -2,6 +2,7 @@
   <div>
     <MenuAction
       label="Chouette"
+      :disabled="!areActionsEnabled()"
       :options="6"
       @click="basicPlay($event, playTypes.CHOUETTE)"
     >
@@ -9,6 +10,7 @@
 
     <MenuAction
       label="Velute"
+      :disabled="!areActionsEnabled()"
       :options="[3, 4, 5, 6]"
       @click="basicPlay($event, playTypes.VELUTE)"
     ></MenuAction>
@@ -19,6 +21,7 @@
       outlined
       large
       class="ma-2"
+      :disabled="!areActionsEnabled()"
       @click="showChouetteVeluteDialog = true"
     >
       Chouette Velute
@@ -26,6 +29,7 @@
 
     <MenuAction
       label="Cul de chouette"
+      :disabled="!areActionsEnabled()"
       :options="6"
       @click="basicPlay($event, playTypes.CUL_DE_CHOUETTE)"
     >
@@ -37,6 +41,7 @@
       outlined
       large
       class="ma-2"
+      :disabled="!areActionsEnabled()"
       @click="showSuiteDialog = true"
       >Suite
     </v-btn>
@@ -47,13 +52,14 @@
       outlined
       large
       class="ma-2"
+      :disabled="!areActionsEnabled()"
       @click="basicPlay($event, playTypes.NEANT)"
       >Néant
     </v-btn>
 
     <v-dialog v-model="showChouetteVeluteDialog" persistent max-width="800">
       <ChouetteVeluteDialogCard
-        :current-player-name="currentPlayer.name"
+        :current-player-name="currentPlayerName"
         :player-names="playerNames"
         @cancel="showChouetteVeluteDialog = false"
         @confirm="playChouetteVelute($event)"
@@ -63,7 +69,7 @@
 
     <v-dialog v-model="showSuiteDialog" persistent max-width="800">
       <SuiteDialogCard
-        :current-player-name="currentPlayer.name"
+        :current-player-name="currentPlayerName"
         :player-names="playerNames"
         @cancel="showSuiteDialog = false"
         @confirm="playSuite"
@@ -93,19 +99,24 @@ import SuiteDialogCard, {
   components: { SuiteDialogCard, ChouetteVeluteDialogCard, MenuAction }
 })
 export default class PlayATurnActions extends Vue {
-  @Prop() currentPlayer!: Player;
+  @Prop() currentPlayerName!: string;
   @Prop() players!: Array<Player>;
   @Prop() playerNames!: Array<string>;
-  @Prop() turnNumber!: number;
+  @Prop() turnNumber?: number;
+  @Prop() disabled?: boolean;
   readonly playTypes = HistoryLineType;
 
   showChouetteVeluteDialog = false;
   showSuiteDialog = false;
 
+  areActionsEnabled(): boolean {
+    return !this.disabled;
+  }
+
   @Emit()
   basicPlay(value: number, designation: HistoryLineType): HistoryLineAction {
     return {
-      playerName: this.currentPlayer.name,
+      playerName: this.currentPlayerName,
       designation,
       value,
       turnNumber: this.turnNumber
@@ -117,7 +128,7 @@ export default class PlayATurnActions extends Vue {
     form: ChouetteVeluteForm
   ): ChouetteVeluteHistoryLineAction {
     const action: ChouetteVeluteHistoryLineAction = {
-      playerName: this.currentPlayer.name,
+      playerName: this.currentPlayerName,
       designation: HistoryLineType.CHOUETTE_VELUTE,
       value: form.value,
       shoutingPlayers: form.playerNames,
@@ -131,7 +142,7 @@ export default class PlayATurnActions extends Vue {
   @Emit()
   playSuite(form: SuiteForm): SuiteHistoryLineAction {
     const action: SuiteHistoryLineAction = {
-      playerName: this.currentPlayer.name,
+      playerName: this.currentPlayerName,
       designation: HistoryLineType.SUITE,
       multiplier: form.multiplier,
       loosingPlayerName: form.loosingPlayerName,

@@ -14,7 +14,7 @@
 
     <v-card-text>
       <PlayATurnActions
-        :current-player="currentPlayer"
+        :current-player-name="currentPlayer.name"
         :players="players"
         :player-names="playerNames"
         :turn-number="turnNumber"
