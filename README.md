@@ -12,11 +12,16 @@
   Kaamelott
 </h1>
 
-Kaamelott est une série de fantasy médiévale. En premier lieu, il y a eu “Dies iræ”, sorti en  2003. Ce court-métrage, inspiré par la légende arthurienne, est réalisé par Alexandre Astier. Son succès poussera ce dernier a créé plusieurs pilotes pour une série.
+Kaamelott est une série de fantasy médiévale. En premier lieu, il y a eu “Dies iræ”, sorti en  2003.
+
+Ce court-métrage, inspiré par la légende arthurienne, est réalisé par Alexandre Astier. Son succès poussera ce dernier a créé plusieurs pilotes pour une série.
 
 ### Le Cul de chouette
 
+Il faut savoir que le Cul de Chouette est un gag récurent dans les quatre premières saisons. Dans chacune d’elles, il est mentionné au cours d’un épisode.
+
 Le Cul de chouette est un jeu originaire de la série Kaamelott et se joue avec trois dés. Le but du jeu est d'atteindre ou dépasser 343 points, le score à atteindre provenant des initiales du nom du jeu (CDC), soit les 3e, 4e et 3e lettres de l'alphabet.
+
 
 ### Utilisation
 
