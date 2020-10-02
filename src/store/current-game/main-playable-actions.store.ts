@@ -34,6 +34,10 @@ export const MainPlayableActionsStoreModule: Module<
         case HistoryLineType.SUITE:
           dispatch("handleSuiteAction", action);
           break;
+        case HistoryLineType.NEANT:
+          commit("currentGame/addGrelottine", action.playerName, {
+            root: true
+          });
         default:
           commit(
             "currentGame/addHistoryLine",

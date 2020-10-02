@@ -119,10 +119,13 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
           amount: apply.amount,
           turnNumber: apply.turnNumber
         });
+      }
+    },
+    addGrelottine(state, playerName: string): void {
+      const player = state.players.find(byName(playerName));
 
-        if (apply.designation === HistoryLineType.NEANT) {
-          player.hasGrelottine = true;
-        }
+      if (player) {
+        player.hasGrelottine = true;
       }
     },
     removeGrelottine(state, playerName: string): void {
