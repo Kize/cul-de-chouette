@@ -3,6 +3,7 @@ import {
   CurrentGameState,
   GameStatus,
   NewGameForm,
+  SavedCurrentGame,
   SloubiActionPayload
 } from "@/store/current-game/current-game.interface";
 import {
@@ -174,8 +175,12 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
 
       await dispatch("saveGameToLocalStorage");
     },
-    resumeGame({ commit }, currentGame: CurrentGameState): void {
+    resumeGame({ commit }, currentGame: SavedCurrentGame): void {
       commit("setGame", currentGame);
+      commit(
+        "levelOne/setIsSouffletteEnabled",
+        currentGame.levelOne.isSouffletteEnabled
+      );
     },
     async checkEndGame({ commit, getters, dispatch }): Promise<boolean> {
       const highestPlayer = getters.highestPlayer;
@@ -288,28 +293,11 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       { commit, dispatch },
       grelottineActionPayload: GrelottineActionPayload
     ): Promise<void> {
-      switch (grelottineActionPayload.challengedPlayerAction.designation) {
-        case HistoryLineType.CHOUETTE_VELUTE:
-          dispatch(
-            "handleChouetteVeluteAction",
-            grelottineActionPayload.challengedPlayerAction
-          );
-          break;
-        case HistoryLineType.SUITE:
-          dispatch(
-            "currentGame/play/handleSuiteAction",
-            grelottineActionPayload.challengedPlayerAction,
-            { root: true }
-          );
-          break;
-        default:
-          commit(
-            "addHistoryLine",
-            mapHistoryActionToApply(
-              grelottineActionPayload.challengedPlayerAction
-            )
-          );
-      }
+      dispatch(
+        "currentGame/play/handleChallengedPlayerAction",
+        grelottineActionPayload.challengedPlayerAction,
+        { root: true }
+      );
 
       const isChallengePassed = isGrelottineChallengeSuccessful(
         grelottineActionPayload.challenge,

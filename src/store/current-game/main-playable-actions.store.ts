@@ -129,6 +129,25 @@ export const MainPlayableActionsStoreModule: Module<
           { root: true }
         );
       }
+    },
+    handleChallengedPlayerAction(
+      { commit, dispatch },
+      lineAction: HistoryLineAction
+    ): void {
+      switch (lineAction.designation) {
+        case HistoryLineType.CHOUETTE_VELUTE:
+          dispatch("handleChouetteVeluteAction", lineAction);
+          break;
+        case HistoryLineType.SUITE:
+          dispatch("handleSuiteAction", lineAction);
+          break;
+        default:
+          commit(
+            "currentGame/addHistoryLine",
+            mapHistoryActionToApply(lineAction),
+            { root: true }
+          );
+      }
     }
   }
 };
