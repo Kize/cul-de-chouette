@@ -22,7 +22,7 @@
             <v-col cols="6">
               <v-select
                 label="Grelottin"
-                :items="grelottinePlayers"
+                :items="getGrelottinePlayerNames()"
                 v-model="form.grelottin"
                 :rules="getSelectPlayerRules()"
                 :hint="
@@ -40,7 +40,7 @@
             <v-col cols="6">
               <v-select
                 label="Joueur défié"
-                :items="grelottinePlayers"
+                :items="getGrelottinePlayerNames()"
                 v-model="form.challengedPlayer"
                 :rules="getSelectPlayerRules()"
                 :hint="
@@ -134,6 +134,7 @@ import {
 } from "@/domain/form-validation-rules";
 import PlayATurnActions from "@/components/play-a-turn-actions/PlayATurnActions.vue";
 import { HistoryLineAction } from "@/domain/history";
+import { Player } from "@/domain/player";
 
 const INITIAL_FORM: GrelottineForm = {
   gambledAmount: 0
@@ -146,7 +147,7 @@ const INITIAL_FORM: GrelottineForm = {
     ...mapGetters("currentGame", [
       "currentPlayer",
       "getPlayerScore",
-      "grelottinePlayers",
+      "getPlayerScore",
       "playerNames"
     ])
   }
@@ -157,9 +158,18 @@ export default class GrelottineDialogCard extends Vue {
   readonly inputPositiveIntegerRules = inputPositiveIntegerRules;
 
   readonly getPlayerScore!: (name: string) => number;
+  players!: Array<Player>;
 
   form: GrelottineForm = { ...INITIAL_FORM };
   isFormValid = true;
+
+  getGrelottinePlayerNames(): Array<string> {
+    return this.players
+      .filter(
+        player => player.hasGrelottine && this.getPlayerScore(player.name) > 0
+      )
+      .map(player => player.name);
+  }
 
   getSelectPlayerRules() {
     return [
