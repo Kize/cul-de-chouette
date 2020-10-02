@@ -10,7 +10,10 @@ import {
   SuiteHistoryLineAction
 } from "@/domain/history";
 
-export const MainPlayableActionsStoreModule: Module<Object, RootState> = {
+export const MainPlayableActionsStoreModule: Module<
+  Record<string, any>,
+  RootState
+> = {
   namespaced: true,
   actions: {
     playATurn(

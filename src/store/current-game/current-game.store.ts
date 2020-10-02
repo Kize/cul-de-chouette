@@ -45,14 +45,6 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     playerNames(state): Array<string> {
       return state.players.map(player => player.name);
     },
-    grelottinePlayers(state, getters): Array<string> {
-      return state.players
-        .filter(
-          player =>
-            player.hasGrelottine && getters.getPlayerScore(player.name) > 0
-        )
-        .map(player => player.name);
-    },
     currentPlayer(state): Player {
       return state.players.find(
         player => player.name === state.currentPlayerName
