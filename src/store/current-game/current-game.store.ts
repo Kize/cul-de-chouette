@@ -87,11 +87,11 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       state.players = newGame.players;
       state.currentPlayerName = newGame.currentPlayerName;
     },
-    setCurrentPlayerName(state, name: string): void {
-      state.currentPlayerName = name;
-    },
     setGameStatus(state, status: GameStatus): void {
       state.status = status;
+    },
+    setCurrentPlayerName(state, name: string): void {
+      state.currentPlayerName = name;
     },
     incrementTurnNumber(state): void {
       state.turnNumber += 1;
@@ -163,38 +163,6 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       commit("setGame", newGame);
       await dispatch("saveGameToLocalStorage");
     },
-    async sloubi(
-      { state, commit, dispatch },
-      sloubi: SloubiActionPayload
-    ): Promise<void> {
-      if (state.currentPlayerName !== state.players[0].name) {
-        throw new Error("Le sloubi ne peut être tenté qu'en début de tour.");
-      }
-
-      if (state.players.length > 5) {
-        throw new Error("Le jeu n'autorise que 6 joueurs dans une partie.");
-      }
-
-      if (state.players.map(player => player.name).includes(sloubi.name)) {
-        throw new Error("Le nom de ce joueur est déjà pris.");
-      }
-
-      const player: Player = {
-        name: sloubi.name,
-        history: [
-          {
-            designation: HistoryLineType.SLOUBI,
-            amount: Number(sloubi.score),
-            turnNumber: state.turnNumber
-          }
-        ],
-        hasGrelottine: false
-      };
-
-      commit("addPlayer", { player, previousPlayer: sloubi.previousPlayer });
-
-      await dispatch("saveGameToLocalStorage");
-    },
     resumeGame({ commit }, currentGame: CurrentGameState): void {
       commit("setGame", currentGame);
     },
@@ -256,6 +224,55 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     saveGameToLocalStorage({ state }, storage = localStorage): void {
       storage.setItem("currentGame", JSON.stringify(state));
     },
+    applyBevue({ state, commit, dispatch }, playerName: string): void {
+      const player = state.players.find(byName(playerName));
+      if (player) {
+        const action: HistoryLineAction = {
+          playerName,
+          value: 0,
+          designation: HistoryLineType.BEVUE
+        };
+        commit("addHistoryLine", mapHistoryActionToApply(action));
+
+        dispatch("saveGameToLocalStorage");
+      } else {
+        throw new Error(
+          "La bévue n'a pas été appliquée. Le joueur n'a pas été trouvé"
+        );
+      }
+    },
+    async sloubi(
+      { state, commit, dispatch },
+      sloubi: SloubiActionPayload
+    ): Promise<void> {
+      if (state.currentPlayerName !== state.players[0].name) {
+        throw new Error("Le sloubi ne peut être tenté qu'en début de tour.");
+      }
+
+      if (state.players.length > 5) {
+        throw new Error("Le jeu n'autorise que 6 joueurs dans une partie.");
+      }
+
+      if (state.players.map(player => player.name).includes(sloubi.name)) {
+        throw new Error("Le nom de ce joueur est déjà pris.");
+      }
+
+      const player: Player = {
+        name: sloubi.name,
+        history: [
+          {
+            designation: HistoryLineType.SLOUBI,
+            amount: Number(sloubi.score),
+            turnNumber: state.turnNumber
+          }
+        ],
+        hasGrelottine: false
+      };
+
+      commit("addPlayer", { player, previousPlayer: sloubi.previousPlayer });
+
+      await dispatch("saveGameToLocalStorage");
+    },
     async grelottineChallenge(
       { commit, dispatch },
       grelottineActionPayload: GrelottineActionPayload
@@ -314,23 +331,6 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       commit("removeGrelottine", grelottineActionPayload.grelottin);
 
       await dispatch("checkEndGame");
-    },
-    applyBevue({ state, commit, dispatch }, playerName: string): void {
-      const player = state.players.find(byName(playerName));
-      if (player) {
-        const action: HistoryLineAction = {
-          playerName,
-          value: 0,
-          designation: HistoryLineType.BEVUE
-        };
-        commit("addHistoryLine", mapHistoryActionToApply(action));
-
-        dispatch("saveGameToLocalStorage");
-      } else {
-        throw new Error(
-          "La bévue n'a pas été appliquée. Le joueur n'a pas été trouvé"
-        );
-      }
     }
   }
 };
