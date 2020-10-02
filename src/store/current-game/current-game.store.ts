@@ -12,23 +12,23 @@ import {
   Player
 } from "@/domain/player";
 import {
-  BasicHistoryLineAction,
-  ChouetteVeluteHistoryLineAction,
-  getAmount,
   HistoryLineAction,
   HistoryLineApply,
   HistoryLineType,
-  mapHistoryActionToApply,
-  SuiteHistoryLineAction
+  mapHistoryActionToApply
 } from "@/domain/history";
 import { RootState } from "@/store/app.state";
 import {
   GrelottineActionPayload,
   isGrelottineChallengeSuccessful
 } from "@/domain/grelottine";
+import { MainPlayableActionsStoreModule } from "@/store/current-game/main-playable-actions.store";
 
 export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
   namespaced: true,
+  modules: {
+    play: MainPlayableActionsStoreModule
+  },
   state(): CurrentGameState {
     return {
       status: GameStatus.CREATION,
@@ -39,13 +39,18 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     };
   },
   getters: {
+    getState(state): CurrentGameState {
+      return state;
+    },
     playerNames(state): Array<string> {
       return state.players.map(player => player.name);
     },
     grelottinePlayers(state, getters): Array<string> {
       return state.players
-        .filter(player => player.hasGrelottine)
-        .filter(player => getters.getPlayerScore(player.name) > 0)
+        .filter(
+          player =>
+            player.hasGrelottine && getters.getPlayerScore(player.name) > 0
+        )
         .map(player => player.name);
     },
     currentPlayer(state): Player {
@@ -259,93 +264,6 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     saveGameToLocalStorage({ state }, storage = localStorage): void {
       storage.setItem("currentGame", JSON.stringify(state));
     },
-    playATurn({ state, commit, dispatch }, action: HistoryLineAction): void {
-      if (state.currentPlayerName !== action.playerName) {
-        return;
-      }
-
-      switch (action.designation) {
-        case HistoryLineType.CHOUETTE_VELUTE:
-          dispatch("handleChouetteVeluteAction", action);
-          break;
-        case HistoryLineType.SUITE:
-          dispatch("handleSuiteAction", action);
-          break;
-        default:
-          commit("addHistoryLine", mapHistoryActionToApply(action));
-      }
-
-      dispatch("handleEndTurn");
-    },
-    handleChouetteVeluteAction(
-      { commit, getters },
-      action: ChouetteVeluteHistoryLineAction
-    ): void {
-      if (action.shoutingPlayers.length === 1) {
-        const newAction: BasicHistoryLineAction = {
-          playerName: action.shoutingPlayers[0],
-          designation: HistoryLineType.CHOUETTE_VELUTE,
-          value: action.value,
-          turnNumber: getters.isCurrentPlayer(action.shoutingPlayers[0])
-            ? action.turnNumber
-            : undefined
-        };
-        commit("addHistoryLine", mapHistoryActionToApply(newAction));
-      } else {
-        action.shoutingPlayers.forEach(playerName => {
-          const historyLineApply = mapHistoryActionToApply({
-            playerName,
-            designation: HistoryLineType.CHOUETTE_VELUTE,
-            value: action.value,
-            turnNumber: getters.isCurrentPlayer(playerName)
-              ? action.turnNumber
-              : undefined
-          });
-
-          historyLineApply.amount = -historyLineApply.amount;
-          commit("addHistoryLine", historyLineApply);
-        });
-      }
-
-      if (!action.shoutingPlayers.includes(action.playerName)) {
-        commit(
-          "addHistoryLine",
-          mapHistoryActionToApply({
-            playerName: action.playerName,
-            designation: HistoryLineType.CHOUETTE_VELUTE,
-            value: 0,
-            turnNumber: action.turnNumber
-          })
-        );
-      }
-    },
-    handleSuiteAction({ commit }, action: SuiteHistoryLineAction): void {
-      const isCurrentPlayerTheLooser =
-        action.loosingPlayerName === action.playerName;
-
-      if (!isCurrentPlayerTheLooser) {
-        const historyLineAction: HistoryLineAction = {
-          playerName: action.loosingPlayerName,
-          designation: HistoryLineType.SUITE,
-          value: action.multiplier * 10
-        };
-        commit("addHistoryLine", mapHistoryActionToApply(historyLineAction));
-      }
-
-      const value = isCurrentPlayerTheLooser ? action.multiplier * 10 : 0;
-      const historyLineApply = mapHistoryActionToApply({
-        playerName: action.playerName,
-        designation: HistoryLineType.SUITE,
-        value,
-        turnNumber: action.turnNumber
-      });
-
-      if (action.isVelute) {
-        historyLineApply.amount += getAmount(HistoryLineType.VELUTE, 3);
-      }
-
-      commit("addHistoryLine", historyLineApply);
-    },
     async grelottineChallenge(
       { commit, dispatch },
       grelottineActionPayload: GrelottineActionPayload
@@ -359,8 +277,9 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
           break;
         case HistoryLineType.SUITE:
           dispatch(
-            "handleSuiteAction",
-            grelottineActionPayload.challengedPlayerAction
+            "currentGame/play/handleSuiteAction",
+            grelottineActionPayload.challengedPlayerAction,
+            { root: true }
           );
           break;
         default:

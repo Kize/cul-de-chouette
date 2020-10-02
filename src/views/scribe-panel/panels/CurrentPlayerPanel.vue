@@ -61,15 +61,15 @@ export default class CurrentPlayerPanel extends Vue {
   @Prop() currentPlayer!: Player;
 
   basicPlay(action: HistoryLineAction): void {
-    this.$store.dispatch("currentGame/playATurn", action);
+    this.$store.dispatch("currentGame/play/playATurn", action);
   }
 
   playChouetteVelute(action: ChouetteVeluteHistoryLineAction): void {
-    this.$store.dispatch("currentGame/playATurn", action);
+    this.$store.dispatch("currentGame/play/playATurn", action);
   }
 
   playSuite(action: SuiteHistoryLineAction): void {
-    this.$store.dispatch("currentGame/playATurn", action);
+    this.$store.dispatch("currentGame/play/playATurn", action);
   }
 }
 </script>
