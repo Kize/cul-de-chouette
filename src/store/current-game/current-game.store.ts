@@ -2,8 +2,8 @@ import { Module } from "vuex";
 import {
   CurrentGameState,
   GameStatus,
-  SloubiActionPayload,
-  StartGameData
+  NewGameForm,
+  SloubiActionPayload
 } from "@/store/current-game/current-game.interface";
 import {
   byName,
@@ -23,11 +23,13 @@ import {
   isGrelottineChallengeSuccessful
 } from "@/domain/grelottine";
 import { MainPlayableActionsStoreModule } from "@/store/current-game/main-playable-actions.store";
+import { LeveLOneStoreModule } from "@/store/current-game/difficulty-levels/level-one.store";
 
 export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
   namespaced: true,
   modules: {
-    play: MainPlayableActionsStoreModule
+    play: MainPlayableActionsStoreModule,
+    levelOne: LeveLOneStoreModule
   },
   state(): CurrentGameState {
     return {
@@ -137,8 +139,8 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     }
   },
   actions: {
-    async startGame({ commit, dispatch }, data: StartGameData): Promise<void> {
-      const playerNames = data.playerNames.filter(name => name.length > 0);
+    async startGame({ commit, dispatch }, form: NewGameForm): Promise<void> {
+      const playerNames = form.playerNames.filter(name => name.length > 0);
 
       const hasOnlyUniqueNames =
         [...new Set(playerNames)].length === playerNames.length;
@@ -153,7 +155,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
 
       const newGame: CurrentGameState = {
         status: GameStatus.IN_GAME,
-        name: data.gameName,
+        name: form.gameName,
         players: playerNames.map(name => ({
           name,
           history: [],
@@ -164,6 +166,12 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       };
 
       commit("setGame", newGame);
+
+      commit(
+        "levelOne/setIsSouffletteEnabled",
+        form.levelOne.isSouffletteEnabled
+      );
+
       await dispatch("saveGameToLocalStorage");
     },
     resumeGame({ commit }, currentGame: CurrentGameState): void {

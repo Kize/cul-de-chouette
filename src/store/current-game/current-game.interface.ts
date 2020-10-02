@@ -6,17 +6,20 @@ export enum GameStatus {
   FINISHED = "finished"
 }
 
-export interface StartGameData {
-  gameName: string;
-  playerNames: Array<string>;
-}
-
 export interface CurrentGameState {
   name: string;
   status: GameStatus;
   players: Array<Player>;
   currentPlayerName: string;
   turnNumber: number;
+}
+
+export interface NewGameForm {
+  gameName: string;
+  playerNames: Array<string>;
+  levelOne: {
+    isSouffletteEnabled: boolean;
+  };
 }
 
 export interface SloubiActionPayload {
