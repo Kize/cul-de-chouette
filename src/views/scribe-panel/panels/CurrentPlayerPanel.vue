@@ -4,6 +4,8 @@
       <span>{{ currentPlayer.name }}</span>
       <v-divider vertical class="mx-6"></v-divider>
       <span>Score: {{ getPlayerScore(currentPlayer.name) }}</span>
+      <v-divider vertical class="mx-6"></v-divider>
+      <span>Tour: {{ turnNumber }}</span>
 
       <v-spacer></v-spacer>
 

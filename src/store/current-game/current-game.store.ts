@@ -68,6 +68,20 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         return computePlayerScore(player);
       };
     },
+    sloubiScore(state, getters): number {
+      const [bestScore, secondBestScore] = state.players
+        .map(player => ({
+          name: player.name,
+          score: getters.getPlayerScore(player.name)
+        }))
+        .sort((p1, p2) => p2.score - p1.score)
+        .slice(0, 2)
+        .map(p => p.score);
+
+      return Math.trunc(
+        ((bestScore - secondBestScore) * state.turnNumber) / 10
+      );
+    },
     highestPlayer(state, getters): { name: string; score: number } {
       return state.players
         .map(player => ({
@@ -258,7 +272,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       }
     },
     async sloubi(
-      { state, commit, dispatch },
+      { state, commit, dispatch, getters },
       sloubi: SloubiActionPayload
     ): Promise<void> {
       if (state.currentPlayerName !== state.players[0].name) {
@@ -273,12 +287,16 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         throw new Error("Le nom de ce joueur est déjà pris.");
       }
 
+      const sloubiAmount = sloubi.isSloubiCompleted
+        ? Math.trunc(getters["sloubiScore"] * 1.5)
+        : getters["sloubiScore"];
+
       const player: Player = {
         name: sloubi.name,
         history: [
           {
             designation: HistoryLineType.SLOUBI,
-            amount: Number(sloubi.score),
+            amount: sloubiAmount,
             turnNumber: state.turnNumber
           }
         ],

@@ -30,6 +30,7 @@
     <v-dialog v-model="showSloubiDialog" persistent max-width="800">
       <SloubiDialogCard
         :player-names="playerNames"
+        :sloubi-score="sloubiScore"
         :current-player-name="currentPlayer.name"
         @cancel="showSloubiDialog = false"
         @confirm="playSloubi($event)"
@@ -81,7 +82,7 @@ import GrelottineDialogCard from "@/views/scribe-panel/dialogs/GrelottineDialogC
     GrelottineDialogCard
   },
   computed: {
-    ...mapGetters("currentGame", ["playerNames"])
+    ...mapGetters("currentGame", ["playerNames", "sloubiScore"])
   }
 })
 export default class MainActionsPanel extends Vue {
