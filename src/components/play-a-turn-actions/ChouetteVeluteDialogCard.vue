@@ -7,8 +7,8 @@
     @confirm="confirm"
   >
     <v-form ref="formRef" v-model="isFormValid">
-      <v-row justify="center" dense>
-        <v-col cols="10">
+      <v-row justify="center" align="center">
+        <v-col cols="8">
           <v-select
             label="Joueurs ayant disputé la chouette velute"
             v-model="form.playerNames"
@@ -20,14 +20,11 @@
             :items="playerNames"
           ></v-select>
         </v-col>
-      </v-row>
-      <v-row justify="center" dense>
         <v-col cols="4">
           <v-select
             label="Valeur de la chouette velute"
             v-model="form.value"
             outlined
-            dense
             :items="[2, 4, 6]"
           ></v-select>
         </v-col>
@@ -68,11 +65,20 @@ export default class ChouetteVeluteDialogCard extends Vue {
   @Emit()
   cancel(): void {
     this.form = { ...INITIAL_FORM };
+    (this.$refs.formRef as VForm).resetValidation();
   }
 
   @Emit()
   confirm(): ChouetteVeluteForm {
-    return { ...this.form };
+    const form: ChouetteVeluteForm = {
+      value: this.form.value,
+      playerNames: [...this.form.playerNames]
+    };
+
+    this.form = { ...INITIAL_FORM };
+    (this.$refs.formRef as VForm).resetValidation();
+
+    return form;
   }
 }
 </script>

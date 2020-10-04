@@ -51,6 +51,10 @@
         <v-spacer></v-spacer>
       </v-row>
     </v-form>
+
+    <p v-if="!isSloubiScoreValid()">
+      Le sloubi ne peut être tenté si le montant du sloubi est supérieur à 228.
+    </p>
   </MainDialogCard>
 </template>
 
