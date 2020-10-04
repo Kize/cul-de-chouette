@@ -8,13 +8,27 @@
       <v-card-text>
         <v-text-field
           label="Nom de la partie"
-          v-model="gameName"
+          v-model="form.gameName"
           :rules="newGameNameNameRules"
           counter
           outlined
           shaped
           clearable
         ></v-text-field>
+
+        <v-card>
+          <v-card-title>
+            Difficulté
+            <v-icon>mdi-star</v-icon>
+          </v-card-title>
+
+          <v-card-text>
+            <v-checkbox
+              label="La soufflette"
+              v-model="form.levelOne.isSouffletteEnabled"
+            ></v-checkbox>
+          </v-card-text>
+        </v-card>
       </v-card-text>
     </v-card>
 
@@ -25,10 +39,10 @@
 
       <v-card-text class="pb-0">
         <v-row>
-          <v-col cols="3" v-for="(_, index) of playerNames" :key="index">
+          <v-col cols="3" v-for="(_, index) of form.playerNames" :key="index">
             <v-text-field
               :label="'Joueur ' + (index + 1)"
-              v-model="playerNames[index]"
+              v-model="form.playerNames[index]"
               :rules="newPlayerNameRules"
               clearable
               outlined
@@ -74,56 +88,55 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { StartGameData } from "@/store/current-game/current-game.interface";
 import { ROUTES } from "@/router";
 import {
   newGameNameNameRules,
   newPlayerNameRules
 } from "@/domain/form-validation-rules";
+import { NewGameForm } from "@/store/current-game/current-game.interface";
 
-@Component({
-  components: {}
-})
-export default class NewGameForm extends Vue {
-  isFormValid = true;
-
-  gameName = `Partie du ${new Date().toLocaleString("FR-fr").split(" à ")[0]}`;
-  playerNames: Array<string> = ["", ""];
+@Component({})
+export default class NewGameFormSection extends Vue {
   readonly newPlayerNameRules = newPlayerNameRules;
   readonly newGameNameNameRules = newGameNameNameRules;
 
+  isFormValid = true;
+
+  form: NewGameForm = {
+    gameName: `Partie du ${new Date().toLocaleString("FR-fr").split(" à ")[0]}`,
+    playerNames: ["", ""],
+    levelOne: {
+      isSouffletteEnabled: false
+    }
+  };
+
   canRemovePlayer(): boolean {
-    return this.playerNames.length > 2;
+    return this.form.playerNames.length > 2;
   }
 
   canAddPlayer(): boolean {
-    return this.playerNames.length < 6;
+    return this.form.playerNames.length < 6;
   }
 
   removePlayer(index: number): void {
     if (this.canRemovePlayer()) {
-      this.playerNames.splice(index, 1);
+      this.form.playerNames.splice(index, 1);
     }
   }
 
   addPlayer(): void {
     if (this.canAddPlayer()) {
-      this.playerNames.push("");
+      this.form.playerNames.push("");
     }
   }
 
   getList(): string {
-    return JSON.stringify(this.playerNames);
+    return JSON.stringify(this.form.playerNames);
   }
 
   async createGame(): Promise<void> {
-    const data: StartGameData = {
-      gameName: this.gameName,
-      playerNames: this.playerNames
-    };
-
     try {
-      await this.$store.dispatch("currentGame/startGame", data);
+      await this.$store.dispatch("currentGame/startGame", this.form);
       await this.$router.push(ROUTES.SCRIBE_PANEL.path);
     } catch (error) {
       window.alert(error.message);

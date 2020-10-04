@@ -18,9 +18,11 @@
         :players="players"
         :player-names="playerNames"
         :turn-number="turnNumber"
+        :is-soufflette-enabled="isSouffletteEnabled"
         @basic-play="basicPlay"
         @play-chouette-velute="playChouetteVelute"
         @play-suite="playSuite"
+        @play-soufflette="playSoufflette"
       >
       </PlayATurnActions>
     </v-card-text>
@@ -40,6 +42,7 @@ import { mapGetters, mapState } from "vuex";
 import ChouetteVeluteDialogCard from "@/components/play-a-turn-actions/ChouetteVeluteDialogCard.vue";
 import SuiteDialogCard from "@/components/play-a-turn-actions/SuiteDialogCard.vue";
 import PlayATurnActions from "@/components/play-a-turn-actions/PlayATurnActions.vue";
+import { SouffletteActionPayload } from "@/domain/soufflette";
 
 @Component({
   components: {
@@ -50,6 +53,7 @@ import PlayATurnActions from "@/components/play-a-turn-actions/PlayATurnActions.
   },
   computed: {
     ...mapState("currentGame", ["players", "turnNumber"]),
+    ...mapState("currentGame/levelOne", ["isSouffletteEnabled"]),
     ...mapGetters("currentGame", [
       "isCurrentPlayer",
       "playerNames",
@@ -70,6 +74,10 @@ export default class CurrentPlayerPanel extends Vue {
 
   playSuite(action: SuiteHistoryLineAction): void {
     this.$store.dispatch("currentGame/play/playATurn", action);
+  }
+
+  playSoufflette(actionPayload: SouffletteActionPayload): void {
+    this.$store.dispatch("currentGame/levelOne/playSoufflette", actionPayload);
   }
 }
 </script>

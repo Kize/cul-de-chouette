@@ -106,9 +106,11 @@
             :players="players"
             :player-names="playerNames"
             :disabled="!isFormValid"
+            :is-soufflette-enabled="isSouffletteEnabled"
             @basic-play="setChallengedPlayerAction"
             @play-chouette-velute="setChallengedPlayerAction"
             @play-suite="setChallengedPlayerAction"
+            @play-soufflette="handleSoufflette"
           ></PlayATurnActions>
         </v-card>
       </v-container>
@@ -135,6 +137,10 @@ import {
 import PlayATurnActions from "@/components/play-a-turn-actions/PlayATurnActions.vue";
 import { HistoryLineAction } from "@/domain/history";
 import { Player } from "@/domain/player";
+import {
+  GrelottineSouffletteActionPayload,
+  SouffletteActionPayload
+} from "@/domain/soufflette";
 
 const INITIAL_FORM: GrelottineForm = {
   gambledAmount: 0
@@ -144,6 +150,7 @@ const INITIAL_FORM: GrelottineForm = {
   components: { PlayATurnActions, BevueMenuAction },
   computed: {
     ...mapState("currentGame", ["players", "turnNumber"]),
+    ...mapState("currentGame/levelOne", ["isSouffletteEnabled"]),
     ...mapGetters("currentGame", [
       "currentPlayer",
       "getPlayerScore",
@@ -214,6 +221,30 @@ export default class GrelottineDialogCard extends Vue {
     this.form.challengedPlayerAction = action;
 
     this.confirm();
+  }
+
+  handleSoufflette(actionPayload: SouffletteActionPayload): void {
+    if (
+      !this.form.grelottin ||
+      !this.form.challengedPlayer ||
+      !this.form.challenge
+    ) {
+      throw new Error("Le formulaire n'aurait pas dû être validé !");
+    }
+    const grelottineActionPayload: GrelottineSouffletteActionPayload = {
+      grelottin: this.form.grelottin,
+      challengedPlayer: this.form.challengedPlayer,
+      challenge: this.form.challenge,
+      gambledAmount: this.form.gambledAmount,
+      challengedPlayerActionPayload: actionPayload
+    };
+    this.$store.dispatch(
+      "currentGame/levelOne/handleGrelottineSoufflette",
+      grelottineActionPayload
+    );
+
+    this.form = { ...INITIAL_FORM };
+    this.close();
   }
 
   cancel(): void {

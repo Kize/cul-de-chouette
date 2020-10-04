@@ -7,20 +7,18 @@ export enum HistoryLineType {
   SUITE = "suite",
   CHOUETTE_VELUTE = "chouette velute",
   CUL_DE_CHOUETTE = "cul de chouette",
-  SLOUBI = "Sloubi"
+  SLOUBI = "Sloubi",
+  SOUFFLETTE = "Soufflette"
 }
 
 export interface HistoryLine {
   designation: HistoryLineType;
   amount: number;
-  turnNumber: number | undefined;
+  turnNumber?: number;
 }
 
-export interface HistoryLineApply {
+export interface HistoryLineApply extends HistoryLine {
   playerName: string;
-  designation: HistoryLineType;
-  amount: number;
-  turnNumber?: number;
 }
 
 export type HistoryLineAction =
@@ -67,6 +65,8 @@ export function getAmount(type: HistoryLineType, value: number): number {
       return 40 + 10 * value;
     case HistoryLineType.SUITE:
       return -value;
+    case HistoryLineType.SOUFFLETTE:
+      return value;
   }
 
   throw new Error("Aucune valeur trouvé pour ce type d'action.");

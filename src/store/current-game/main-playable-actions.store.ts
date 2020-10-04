@@ -18,34 +18,22 @@ export const MainPlayableActionsStoreModule: Module<
   actions: {
     playATurn(
       { rootGetters, commit, dispatch },
-      action: HistoryLineAction
+      lineAction: HistoryLineAction
     ): void {
       if (
         rootGetters["currentGame/getState"].currentPlayerName !==
-        action.playerName
+        lineAction.playerName
       ) {
         return;
       }
 
-      switch (action.designation) {
-        case HistoryLineType.CHOUETTE_VELUTE:
-          dispatch("handleChouetteVeluteAction", action);
-          break;
-        case HistoryLineType.SUITE:
-          dispatch("handleSuiteAction", action);
-          break;
-        case HistoryLineType.NEANT:
-          commit("currentGame/addGrelottine", action.playerName, {
-            root: true
-          });
-        default:
-          commit(
-            "currentGame/addHistoryLine",
-            mapHistoryActionToApply(action),
-            { root: true }
-          );
+      if (lineAction.designation === HistoryLineType.NEANT) {
+        commit("currentGame/addGrelottine", lineAction.playerName, {
+          root: true
+        });
       }
 
+      dispatch("handlePlayerLineAction", lineAction);
       dispatch("currentGame/handleEndTurn", null, { root: true });
     },
     handleSuiteAction({ commit }, action: SuiteHistoryLineAction): void {
@@ -128,6 +116,25 @@ export const MainPlayableActionsStoreModule: Module<
           }),
           { root: true }
         );
+      }
+    },
+    handlePlayerLineAction(
+      { commit, dispatch },
+      lineAction: HistoryLineAction
+    ): void {
+      switch (lineAction.designation) {
+        case HistoryLineType.CHOUETTE_VELUTE:
+          dispatch("handleChouetteVeluteAction", lineAction);
+          break;
+        case HistoryLineType.SUITE:
+          dispatch("handleSuiteAction", lineAction);
+          break;
+        default:
+          commit(
+            "currentGame/addHistoryLine",
+            mapHistoryActionToApply(lineAction),
+            { root: true }
+          );
       }
     }
   }

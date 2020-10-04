@@ -3,6 +3,7 @@ import {
   HistoryLineType,
   SuiteHistoryLineAction
 } from "@/domain/history";
+import { SouffletteActionPayload } from "@/domain/soufflette";
 
 export enum GrelottineChallenges {
   CHOUETTE = "Chouette",

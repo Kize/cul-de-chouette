@@ -57,6 +57,18 @@
       >Néant
     </v-btn>
 
+    <v-btn
+      v-if="getIsSouffletteEnabled()"
+      tile
+      color="primary"
+      outlined
+      large
+      class="ma-2"
+      :disabled="!areActionsEnabled()"
+      @click="showSouffletteDialog = true"
+      >Soufflette
+    </v-btn>
+
     <v-dialog v-model="showChouetteVeluteDialog" persistent max-width="800">
       <ChouetteVeluteDialogCard
         :current-player-name="currentPlayerName"
@@ -74,6 +86,23 @@
         @cancel="showSuiteDialog = false"
         @confirm="playSuite"
       ></SuiteDialogCard>
+    </v-dialog>
+
+    <v-dialog
+      v-if="getIsSouffletteEnabled()"
+      v-model="showSouffletteDialog"
+      persistent
+      max-width="1200"
+    >
+      <SouffletteDialogCard
+        :current-player-name="currentPlayerName"
+        :players="players"
+        :player-names="playerNames"
+        :turn-number="turnNumber"
+        @confirm="playSoufflette"
+        @cancel="showSouffletteDialog = false"
+      >
+      </SouffletteDialogCard>
     </v-dialog>
   </div>
 </template>
@@ -94,23 +123,36 @@ import ChouetteVeluteDialogCard, {
 import SuiteDialogCard, {
   SuiteForm
 } from "@/components/play-a-turn-actions/SuiteDialogCard.vue";
+import SouffletteDialogCard from "@/components/play-a-turn-actions/SouffletteDialogCard.vue";
+import { SouffletteActionPayload } from "@/domain/soufflette";
 
 @Component({
-  components: { SuiteDialogCard, ChouetteVeluteDialogCard, MenuAction }
+  components: {
+    SouffletteDialogCard,
+    SuiteDialogCard,
+    ChouetteVeluteDialogCard,
+    MenuAction
+  }
 })
 export default class PlayATurnActions extends Vue {
   @Prop() currentPlayerName!: string;
   @Prop() players!: Array<Player>;
   @Prop() playerNames!: Array<string>;
+  @Prop() isSouffletteEnabled?: boolean;
   @Prop() turnNumber?: number;
   @Prop() disabled?: boolean;
   readonly playTypes = HistoryLineType;
 
   showChouetteVeluteDialog = false;
   showSuiteDialog = false;
+  showSouffletteDialog = false;
 
   areActionsEnabled(): boolean {
     return !this.disabled;
+  }
+
+  getIsSouffletteEnabled(): boolean {
+    return !!this.isSouffletteEnabled;
   }
 
   @Emit()
@@ -152,6 +194,14 @@ export default class PlayATurnActions extends Vue {
 
     this.showSuiteDialog = false;
     return action;
+  }
+
+  @Emit()
+  playSoufflette(
+    actionPayload: SouffletteActionPayload
+  ): SouffletteActionPayload {
+    this.showSouffletteDialog = false;
+    return actionPayload;
   }
 }
 </script>
