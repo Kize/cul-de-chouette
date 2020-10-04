@@ -293,12 +293,6 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       { commit, dispatch },
       grelottineActionPayload: GrelottineActionPayload
     ): Promise<void> {
-      dispatch(
-        "currentGame/play/handleChallengedPlayerAction",
-        grelottineActionPayload.challengedPlayerAction,
-        { root: true }
-      );
-
       const isChallengePassed = isGrelottineChallengeSuccessful(
         grelottineActionPayload.challenge,
         grelottineActionPayload.challengedPlayerAction
@@ -327,6 +321,11 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       };
       commit("addHistoryLine", looserApply);
 
+      dispatch(
+        "currentGame/play/handleChallengedPlayerAction",
+        grelottineActionPayload.challengedPlayerAction,
+        { root: true }
+      );
       commit("removeGrelottine", grelottineActionPayload.grelottin);
 
       await dispatch("checkEndGame");

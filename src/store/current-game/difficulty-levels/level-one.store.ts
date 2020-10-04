@@ -1,11 +1,16 @@
 import { Module } from "vuex";
 import { RootState } from "@/store/app.state";
-import { SouffletteActionPayload } from "@/domain/soufflette";
+import {
+  GrelottineSouffletteActionPayload,
+  SouffletteActionPayload
+} from "@/domain/soufflette";
 import {
   BasicHistoryLineAction,
   HistoryLineApply,
-  HistoryLineType
+  HistoryLineType,
+  mapHistoryActionToApply
 } from "@/domain/history";
+import { GrelottineActionPayload } from "@/domain/grelottine";
 
 export interface LevelOneState {
   isSouffletteEnabled: boolean;
@@ -42,6 +47,48 @@ export const LeveLOneStoreModule: Module<LevelOneState, RootState> = {
         };
         dispatch("currentGame/play/playATurn", lineAction, { root: true });
       }
+    },
+    handleGrelottineSoufflette(
+      { dispatch, commit, rootGetters },
+      actionPayload: GrelottineSouffletteActionPayload
+    ): void {
+      const grelottineActionPayload: GrelottineActionPayload = {
+        grelottin: actionPayload.grelottin,
+        challengedPlayer: actionPayload.challengedPlayer,
+        challenge: actionPayload.challenge,
+        gambledAmount: actionPayload.gambledAmount,
+        challengedPlayerAction: {
+          designation: HistoryLineType.SOUFFLETTE,
+          playerName: actionPayload.challengedPlayer,
+          value: 0
+        }
+      };
+
+      dispatch("currentGame/grelottineChallenge", grelottineActionPayload, {
+        root: true
+      });
+
+      if (actionPayload.challengedPlayerActionPayload.isChallenge) {
+        dispatch(
+          "handleSouffletteChallenge",
+          actionPayload.challengedPlayerActionPayload
+        );
+      } else {
+        const lineAction: BasicHistoryLineAction = {
+          designation: HistoryLineType.SOUFFLETTE,
+          playerName:
+            actionPayload.challengedPlayerActionPayload.challengerName,
+          value: 0
+        };
+        commit(
+          "currentGame/addHistoryLine",
+          mapHistoryActionToApply(lineAction),
+          { root: true }
+        );
+      }
+
+      dispatch("currentGame/saveGameToLocalStorage", undefined, { root: true });
+      dispatch("currentGame/checkEndGame", undefined, { root: true });
     },
     handleSouffletteChallenge(
       { commit, dispatch },

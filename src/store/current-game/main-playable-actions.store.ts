@@ -27,6 +27,12 @@ export const MainPlayableActionsStoreModule: Module<
         return;
       }
 
+      if (action.designation === HistoryLineType.NEANT) {
+        commit("currentGame/addGrelottine", action.playerName, {
+          root: true
+        });
+      }
+
       switch (action.designation) {
         case HistoryLineType.CHOUETTE_VELUTE:
           dispatch("handleChouetteVeluteAction", action);
@@ -34,10 +40,6 @@ export const MainPlayableActionsStoreModule: Module<
         case HistoryLineType.SUITE:
           dispatch("handleSuiteAction", action);
           break;
-        case HistoryLineType.NEANT:
-          commit("currentGame/addGrelottine", action.playerName, {
-            root: true
-          });
         default:
           commit(
             "currentGame/addHistoryLine",
