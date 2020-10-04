@@ -29,6 +29,6 @@ export interface NewGameForm {
 
 export interface SloubiActionPayload {
   name: string;
-  score: number;
+  isSloubiCompleted: boolean;
   previousPlayer?: string;
 }

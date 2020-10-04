@@ -45,5 +45,6 @@ export const inputStrictlyPositiveIntegerRules = [
 
 export const inputPositiveIntegerRules = [
   (num: number) =>
-    (num >= 0 && isInteger(num)) || "Ce champ doit être un entier positif"
+    (num >= 0 && isInteger(num)) ||
+    "Ce champ doit être un entier positif ou nul"
 ];
