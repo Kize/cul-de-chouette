@@ -18,36 +18,22 @@ export const MainPlayableActionsStoreModule: Module<
   actions: {
     playATurn(
       { rootGetters, commit, dispatch },
-      action: HistoryLineAction
+      lineAction: HistoryLineAction
     ): void {
       if (
         rootGetters["currentGame/getState"].currentPlayerName !==
-        action.playerName
+        lineAction.playerName
       ) {
         return;
       }
 
-      if (action.designation === HistoryLineType.NEANT) {
-        commit("currentGame/addGrelottine", action.playerName, {
+      if (lineAction.designation === HistoryLineType.NEANT) {
+        commit("currentGame/addGrelottine", lineAction.playerName, {
           root: true
         });
       }
 
-      switch (action.designation) {
-        case HistoryLineType.CHOUETTE_VELUTE:
-          dispatch("handleChouetteVeluteAction", action);
-          break;
-        case HistoryLineType.SUITE:
-          dispatch("handleSuiteAction", action);
-          break;
-        default:
-          commit(
-            "currentGame/addHistoryLine",
-            mapHistoryActionToApply(action),
-            { root: true }
-          );
-      }
-
+      dispatch("handlePlayerLineAction", lineAction);
       dispatch("currentGame/handleEndTurn", null, { root: true });
     },
     handleSuiteAction({ commit }, action: SuiteHistoryLineAction): void {
@@ -132,7 +118,7 @@ export const MainPlayableActionsStoreModule: Module<
         );
       }
     },
-    handleChallengedPlayerAction(
+    handlePlayerLineAction(
       { commit, dispatch },
       lineAction: HistoryLineAction
     ): void {

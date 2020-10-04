@@ -322,7 +322,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       commit("addHistoryLine", looserApply);
 
       dispatch(
-        "currentGame/play/handleChallengedPlayerAction",
+        "currentGame/play/handlePlayerLineAction",
         grelottineActionPayload.challengedPlayerAction,
         { root: true }
       );

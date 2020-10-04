@@ -140,7 +140,7 @@ export const LeveLOneStoreModule: Module<LevelOneState, RootState> = {
 
       if (!hasChallengedPlayerWon) {
         dispatch(
-          "currentGame/play/handleChallengedPlayerAction",
+          "currentGame/play/handlePlayerLineAction",
           actionPayload.challengedPlayerAction,
           { root: true }
         );
