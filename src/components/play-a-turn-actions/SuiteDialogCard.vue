@@ -82,11 +82,15 @@ export default class SuiteDialogCard extends Vue {
   @Emit()
   cancel(): void {
     this.form = { ...INITIAL_FORM };
+    (this.$refs.formRef as VForm).resetValidation();
   }
 
   @Emit()
   confirm(): SuiteForm {
-    return { ...this.form };
+    const form = { ...this.form };
+    this.form = { ...INITIAL_FORM };
+    (this.$refs.formRef as VForm).resetValidation();
+    return form;
   }
 }
 </script>
