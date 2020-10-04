@@ -275,10 +275,6 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       { state, commit, dispatch, getters },
       sloubi: SloubiActionPayload
     ): Promise<void> {
-      if (state.currentPlayerName !== state.players[0].name) {
-        throw new Error("Le sloubi ne peut être tenté qu'en début de tour.");
-      }
-
       if (state.players.length > 5) {
         throw new Error("Le jeu n'autorise que 6 joueurs dans une partie.");
       }
