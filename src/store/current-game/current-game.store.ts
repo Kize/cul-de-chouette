@@ -291,6 +291,8 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
 
       if (actionPayload.shouldHandleEndTurn) {
         dispatch("handleEndTurn");
+      } else {
+        dispatch("checkEndGame");
       }
     },
     async sloubi(
