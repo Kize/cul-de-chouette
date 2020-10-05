@@ -1,7 +1,8 @@
 <template>
   <div class="scribe-panel">
     <v-app-bar flat class="d-flex justify-center">
-      <v-toolbar-title class="mr-8">
+      <AddOperationLinesButton></AddOperationLinesButton>
+      <v-toolbar-title class="mx-8">
         Gestion des scores - {{ name }}
       </v-toolbar-title>
       <router-link :to="currentGameHistoryRoutePath">
@@ -38,9 +39,11 @@ import PlayersBanner from "@/views/scribe-panel/components/PlayersBanner.vue";
 import CurrentPlayerPanel from "@/views/scribe-panel/panels/CurrentPlayerPanel.vue";
 import MainActionsPanel from "@/views/scribe-panel/panels/MainActionsPanel.vue";
 import { ROUTES } from "@/router";
+import AddOperationLinesButton from "@/views/scribe-panel/components/AddOperationLinesButton.vue";
 
 @Component({
   components: {
+    AddOperationLinesButton,
     CurrentPlayerPanel,
     MainActionsPanel,
     PlayersBanner

@@ -30,9 +30,24 @@ export const newPlayerNameRules = [
   }
 ];
 
-export const selectNameRules = [
-  (name?: string) => (name && name.length > 1) || "Le joueur est requis"
-];
+function requiredPlayerNameRule(name?: string) {
+  return (name && name.length > 1) || "Le joueur est requis";
+}
+
+function requiredLineTypeRule(name?: string) {
+  return (name && name.length > 1) || "Le type d'opération est requis";
+}
+
+function requiredAmountRule(amount?: number) {
+  return (
+    (amount !== undefined && amount !== null && isInteger(amount)) ||
+    "Le montant est requis et doit être entier."
+  );
+}
+
+export const selectNameRules = [requiredPlayerNameRule];
+export const selectLineTypeRules = [requiredLineTypeRule];
+export const requiredAmountInputRules = [requiredAmountRule];
 
 export const selectChallengeRules = [
   (name?: string) => (name && name.length > 1) || "Le défi est requis"

@@ -34,7 +34,7 @@ export const MainPlayableActionsStoreModule: Module<
       }
 
       dispatch("handlePlayerLineAction", lineAction);
-      dispatch("currentGame/handleEndTurn", null, { root: true });
+      dispatch("currentGame/handleEndTurn", undefined, { root: true });
     },
     handleSuiteAction({ commit }, action: SuiteHistoryLineAction): void {
       const isCurrentPlayerTheLooser =
