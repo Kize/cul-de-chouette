@@ -17,6 +17,7 @@
             clearable
             outlined
             :items="playerNames"
+            prepend-icon="mdi-account-outline"
           ></v-select>
         </v-col>
       </v-row>
@@ -31,6 +32,7 @@
             :rules="inputStrictlyPositiveIntegerRules"
             outlined
             dense
+            prepend-icon="mdi-dice-multiple"
           ></v-text-field>
         </v-col>
 

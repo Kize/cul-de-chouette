@@ -12,6 +12,7 @@
           large
           @click="showSloubiDialog = true"
         >
+          <v-icon class="mr-2">mdi-account-cowboy-hat</v-icon>
           Chante-Sloubi !
         </v-btn>
 
@@ -22,6 +23,7 @@
           large
           @click="showGrelottineDialog = true"
         >
+          <v-icon class="mr-2">mdi-bell-alert-outline</v-icon>
           Défi Grelottine !
         </v-btn>
       </v-card-text>

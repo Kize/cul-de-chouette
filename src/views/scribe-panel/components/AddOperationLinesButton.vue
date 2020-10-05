@@ -1,6 +1,9 @@
 <template>
   <span>
-    <v-btn @click="showDialog = true">Ajouter des opérations</v-btn>
+    <v-btn @click="showDialog = true">
+      <v-icon class="mr-2">mdi-text-box-plus</v-icon>
+      Ajouter des opérations
+    </v-btn>
 
     <v-dialog v-model="showDialog" persistent max-width="90%">
       <MainDialogCard
@@ -19,6 +22,7 @@
                 v-model="operation.playerName"
                 :items="playerNames"
                 :rules="selectNameRules"
+                prepend-icon="mdi-account"
               ></v-select>
             </v-col>
 
@@ -29,6 +33,7 @@
                 v-model="operation.designation"
                 :items="lineTypes"
                 :rules="selectLineTypeRules"
+                prepend-icon="mdi-note-text-outline"
               ></v-select>
             </v-col>
 
@@ -42,6 +47,7 @@
                     label="Montant"
                     v-model="operation.amount"
                     :rules="requiredAmountInputRules"
+                    prepend-icon="mdi-dice-multiple"
                   ></v-text-field>
                 </v-col>
 

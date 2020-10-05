@@ -6,7 +6,8 @@
         Gestion des scores - {{ name }}
       </v-toolbar-title>
       <router-link :to="currentGameHistoryRoutePath">
-        <v-btn tile small>
+        <v-btn tile>
+          <v-icon class="mr-2" small>mdi-table-large</v-icon>
           Afficher l'historique
         </v-btn>
       </router-link>
