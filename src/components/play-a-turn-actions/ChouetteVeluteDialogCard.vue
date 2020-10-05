@@ -18,6 +18,7 @@
             chips
             outlined
             :items="playerNames"
+            prepend-icon="mdi-account-multiple-outline"
           ></v-select>
         </v-col>
         <v-col cols="4">
@@ -26,6 +27,7 @@
             v-model="form.value"
             outlined
             :items="[2, 4, 6]"
+            prepend-icon="mdi-dice-multiple"
           ></v-select>
         </v-col>
       </v-row>

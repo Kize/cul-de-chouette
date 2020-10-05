@@ -1,5 +1,6 @@
 import { Player } from "@/domain/player";
 import { LevelOneState } from "@/store/current-game/difficulty-levels/level-one.store";
+import { HistoryLineType } from "@/domain/history";
 
 export enum GameStatus {
   CREATION = "creation",
@@ -31,4 +32,16 @@ export interface SloubiActionPayload {
   name: string;
   isSloubiCompleted: boolean;
   previousPlayer?: string;
+}
+
+export interface OperationLineActionPayload {
+  playerName: string;
+  designation: HistoryLineType;
+  amount: number;
+  shouldDisplayTurnNumber: boolean;
+}
+
+export interface AddOperationLinesActionPayload {
+  operations: Array<OperationLineActionPayload>;
+  shouldHandleEndTurn: boolean;
 }

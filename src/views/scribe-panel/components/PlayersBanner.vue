@@ -26,7 +26,10 @@
             <v-chip
               :color="player.hasGrelottine ? 'red' : 'dark darken-1'"
               outlined
-              >Grelottine
+              :disabled="!player.hasGrelottine"
+            >
+              <v-icon class="mr-1" small>mdi-bell-outline</v-icon>
+              Grelottine
             </v-chip>
           </v-card-text>
         </v-card>

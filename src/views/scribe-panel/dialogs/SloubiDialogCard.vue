@@ -16,6 +16,7 @@
             outlined
             rounded
             :rules="newPlayerNameRules"
+            prepend-inner-icon="mdi-account-plus-outline"
           ></v-text-field>
         </v-col>
         <v-spacer></v-spacer>
@@ -25,6 +26,7 @@
             type="number"
             v-model="sloubiScore"
             disabled
+            prepend-icon="mdi-dice-multiple"
           ></v-text-field>
         </v-col>
         <v-spacer></v-spacer>
@@ -37,6 +39,7 @@
             clearable
             v-model="form.previousPlayer"
             :items="playerNames"
+            prepend-icon="mdi-account-arrow-left-outline"
           ></v-select>
         </v-col>
         <v-spacer></v-spacer>

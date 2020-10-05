@@ -1,5 +1,6 @@
 import { Module } from "vuex";
 import {
+  AddOperationLinesActionPayload,
   CurrentGameState,
   GameStatus,
   NewGameForm,
@@ -269,6 +270,29 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         throw new Error(
           "La bévue n'a pas été appliquée. Le joueur n'a pas été trouvé"
         );
+      }
+    },
+    addOperations(
+      { dispatch, commit, state },
+      actionPayload: AddOperationLinesActionPayload
+    ): void {
+      actionPayload.operations.forEach(operation => {
+        const apply: HistoryLineApply = {
+          designation: operation.designation,
+          playerName: operation.playerName,
+          amount: operation.amount,
+          turnNumber: operation.shouldDisplayTurnNumber
+            ? state.turnNumber
+            : undefined
+        };
+
+        commit("addHistoryLine", apply);
+      });
+
+      if (actionPayload.shouldHandleEndTurn) {
+        dispatch("handleEndTurn");
+      } else {
+        dispatch("checkEndGame");
       }
     },
     async sloubi(

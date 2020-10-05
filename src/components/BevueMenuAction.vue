@@ -10,7 +10,9 @@
           tile
           v-bind="attrs"
           v-on="on"
-          >Bévue
+        >
+          <v-icon class="mr-2">mdi-alert-circle-outline</v-icon>
+          Bévue
         </v-btn>
       </template>
       <v-list>
