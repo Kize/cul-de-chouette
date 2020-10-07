@@ -5,6 +5,7 @@ import {
   GameStatus,
   NewGameForm,
   SavedCurrentGame,
+  Scoreboard,
   SloubiActionPayload
 } from "@/store/current-game/current-game.interface";
 import {
@@ -82,6 +83,16 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       return Math.trunc(
         ((bestScore - secondBestScore) * state.turnNumber) / 10
       );
+    },
+    scoreboard(state, getters): Scoreboard {
+      return state.players
+        .map(player => {
+          return {
+            playerName: player.name,
+            score: getters["getPlayerScore"](player.name)
+          };
+        })
+        .sort((p1, p2) => p2.score - p1.score);
     },
     highestPlayer(state, getters): { name: string; score: number } {
       return state.players

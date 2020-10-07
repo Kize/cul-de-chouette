@@ -28,6 +28,13 @@
         ></MainActionsPanel>
       </v-col>
     </v-row>
+
+    <v-dialog v-model="showEndGameDialog" persistent max-width="1000">
+      <EndGameDialogCard
+        :scoreboard="scoreboard"
+        @confirm="endGame"
+      ></EndGameDialogCard>
+    </v-dialog>
   </div>
 </template>
 
@@ -41,9 +48,11 @@ import CurrentPlayerPanel from "@/views/scribe-panel/panels/CurrentPlayerPanel.v
 import MainActionsPanel from "@/views/scribe-panel/panels/MainActionsPanel.vue";
 import { ROUTES } from "@/router";
 import AddOperationLinesButton from "@/views/scribe-panel/components/AddOperationLinesButton.vue";
+import EndGameDialogCard from "@/views/scribe-panel/dialogs/EndGameDialogCard.vue";
 
 @Component({
   components: {
+    EndGameDialogCard,
     AddOperationLinesButton,
     CurrentPlayerPanel,
     MainActionsPanel,
@@ -57,13 +66,19 @@ import AddOperationLinesButton from "@/views/scribe-panel/components/AddOperatio
       "players"
     ]),
 
-    ...mapGetters("currentGame", ["getPlayerScore", "playerNames"])
+    ...mapGetters("currentGame", [
+      "getPlayerScore",
+      "playerNames",
+      "scoreboard"
+    ])
   }
 })
 export default class ScribePanel extends Vue {
   players!: Array<Player>;
   currentPlayerName!: string;
   readonly currentGameHistoryRoutePath = ROUTES.CURRENT_GAME_HISTORY.path;
+
+  showEndGameDialog = false;
 
   @Watch("status")
   onGameStatusChange(newStatus: GameStatus): void {
@@ -72,8 +87,7 @@ export default class ScribePanel extends Vue {
         this.$router.push("/");
         break;
       case GameStatus.FINISHED:
-        window.confirm("La partie est finie !");
-        this.$store.dispatch("currentGame/handleEndGame");
+        this.showEndGameDialog = true;
         break;
     }
   }
@@ -82,6 +96,11 @@ export default class ScribePanel extends Vue {
     return this.players.filter(
       player => player.name === this.currentPlayerName
     )[0];
+  }
+
+  endGame(): void {
+    this.showEndGameDialog = false;
+    this.$store.dispatch("currentGame/handleEndGame");
   }
 }
 </script>

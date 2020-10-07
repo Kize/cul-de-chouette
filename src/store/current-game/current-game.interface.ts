@@ -16,6 +16,11 @@ export interface CurrentGameState {
   turnNumber: number;
 }
 
+export type Scoreboard = ReadonlyArray<{
+  playerName: string;
+  score: number;
+}>;
+
 export interface SavedCurrentGame extends CurrentGameState {
   levelOne: LevelOneState;
 }
