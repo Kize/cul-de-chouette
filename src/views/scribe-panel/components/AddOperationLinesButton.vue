@@ -94,7 +94,12 @@
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 import MainDialogCard from "@/components/MainDialogCard.vue";
-import { HistoryLineType } from "@/domain/history";
+import {
+  AllHistoryLineTypes,
+  GodModLineType,
+  HistoryLineType,
+  NotImplementedHistoryLineType
+} from "@/domain/history";
 import {
   requiredAmountInputRules,
   selectLineTypeRules,
@@ -104,10 +109,11 @@ import {
   AddOperationLinesActionPayload,
   OperationLineActionPayload
 } from "@/store/current-game/current-game.interface";
+import { sortStrings } from "@/domain/sort";
 
 interface OperationLineForm {
   playerName?: string;
-  designation?: HistoryLineType;
+  designation?: AllHistoryLineTypes;
   amount?: number;
   shouldDisplayTurnNumber?: boolean;
 }
@@ -118,7 +124,7 @@ interface AddOperationLinesForm {
 }
 
 const INITIAL_FORM: AddOperationLinesForm = {
-  operations: [{}],
+  operations: [{ designation: GodModLineType.GOD_MOD }],
   shouldHandleEndTurn: false
 };
 
@@ -150,15 +156,30 @@ export default class PlayersBanner extends Vue {
   readonly selectLineTypeRules = selectLineTypeRules;
   readonly requiredAmountInputRules = requiredAmountInputRules;
 
-  readonly lineTypes = Object.values(HistoryLineType);
-
   showDialog = false;
   isFormValid = true;
 
   form = INITIAL_FORM;
 
+  get lineTypes(): Array<string> {
+    const implementedLineTypes = Object.values(HistoryLineType);
+    const notImplementedLineTypes = Object.values(
+      NotImplementedHistoryLineType
+    );
+    const godModLineTypes = Object.values(GodModLineType);
+
+    implementedLineTypes.sort(sortStrings);
+    notImplementedLineTypes.sort(sortStrings);
+
+    return [
+      ...godModLineTypes,
+      ...implementedLineTypes,
+      ...notImplementedLineTypes
+    ];
+  }
+
   addEmptyOperation(): void {
-    this.form.operations.push({});
+    this.form.operations.push({ designation: GodModLineType.GOD_MOD });
   }
 
   removeLine(index: number): void {

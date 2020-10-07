@@ -11,8 +11,37 @@ export enum HistoryLineType {
   SOUFFLETTE = "Soufflette"
 }
 
+export enum NotImplementedHistoryLineType {
+  POULETTE = "La poulette",
+  SIROP = "Sirotage",
+  SIROP_CHALLENGE = "Pari de Sirotage",
+  CIVET = "Le civet",
+  ATTRAPE_OISEAU = "Attrape-oiseau",
+  GRAINES = "Graines",
+  ARTICHETTE = "Artichette",
+  CONTRE_SIROP = "Contre-sirop",
+  SIROP_JEANNOT = "Sirop-Jeannot",
+  CIVET_DOUBLE = "Civet doublé",
+  PASSE_GRELOT = "Passe-grelot",
+  RIGODON = "Rigodon",
+  CUL_DE_CHOUETTE_DOUBLE = "Cul de chouette doublé",
+  BLEU_ROUGE = "Bleu-rouge",
+  PELICAN = "Pélican",
+  VERDIER = "Verdier",
+  ACHAT = "Achat",
+  DOUBLE_ACHAT = "Double Achat",
+  JARRET = "Jarret",
+  FLAN = "Flan"
+}
+
+export enum GodModLineType {
+  GOD_MOD = "Ligne custom"
+}
+
+export type AllHistoryLineTypes = HistoryLineType | NotImplementedHistoryLineType | GodModLineType;
+
 export interface HistoryLine {
-  designation: HistoryLineType;
+  designation: AllHistoryLineTypes;
   amount: number;
   turnNumber?: number;
 }
