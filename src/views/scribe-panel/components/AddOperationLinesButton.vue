@@ -123,10 +123,12 @@ interface AddOperationLinesForm {
   shouldHandleEndTurn: boolean;
 }
 
-const INITIAL_FORM: AddOperationLinesForm = {
-  operations: [{ designation: GodModLineType.GOD_MOD }],
-  shouldHandleEndTurn: false
-};
+function getInitialForm(): AddOperationLinesForm {
+  return {
+    operations: [{ designation: GodModLineType.GOD_MOD }],
+    shouldHandleEndTurn: false
+  };
+}
 
 function lineFormToLineActionPayload(
   line: OperationLineForm
@@ -159,7 +161,7 @@ export default class PlayersBanner extends Vue {
   showDialog = false;
   isFormValid = true;
 
-  form = INITIAL_FORM;
+  form: AddOperationLinesForm = getInitialForm();
 
   get lineTypes(): Array<string> {
     const implementedLineTypes = Object.values(HistoryLineType);
@@ -188,6 +190,7 @@ export default class PlayersBanner extends Vue {
 
   cancel(): void {
     this.showDialog = false;
+    this.form = getInitialForm();
   }
 
   confirm(): void {
@@ -198,6 +201,7 @@ export default class PlayersBanner extends Vue {
 
     this.$store.dispatch("currentGame/addOperations", payload);
     this.showDialog = false;
+    this.form = getInitialForm();
   }
 }
 </script>
