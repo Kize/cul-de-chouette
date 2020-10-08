@@ -9,7 +9,7 @@
   >
     <v-form ref="formRef" v-model="isFormValid">
       <v-row justify="center" dense>
-        <v-col cols="10">
+        <v-col md="10" cols="12">
           <v-select
             label="Joueur ayant perdu la suite"
             v-model="form.loosingPlayerName"
@@ -22,7 +22,7 @@
         </v-col>
       </v-row>
       <v-row justify="space-around" dense>
-        <v-col cols="4">
+        <v-col md="4" cols="12">
           <v-text-field
             type="number"
             min="1"
@@ -36,7 +36,7 @@
           ></v-text-field>
         </v-col>
 
-        <v-col cols="2">
+        <v-col md="2" cols="12">
           <v-checkbox
             class="mt-1"
             v-model="form.isVelute"

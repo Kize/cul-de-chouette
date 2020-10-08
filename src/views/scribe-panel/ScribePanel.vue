@@ -1,17 +1,22 @@
 <template>
   <div class="scribe-panel">
-    <v-app-bar flat class="d-flex justify-center">
-      <AddOperationLinesButton></AddOperationLinesButton>
-      <v-toolbar-title class="mx-8">
-        Gestion des scores - {{ name }}
-      </v-toolbar-title>
-      <router-link :to="currentGameHistoryRoutePath">
-        <v-btn tile>
-          <v-icon class="mr-2" small>mdi-table-large</v-icon>
-          Afficher l'historique
-        </v-btn>
-      </router-link>
-    </v-app-bar>
+    <v-row class="mx-2">
+      <v-col xl="6" lg="6" md="10" sm="12">
+        <h1>Gestion des scores - {{ name }}</h1>
+      </v-col>
+      <v-col>
+        <AddOperationLinesButton></AddOperationLinesButton>
+      </v-col>
+      <v-col>
+        <router-link :to="currentGameHistoryRoutePath">
+          <v-btn tile>
+            <v-icon class="mr-2" small>mdi-table-large</v-icon>
+            Afficher l'historique
+          </v-btn>
+        </router-link>
+      </v-col>
+      <v-col></v-col>
+    </v-row>
 
     <PlayersBanner :players="players"></PlayersBanner>
 

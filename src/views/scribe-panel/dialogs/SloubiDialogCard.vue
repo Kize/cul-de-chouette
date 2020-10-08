@@ -8,7 +8,7 @@
   >
     <v-form ref="formRef" v-model="isFormValid">
       <v-row>
-        <v-col cols="5">
+        <v-col md="5" cols="12">
           <v-text-field
             label="Nom du nouveau joueur"
             v-model="form.name"
@@ -20,7 +20,7 @@
           ></v-text-field>
         </v-col>
         <v-spacer></v-spacer>
-        <v-col cols="3">
+        <v-col md="3" cols="12">
           <v-text-field
             label="Score du Sloubi"
             type="number"
@@ -33,7 +33,7 @@
       </v-row>
 
       <v-row>
-        <v-col cols="5">
+        <v-col md="5" cols="12">
           <v-select
             label="Joueur précédent"
             clearable
@@ -44,7 +44,7 @@
         </v-col>
         <v-spacer></v-spacer>
 
-        <v-col col="3">
+        <v-col md="3" cols="12">
           <v-checkbox
             label="Sloubi réussi"
             v-model="form.isSloubiCompleted"

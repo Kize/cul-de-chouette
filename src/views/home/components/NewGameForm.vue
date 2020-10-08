@@ -39,7 +39,13 @@
 
       <v-card-text class="pb-0">
         <v-row>
-          <v-col cols="3" v-for="(_, index) of form.playerNames" :key="index">
+          <v-col
+            lg="3"
+            md="6"
+            cols="12"
+            v-for="(_, index) of form.playerNames"
+            :key="index"
+          >
             <v-text-field
               :label="'Joueur ' + (index + 1)"
               v-model="form.playerNames[index]"

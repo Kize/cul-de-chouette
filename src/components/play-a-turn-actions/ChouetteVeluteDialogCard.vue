@@ -8,7 +8,7 @@
   >
     <v-form ref="formRef" v-model="isFormValid">
       <v-row justify="center" align="center">
-        <v-col cols="8">
+        <v-col md="8" cols="12">
           <v-select
             label="Joueurs ayant disputé la chouette velute"
             v-model="form.playerNames"
@@ -21,7 +21,7 @@
             prepend-icon="mdi-account-multiple-outline"
           ></v-select>
         </v-col>
-        <v-col cols="4">
+        <v-col md="4" cols="12">
           <v-select
             label="Valeur de la chouette velute"
             v-model="form.value"

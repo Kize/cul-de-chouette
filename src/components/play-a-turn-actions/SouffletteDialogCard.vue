@@ -8,10 +8,10 @@
   >
     <v-form ref="formRef" v-model="isFormValid">
       <v-row dense>
-        <v-col cols="2">
+        <v-col md="2" cols="12">
           <v-btn large @click="noChallenge">Aucun défi</v-btn>
         </v-col>
-        <v-col cols="6">
+        <v-col md="6" cols="12">
           <v-select
             label="Joueur défié"
             v-model="form.challengedPlayer"
@@ -21,7 +21,7 @@
             :items="getFilteredPlayerNames()"
           ></v-select>
         </v-col>
-        <v-col cols="4" align="center">
+        <v-col md="4" cols="12" align="center">
           <v-btn-toggle v-model="form.diceThrowsNumber" mandatory>
             <span class="button-toggle-label grey--text">
               Nombre de lancés:
