@@ -238,14 +238,8 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         await dispatch("saveGameToLocalStorage");
       }
     },
-    handleEndGame({ state, commit }, storage = localStorage): void {
-      const game: CurrentGameState = {
-        name: state.name,
-        status: GameStatus.FINISHED,
-        players: state.players,
-        currentPlayerName: state.currentPlayerName,
-        turnNumber: state.turnNumber
-      };
+    handleEndGame({ state, commit, dispatch }, storage = localStorage): void {
+      const game: CurrentGameState = { ...state };
       const history: Array<CurrentGameState> = JSON.parse(
         storage.getItem("games") || "[]"
       );
@@ -253,6 +247,9 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       history.push(game);
       storage.setItem("games", JSON.stringify(history));
 
+      dispatch("nextGame");
+    },
+    nextGame({ commit }, storage = localStorage): void {
       const nextGame: CurrentGameState = {
         status: GameStatus.CREATION,
         name: "",

@@ -1,7 +1,7 @@
 <template>
   <div class="scribe-panel">
     <v-row class="mx-2">
-      <v-col xl="6" lg="6" md="10" sm="12">
+      <v-col lg="6" md="10" sm="12">
         <h1>Gestion des scores - {{ name }}</h1>
       </v-col>
       <v-col>
@@ -15,7 +15,12 @@
           </v-btn>
         </router-link>
       </v-col>
-      <v-col></v-col>
+      <v-col>
+        <v-btn tile @click="showCancelGameDialog = true" color="red lighten-4">
+          <v-icon class="mr-2">mdi-close-circle-outline</v-icon>
+          Annuler la partie
+        </v-btn>
+      </v-col>
     </v-row>
 
     <PlayersBanner :players="players"></PlayersBanner>
@@ -40,6 +45,14 @@
         @confirm="endGame"
       ></EndGameDialogCard>
     </v-dialog>
+
+    <v-dialog v-model="showCancelGameDialog" persistent max-width="450">
+      <CancelGameDialogCard
+        @cancel="showCancelGameDialog = false"
+        @confirm="cancelCurrentGame"
+      >
+      </CancelGameDialogCard>
+    </v-dialog>
   </div>
 </template>
 
@@ -54,9 +67,11 @@ import MainActionsPanel from "@/views/scribe-panel/panels/MainActionsPanel.vue";
 import { ROUTES } from "@/router";
 import AddOperationLinesButton from "@/views/scribe-panel/components/AddOperationLinesButton.vue";
 import EndGameDialogCard from "@/views/scribe-panel/dialogs/EndGameDialogCard.vue";
+import CancelGameDialogCard from "@/views/scribe-panel/dialogs/CancelGameDialogCard.vue";
 
 @Component({
   components: {
+    CancelGameDialogCard,
     EndGameDialogCard,
     AddOperationLinesButton,
     CurrentPlayerPanel,
@@ -84,6 +99,7 @@ export default class ScribePanel extends Vue {
   readonly currentGameHistoryRoutePath = ROUTES.CURRENT_GAME_HISTORY.path;
 
   showEndGameDialog = false;
+  showCancelGameDialog = false;
 
   @Watch("status")
   onGameStatusChange(newStatus: GameStatus): void {
@@ -106,6 +122,10 @@ export default class ScribePanel extends Vue {
   endGame(): void {
     this.showEndGameDialog = false;
     this.$store.dispatch("currentGame/handleEndGame");
+  }
+  cancelCurrentGame(): void {
+    this.showCancelGameDialog = false;
+    this.$store.dispatch("currentGame/nextGame");
   }
 }
 </script>

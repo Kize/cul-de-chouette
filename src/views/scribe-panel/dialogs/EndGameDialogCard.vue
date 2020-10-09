@@ -7,6 +7,7 @@
         <v-col cols="6">
           <v-list>
             <v-subheader>Classements des joueurs</v-subheader>
+
             <v-list-item-group>
               <v-list-item v-for="(player, index) in scoreboard" :key="index">
                 <v-list-item-icon>
@@ -14,6 +15,7 @@
                     v-text="`mdi-numeric-${index + 1}-circle-outline`"
                   ></v-icon>
                 </v-list-item-icon>
+
                 <v-list-item-content>
                   <v-list-item-title>{{ player.playerName }}</v-list-item-title>
                   <v-list-item-subtitle
@@ -49,7 +51,7 @@ import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import { Scoreboard } from "@/store/current-game/current-game.interface";
 
 @Component({})
-export default class SloubiDialogCard extends Vue {
+export default class EndGameDialogCard extends Vue {
   @Prop() scoreboard!: Scoreboard;
 
   @Emit()
