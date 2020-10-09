@@ -38,7 +38,10 @@ export enum GodModLineType {
   GOD_MOD = "Ligne custom"
 }
 
-export type AllHistoryLineTypes = HistoryLineType | NotImplementedHistoryLineType | GodModLineType;
+export type AllHistoryLineTypes =
+  | HistoryLineType
+  | NotImplementedHistoryLineType
+  | GodModLineType;
 
 export interface HistoryLine {
   designation: AllHistoryLineTypes;

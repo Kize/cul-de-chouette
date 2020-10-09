@@ -1,25 +1,28 @@
 <template>
   <v-card>
     <v-form ref="formRef" v-model="isFormValid">
-      <v-toolbar color="yellow accent-4">
-        <v-btn icon @click="cancel">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-        <v-toolbar-title>Défi de grelottine</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-toolbar-items>
-          <v-container class="mt-n3 mr-16">
+      <v-card color="yellow accent-4">
+        <v-row align="center" class="grelottine-toolbar" dense>
+          <v-col cols="2" class="">
+            <v-btn icon @click="cancel">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-col>
+          <v-col md="7" cols="8" class="text-center">
+            <v-toolbar-title>Défi de grelottine</v-toolbar-title>
+          </v-col>
+          <v-col md="3" cols="4" class="text-right py-0">
             <BevueMenuAction></BevueMenuAction>
-          </v-container>
-        </v-toolbar-items>
-      </v-toolbar>
+          </v-col>
+        </v-row>
+      </v-card>
 
       <v-container>
         <v-card class="pt-2 px-4 pb-4 mb-8" outlined>
           <v-card-title>Conditions du défi</v-card-title>
 
           <v-row>
-            <v-col cols="6">
+            <v-col md="6" cols="12">
               <v-select
                 label="Grelottin"
                 :items="getGrelottinePlayerNames()"
@@ -37,7 +40,7 @@
                 @change="setAmountToMax"
               ></v-select>
             </v-col>
-            <v-col cols="6">
+            <v-col md="6" cols="12">
               <v-select
                 label="Joueur défié"
                 :items="getGrelottinePlayerNames()"
@@ -58,7 +61,7 @@
           </v-row>
 
           <v-row>
-            <v-col cols="6">
+            <v-col md="6" cols="12">
               <v-select
                 label="Défi"
                 :items="challenges"
@@ -76,7 +79,7 @@
               ></v-select>
             </v-col>
             <v-spacer></v-spacer>
-            <v-col cols="2">
+            <v-col lg="2" md="6" cols="12">
               <v-text-field
                 label="Montant du défi"
                 type="number"

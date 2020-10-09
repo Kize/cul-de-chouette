@@ -1,11 +1,9 @@
 <template>
-  <v-row>
-    <v-spacer></v-spacer>
-    <v-col cols="8">
+  <v-row justify="center">
+    <v-col md="8" cols="12" class="px-6">
       <Intro />
       <NewGameForm />
     </v-col>
-    <v-spacer></v-spacer>
   </v-row>
 </template>
 
@@ -19,3 +17,5 @@ import NewGameForm from "@/views/home/components/NewGameForm.vue";
 })
 export default class Home extends Vue {}
 </script>
+
+<style lang="scss"></style>

@@ -2,9 +2,10 @@
   <v-banner>
     <v-row>
       <v-col
-        lg="2"
-        md="12"
+        lg="3"
+        md="4"
         sm="12"
+        cols="12"
         v-for="player in players"
         :key="player.name"
       >

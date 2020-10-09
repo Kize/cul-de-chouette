@@ -14,65 +14,71 @@
         @confirm="confirm"
       >
         <v-form ref="formRef" v-model="isFormValid" class="mt-4">
-          <v-row v-for="(operation, index) in form.operations" :key="index">
-            <v-col class="mx-5 px-4">
-              <v-select
-                dense
-                label="Nom du joueur"
-                v-model="operation.playerName"
-                :items="playerNames"
-                :rules="selectNameRules"
-                prepend-icon="mdi-account"
-              ></v-select>
-            </v-col>
+          <v-card
+            color="blue-grey lighten-5"
+            v-for="(operation, index) in form.operations"
+            :key="index"
+            rounded
+            class="py-2 mb-2"
+          >
+            <v-row>
+              <v-col md="3" cols="12" class="px-4 py-0 mt-3">
+                <v-select
+                  dense
+                  label="Opération"
+                  v-model="operation.designation"
+                  :items="lineTypes"
+                  :rules="selectLineTypeRules"
+                  prepend-icon="mdi-note-text-outline"
+                ></v-select>
+              </v-col>
 
-            <v-col class="mx-5 px-4">
-              <v-select
-                dense
-                label="Opération"
-                v-model="operation.designation"
-                :items="lineTypes"
-                :rules="selectLineTypeRules"
-                prepend-icon="mdi-note-text-outline"
-              ></v-select>
-            </v-col>
+              <v-col md="3" cols="12" class="px-4 py-0 mt-3">
+                <v-select
+                  dense
+                  label="Nom du joueur"
+                  v-model="operation.playerName"
+                  :items="playerNames"
+                  :rules="selectNameRules"
+                  prepend-icon="mdi-account"
+                ></v-select>
+              </v-col>
 
-            <v-col class="mx-5 px-4">
-              <v-row justify="space-around" align="start">
-                <v-col cols="3" class="pa-0">
-                  <v-text-field
-                    dense
-                    type="number"
-                    step="1"
-                    label="Montant"
-                    v-model="operation.amount"
-                    :rules="requiredAmountInputRules"
-                    prepend-icon="mdi-dice-multiple"
-                  ></v-text-field>
-                </v-col>
+              <v-col md="6" cols="12" class="px-4 py-0">
+                <v-row justify="center" align="center">
+                  <v-col md="4" cols="12" class="py-0">
+                    <v-text-field
+                      dense
+                      type="number"
+                      step="1"
+                      label="Montant"
+                      v-model="operation.amount"
+                      :rules="requiredAmountInputRules"
+                      prepend-icon="mdi-dice-multiple"
+                    ></v-text-field>
+                  </v-col>
 
-                <v-col cols="4" class="pa-0">
-                  <v-checkbox
-                    dense
-                    class="pl-3 mt-1"
-                    label="Afficher le tour"
-                    v-model="operation.shouldDisplayTurnNumber"
-                  ></v-checkbox>
-                </v-col>
-                <v-col cols="3" class="pa-0">
-                  <v-btn
-                    small
-                    class="mt-1"
-                    @click="removeLine(index)"
-                    :disabled="form.operations.length === 1"
-                  >
-                    <v-icon class="mr-1">mdi-trash-can-outline</v-icon>
-                    Retirer
-                  </v-btn>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
+                  <v-col md="3" cols="6" class="py-0">
+                    <v-checkbox
+                      dense
+                      label="Tour ?"
+                      v-model="operation.shouldDisplayTurnNumber"
+                    ></v-checkbox>
+                  </v-col>
+                  <v-col md="4" cols="6" class="py-0">
+                    <v-btn
+                      small
+                      @click="removeLine(index)"
+                      :disabled="form.operations.length === 1"
+                    >
+                      <v-icon class="mr-1">mdi-trash-can-outline</v-icon>
+                      Retirer
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-card>
 
           <v-row justify="center" align="center">
             <v-btn @click="addEmptyOperation" class="mr-8">
@@ -123,10 +129,12 @@ interface AddOperationLinesForm {
   shouldHandleEndTurn: boolean;
 }
 
-const INITIAL_FORM: AddOperationLinesForm = {
-  operations: [{ designation: GodModLineType.GOD_MOD }],
-  shouldHandleEndTurn: false
-};
+function getInitialForm(): AddOperationLinesForm {
+  return {
+    operations: [{ designation: GodModLineType.GOD_MOD }],
+    shouldHandleEndTurn: false
+  };
+}
 
 function lineFormToLineActionPayload(
   line: OperationLineForm
@@ -159,7 +167,7 @@ export default class PlayersBanner extends Vue {
   showDialog = false;
   isFormValid = true;
 
-  form = INITIAL_FORM;
+  form: AddOperationLinesForm = getInitialForm();
 
   get lineTypes(): Array<string> {
     const implementedLineTypes = Object.values(HistoryLineType);
@@ -188,6 +196,7 @@ export default class PlayersBanner extends Vue {
 
   cancel(): void {
     this.showDialog = false;
+    this.form = getInitialForm();
   }
 
   confirm(): void {
@@ -198,6 +207,7 @@ export default class PlayersBanner extends Vue {
 
     this.$store.dispatch("currentGame/addOperations", payload);
     this.showDialog = false;
+    this.form = getInitialForm();
   }
 }
 </script>
