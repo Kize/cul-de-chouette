@@ -1,6 +1,13 @@
 <template>
   <v-container>
-    <h1>Le cul de chouette</h1>
+    <h1 class="headline mb-2">
+      <v-row no-gutters justify="space-between">
+        <v-col>Le cul de chouette</v-col>
+        <v-col class="text-right">
+          <RulesButton></RulesButton>
+        </v-col>
+      </v-row>
+    </h1>
 
     <v-expansion-panels accordion hover>
       <v-expansion-panel>
@@ -31,9 +38,10 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import RulesButton from "@/components/RulesButton.vue";
 
 @Component({
-  components: {}
+  components: { RulesButton }
 })
 export default class Intro extends Vue {}
 </script>

@@ -1,8 +1,11 @@
 <template>
   <div class="scribe-panel">
     <v-row class="mx-2">
-      <v-col lg="6" md="10" sm="12">
+      <v-col lg="4" md="10" sm="12">
         <h1 class="headline">Gestion des scores - {{ name }}</h1>
+      </v-col>
+      <v-col>
+        <RulesButton></RulesButton>
       </v-col>
       <v-col>
         <AddOperationLinesButton></AddOperationLinesButton>
@@ -68,9 +71,11 @@ import { ROUTES } from "@/router";
 import AddOperationLinesButton from "@/views/scribe-panel/components/AddOperationLinesButton.vue";
 import EndGameDialogCard from "@/views/scribe-panel/dialogs/EndGameDialogCard.vue";
 import CancelGameDialogCard from "@/views/scribe-panel/dialogs/CancelGameDialogCard.vue";
+import RulesButton from "@/components/RulesButton.vue";
 
 @Component({
   components: {
+    RulesButton,
     CancelGameDialogCard,
     EndGameDialogCard,
     AddOperationLinesButton,
@@ -123,6 +128,7 @@ export default class ScribePanel extends Vue {
     this.showEndGameDialog = false;
     this.$store.dispatch("currentGame/handleEndGame");
   }
+
   cancelCurrentGame(): void {
     this.showCancelGameDialog = false;
     this.$store.dispatch("currentGame/nextGame");
