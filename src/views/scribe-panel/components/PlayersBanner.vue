@@ -17,11 +17,32 @@
               : 'light-blue lighten-5'
           "
         >
-          <v-card-title class="d-flex justify-space-around">
-            <span>{{ player.name }}</span>
-            <v-divider vertical class="mx-6"></v-divider>
-            <span>Score: {{ getPlayerScore(player.name) }}</span>
+          <v-card-title>
+            <v-row no-gutters>
+              <v-col cols="6">
+                <span>{{ player.name }}</span>
+              </v-col>
+
+              <v-col cols="6">
+                <span>Score: {{ getPlayerScore(player.name) }}</span>
+              </v-col>
+            </v-row>
           </v-card-title>
+
+          <v-row no-gutters>
+            <v-col class="text-right mx-6">
+              <v-btn
+                color="red accent-4"
+                dark
+                rounded
+                small
+                @click="applyBevue(player)"
+              >
+                <v-icon class="mr-1" small>mdi-alert-circle-outline</v-icon>
+                Bévue
+              </v-btn>
+            </v-col>
+          </v-row>
 
           <v-card-text>
             <v-chip
@@ -51,6 +72,10 @@ import { mapGetters } from "vuex";
 })
 export default class PlayersBanner extends Vue {
   @Prop() players!: Array<Player>;
+
+  applyBevue(player: Player): void {
+    this.$store.dispatch("currentGame/applyBevue", player.name);
+  }
 }
 </script>
 
