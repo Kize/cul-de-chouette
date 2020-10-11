@@ -2,7 +2,7 @@
   <div class="scribe-panel">
     <v-row class="mx-2">
       <v-col lg="6" md="10" sm="12">
-        <h1>Gestion des scores - {{ name }}</h1>
+        <h1 class="headline">Gestion des scores - {{ name }}</h1>
       </v-col>
       <v-col>
         <AddOperationLinesButton></AddOperationLinesButton>

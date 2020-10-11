@@ -1,47 +1,60 @@
 <template>
   <div class="current-game-history">
-    <v-app-bar flat class="d-flex justify-center">
-      <v-toolbar-title class="mr-8">
-        Historique de la partie - {{ name }}
-      </v-toolbar-title>
-      <router-link :to="scribePanelRoutePath">
-        <v-btn tile small>
-          Revenir à la partie en cours
-        </v-btn>
-      </router-link>
-    </v-app-bar>
+    <v-row class="mx-2">
+      <v-col lg="6" md="8" sm="12">
+        <h1 class="headline">Historique de la partie - {{ name }}</h1>
+      </v-col>
+      <v-col>
+        <router-link :to="scribePanelRoutePath">
+          <v-btn tile>
+            Revenir à la partie en cours
+          </v-btn>
+        </router-link>
+      </v-col>
+    </v-row>
 
-    <v-container class="d-flex justify-center">
-      <v-card v-for="player in players" :key="player.name" class="mx-4">
-        <v-card-title>
-          {{ player.name }} - Score: {{ getPlayerScore(player.name) }}
-        </v-card-title>
+    <v-row>
+      <v-col
+        lg="3"
+        md="4"
+        sm="6"
+        cols="12"
+        v-for="player in players"
+        :key="player.name"
+      >
+        <v-card>
+          <v-card-title>
+            {{ player.name }} - Score: {{ getPlayerScore(player.name) }}
+          </v-card-title>
 
-        <v-card-text>
-          <v-list>
-            <v-list-item
-              v-for="(line, lineIndex) in player.history"
-              :key="lineIndex"
-            >
-              <v-list-item-action
-                v-text="getPlayerScoreAtLine(player, lineIndex)"
-              ></v-list-item-action>
+          <v-card-text>
+            <v-list>
+              <v-list-item
+                v-for="(line, lineIndex) in player.history"
+                :key="lineIndex"
+              >
+                <v-list-item-action
+                  v-text="getPlayerScoreAtLine(player, lineIndex)"
+                ></v-list-item-action>
 
-              <v-list-item-content>
-                <v-list-item-title
-                  v-text="line.designation"
-                ></v-list-item-title>
-                <v-list-item-subtitle
-                  v-text="line.amount"
-                ></v-list-item-subtitle>
-              </v-list-item-content>
+                <v-list-item-content>
+                  <v-list-item-title
+                    v-text="line.designation"
+                  ></v-list-item-title>
+                  <v-list-item-subtitle
+                    v-text="line.amount"
+                  ></v-list-item-subtitle>
+                </v-list-item-content>
 
-              <v-list-item-action v-text="line.turnNumber"></v-list-item-action>
-            </v-list-item>
-          </v-list>
-        </v-card-text>
-      </v-card>
-    </v-container>
+                <v-list-item-action
+                  v-text="line.turnNumber"
+                ></v-list-item-action>
+              </v-list-item>
+            </v-list>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
