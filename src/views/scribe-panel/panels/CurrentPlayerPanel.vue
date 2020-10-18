@@ -15,18 +15,18 @@
     </v-card-title>
 
     <v-card-text>
-      <PlayATurnActions
+      <PlayATurnWithDice
         :current-player-name="currentPlayer.name"
         :players="players"
         :player-names="playerNames"
         :turn-number="turnNumber"
-        :is-soufflette-enabled="isSouffletteEnabled"
+        :rules="getRules"
         @basic-play="basicPlay"
         @play-chouette-velute="playChouetteVelute"
         @play-suite="playSuite"
         @play-soufflette="playSoufflette"
       >
-      </PlayATurnActions>
+      </PlayATurnWithDice>
     </v-card-text>
   </v-card>
 </template>
@@ -41,21 +41,21 @@ import {
 import { Player } from "@/domain/player";
 import MenuAction from "@/components/MenuAction.vue";
 import { mapGetters, mapState } from "vuex";
-import ChouetteVeluteDialogCard from "@/components/play-a-turn-actions/ChouetteVeluteDialogCard.vue";
-import SuiteDialogCard from "@/components/play-a-turn-actions/SuiteDialogCard.vue";
-import PlayATurnActions from "@/components/play-a-turn-actions/PlayATurnActions.vue";
+import ChouetteVeluteDialogCard from "@/components/play-a-turn-actions/dialogs/ChouetteVeluteDialogCard.vue";
+import SuiteDialogCard from "@/components/play-a-turn-actions/dialogs/SuiteDialogCard.vue";
 import { SouffletteActionPayload } from "@/domain/soufflette";
+import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDice.vue";
 
 @Component({
   components: {
-    PlayATurnActions,
+    PlayATurnWithDice,
     SuiteDialogCard,
     ChouetteVeluteDialogCard,
     MenuAction
   },
   computed: {
     ...mapState("currentGame", ["players", "turnNumber"]),
-    ...mapState("currentGame/levelOne", ["isSouffletteEnabled"]),
+    ...mapGetters("currentGame/rules", ["getRules"]),
     ...mapGetters("currentGame", [
       "isCurrentPlayer",
       "playerNames",
@@ -79,7 +79,10 @@ export default class CurrentPlayerPanel extends Vue {
   }
 
   playSoufflette(actionPayload: SouffletteActionPayload): void {
-    this.$store.dispatch("currentGame/levelOne/playSoufflette", actionPayload);
+    this.$store.dispatch(
+      "currentGame/rules/levelOne/playSoufflette",
+      actionPayload
+    );
   }
 }
 </script>

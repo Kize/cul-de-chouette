@@ -35,14 +35,6 @@
             prepend-icon="mdi-dice-multiple"
           ></v-text-field>
         </v-col>
-
-        <v-col md="2" cols="12">
-          <v-checkbox
-            class="mt-1"
-            v-model="form.isVelute"
-            label="Velute"
-          ></v-checkbox>
-        </v-col>
       </v-row>
     </v-form>
   </MainDialogCard>
@@ -59,13 +51,11 @@ import {
 export interface SuiteForm {
   multiplier: number;
   loosingPlayerName: string;
-  isVelute: boolean;
 }
 
 const INITIAL_FORM: SuiteForm = {
   loosingPlayerName: "",
-  multiplier: 1,
-  isVelute: false
+  multiplier: 1
 };
 
 @Component({

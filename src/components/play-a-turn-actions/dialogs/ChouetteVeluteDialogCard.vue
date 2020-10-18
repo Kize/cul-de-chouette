@@ -1,36 +1,26 @@
 <template>
   <MainDialogCard
-    :title="`Application de la Chouette Velute du joueur ${currentPlayerName}`"
+    :title="`${currentPlayerName} a fait une Chouette Velute`"
     confirm-button-label="Confirmer la chouette velute"
     :is-confirm-button-enabled="isFormValid"
     @cancel="cancel"
     @confirm="confirm"
   >
     <v-form ref="formRef" v-model="isFormValid">
-      <v-row justify="center" align="center">
-        <v-col md="8" cols="12">
-          <v-select
-            label="Joueurs ayant disputé la chouette velute"
+      <p>Sélectionner les joueurs ayant disputer la Chouette Velute:</p>
+      <ul class="player-names-list">
+        <li v-for="(playerName, index) in playerNames" :key="index">
+          <v-checkbox
+            :key="index"
             v-model="form.playerNames"
+            :value="playerName"
+            :label="playerName"
             :rules="selectPlayersRules"
-            clearable
-            multiple
-            chips
-            outlined
-            :items="playerNames"
-            prepend-icon="mdi-account-multiple-outline"
-          ></v-select>
-        </v-col>
-        <v-col md="4" cols="12">
-          <v-select
-            label="Valeur de la chouette velute"
-            v-model="form.value"
-            outlined
-            :items="[2, 4, 6]"
-            prepend-icon="mdi-dice-multiple"
-          ></v-select>
-        </v-col>
-      </v-row>
+            :hide-details="index !== playerNames.length - 1"
+          >
+          </v-checkbox>
+        </li>
+      </ul>
     </v-form>
   </MainDialogCard>
 </template>
@@ -40,12 +30,10 @@ import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import MainDialogCard from "@/components/MainDialogCard.vue";
 
 export interface ChouetteVeluteForm {
-  value: number;
   playerNames: Array<string>;
 }
 
 const INITIAL_FORM: ChouetteVeluteForm = {
-  value: 2,
   playerNames: []
 };
 
@@ -62,7 +50,7 @@ export default class ChouetteVeluteDialogCard extends Vue {
   ];
 
   form: ChouetteVeluteForm = { ...INITIAL_FORM };
-  isFormValid = true;
+  isFormValid = false;
 
   @Emit()
   cancel(): void {
@@ -73,7 +61,6 @@ export default class ChouetteVeluteDialogCard extends Vue {
   @Emit()
   confirm(): ChouetteVeluteForm {
     const form: ChouetteVeluteForm = {
-      value: this.form.value,
       playerNames: [...this.form.playerNames]
     };
 
@@ -85,4 +72,9 @@ export default class ChouetteVeluteDialogCard extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.player-names-list li {
+  padding: 0;
+  list-style: none;
+}
+</style>

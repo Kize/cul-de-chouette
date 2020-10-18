@@ -2,7 +2,7 @@
   <v-card>
     <v-form ref="formRef" v-model="isFormValid">
       <v-card color="yellow accent-4">
-        <v-row align="center" class="grelottine-toolbar" dense>
+        <v-row align="center" class="mx-md-8 mx-4" dense no-gutters>
           <v-col cols="2" class="">
             <v-btn icon @click="cancel">
               <v-icon>mdi-close</v-icon>
@@ -17,106 +17,110 @@
         </v-row>
       </v-card>
 
-      <v-container>
-        <v-card class="pt-2 px-4 pb-4 mb-8" outlined>
-          <v-card-title>Conditions du défi</v-card-title>
+      <v-row class="mx-md-12 mx-6">
+        <v-col cols="12" md="6">
+          <v-card class="pa-4" outlined>
+            <v-card-title>Conditions du défi</v-card-title>
 
-          <v-row>
-            <v-col md="6" cols="12">
-              <v-select
-                label="Grelottin"
-                :items="getGrelottinePlayerNames()"
-                v-model="form.grelottin"
-                :rules="getSelectPlayerRules()"
-                :hint="
-                  form.grelottin
-                    ? `Score: ${getPlayerScore(form.grelottin)}`
-                    : ''
-                "
-                no-data-text="Aucun joueur n'a de grelottine ou un score suffisant"
-                persistent-hint
-                clearable
-                outlined
-                @change="setAmountToMax"
-              ></v-select>
-            </v-col>
-            <v-col md="6" cols="12">
-              <v-select
-                label="Joueur défié"
-                :items="getGrelottinePlayerNames()"
-                v-model="form.challengedPlayer"
-                :rules="getSelectPlayerRules()"
-                :hint="
-                  form.challengedPlayer
-                    ? `Score: ${getPlayerScore(form.challengedPlayer)}`
-                    : ''
-                "
-                no-data-text="Aucun joueur n'a de grelottine ou un score suffisant"
-                persistent-hint
-                clearable
-                outlined
-                @change="setAmountToMax"
-              ></v-select>
-            </v-col>
-          </v-row>
+            <v-row>
+              <v-col md="6" cols="12">
+                <v-select
+                  label="Grelottin"
+                  :items="getGrelottinePlayerNames()"
+                  v-model="form.grelottin"
+                  :rules="getSelectPlayerRules()"
+                  :hint="
+                    form.grelottin
+                      ? `Score: ${getPlayerScore(form.grelottin)}`
+                      : ''
+                  "
+                  no-data-text="Aucun joueur n'a de grelottine ou un score suffisant"
+                  persistent-hint
+                  clearable
+                  outlined
+                  @change="setAmountToMax"
+                ></v-select>
+              </v-col>
 
-          <v-row>
-            <v-col md="6" cols="12">
-              <v-select
-                label="Défi"
-                :items="challenges"
-                v-model="form.challenge"
-                :rules="selectChallengeRules"
-                :hint="
-                  form.challenge
-                    ? `Montant maximum possible: ${getMaxGrelottinePossibleAmount()}`
-                    : ''
-                "
-                persistent-hint
-                clearable
-                outlined
-                @change="setAmountToMax"
-              ></v-select>
-            </v-col>
-            <v-spacer></v-spacer>
-            <v-col lg="2" md="6" cols="12">
-              <v-text-field
-                label="Montant du défi"
-                type="number"
-                min="0"
-                step="1"
-                :rules="getGrelottineAmountRules()"
-                v-model="form.gambledAmount"
-                clearable
-                outlined
-                rounded
-                append-outer-icon="mdi-upload-multiple"
-                @click:append-outer="setAmountToMax"
-              >
-              </v-text-field>
-            </v-col>
-            <v-spacer></v-spacer>
-          </v-row>
-        </v-card>
+              <v-col md="6" cols="12">
+                <v-select
+                  label="Joueur défié"
+                  :items="getGrelottinePlayerNames()"
+                  v-model="form.challengedPlayer"
+                  :rules="getSelectPlayerRules()"
+                  :hint="
+                    form.challengedPlayer
+                      ? `Score: ${getPlayerScore(form.challengedPlayer)}`
+                      : ''
+                  "
+                  no-data-text="Aucun joueur n'a de grelottine ou un score suffisant"
+                  persistent-hint
+                  clearable
+                  outlined
+                  @change="setAmountToMax"
+                ></v-select>
+              </v-col>
+            </v-row>
 
-        <v-card class="pt-2 px-4 pb-4 mb-8" outlined>
-          <v-card-title>
-            Combinaison du joueur défié réalisée
-            {{ isFormValid ? "" : " - (Renseigne les conditions du défi)" }}
-          </v-card-title>
-          <PlayATurnActions
-            :current-player-name="form.challengedPlayer"
-            :players="players"
-            :player-names="playerNames"
-            :disabled="!isFormValid"
-            :is-soufflette-enabled="isSouffletteEnabled"
-            @basic-play="setChallengedPlayerAction"
-            @play-chouette-velute="setChallengedPlayerAction"
-            @play-suite="setChallengedPlayerAction"
-            @play-soufflette="handleSoufflette"
-          ></PlayATurnActions>
-        </v-card>
-      </v-container>
+            <v-row>
+              <v-col md="6" cols="12">
+                <v-select
+                  label="Défi"
+                  :items="challenges"
+                  v-model="form.challenge"
+                  :rules="selectChallengeRules"
+                  :hint="
+                    form.challenge
+                      ? `Montant maximum possible: ${getMaxGrelottinePossibleAmount()}`
+                      : ''
+                  "
+                  persistent-hint
+                  clearable
+                  outlined
+                  @change="setAmountToMax"
+                ></v-select>
+              </v-col>
+              <v-spacer></v-spacer>
+              <v-col md="6" cols="12">
+                <v-text-field
+                  label="Montant du défi"
+                  type="number"
+                  min="0"
+                  step="1"
+                  :rules="getGrelottineAmountRules()"
+                  v-model="form.gambledAmount"
+                  clearable
+                  outlined
+                  rounded
+                  append-outer-icon="mdi-upload-multiple"
+                  @click:append-outer="setAmountToMax"
+                >
+                </v-text-field>
+              </v-col>
+              <v-spacer></v-spacer>
+            </v-row>
+          </v-card>
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-card class="pa-4" outlined>
+            <v-card-title>
+              Combinaison du joueur défié réalisée
+              {{ isFormValid ? "" : " - (Renseigne les conditions du défi)" }}
+            </v-card-title>
+            <PlayATurnWithDice
+              :current-player-name="form.challengedPlayer"
+              :players="players"
+              :player-names="playerNames"
+              :disabled="!isFormValid"
+              :rules="getRules"
+              @basic-play="setChallengedPlayerAction"
+              @play-chouette-velute="setChallengedPlayerAction"
+              @play-suite="setChallengedPlayerAction"
+              @play-soufflette="handleSoufflette"
+            ></PlayATurnWithDice>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-form>
   </v-card>
 </template>
@@ -137,23 +141,23 @@ import {
   selectChallengeRules,
   selectNameRules
 } from "@/domain/form-validation-rules";
-import PlayATurnActions from "@/components/play-a-turn-actions/PlayATurnActions.vue";
 import { HistoryLineAction } from "@/domain/history";
 import { Player } from "@/domain/player";
 import {
   GrelottineSouffletteActionPayload,
   SouffletteActionPayload
 } from "@/domain/soufflette";
+import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDice.vue";
 
 const INITIAL_FORM: GrelottineForm = {
   gambledAmount: 0
 };
 
 @Component({
-  components: { PlayATurnActions, BevueMenuAction },
+  components: { PlayATurnWithDice, BevueMenuAction },
   computed: {
     ...mapState("currentGame", ["players", "turnNumber"]),
-    ...mapState("currentGame/levelOne", ["isSouffletteEnabled"]),
+    ...mapGetters("currentGame/rules", ["getRules"]),
     ...mapGetters("currentGame", [
       "currentPlayer",
       "getPlayerScore",
@@ -242,7 +246,7 @@ export default class GrelottineDialogCard extends Vue {
       challengedPlayerActionPayload: actionPayload
     };
     this.$store.dispatch(
-      "currentGame/levelOne/handleGrelottineSoufflette",
+      "currentGame/rules/levelOne/handleGrelottineSoufflette",
       grelottineActionPayload
     );
 

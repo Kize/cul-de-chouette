@@ -1,73 +1,27 @@
 <template>
   <div>
-    <MenuAction
-      label="Chouette"
-      :disabled="!areActionsEnabled()"
-      :options="6"
-      @click="basicPlay($event, playTypes.CHOUETTE)"
-    >
-    </MenuAction>
+    <v-row>
+      <v-col v-for="dieNumber in 3" :key="dieNumber" md="2" cols="4">
+        <DieCard
+          v-model="diceForm[dieNumber - 1]"
+          color="blue-grey darken-2"
+          :is-selected="false"
+        >
+        </DieCard>
+      </v-col>
+    </v-row>
 
-    <MenuAction
-      label="Velute"
-      :disabled="!areActionsEnabled()"
-      :options="[4, 5, 6]"
-      @click="basicPlay($event, playTypes.VELUTE)"
-    ></MenuAction>
-
-    <MenuAction
-      label="Cul de chouette"
-      :disabled="!areActionsEnabled()"
-      :options="6"
-      @click="basicPlay($event, playTypes.CUL_DE_CHOUETTE)"
-    >
-    </MenuAction>
-
-    <v-btn
-      tile
-      color="primary"
-      outlined
-      large
-      class="ma-2"
-      :disabled="!areActionsEnabled()"
-      @click="showChouetteVeluteDialog = true"
-    >
-      Chouette Velute
-    </v-btn>
-
-    <v-btn
-      tile
-      color="primary"
-      outlined
-      large
-      class="ma-2"
-      :disabled="!areActionsEnabled()"
-      @click="showSuiteDialog = true"
-      >Suite
-    </v-btn>
-
-    <v-btn
-      tile
-      color="grey darken-4"
-      outlined
-      large
-      class="ma-2"
-      :disabled="!areActionsEnabled()"
-      @click="basicPlay($event, playTypes.NEANT)"
-      >Néant
-    </v-btn>
-
-    <v-btn
-      v-if="getIsSouffletteEnabled()"
-      tile
-      color="primary"
-      outlined
-      large
-      class="ma-2"
-      :disabled="!areActionsEnabled()"
-      @click="showSouffletteDialog = true"
-      >Soufflette
-    </v-btn>
+    <v-row>
+      <v-col class="text-right">
+        <v-btn
+          color="green darken-1"
+          text
+          @click="confirm"
+          :disabled="isConfirmButtonDisabled()"
+          >Valider
+        </v-btn>
+      </v-col>
+    </v-row>
 
     <v-dialog v-model="showChouetteVeluteDialog" persistent max-width="800">
       <ChouetteVeluteDialogCard
@@ -89,7 +43,7 @@
     </v-dialog>
 
     <v-dialog
-      v-if="getIsSouffletteEnabled()"
+      v-if="rules.levelOne.isSouffletteEnabled && !getIsAlreadySoufflette()"
       v-model="showSouffletteDialog"
       persistent
       max-width="1200"
@@ -99,6 +53,7 @@
         :players="players"
         :player-names="playerNames"
         :turn-number="turnNumber"
+        :rules="rules"
         @confirm="playSoufflette"
         @cancel="showSouffletteDialog = false"
       >
@@ -119,44 +74,83 @@ import { Player } from "@/domain/player";
 import MenuAction from "@/components/MenuAction.vue";
 import ChouetteVeluteDialogCard, {
   ChouetteVeluteForm
-} from "@/components/play-a-turn-actions/ChouetteVeluteDialogCard.vue";
+} from "@/components/play-a-turn-actions/dialogs/ChouetteVeluteDialogCard.vue";
 import SuiteDialogCard, {
   SuiteForm
-} from "@/components/play-a-turn-actions/SuiteDialogCard.vue";
-import SouffletteDialogCard from "@/components/play-a-turn-actions/SouffletteDialogCard.vue";
+} from "@/components/play-a-turn-actions/dialogs/SuiteDialogCard.vue";
+import SouffletteDialogCard from "@/components/play-a-turn-actions/dialogs/SouffletteDialogCard.vue";
 import { SouffletteActionPayload } from "@/domain/soufflette";
+import DieCard from "@/components/play-a-turn-actions/DieCard.vue";
+import {
+  computeDiceResult,
+  DiceForm,
+  isDiceFormValid,
+  isVelute
+} from "@/domain/dice/compute-dice-result";
+import { computeDiceValue } from "@/domain/dice/compute-dice-value";
+import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
 
 @Component({
   components: {
+    DieCard,
     SouffletteDialogCard,
     SuiteDialogCard,
     ChouetteVeluteDialogCard,
     MenuAction
   }
 })
-export default class PlayATurnActions extends Vue {
+export default class PlayATurnWithDice extends Vue {
   @Prop() currentPlayerName!: string;
   @Prop() players!: Array<Player>;
   @Prop() playerNames!: Array<string>;
-  @Prop() isSouffletteEnabled?: boolean;
+  @Prop() rules!: RulesState;
   @Prop() turnNumber?: number;
   @Prop() disabled?: boolean;
+  @Prop() isAlreadyInSoufflette?: boolean;
   readonly playTypes = HistoryLineType;
 
   showChouetteVeluteDialog = false;
   showSuiteDialog = false;
   showSouffletteDialog = false;
 
-  areActionsEnabled(): boolean {
-    return !this.disabled;
+  isFormValid = true;
+  diceForm: DiceForm = [-1, -1, -1];
+
+  isConfirmButtonDisabled(): boolean {
+    return this.disabled || !isDiceFormValid(this.diceForm);
   }
 
-  getIsSouffletteEnabled(): boolean {
-    return !!this.isSouffletteEnabled;
+  getIsAlreadySoufflette(): boolean {
+    return !!this.isAlreadyInSoufflette;
+  }
+
+  confirm(): void {
+    const type = computeDiceResult(this.diceForm, this.rules);
+    switch (type) {
+      case HistoryLineType.CHOUETTE_VELUTE:
+        this.showChouetteVeluteDialog = true;
+        return;
+      case HistoryLineType.SUITE:
+        this.showSuiteDialog = true;
+        return;
+      case HistoryLineType.SOUFFLETTE:
+        if (!this.getIsAlreadySoufflette()) {
+          this.showSouffletteDialog = true;
+          return;
+        }
+    }
+
+    const value = computeDiceValue(this.diceForm, type);
+    this.basicPlay(value, type);
   }
 
   @Emit()
-  basicPlay(value: number, designation: HistoryLineType): HistoryLineAction {
+  private basicPlay(
+    value: number,
+    designation: HistoryLineType
+  ): HistoryLineAction {
+    this.diceForm = [-1, -1, -1];
+
     return {
       playerName: this.currentPlayerName,
       designation,
@@ -166,40 +160,45 @@ export default class PlayATurnActions extends Vue {
   }
 
   @Emit()
-  playChouetteVelute(
+  private playChouetteVelute(
     form: ChouetteVeluteForm
   ): ChouetteVeluteHistoryLineAction {
     const action: ChouetteVeluteHistoryLineAction = {
       playerName: this.currentPlayerName,
       designation: HistoryLineType.CHOUETTE_VELUTE,
-      value: form.value,
+      value: computeDiceValue(this.diceForm, HistoryLineType.CHOUETTE_VELUTE),
       shoutingPlayers: form.playerNames,
       turnNumber: this.turnNumber
     };
 
+    this.diceForm = [-1, -1, -1];
     this.showChouetteVeluteDialog = false;
+
     return action;
   }
 
   @Emit()
-  playSuite(form: SuiteForm): SuiteHistoryLineAction {
+  private playSuite(form: SuiteForm): SuiteHistoryLineAction {
     const action: SuiteHistoryLineAction = {
       playerName: this.currentPlayerName,
       designation: HistoryLineType.SUITE,
       multiplier: form.multiplier,
       loosingPlayerName: form.loosingPlayerName,
-      isVelute: form.isVelute,
+      isVelute: isVelute(this.diceForm),
       turnNumber: this.turnNumber
     };
 
+    this.diceForm = [-1, -1, -1];
     this.showSuiteDialog = false;
+
     return action;
   }
 
   @Emit()
-  playSoufflette(
+  private playSoufflette(
     actionPayload: SouffletteActionPayload
   ): SouffletteActionPayload {
+    this.diceForm = [-1, -1, -1];
     this.showSouffletteDialog = false;
     return actionPayload;
   }
