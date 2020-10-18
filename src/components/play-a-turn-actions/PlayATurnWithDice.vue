@@ -43,7 +43,7 @@
     </v-dialog>
 
     <v-dialog
-      v-if="getIsSouffletteEnabled()"
+      v-if="rules.levelOne.isSouffletteEnabled && !getIsAlreadySoufflette()"
       v-model="showSouffletteDialog"
       persistent
       max-width="1200"
@@ -53,6 +53,7 @@
         :players="players"
         :player-names="playerNames"
         :turn-number="turnNumber"
+        :rules="rules"
         @confirm="playSoufflette"
         @cancel="showSouffletteDialog = false"
       >
@@ -87,6 +88,7 @@ import {
   isVelute
 } from "@/domain/dice/compute-dice-result";
 import { computeDiceValue } from "@/domain/dice/compute-dice-value";
+import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
 
 @Component({
   components: {
@@ -101,9 +103,10 @@ export default class PlayATurnWithDice extends Vue {
   @Prop() currentPlayerName!: string;
   @Prop() players!: Array<Player>;
   @Prop() playerNames!: Array<string>;
-  @Prop() isSouffletteEnabled?: boolean;
+  @Prop() rules!: RulesState;
   @Prop() turnNumber?: number;
   @Prop() disabled?: boolean;
+  @Prop() isAlreadyInSoufflette?: boolean;
   readonly playTypes = HistoryLineType;
 
   showChouetteVeluteDialog = false;
@@ -117,12 +120,12 @@ export default class PlayATurnWithDice extends Vue {
     return this.disabled || !isDiceFormValid(this.diceForm);
   }
 
-  getIsSouffletteEnabled(): boolean {
-    return !!this.isSouffletteEnabled;
+  getIsAlreadySoufflette(): boolean {
+    return !!this.isAlreadyInSoufflette;
   }
 
   confirm(): void {
-    const type = computeDiceResult(this.diceForm);
+    const type = computeDiceResult(this.diceForm, this.rules);
     switch (type) {
       case HistoryLineType.CHOUETTE_VELUTE:
         this.showChouetteVeluteDialog = true;
@@ -130,6 +133,11 @@ export default class PlayATurnWithDice extends Vue {
       case HistoryLineType.SUITE:
         this.showSuiteDialog = true;
         return;
+      case HistoryLineType.SOUFFLETTE:
+        if (!this.getIsAlreadySoufflette()) {
+          this.showSouffletteDialog = true;
+          return;
+        }
     }
 
     const value = computeDiceValue(this.diceForm, type);
@@ -190,6 +198,7 @@ export default class PlayATurnWithDice extends Vue {
   private playSoufflette(
     actionPayload: SouffletteActionPayload
   ): SouffletteActionPayload {
+    this.diceForm = [-1, -1, -1];
     this.showSouffletteDialog = false;
     return actionPayload;
   }

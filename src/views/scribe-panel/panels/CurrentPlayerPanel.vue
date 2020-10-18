@@ -20,7 +20,7 @@
         :players="players"
         :player-names="playerNames"
         :turn-number="turnNumber"
-        :is-soufflette-enabled="isSouffletteEnabled"
+        :rules="getRules"
         @basic-play="basicPlay"
         @play-chouette-velute="playChouetteVelute"
         @play-suite="playSuite"
@@ -55,7 +55,7 @@ import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDic
   },
   computed: {
     ...mapState("currentGame", ["players", "turnNumber"]),
-    ...mapState("currentGame/levelOne", ["isSouffletteEnabled"]),
+    ...mapGetters("currentGame/rules", ["getRules"]),
     ...mapGetters("currentGame", [
       "isCurrentPlayer",
       "playerNames",
@@ -79,7 +79,10 @@ export default class CurrentPlayerPanel extends Vue {
   }
 
   playSoufflette(actionPayload: SouffletteActionPayload): void {
-    this.$store.dispatch("currentGame/levelOne/playSoufflette", actionPayload);
+    this.$store.dispatch(
+      "currentGame/rules/levelOne/playSoufflette",
+      actionPayload
+    );
   }
 }
 </script>

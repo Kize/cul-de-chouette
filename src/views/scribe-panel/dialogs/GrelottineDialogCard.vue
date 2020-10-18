@@ -109,7 +109,7 @@
             :players="players"
             :player-names="playerNames"
             :disabled="!isFormValid"
-            :is-soufflette-enabled="isSouffletteEnabled"
+            :rules="getRules"
             @basic-play="setChallengedPlayerAction"
             @play-chouette-velute="setChallengedPlayerAction"
             @play-suite="setChallengedPlayerAction"
@@ -153,7 +153,7 @@ const INITIAL_FORM: GrelottineForm = {
   components: { PlayATurnWithDice, BevueMenuAction },
   computed: {
     ...mapState("currentGame", ["players", "turnNumber"]),
-    ...mapState("currentGame/levelOne", ["isSouffletteEnabled"]),
+    ...mapGetters("currentGame/rules", ["getRules"]),
     ...mapGetters("currentGame", [
       "currentPlayer",
       "getPlayerScore",

@@ -26,13 +26,13 @@ import {
   isGrelottineChallengeSuccessful
 } from "@/domain/grelottine";
 import { MainPlayableActionsStoreModule } from "@/store/current-game/main-playable-actions.store";
-import { LeveLOneStoreModule } from "@/store/current-game/difficulty-levels/level-one.store";
+import { RulesStoreModule } from "@/store/current-game/difficulty-levels/rules.store";
 
 export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
   namespaced: true,
   modules: {
     play: MainPlayableActionsStoreModule,
-    levelOne: LeveLOneStoreModule
+    rules: RulesStoreModule
   },
   state(): CurrentGameState {
     return {
@@ -177,10 +177,6 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         throw new Error("Chaque joueur doit avoir un nom unique.");
       }
 
-      if (playerNames.length < 2) {
-        throw new Error("Il faut 2 joueurs minimum pour commencer une partie.");
-      }
-
       const newGame: CurrentGameState = {
         status: GameStatus.IN_GAME,
         name: form.gameName,
@@ -196,7 +192,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       commit("setGame", newGame);
 
       commit(
-        "levelOne/setIsSouffletteEnabled",
+        "rules/levelOne/setIsSouffletteEnabled",
         form.levelOne.isSouffletteEnabled
       );
 
@@ -205,8 +201,10 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     resumeGame({ commit }, currentGame: SavedCurrentGame): void {
       commit("setGame", currentGame);
       commit(
-        "levelOne/setIsSouffletteEnabled",
-        currentGame.levelOne.isSouffletteEnabled
+        "rules/levelOne/setIsSouffletteEnabled",
+        currentGame.rules.levelOne
+          ? currentGame.rules.levelOne.isSouffletteEnabled
+          : false
       );
     },
     async checkEndGame({ commit, getters, dispatch }): Promise<boolean> {

@@ -16,7 +16,7 @@ export interface LevelOneState {
   isSouffletteEnabled: boolean;
 }
 
-export const LeveLOneStoreModule: Module<LevelOneState, RootState> = {
+export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
   namespaced: true,
   state(): LevelOneState {
     return {
@@ -101,7 +101,7 @@ export const LeveLOneStoreModule: Module<LevelOneState, RootState> = {
         throw new Error("Il manque des infos sur le joueur défié !");
       }
 
-      const gambledAmount = 30 + 10 * (3 - actionPayload.diceThrowsNumber);
+      let gambledAmount = 30;
 
       let winnerName: string, looserName: string;
       const hasChallengedPlayerWon =
@@ -111,6 +111,7 @@ export const LeveLOneStoreModule: Module<LevelOneState, RootState> = {
       if (hasChallengedPlayerWon) {
         winnerName = actionPayload.challengedPlayer;
         looserName = actionPayload.challengerName;
+        gambledAmount += 10 * (3 - actionPayload.diceThrowsNumber);
       } else {
         winnerName = actionPayload.challengerName;
         looserName = actionPayload.challengedPlayer;

@@ -1,10 +1,12 @@
 import { HistoryLineType } from "@/domain/history";
+import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
+import { computeLevelOneDiceResult } from "@/domain/dice/compute-dice-result-level-one";
 
 export type DiceForm = [number, number, number];
 
 export function isDiceFormValid(diceForm: DiceForm): boolean {
   return diceForm.every(
-    dieValueIndex => dieValueIndex >= 0 && dieValueIndex < 7
+    dieValueIndex => dieValueIndex >= 0 && dieValueIndex < 6
   );
 }
 
@@ -49,7 +51,10 @@ function isCulDeChouette([dieIndex1, dieIndex2, dieIndex3]: DiceForm): boolean {
   return dieIndex1 === dieIndex2 && dieIndex1 === dieIndex3;
 }
 
-export function computeDiceResult(diceForm: DiceForm): HistoryLineType {
+export function computeDiceResult(
+  diceForm: DiceForm,
+  rules: RulesState
+): HistoryLineType {
   if (isCulDeChouette(diceForm)) {
     return HistoryLineType.CUL_DE_CHOUETTE;
   }
@@ -60,6 +65,11 @@ export function computeDiceResult(diceForm: DiceForm): HistoryLineType {
 
   if (isChouetteVelute(diceForm)) {
     return HistoryLineType.CHOUETTE_VELUTE;
+  }
+
+  const levelOneResult = computeLevelOneDiceResult(diceForm, rules.levelOne);
+  if (levelOneResult !== undefined) {
+    return levelOneResult;
   }
 
   if (isChouette(diceForm)) {
