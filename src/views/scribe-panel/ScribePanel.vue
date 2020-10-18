@@ -1,5 +1,5 @@
 <template>
-  <div class="scribe-panel">
+  <div class="mx-4">
     <v-row class="mx-2">
       <v-col lg="4" md="10" sm="12">
         <h1 class="headline">Gestion des scores - {{ name }}</h1>
