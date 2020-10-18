@@ -104,7 +104,7 @@
             Combinaison du joueur défié réalisée
             {{ isFormValid ? "" : " - (Renseigne les conditions du défi)" }}
           </v-card-title>
-          <PlayATurnActions
+          <PlayATurnWithDice
             :current-player-name="form.challengedPlayer"
             :players="players"
             :player-names="playerNames"
@@ -114,7 +114,7 @@
             @play-chouette-velute="setChallengedPlayerAction"
             @play-suite="setChallengedPlayerAction"
             @play-soufflette="handleSoufflette"
-          ></PlayATurnActions>
+          ></PlayATurnWithDice>
         </v-card>
       </v-container>
     </v-form>
@@ -137,20 +137,20 @@ import {
   selectChallengeRules,
   selectNameRules
 } from "@/domain/form-validation-rules";
-import PlayATurnActions from "@/components/play-a-turn-actions/PlayATurnActions.vue";
 import { HistoryLineAction } from "@/domain/history";
 import { Player } from "@/domain/player";
 import {
   GrelottineSouffletteActionPayload,
   SouffletteActionPayload
 } from "@/domain/soufflette";
+import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDice.vue";
 
 const INITIAL_FORM: GrelottineForm = {
   gambledAmount: 0
 };
 
 @Component({
-  components: { PlayATurnActions, BevueMenuAction },
+  components: { PlayATurnWithDice, BevueMenuAction },
   computed: {
     ...mapState("currentGame", ["players", "turnNumber"]),
     ...mapState("currentGame/levelOne", ["isSouffletteEnabled"]),

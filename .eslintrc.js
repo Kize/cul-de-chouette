@@ -4,6 +4,8 @@ module.exports = {
     node: true,
     jest: true
   },
+  // parser: "@typescript-eslint/parser",
+  // plugins: ["@typescript-eslint"],
   extends: [
     "plugin:vue/essential",
     "eslint:recommended",
@@ -20,10 +22,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: [
-        "**/__tests__/*.{j,t}s?(x)",
-        "**/tests/unit/**/*.spec.{j,t}s?(x)"
-      ],
+      files: ["**/*.spec.ts"],
       env: {
         jest: true
       }

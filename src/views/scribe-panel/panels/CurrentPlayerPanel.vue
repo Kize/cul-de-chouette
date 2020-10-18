@@ -15,7 +15,7 @@
     </v-card-title>
 
     <v-card-text>
-      <PlayATurnActions
+      <PlayATurnWithDice
         :current-player-name="currentPlayer.name"
         :players="players"
         :player-names="playerNames"
@@ -26,7 +26,7 @@
         @play-suite="playSuite"
         @play-soufflette="playSoufflette"
       >
-      </PlayATurnActions>
+      </PlayATurnWithDice>
     </v-card-text>
   </v-card>
 </template>
@@ -41,14 +41,14 @@ import {
 import { Player } from "@/domain/player";
 import MenuAction from "@/components/MenuAction.vue";
 import { mapGetters, mapState } from "vuex";
-import ChouetteVeluteDialogCard from "@/components/play-a-turn-actions/ChouetteVeluteDialogCard.vue";
-import SuiteDialogCard from "@/components/play-a-turn-actions/SuiteDialogCard.vue";
-import PlayATurnActions from "@/components/play-a-turn-actions/PlayATurnActions.vue";
+import ChouetteVeluteDialogCard from "@/components/play-a-turn-actions/dialogs/ChouetteVeluteDialogCard.vue";
+import SuiteDialogCard from "@/components/play-a-turn-actions/dialogs/SuiteDialogCard.vue";
 import { SouffletteActionPayload } from "@/domain/soufflette";
+import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDice.vue";
 
 @Component({
   components: {
-    PlayATurnActions,
+    PlayATurnWithDice,
     SuiteDialogCard,
     ChouetteVeluteDialogCard,
     MenuAction

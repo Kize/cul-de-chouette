@@ -39,7 +39,7 @@
 
     <span class="subtitle-1">Combinaison réalisée sur le dernier lancé:</span>
 
-    <PlayATurnActions
+    <PlayATurnWithDice
       :players="players"
       :player-names="playerNames"
       :current-player-name="form.challengedPlayer"
@@ -48,7 +48,7 @@
       @play-chouette-velute="looseChallenge"
       @play-suite="looseChallenge"
     >
-    </PlayATurnActions>
+    </PlayATurnWithDice>
   </MainDialogCard>
 </template>
 
@@ -67,8 +67,8 @@ const INITIAL_FORM: SouffletteForm = {
 
 @Component({
   components: {
-    PlayATurnActions: () =>
-      import("@/components/play-a-turn-actions/PlayATurnActions.vue"),
+    PlayATurnWithDice: () =>
+      import("@/components/play-a-turn-actions/PlayATurnWithDice.vue"),
     MainDialogCard
   }
 })

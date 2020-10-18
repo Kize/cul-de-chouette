@@ -115,6 +115,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       state.name = newGame.name;
       state.players = newGame.players;
       state.currentPlayerName = newGame.currentPlayerName;
+      state.turnNumber = newGame.turnNumber;
     },
     setGameStatus(state, status: GameStatus): void {
       state.status = status;
