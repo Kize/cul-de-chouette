@@ -25,8 +25,6 @@ export function computeDiceValue(
   diceForm: DiceForm,
   type: HistoryLineType
 ): number {
-  console.log(diceForm);
-
   switch (type) {
     case HistoryLineType.CHOUETTE:
       return getChouetteNumber(diceForm);

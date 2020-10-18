@@ -122,11 +122,6 @@ export default class PlayATurnWithDice extends Vue {
   }
 
   confirm(): void {
-    if (!isDiceFormValid(this.diceForm)) {
-      console.warn("Damn, handle this !");
-      return;
-    }
-
     const type = computeDiceResult(this.diceForm);
     switch (type) {
       case HistoryLineType.CHOUETTE_VELUTE:
