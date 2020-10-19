@@ -4,8 +4,8 @@
       <v-col v-for="dieNumber in 3" :key="dieNumber" md="2" cols="4">
         <DieCard
           v-model="diceForm[dieNumber - 1]"
-          color="blue-grey darken-2"
           :is-selected="false"
+          :is-cul="dieNumber === 3"
         >
         </DieCard>
       </v-col>
