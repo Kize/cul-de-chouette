@@ -34,7 +34,7 @@
 
     <v-card color="grey lighten-3" class="my-4">
       <v-card-title class="headline">
-        <span>Liste des joueurs - de 2 à 6 joueurs</span>
+        <span>Liste des joueurs - de 2 à 8 joueurs</span>
       </v-card-title>
 
       <v-card-text class="pb-0">
@@ -121,7 +121,7 @@ export default class NewGameFormSection extends Vue {
   }
 
   canAddPlayer(): boolean {
-    return this.form.playerNames.length < 6;
+    return this.form.playerNames.length < 8;
   }
 
   removePlayer(index: number): void {
