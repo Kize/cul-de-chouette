@@ -28,16 +28,20 @@
               ></v-select>
             </v-col>
             <v-col md="4" cols="12" align="center">
-              <v-btn-toggle v-model="form.diceThrowsNumber" mandatory>
-                <span class="button-toggle-label grey--text">
-                  Nombre de lancés:
-                </span>
+              <span class="button-toggle-label grey--text">
+                Nombre de lancés:
+              </span>
+              <v-btn-toggle
+                v-model="form.diceThrowsNumber"
+                mandatory
+                color="blue accent-4"
+                tile
+              >
+                <v-btn :value="1"><b>1</b></v-btn>
 
-                <v-btn :value="1">1</v-btn>
+                <v-btn :value="2"><b>2</b></v-btn>
 
-                <v-btn :value="2">2</v-btn>
-
-                <v-btn :value="3">3</v-btn>
+                <v-btn :value="3"><b>3</b></v-btn>
               </v-btn-toggle>
             </v-col>
           </v-row>
