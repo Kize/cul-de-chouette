@@ -62,6 +62,9 @@ export default class DieCard extends Vue {
 }
 
 .v-btn-toggle > .v-btn.v-btn--active.active-die {
+  transform: scale(1.25);
+  z-index: 10;
+
   &.chouette-die {
     background-color: #448aff;
 
