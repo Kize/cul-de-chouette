@@ -5,24 +5,21 @@ import { computeLevelOneDiceResult } from "@/domain/dice/compute-dice-result-lev
 export type DiceForm = [number, number, number];
 
 export function isDiceFormValid(diceForm: DiceForm): boolean {
-  return diceForm.every(
-    dieValueIndex => dieValueIndex >= 0 && dieValueIndex < 6
-  );
+  return diceForm.every(dieValue => dieValue >= 1 && dieValue <= 6);
 }
 
-function isChouette([dieIndex1, dieIndex2, dieIndex3]: DiceForm): boolean {
+function isChouette([dieValue1, dieValue2, dieValue3]: DiceForm): boolean {
   return (
-    dieIndex1 === dieIndex2 ||
-    dieIndex1 === dieIndex3 ||
-    dieIndex2 === dieIndex3
+    dieValue1 === dieValue2 ||
+    dieValue1 === dieValue3 ||
+    dieValue2 === dieValue3
   );
 }
 
-export function isVelute([dieIndex1, dieIndex2, dieIndex3]: DiceForm): boolean {
-  const [v1, v2, v3] = [dieIndex1 + 1, dieIndex2 + 1, dieIndex3 + 1];
-  const firstCase = v1 + v2 === v3;
-  const secondCase = v1 + v3 === v2;
-  const thirdCase = v2 + v3 === v1;
+export function isVelute([dieValue1, dieValue2, dieValue3]: DiceForm): boolean {
+  const firstCase = dieValue1 + dieValue2 === dieValue3;
+  const secondCase = dieValue1 + dieValue3 === dieValue2;
+  const thirdCase = dieValue2 + dieValue3 === dieValue1;
 
   return firstCase || secondCase || thirdCase;
 }
@@ -31,8 +28,7 @@ function isChouetteVelute(diceForm: DiceForm): boolean {
   return isChouette(diceForm) && isVelute(diceForm);
 }
 
-function isSuite([dieIndex1, dieIndex2, dieIndex3]: DiceForm): boolean {
-  const values = [dieIndex1 + 1, dieIndex2 + 1, dieIndex3 + 1].sort();
+function isSuite(diceForm: DiceForm): boolean {
   const possibleSuites = [
     [1, 2, 3],
     [2, 3, 4],
@@ -42,13 +38,13 @@ function isSuite([dieIndex1, dieIndex2, dieIndex3]: DiceForm): boolean {
 
   return possibleSuites.some(validSuite => {
     return validSuite.every(
-      (validSuiteNumber, index) => validSuiteNumber === values[index]
+      (validSuiteNumber, index) => validSuiteNumber === diceForm[index]
     );
   });
 }
 
-function isCulDeChouette([dieIndex1, dieIndex2, dieIndex3]: DiceForm): boolean {
-  return dieIndex1 === dieIndex2 && dieIndex1 === dieIndex3;
+function isCulDeChouette([dieValue1, dieValue2, dieValue3]: DiceForm): boolean {
+  return dieValue1 === dieValue2 && dieValue1 === dieValue3;
 }
 
 export function computeDiceResult(

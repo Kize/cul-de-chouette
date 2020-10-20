@@ -10,6 +10,7 @@
       :class="isCul ? 'cul-die' : 'chouette-die'"
       v-for="dieValue in 6"
       :key="dieValue"
+      :value="dieValue"
     >
       <v-icon size="72" class="dice-icon"
         >mdi-dice-{{ dieValue }}-outline
