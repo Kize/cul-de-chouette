@@ -4,8 +4,8 @@
       <v-col v-for="dieNumber in 3" :key="dieNumber" md="2" cols="4">
         <DieCard
           v-model="diceForm[dieNumber - 1]"
-          color="blue-grey darken-2"
           :is-selected="false"
+          :is-cul="dieNumber === 3"
         >
         </DieCard>
       </v-col>
@@ -90,6 +90,10 @@ import {
 import { computeDiceValue } from "@/domain/dice/compute-dice-value";
 import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
 
+function getInitialDiceForm(): DiceForm {
+  return [0, 0, 0];
+}
+
 @Component({
   components: {
     DieCard,
@@ -114,7 +118,7 @@ export default class PlayATurnWithDice extends Vue {
   showSouffletteDialog = false;
 
   isFormValid = true;
-  diceForm: DiceForm = [-1, -1, -1];
+  diceForm: DiceForm = getInitialDiceForm();
 
   isConfirmButtonDisabled(): boolean {
     return this.disabled || !isDiceFormValid(this.diceForm);
@@ -149,7 +153,7 @@ export default class PlayATurnWithDice extends Vue {
     value: number,
     designation: HistoryLineType
   ): HistoryLineAction {
-    this.diceForm = [-1, -1, -1];
+    this.diceForm = getInitialDiceForm();
 
     return {
       playerName: this.currentPlayerName,
@@ -171,7 +175,7 @@ export default class PlayATurnWithDice extends Vue {
       turnNumber: this.turnNumber
     };
 
-    this.diceForm = [-1, -1, -1];
+    this.diceForm = getInitialDiceForm();
     this.showChouetteVeluteDialog = false;
 
     return action;
@@ -188,7 +192,7 @@ export default class PlayATurnWithDice extends Vue {
       turnNumber: this.turnNumber
     };
 
-    this.diceForm = [-1, -1, -1];
+    this.diceForm = getInitialDiceForm();
     this.showSuiteDialog = false;
 
     return action;
@@ -198,7 +202,7 @@ export default class PlayATurnWithDice extends Vue {
   private playSoufflette(
     actionPayload: SouffletteActionPayload
   ): SouffletteActionPayload {
-    this.diceForm = [-1, -1, -1];
+    this.diceForm = getInitialDiceForm();
     this.showSouffletteDialog = false;
     return actionPayload;
   }

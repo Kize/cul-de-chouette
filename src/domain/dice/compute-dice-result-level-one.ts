@@ -2,10 +2,10 @@ import { HistoryLineType } from "@/domain/history";
 import { DiceForm } from "@/domain/dice/compute-dice-result";
 import { LevelOneState } from "@/store/current-game/difficulty-levels/level-one.store";
 
-function isSoufflette([dieIndex1, dieIndex2, dieIndex3]: DiceForm): boolean {
-  const values = [dieIndex1 + 1, dieIndex2 + 1, dieIndex3 + 1].sort();
+function isSoufflette(diceForm: DiceForm): boolean {
+  const sortedValues = [...diceForm].sort();
 
-  return values[0] === 1 && values[1] === 2 && values[2] === 4;
+  return sortedValues[0] === 1 && sortedValues[1] === 2 && sortedValues[2] === 4;
 }
 
 export function computeLevelOneDiceResult(

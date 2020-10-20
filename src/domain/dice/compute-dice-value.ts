@@ -2,23 +2,23 @@ import { DiceForm } from "@/domain/dice/compute-dice-result";
 import { HistoryLineType } from "@/domain/history";
 
 function getChouetteNumber([
-  dieIndex1,
-  dieIndex2,
-  dieIndex3
+  dieValue1,
+  dieValue2,
+  dieValue3
 ]: DiceForm): number {
-  if (dieIndex1 === dieIndex2 || dieIndex1 === dieIndex3) {
-    return dieIndex1 + 1;
+  if (dieValue1 === dieValue2 || dieValue1 === dieValue3) {
+    return dieValue1;
   }
 
-  return dieIndex2 + 1;
+  return dieValue2;
 }
 
 function getVeluteNumber(diceForm: DiceForm): number {
-  return [...diceForm].sort().pop()! + 1;
+  return [...diceForm].sort().pop()!;
 }
 
-function getCulDeChouetteNumber([index1]: DiceForm): number {
-  return index1 + 1;
+function getCulDeChouetteNumber([firstValue]: DiceForm): number {
+  return firstValue;
 }
 
 export function computeDiceValue(
