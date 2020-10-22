@@ -89,11 +89,11 @@ import GrelottineDialogCard from "@/views/scribe-panel/dialogs/GrelottineDialogC
   components: {
     BevueMenuAction,
     SloubiDialogCard,
-    GrelottineDialogCard
+    GrelottineDialogCard,
   },
   computed: {
-    ...mapGetters("currentGame", ["playerNames", "sloubiScore"])
-  }
+    ...mapGetters("currentGame", ["playerNames", "sloubiScore"]),
+  },
 })
 export default class MainActionsPanel extends Vue {
   @Prop() currentPlayer!: Player;
@@ -103,7 +103,7 @@ export default class MainActionsPanel extends Vue {
 
   errorSnackBar = {
     text: "",
-    display: false
+    display: false,
   };
 
   async playSloubi(form: SloubiActionPayload): Promise<void> {

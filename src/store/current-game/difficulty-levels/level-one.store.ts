@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Module } from "vuex";
 import { RootState } from "@/store/app.state";
 import {
   GrelottineSouffletteActionPayload,
-  SouffletteActionPayload
+  SouffletteActionPayload,
 } from "@/domain/soufflette";
 import {
   BasicHistoryLineAction,
   HistoryLineApply,
   HistoryLineType,
-  mapHistoryActionToApply
+  mapHistoryActionToApply,
 } from "@/domain/history";
 import { GrelottineActionPayload } from "@/domain/grelottine";
 
@@ -20,17 +21,17 @@ export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
   namespaced: true,
   state(): LevelOneState {
     return {
-      isSouffletteEnabled: false
+      isSouffletteEnabled: false,
     };
   },
   mutations: {
     setIsSouffletteEnabled(state, isEnabled: boolean): void {
       state.isSouffletteEnabled = isEnabled;
-    }
+    },
   },
   actions: {
     playSoufflette(
-      { dispatch, commit, rootGetters },
+      { dispatch, rootGetters },
       actionPayload: SouffletteActionPayload
     ): void {
       actionPayload.turnNumber = rootGetters["currentGame/getState"].turnNumber;
@@ -43,13 +44,13 @@ export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
           designation: HistoryLineType.SOUFFLETTE,
           playerName: actionPayload.challengerName,
           value: 0,
-          turnNumber: actionPayload.turnNumber
+          turnNumber: actionPayload.turnNumber,
         };
         dispatch("currentGame/play/playATurn", lineAction, { root: true });
       }
     },
     handleGrelottineSoufflette(
-      { dispatch, commit, rootGetters },
+      { dispatch, commit },
       actionPayload: GrelottineSouffletteActionPayload
     ): void {
       const grelottineActionPayload: GrelottineActionPayload = {
@@ -60,12 +61,12 @@ export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
         challengedPlayerAction: {
           designation: HistoryLineType.SOUFFLETTE,
           playerName: actionPayload.challengedPlayer,
-          value: 0
-        }
+          value: 0,
+        },
       };
 
       dispatch("currentGame/grelottineChallenge", grelottineActionPayload, {
-        root: true
+        root: true,
       });
 
       if (actionPayload.challengedPlayerActionPayload.isChallenge) {
@@ -78,7 +79,7 @@ export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
           designation: HistoryLineType.SOUFFLETTE,
           playerName:
             actionPayload.challengedPlayerActionPayload.challengerName,
-          value: 0
+          value: 0,
         };
         commit(
           "currentGame/addHistoryLine",
@@ -124,7 +125,7 @@ export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
         turnNumber:
           winnerName === actionPayload.challengerName
             ? actionPayload.turnNumber
-            : undefined
+            : undefined,
       };
       commit("currentGame/addHistoryLine", winnerApply, { root: true });
 
@@ -135,7 +136,7 @@ export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
         turnNumber:
           looserName === actionPayload.challengerName
             ? actionPayload.turnNumber
-            : undefined
+            : undefined,
       };
       commit("currentGame/addHistoryLine", looserApply, { root: true });
 
@@ -146,6 +147,6 @@ export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
           { root: true }
         );
       }
-    }
-  }
+    },
+  },
 };

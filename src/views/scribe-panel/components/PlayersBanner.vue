@@ -65,8 +65,8 @@ import { mapGetters } from "vuex";
 
 @Component({
   computed: {
-    ...mapGetters("currentGame", ["isCurrentPlayer", "getPlayerScore"])
-  }
+    ...mapGetters("currentGame", ["isCurrentPlayer", "getPlayerScore"]),
+  },
 })
 export default class PlayersBanner extends Vue {
   @Prop() players!: Array<Player>;

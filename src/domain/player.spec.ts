@@ -5,7 +5,7 @@ describe("getNextPlayer", () => {
     const players: Array<Player> = [
       { name: "player 1", history: [], hasGrelottine: false },
       { name: "player 2", history: [], hasGrelottine: false },
-      { name: "player 3", history: [], hasGrelottine: false }
+      { name: "player 3", history: [], hasGrelottine: false },
     ];
 
     const nextPlayerName = getNextPlayer(players, "player 1");
@@ -17,7 +17,7 @@ describe("getNextPlayer", () => {
     const players: Array<Player> = [
       { name: "player 1", history: [], hasGrelottine: false },
       { name: "player 2", history: [], hasGrelottine: false },
-      { name: "player 3", history: [], hasGrelottine: false }
+      { name: "player 3", history: [], hasGrelottine: false },
     ];
 
     const nextPlayerName = getNextPlayer(players, "player 3");

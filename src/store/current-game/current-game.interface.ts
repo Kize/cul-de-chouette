@@ -1,12 +1,11 @@
 import { Player } from "@/domain/player";
-import { LevelOneState } from "@/store/current-game/difficulty-levels/level-one.store";
 import { AllHistoryLineTypes } from "@/domain/history";
-import { RulesState } from '@/store/current-game/difficulty-levels/rules.store';
+import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
 
 export enum GameStatus {
   CREATION = "creation",
   IN_GAME = "in game",
-  FINISHED = "finished"
+  FINISHED = "finished",
 }
 
 export interface CurrentGameState {
@@ -23,7 +22,7 @@ export type Scoreboard = ReadonlyArray<{
 }>;
 
 export interface SavedCurrentGame extends CurrentGameState {
-  rules: RulesState
+  rules: RulesState;
 }
 
 export interface NewGameForm {

@@ -41,7 +41,7 @@ import { Component, Vue } from "vue-property-decorator";
 import RulesButton from "@/components/RulesButton.vue";
 
 @Component({
-  components: { RulesButton }
+  components: { RulesButton },
 })
 export default class Intro extends Vue {}
 </script>

@@ -8,7 +8,7 @@ export enum HistoryLineType {
   CHOUETTE_VELUTE = "Chouette velute",
   CUL_DE_CHOUETTE = "Cul de chouette",
   SLOUBI = "Sloubi",
-  SOUFFLETTE = "Soufflette"
+  SOUFFLETTE = "Soufflette",
 }
 
 export enum NotImplementedHistoryLineType {
@@ -31,11 +31,11 @@ export enum NotImplementedHistoryLineType {
   ACHAT = "Achat",
   DOUBLE_ACHAT = "Double Achat",
   JARRET = "Jarret",
-  FLAN = "Flan"
+  FLAN = "Flan",
 }
 
 export enum GodModLineType {
-  GOD_MOD = "Ligne custom"
+  GOD_MOD = "Ligne custom",
 }
 
 export type AllHistoryLineTypes =
@@ -112,6 +112,6 @@ export function mapHistoryActionToApply(
     amount,
     playerName: action.playerName,
     designation: action.designation,
-    turnNumber: action.turnNumber
+    turnNumber: action.turnNumber,
   };
 }

@@ -132,25 +132,27 @@ import {
   getMaxGrelottinePossibleAmount,
   GrelottineActionPayload,
   GrelottineChallenges,
-  GrelottineForm
+  GrelottineForm,
 } from "@/domain/grelottine";
 import { mapGetters, mapState } from "vuex";
 import {
   inputPositiveIntegerRules,
   inputStrictlyPositiveIntegerRules,
   selectChallengeRules,
-  selectNameRules
+  selectNameRules,
+  inputRuleFunction,
 } from "@/domain/form-validation-rules";
 import { HistoryLineAction } from "@/domain/history";
 import { Player } from "@/domain/player";
 import {
   GrelottineSouffletteActionPayload,
-  SouffletteActionPayload
+  SouffletteActionPayload,
 } from "@/domain/soufflette";
 import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDice.vue";
+import { VForm } from "@/vuetify.interface";
 
 const INITIAL_FORM: GrelottineForm = {
-  gambledAmount: 0
+  gambledAmount: 0,
 };
 
 @Component({
@@ -162,9 +164,9 @@ const INITIAL_FORM: GrelottineForm = {
       "currentPlayer",
       "getPlayerScore",
       "getPlayerScore",
-      "playerNames"
-    ])
-  }
+      "playerNames",
+    ]),
+  },
 })
 export default class GrelottineDialogCard extends Vue {
   readonly challenges = Object.values(GrelottineChallenges);
@@ -180,12 +182,12 @@ export default class GrelottineDialogCard extends Vue {
   getGrelottinePlayerNames(): Array<string> {
     return this.players
       .filter(
-        player => player.hasGrelottine && this.getPlayerScore(player.name) > 0
+        (player) => player.hasGrelottine && this.getPlayerScore(player.name) > 0
       )
-      .map(player => player.name);
+      .map((player) => player.name);
   }
 
-  getSelectPlayerRules() {
+  getSelectPlayerRules(): ReadonlyArray<inputRuleFunction> {
     return [
       ...selectNameRules,
       (): boolean | string => {
@@ -193,18 +195,18 @@ export default class GrelottineDialogCard extends Vue {
           return "Le grelottin ne peut pas être le joueur défié.";
         }
         return true;
-      }
+      },
     ];
   }
 
-  getGrelottineAmountRules() {
-    const rules: Array<(n: number) => boolean | string> = [
-      ...inputStrictlyPositiveIntegerRules
+  getGrelottineAmountRules(): ReadonlyArray<inputRuleFunction> {
+    const rules: Array<inputRuleFunction> = [
+      ...inputStrictlyPositiveIntegerRules,
     ];
 
     const maxAmount = this.getMaxGrelottinePossibleAmount();
-    const maxScoreRule = (number: number): boolean | string => {
-      if (number > maxAmount) {
+    const maxScoreRule = (n?: string): boolean | string => {
+      if (Number(n) > maxAmount) {
         return `Le score ne peut pas supérieur à ${maxAmount}.`;
       }
       return true;
@@ -243,7 +245,7 @@ export default class GrelottineDialogCard extends Vue {
       challengedPlayer: this.form.challengedPlayer,
       challenge: this.form.challenge,
       gambledAmount: this.form.gambledAmount,
-      challengedPlayerActionPayload: actionPayload
+      challengedPlayerActionPayload: actionPayload,
     };
     this.$store.dispatch(
       "currentGame/rules/levelOne/handleGrelottineSoufflette",
@@ -261,7 +263,7 @@ export default class GrelottineDialogCard extends Vue {
 
   private confirm(): void {
     const grelottineActionPayload: GrelottineActionPayload = {
-      ...(this.form as GrelottineActionPayload)
+      ...(this.form as GrelottineActionPayload),
     };
     this.$store.dispatch(
       "currentGame/grelottineChallenge",

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Module } from "vuex";
 import { RootState } from "@/store/app.state";
 import {
@@ -7,11 +8,13 @@ import {
   HistoryLineAction,
   HistoryLineType,
   mapHistoryActionToApply,
-  SuiteHistoryLineAction
+  SuiteHistoryLineAction,
 } from "@/domain/history";
 
+type MainPlayableState = Record<string, unknown>;
+
 export const MainPlayableActionsStoreModule: Module<
-  Record<string, any>,
+  MainPlayableState,
   RootState
 > = {
   namespaced: true,
@@ -29,7 +32,7 @@ export const MainPlayableActionsStoreModule: Module<
 
       if (lineAction.designation === HistoryLineType.NEANT) {
         commit("currentGame/addGrelottine", lineAction.playerName, {
-          root: true
+          root: true,
         });
       }
 
@@ -44,7 +47,7 @@ export const MainPlayableActionsStoreModule: Module<
         const historyLineAction: HistoryLineAction = {
           playerName: action.loosingPlayerName,
           designation: HistoryLineType.SUITE,
-          value: action.multiplier * 10
+          value: action.multiplier * 10,
         };
         commit(
           "currentGame/addHistoryLine",
@@ -58,7 +61,7 @@ export const MainPlayableActionsStoreModule: Module<
         playerName: action.playerName,
         designation: HistoryLineType.SUITE,
         value,
-        turnNumber: action.turnNumber
+        turnNumber: action.turnNumber,
       });
 
       if (action.isVelute) {
@@ -80,7 +83,7 @@ export const MainPlayableActionsStoreModule: Module<
             action.shoutingPlayers[0]
           )
             ? action.turnNumber
-            : undefined
+            : undefined,
         };
         commit(
           "currentGame/addHistoryLine",
@@ -88,19 +91,19 @@ export const MainPlayableActionsStoreModule: Module<
           { root: true }
         );
       } else {
-        action.shoutingPlayers.forEach(playerName => {
+        action.shoutingPlayers.forEach((playerName) => {
           const historyLineApply = mapHistoryActionToApply({
             playerName,
             designation: HistoryLineType.CHOUETTE_VELUTE,
             value: action.value,
             turnNumber: rootGetters["currentGame/isCurrentPlayer"](playerName)
               ? action.turnNumber
-              : undefined
+              : undefined,
           });
 
           historyLineApply.amount = -historyLineApply.amount;
           commit("currentGame/addHistoryLine", historyLineApply, {
-            root: true
+            root: true,
           });
         });
       }
@@ -112,7 +115,7 @@ export const MainPlayableActionsStoreModule: Module<
             playerName: action.playerName,
             designation: HistoryLineType.CHOUETTE_VELUTE,
             value: 0,
-            turnNumber: action.turnNumber
+            turnNumber: action.turnNumber,
           }),
           { root: true }
         );
@@ -136,6 +139,6 @@ export const MainPlayableActionsStoreModule: Module<
             { root: true }
           );
       }
-    }
-  }
+    },
+  },
 };

@@ -36,7 +36,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import {
   ChouetteVeluteHistoryLineAction,
   HistoryLineAction,
-  SuiteHistoryLineAction
+  SuiteHistoryLineAction,
 } from "@/domain/history";
 import { Player } from "@/domain/player";
 import MenuAction from "@/components/MenuAction.vue";
@@ -51,7 +51,7 @@ import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDic
     PlayATurnWithDice,
     SuiteDialogCard,
     ChouetteVeluteDialogCard,
-    MenuAction
+    MenuAction,
   },
   computed: {
     ...mapState("currentGame", ["players", "turnNumber"]),
@@ -59,9 +59,9 @@ import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDic
     ...mapGetters("currentGame", [
       "isCurrentPlayer",
       "playerNames",
-      "getPlayerScore"
-    ])
-  }
+      "getPlayerScore",
+    ]),
+  },
 })
 export default class CurrentPlayerPanel extends Vue {
   @Prop() currentPlayer!: Player;

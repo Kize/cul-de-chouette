@@ -13,7 +13,7 @@ export const newGameNameNameRules = [
     }
 
     return true;
-  }
+  },
 ];
 
 export const newPlayerNameRules = [
@@ -27,18 +27,18 @@ export const newPlayerNameRules = [
     }
 
     return true;
-  }
+  },
 ];
 
-function requiredPlayerNameRule(name?: string) {
+function requiredPlayerNameRule(name?: string): true | string {
   return (name && name.length > 1) || "Le joueur est requis";
 }
 
-function requiredLineTypeRule(name?: string) {
+function requiredLineTypeRule(name?: string): true | string {
   return (name && name.length > 1) || "Le type d'opération est requis";
 }
 
-function requiredAmountRule(amount?: number) {
+function requiredAmountRule(amount?: number): true | string {
   return (
     (amount !== undefined && amount !== null && isInteger(amount)) ||
     "Le montant est requis et doit être entier."
@@ -49,17 +49,21 @@ export const selectNameRules = [requiredPlayerNameRule];
 export const selectLineTypeRules = [requiredLineTypeRule];
 export const requiredAmountInputRules = [requiredAmountRule];
 
+export type inputRuleFunction = (n?: string) => true | string;
+
 export const selectChallengeRules = [
-  (name?: string) => (name && name.length > 1) || "Le défi est requis"
+  (name?: string): true | string =>
+    (name && name.length > 1) || "Le défi est requis",
 ];
 
 export const inputStrictlyPositiveIntegerRules = [
-  (num: number) =>
-    (num >= 1 && isInteger(num)) || "Ce champ doit être un entier positif"
+  (num?: string): true | string =>
+    (Number(num) >= 1 && isInteger(Number(num))) ||
+    "Ce champ doit être un entier positif",
 ];
 
 export const inputPositiveIntegerRules = [
-  (num: number) =>
-    (num >= 0 && isInteger(num)) ||
-    "Ce champ doit être un entier positif ou nul"
+  (num?: string): true | string =>
+    (Number(num) >= 0 && isInteger(Number(num))) ||
+    "Ce champ doit être un entier positif ou nul",
 ];

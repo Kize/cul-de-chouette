@@ -4,7 +4,7 @@ import { HistoryLineType } from "@/domain/history";
 function getChouetteNumber([
   dieValue1,
   dieValue2,
-  dieValue3
+  dieValue3,
 ]: DiceForm): number {
   if (dieValue1 === dieValue2 || dieValue1 === dieValue3) {
     return dieValue1;
@@ -14,6 +14,7 @@ function getChouetteNumber([
 }
 
 function getVeluteNumber(diceForm: DiceForm): number {
+  //eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return [...diceForm].sort().pop()!;
 }
 

@@ -5,7 +5,9 @@ import { LevelOneState } from "@/store/current-game/difficulty-levels/level-one.
 function isSoufflette(diceForm: DiceForm): boolean {
   const sortedValues = [...diceForm].sort();
 
-  return sortedValues[0] === 1 && sortedValues[1] === 2 && sortedValues[2] === 4;
+  return (
+    sortedValues[0] === 1 && sortedValues[1] === 2 && sortedValues[2] === 4
+  );
 }
 
 export function computeLevelOneDiceResult(

@@ -104,16 +104,16 @@ import {
   AllHistoryLineTypes,
   GodModLineType,
   HistoryLineType,
-  NotImplementedHistoryLineType
+  NotImplementedHistoryLineType,
 } from "@/domain/history";
 import {
   requiredAmountInputRules,
   selectLineTypeRules,
-  selectNameRules
+  selectNameRules,
 } from "@/domain/form-validation-rules";
 import {
   AddOperationLinesActionPayload,
-  OperationLineActionPayload
+  OperationLineActionPayload,
 } from "@/store/current-game/current-game.interface";
 import { sortStrings } from "@/domain/sort";
 
@@ -132,7 +132,7 @@ interface AddOperationLinesForm {
 function getInitialForm(): AddOperationLinesForm {
   return {
     operations: [{ designation: GodModLineType.GOD_MOD }],
-    shouldHandleEndTurn: false
+    shouldHandleEndTurn: false,
   };
 }
 
@@ -147,17 +147,17 @@ function lineFormToLineActionPayload(
     playerName: line.playerName,
     designation: line.designation,
     amount: Number(line.amount),
-    shouldDisplayTurnNumber: line.shouldDisplayTurnNumber || false
+    shouldDisplayTurnNumber: line.shouldDisplayTurnNumber || false,
   };
 }
 
 @Component({
   components: {
-    MainDialogCard
+    MainDialogCard,
   },
   computed: {
-    ...mapGetters("currentGame", ["playerNames"])
-  }
+    ...mapGetters("currentGame", ["playerNames"]),
+  },
 })
 export default class PlayersBanner extends Vue {
   readonly selectNameRules = selectNameRules;
@@ -182,7 +182,7 @@ export default class PlayersBanner extends Vue {
     return [
       ...godModLineTypes,
       ...implementedLineTypes,
-      ...notImplementedLineTypes
+      ...notImplementedLineTypes,
     ];
   }
 
@@ -202,7 +202,7 @@ export default class PlayersBanner extends Vue {
   confirm(): void {
     const payload: AddOperationLinesActionPayload = {
       shouldHandleEndTurn: this.form.shouldHandleEndTurn,
-      operations: this.form.operations.map(lineFormToLineActionPayload)
+      operations: this.form.operations.map(lineFormToLineActionPayload),
     };
 
     this.$store.dispatch("currentGame/addOperations", payload);

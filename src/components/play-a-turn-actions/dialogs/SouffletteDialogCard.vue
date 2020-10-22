@@ -76,10 +76,11 @@ import { HistoryLineAction } from "@/domain/history";
 import { SouffletteActionPayload, SouffletteForm } from "@/domain/soufflette";
 import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
 import BevueMenuAction from "@/components/BevueMenuAction.vue";
+import { VForm } from "@/vuetify.interface";
 
 const INITIAL_FORM: SouffletteForm = {
   isChallenge: true,
-  diceThrowsNumber: 3
+  diceThrowsNumber: 3,
 };
 
 @Component({
@@ -87,8 +88,8 @@ const INITIAL_FORM: SouffletteForm = {
     BevueMenuAction,
     PlayATurnWithDice: () =>
       import("@/components/play-a-turn-actions/PlayATurnWithDice.vue"),
-    MainDialogCard
-  }
+    MainDialogCard,
+  },
 })
 export default class SouffletteDialogCard extends Vue {
   @Prop() currentPlayerName!: string;
@@ -103,7 +104,7 @@ export default class SouffletteDialogCard extends Vue {
   readonly selectNameRules = selectNameRules;
 
   getFilteredPlayerNames(): Array<string> {
-    return this.playerNames.filter(name => name !== this.currentPlayerName);
+    return this.playerNames.filter((name) => name !== this.currentPlayerName);
   }
 
   handleClassicPlays(action: HistoryLineAction): void {
@@ -135,7 +136,7 @@ export default class SouffletteDialogCard extends Vue {
       challengerName: this.currentPlayerName,
       diceThrowsNumber: form.diceThrowsNumber,
       challengedPlayer: form.challengedPlayer,
-      challengedPlayerAction: form.challengedPlayerAction
+      challengedPlayerAction: form.challengedPlayerAction,
     };
   }
 }
