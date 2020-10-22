@@ -81,22 +81,22 @@ import RulesButton from "@/components/RulesButton.vue";
     AddOperationLinesButton,
     CurrentPlayerPanel,
     MainActionsPanel,
-    PlayersBanner
+    PlayersBanner,
   },
   computed: {
     ...mapState("currentGame", [
       "currentPlayerName",
       "name",
       "status",
-      "players"
+      "players",
     ]),
 
     ...mapGetters("currentGame", [
       "getPlayerScore",
       "playerNames",
-      "scoreboard"
-    ])
-  }
+      "scoreboard",
+    ]),
+  },
 })
 export default class ScribePanel extends Vue {
   players!: Array<Player>;
@@ -120,7 +120,7 @@ export default class ScribePanel extends Vue {
 
   getCurrentPlayer(): Player {
     return this.players.filter(
-      player => player.name === this.currentPlayerName
+      (player) => player.name === this.currentPlayerName
     )[0];
   }
 

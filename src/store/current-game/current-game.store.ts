@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Module } from "vuex";
 import {
   AddOperationLinesActionPayload,
@@ -6,24 +7,24 @@ import {
   NewGameForm,
   SavedCurrentGame,
   Scoreboard,
-  SloubiActionPayload
+  SloubiActionPayload,
 } from "@/store/current-game/current-game.interface";
 import {
   byName,
   computePlayerScore,
   getNextPlayer,
-  Player
+  Player,
 } from "@/domain/player";
 import {
   HistoryLineAction,
   HistoryLineApply,
   HistoryLineType,
-  mapHistoryActionToApply
+  mapHistoryActionToApply,
 } from "@/domain/history";
 import { RootState } from "@/store/app.state";
 import {
   GrelottineActionPayload,
-  isGrelottineChallengeSuccessful
+  isGrelottineChallengeSuccessful,
 } from "@/domain/grelottine";
 import { MainPlayableActionsStoreModule } from "@/store/current-game/main-playable-actions.store";
 import { RulesStoreModule } from "@/store/current-game/difficulty-levels/rules.store";
@@ -32,7 +33,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
   namespaced: true,
   modules: {
     play: MainPlayableActionsStoreModule,
-    rules: RulesStoreModule
+    rules: RulesStoreModule,
   },
   state(): CurrentGameState {
     return {
@@ -40,7 +41,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       name: "",
       players: [],
       currentPlayerName: "",
-      turnNumber: 1
+      turnNumber: 1,
     };
   },
   getters: {
@@ -48,11 +49,12 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       return state;
     },
     playerNames(state): Array<string> {
-      return state.players.map(player => player.name);
+      return state.players.map((player) => player.name);
     },
     currentPlayer(state): Player {
+      //eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return state.players.find(
-        player => player.name === state.currentPlayerName
+        (player) => player.name === state.currentPlayerName
       )!;
     },
     isCurrentPlayer(state) {
@@ -72,13 +74,13 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     },
     sloubiScore(state, getters): number {
       const [bestScore, secondBestScore] = state.players
-        .map(player => ({
+        .map((player) => ({
           name: player.name,
-          score: getters.getPlayerScore(player.name)
+          score: getters.getPlayerScore(player.name),
         }))
         .sort((p1, p2) => p2.score - p1.score)
         .slice(0, 2)
-        .map(p => p.score);
+        .map((p) => p.score);
 
       return Math.trunc(
         ((bestScore - secondBestScore) * state.turnNumber) / 10
@@ -86,19 +88,19 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     },
     scoreboard(state, getters): Scoreboard {
       return state.players
-        .map(player => {
+        .map((player) => {
           return {
             playerName: player.name,
-            score: getters["getPlayerScore"](player.name)
+            score: getters["getPlayerScore"](player.name),
           };
         })
         .sort((p1, p2) => p2.score - p1.score);
     },
     highestPlayer(state, getters): { name: string; score: number } {
       return state.players
-        .map(player => ({
+        .map((player) => ({
           name: player.name,
-          score: getters.getPlayerScore(player.name)
+          score: getters.getPlayerScore(player.name),
         }))
         .reduce(
           (bestPlayer, currentPlayer) =>
@@ -107,7 +109,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
               : currentPlayer,
           { name: "", score: -1 }
         );
-    }
+    },
   },
   mutations: {
     setGame(state, newGame: CurrentGameState): void {
@@ -137,7 +139,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       state.players.splice(indexToInsert, 0, {
         name: player.name,
         history: player.history,
-        hasGrelottine: player.hasGrelottine
+        hasGrelottine: player.hasGrelottine,
       });
     },
     addHistoryLine(state, apply: HistoryLineApply): void {
@@ -147,7 +149,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         player.history.push({
           designation: apply.designation,
           amount: apply.amount,
-          turnNumber: apply.turnNumber
+          turnNumber: apply.turnNumber,
         });
       }
     },
@@ -164,11 +166,11 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       if (player) {
         player.hasGrelottine = false;
       }
-    }
+    },
   },
   actions: {
     async startGame({ commit, dispatch }, form: NewGameForm): Promise<void> {
-      const playerNames = form.playerNames.filter(name => name.length > 0);
+      const playerNames = form.playerNames.filter((name) => name.length > 0);
 
       const hasOnlyUniqueNames =
         [...new Set(playerNames)].length === playerNames.length;
@@ -180,13 +182,13 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       const newGame: CurrentGameState = {
         status: GameStatus.IN_GAME,
         name: form.gameName,
-        players: playerNames.map(name => ({
+        players: playerNames.map((name) => ({
           name,
           history: [],
-          hasGrelottine: false
+          hasGrelottine: false,
         })),
         currentPlayerName: playerNames[0],
-        turnNumber: 1
+        turnNumber: 1,
       };
 
       commit("setGame", newGame);
@@ -225,7 +227,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       if (!isGameFinished) {
         const nextPlayerName = getNextPlayer(
           state.players,
-          state.currentPlayerName!
+          state.currentPlayerName! //eslint-disable-line @typescript-eslint/no-non-null-assertion
         );
 
         commit("setCurrentPlayerName", nextPlayerName);
@@ -237,7 +239,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         await dispatch("saveGameToLocalStorage");
       }
     },
-    handleEndGame({ state, commit, dispatch }, storage = localStorage): void {
+    handleEndGame({ state, dispatch }, storage = localStorage): void {
       const game: CurrentGameState = { ...state };
       const history: Array<CurrentGameState> = JSON.parse(
         storage.getItem("games") || "[]"
@@ -254,7 +256,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         name: "",
         players: [],
         currentPlayerName: "",
-        turnNumber: 1
+        turnNumber: 1,
       };
       storage.setItem("currentGame", JSON.stringify(nextGame));
       commit("setGame", nextGame);
@@ -268,7 +270,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         const action: HistoryLineAction = {
           playerName,
           value: 0,
-          designation: HistoryLineType.BEVUE
+          designation: HistoryLineType.BEVUE,
         };
         commit("addHistoryLine", mapHistoryActionToApply(action));
 
@@ -283,14 +285,14 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       { dispatch, commit, state },
       actionPayload: AddOperationLinesActionPayload
     ): void {
-      actionPayload.operations.forEach(operation => {
+      actionPayload.operations.forEach((operation) => {
         const apply: HistoryLineApply = {
           designation: operation.designation,
           playerName: operation.playerName,
           amount: operation.amount,
           turnNumber: operation.shouldDisplayTurnNumber
             ? state.turnNumber
-            : undefined
+            : undefined,
         };
 
         commit("addHistoryLine", apply);
@@ -310,7 +312,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         throw new Error("Le jeu n'autorise que 6 joueurs dans une partie.");
       }
 
-      if (state.players.map(player => player.name).includes(sloubi.name)) {
+      if (state.players.map((player) => player.name).includes(sloubi.name)) {
         throw new Error("Le nom de ce joueur est déjà pris.");
       }
 
@@ -324,10 +326,10 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
           {
             designation: HistoryLineType.SLOUBI,
             amount: sloubiAmount,
-            turnNumber: state.turnNumber
-          }
+            turnNumber: state.turnNumber,
+          },
         ],
-        hasGrelottine: false
+        hasGrelottine: false,
       };
 
       commit("addPlayer", { player, previousPlayer: sloubi.previousPlayer });
@@ -355,14 +357,14 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       const winnerApply: HistoryLineApply = {
         playerName: winner,
         designation: HistoryLineType.GRELOTTINE_CHALLENGE,
-        amount: grelottineActionPayload.gambledAmount
+        amount: grelottineActionPayload.gambledAmount,
       };
       commit("addHistoryLine", winnerApply);
 
       const looserApply: HistoryLineApply = {
         playerName: looser,
         designation: HistoryLineType.GRELOTTINE_CHALLENGE,
-        amount: -grelottineActionPayload.gambledAmount
+        amount: -grelottineActionPayload.gambledAmount,
       };
       commit("addHistoryLine", looserApply);
 
@@ -374,6 +376,6 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       commit("removeGrelottine", grelottineActionPayload.grelottin);
 
       await dispatch("checkEndGame");
-    }
-  }
+    },
+  },
 };

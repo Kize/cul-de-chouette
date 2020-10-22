@@ -46,8 +46,8 @@ import { mapGetters } from "vuex";
 @Component({
   components: { MenuAction },
   computed: {
-    ...mapGetters("currentGame", ["playerNames"])
-  }
+    ...mapGetters("currentGame", ["playerNames"]),
+  },
 })
 export default class BevueMenuAction extends Vue {
   readonly playerNames!: Array<string>;

@@ -14,9 +14,7 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="grey darken-2" text @click="cancel">
-        Annuler
-      </v-btn>
+      <v-btn color="grey darken-2" text @click="cancel"> Annuler </v-btn>
       <v-btn
         color="green darken-1"
         text
@@ -34,7 +32,7 @@ import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import BevueMenuAction from "@/components/BevueMenuAction.vue";
 
 @Component({
-  components: { BevueMenuAction }
+  components: { BevueMenuAction },
 })
 export default class MainDialogCard extends Vue {
   @Prop({ required: true, type: String }) title!: string;

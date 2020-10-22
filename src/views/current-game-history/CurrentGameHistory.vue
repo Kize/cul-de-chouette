@@ -6,9 +6,7 @@
       </v-col>
       <v-col>
         <router-link :to="scribePanelRoutePath">
-          <v-btn tile>
-            Revenir à la partie en cours
-          </v-btn>
+          <v-btn tile> Revenir à la partie en cours </v-btn>
         </router-link>
       </v-col>
     </v-row>
@@ -68,8 +66,8 @@ import { computePlayerScore, Player } from "@/domain/player";
   components: {},
   computed: {
     ...mapState("currentGame", ["name", "players"]),
-    ...mapGetters("currentGame", ["getPlayerScore"])
-  }
+    ...mapGetters("currentGame", ["getPlayerScore"]),
+  },
 })
 export default class CurrentGameHistory extends Vue {
   readonly players!: Array<Player>;

@@ -11,31 +11,31 @@ export const ROUTES = {
   SCRIBE_PANEL: { name: "ScribePanel", path: "/scribe-panel" },
   CURRENT_GAME_HISTORY: {
     name: "CurrentGameHistory",
-    path: "/current-game-history"
-  }
+    path: "/current-game-history",
+  },
 };
 
 const routes: Array<RouteConfig> = [
   {
     path: ROUTES.HOME.path,
     name: ROUTES.HOME.name,
-    component: Home
+    component: Home,
   },
   {
     path: ROUTES.SCRIBE_PANEL.path,
     name: ROUTES.SCRIBE_PANEL.name,
-    component: ScribePanel
+    component: ScribePanel,
   },
   {
     path: ROUTES.CURRENT_GAME_HISTORY.path,
     name: ROUTES.CURRENT_GAME_HISTORY.name,
-    component: CurrentGameHistory
-  }
+    component: CurrentGameHistory,
+  },
 ];
 
 const router = new VueRouter({
   mode: "hash",
-  routes
+  routes,
 });
 
 export default router;

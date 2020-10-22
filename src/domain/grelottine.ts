@@ -1,7 +1,7 @@
 import {
   HistoryLineAction,
   HistoryLineType,
-  SuiteHistoryLineAction
+  SuiteHistoryLineAction,
 } from "@/domain/history";
 
 export enum GrelottineChallenges {
@@ -9,7 +9,7 @@ export enum GrelottineChallenges {
   VELUTE = "Velute",
   CUL_DE_CHOUETTE = "Cul de chouette",
   CHOUETTE_VELUTE = "Chouette-velute",
-  SIROP_GRELOT = "Sirop-grelot"
+  SIROP_GRELOT = "Sirop-grelot",
 }
 
 export interface GrelottineForm {

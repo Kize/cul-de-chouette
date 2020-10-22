@@ -97,7 +97,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { ROUTES } from "@/router";
 import {
   newGameNameNameRules,
-  newPlayerNameRules
+  newPlayerNameRules,
 } from "@/domain/form-validation-rules";
 import { NewGameForm } from "@/store/current-game/current-game.interface";
 
@@ -112,8 +112,8 @@ export default class NewGameFormSection extends Vue {
     gameName: `Partie du ${new Date().toLocaleString("FR-fr").split(" à ")[0]}`,
     playerNames: ["", ""],
     levelOne: {
-      isSouffletteEnabled: false
-    }
+      isSouffletteEnabled: false,
+    },
   };
 
   canRemovePlayer(): boolean {

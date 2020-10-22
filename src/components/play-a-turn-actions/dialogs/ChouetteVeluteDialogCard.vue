@@ -28,25 +28,26 @@
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import MainDialogCard from "@/components/MainDialogCard.vue";
+import { VForm } from "@/vuetify.interface";
 
 export interface ChouetteVeluteForm {
   playerNames: Array<string>;
 }
 
 const INITIAL_FORM: ChouetteVeluteForm = {
-  playerNames: []
+  playerNames: [],
 };
 
 @Component({
-  components: { MainDialogCard }
+  components: { MainDialogCard },
 })
 export default class ChouetteVeluteDialogCard extends Vue {
   @Prop(String) currentPlayerName!: string;
   @Prop() playerNames!: Array<string>;
 
   readonly selectPlayersRules = [
-    (names: Array<string>) =>
-      names.length > 0 || "Au moins un joueur est requis"
+    (names: Array<string>): true | string =>
+      names.length > 0 || "Au moins un joueur est requis",
   ];
 
   form: ChouetteVeluteForm = { ...INITIAL_FORM };
@@ -61,7 +62,7 @@ export default class ChouetteVeluteDialogCard extends Vue {
   @Emit()
   confirm(): ChouetteVeluteForm {
     const form: ChouetteVeluteForm = {
-      playerNames: [...this.form.playerNames]
+      playerNames: [...this.form.playerNames],
     };
 
     this.form = { ...INITIAL_FORM };

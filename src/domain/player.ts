@@ -31,7 +31,7 @@ export function computePlayerScore(
   }, 0);
 }
 
-export function byName(name: string) {
+export function byName(name: string): (p: Player) => boolean {
   return (player: Player) => {
     return player.name === name;
   };

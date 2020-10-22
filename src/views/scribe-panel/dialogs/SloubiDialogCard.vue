@@ -66,14 +66,15 @@ import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import { SloubiActionPayload } from "@/store/current-game/current-game.interface";
 import MainDialogCard from "@/components/MainDialogCard.vue";
 import { newPlayerNameRules } from "@/domain/form-validation-rules";
+import { VForm } from "@/vuetify.interface";
 
 const INITIAL_FORM: SloubiActionPayload = {
   name: "",
-  isSloubiCompleted: false
+  isSloubiCompleted: false,
 };
 
 @Component({
-  components: { MainDialogCard }
+  components: { MainDialogCard },
 })
 export default class SloubiDialogCard extends Vue {
   @Prop(String) currentPlayerName!: string;

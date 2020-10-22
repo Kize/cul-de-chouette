@@ -1,8 +1,6 @@
 <template>
   <MainDialogCard
-    :title="
-      `Sélection du joueur ayant perdu sur la suite de ${currentPlayerName}`
-    "
+    :title="`Sélection du joueur ayant perdu sur la suite de ${currentPlayerName}`"
     :is-confirm-button-enabled="isFormValid"
     @cancel="cancel"
     @confirm="confirm"
@@ -45,8 +43,9 @@ import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import MainDialogCard from "@/components/MainDialogCard.vue";
 import {
   inputStrictlyPositiveIntegerRules,
-  selectNameRules
+  selectNameRules,
 } from "@/domain/form-validation-rules";
+import { VForm } from "@/vuetify.interface";
 
 export interface SuiteForm {
   multiplier: number;
@@ -55,11 +54,11 @@ export interface SuiteForm {
 
 const INITIAL_FORM: SuiteForm = {
   loosingPlayerName: "",
-  multiplier: 1
+  multiplier: 1,
 };
 
 @Component({
-  components: { MainDialogCard }
+  components: { MainDialogCard },
 })
 export default class SuiteDialogCard extends Vue {
   @Prop(String) currentPlayerName!: string;

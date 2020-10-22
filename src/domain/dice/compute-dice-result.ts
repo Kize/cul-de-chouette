@@ -5,7 +5,7 @@ import { computeLevelOneDiceResult } from "@/domain/dice/compute-dice-result-lev
 export type DiceForm = [number, number, number];
 
 export function isDiceFormValid(diceForm: DiceForm): boolean {
-  return diceForm.every(dieValue => dieValue >= 1 && dieValue <= 6);
+  return diceForm.every((dieValue) => dieValue >= 1 && dieValue <= 6);
 }
 
 function isChouette([dieValue1, dieValue2, dieValue3]: DiceForm): boolean {
@@ -33,10 +33,10 @@ function isSuite(diceForm: DiceForm): boolean {
     [1, 2, 3],
     [2, 3, 4],
     [3, 4, 5],
-    [4, 5, 6]
+    [4, 5, 6],
   ];
 
-  return possibleSuites.some(validSuite => {
+  return possibleSuites.some((validSuite) => {
     return validSuite.every(
       (validSuiteNumber, index) => validSuiteNumber === diceForm[index]
     );

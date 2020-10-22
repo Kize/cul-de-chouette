@@ -13,7 +13,7 @@ import Intro from "@/views/home/components/Intro.vue";
 import NewGameForm from "@/views/home/components/NewGameForm.vue";
 
 @Component({
-  components: { NewGameForm, Intro }
+  components: { NewGameForm, Intro },
 })
 export default class Home extends Vue {}
 </script>

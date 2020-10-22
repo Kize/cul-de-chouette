@@ -68,15 +68,15 @@ import {
   ChouetteVeluteHistoryLineAction,
   HistoryLineAction,
   HistoryLineType,
-  SuiteHistoryLineAction
+  SuiteHistoryLineAction,
 } from "@/domain/history";
 import { Player } from "@/domain/player";
 import MenuAction from "@/components/MenuAction.vue";
 import ChouetteVeluteDialogCard, {
-  ChouetteVeluteForm
+  ChouetteVeluteForm,
 } from "@/components/play-a-turn-actions/dialogs/ChouetteVeluteDialogCard.vue";
 import SuiteDialogCard, {
-  SuiteForm
+  SuiteForm,
 } from "@/components/play-a-turn-actions/dialogs/SuiteDialogCard.vue";
 import SouffletteDialogCard from "@/components/play-a-turn-actions/dialogs/SouffletteDialogCard.vue";
 import { SouffletteActionPayload } from "@/domain/soufflette";
@@ -85,7 +85,7 @@ import {
   computeDiceResult,
   DiceForm,
   isDiceFormValid,
-  isVelute
+  isVelute,
 } from "@/domain/dice/compute-dice-result";
 import { computeDiceValue } from "@/domain/dice/compute-dice-value";
 import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
@@ -100,8 +100,8 @@ function getInitialDiceForm(): DiceForm {
     SouffletteDialogCard,
     SuiteDialogCard,
     ChouetteVeluteDialogCard,
-    MenuAction
-  }
+    MenuAction,
+  },
 })
 export default class PlayATurnWithDice extends Vue {
   @Prop() currentPlayerName!: string;
@@ -159,7 +159,7 @@ export default class PlayATurnWithDice extends Vue {
       playerName: this.currentPlayerName,
       designation,
       value,
-      turnNumber: this.turnNumber
+      turnNumber: this.turnNumber,
     };
   }
 
@@ -172,7 +172,7 @@ export default class PlayATurnWithDice extends Vue {
       designation: HistoryLineType.CHOUETTE_VELUTE,
       value: computeDiceValue(this.diceForm, HistoryLineType.CHOUETTE_VELUTE),
       shoutingPlayers: form.playerNames,
-      turnNumber: this.turnNumber
+      turnNumber: this.turnNumber,
     };
 
     this.diceForm = getInitialDiceForm();
@@ -189,7 +189,7 @@ export default class PlayATurnWithDice extends Vue {
       multiplier: form.multiplier,
       loosingPlayerName: form.loosingPlayerName,
       isVelute: isVelute(this.diceForm),
-      turnNumber: this.turnNumber
+      turnNumber: this.turnNumber,
     };
 
     this.diceForm = getInitialDiceForm();
