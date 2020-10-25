@@ -2,11 +2,7 @@
   <div>
     <v-row>
       <v-col v-for="dieNumber in 3" :key="dieNumber" md="2" cols="4">
-        <DieCard
-          v-model="diceForm[dieNumber - 1]"
-          :is-selected="false"
-          :is-cul="dieNumber === 3"
-        >
+        <DieCard v-model="diceForm[dieNumber - 1]" :is-cul="dieNumber === 3">
         </DieCard>
       </v-col>
     </v-row>
@@ -50,7 +46,6 @@
     >
       <SouffletteDialogCard
         :current-player-name="currentPlayerName"
-        :players="players"
         :player-names="playerNames"
         :turn-number="turnNumber"
         :rules="rules"
@@ -58,6 +53,24 @@
         @cancel="showSouffletteDialog = false"
       >
       </SouffletteDialogCard>
+    </v-dialog>
+
+    <v-dialog
+      v-if="rules.levelOne.isSiropEnabled"
+      v-model="showChouetteDialog"
+      persistent
+      max-width="75%"
+    >
+      <ChouetteDialogCard
+        :current-player-name="currentPlayerName"
+        :player-names="playerNames"
+        :rules="rules"
+        :chouette-value="chouetteValue"
+        :turn-number="turnNumber"
+        @confirm="playChouette"
+        @cancel="showChouetteDialog = false"
+      >
+      </ChouetteDialogCard>
     </v-dialog>
   </div>
 </template>
@@ -70,7 +83,6 @@ import {
   HistoryLineType,
   SuiteHistoryLineAction,
 } from "@/domain/history";
-import { Player } from "@/domain/player";
 import MenuAction from "@/components/MenuAction.vue";
 import ChouetteVeluteDialogCard, {
   ChouetteVeluteForm,
@@ -79,7 +91,7 @@ import SuiteDialogCard, {
   SuiteForm,
 } from "@/components/play-a-turn-actions/dialogs/SuiteDialogCard.vue";
 import SouffletteDialogCard from "@/components/play-a-turn-actions/dialogs/SouffletteDialogCard.vue";
-import { SouffletteActionPayload } from "@/domain/soufflette";
+import { SouffletteActionPayload } from "@/domain/level-one/soufflette";
 import DieCard from "@/components/play-a-turn-actions/DieCard.vue";
 import {
   computeDiceResult,
@@ -87,8 +99,9 @@ import {
   isDiceFormValid,
   isVelute,
 } from "@/domain/dice/compute-dice-result";
-import { computeDiceValue } from "@/domain/dice/compute-dice-value";
+import { computeDiceValue, DieValue } from "@/domain/dice/compute-dice-value";
 import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
+import ChouetteDialogCard from "@/components/play-a-turn-actions/dialogs/ChouetteDialogCard.vue";
 
 function getInitialDiceForm(): DiceForm {
   return [0, 0, 0];
@@ -96,16 +109,16 @@ function getInitialDiceForm(): DiceForm {
 
 @Component({
   components: {
+    ChouetteDialogCard,
+    ChouetteVeluteDialogCard,
     DieCard,
+    MenuAction,
     SouffletteDialogCard,
     SuiteDialogCard,
-    ChouetteVeluteDialogCard,
-    MenuAction,
   },
 })
 export default class PlayATurnWithDice extends Vue {
   @Prop() currentPlayerName!: string;
-  @Prop() players!: Array<Player>;
   @Prop() playerNames!: Array<string>;
   @Prop() rules!: RulesState;
   @Prop() turnNumber?: number;
@@ -115,7 +128,10 @@ export default class PlayATurnWithDice extends Vue {
 
   showChouetteVeluteDialog = false;
   showSuiteDialog = false;
+
   showSouffletteDialog = false;
+  showChouetteDialog = false;
+  chouetteValue: DieValue = 0;
 
   isFormValid = true;
   diceForm: DiceForm = getInitialDiceForm();
@@ -142,6 +158,16 @@ export default class PlayATurnWithDice extends Vue {
           this.showSouffletteDialog = true;
           return;
         }
+        break;
+      case HistoryLineType.CHOUETTE:
+        if (this.rules.levelOne.isSiropEnabled) {
+          this.chouetteValue = computeDiceValue(
+            this.diceForm,
+            HistoryLineType.CHOUETTE
+          );
+          this.showChouetteDialog = true;
+        }
+        break;
     }
 
     const value = computeDiceValue(this.diceForm, type);
@@ -204,6 +230,15 @@ export default class PlayATurnWithDice extends Vue {
   ): SouffletteActionPayload {
     this.diceForm = getInitialDiceForm();
     this.showSouffletteDialog = false;
+    return actionPayload;
+  }
+
+  @Emit()
+  private playChouette(
+    actionPayload: SouffletteActionPayload
+  ): SouffletteActionPayload {
+    this.diceForm = getInitialDiceForm();
+    this.showChouetteDialog = false;
     return actionPayload;
   }
 }

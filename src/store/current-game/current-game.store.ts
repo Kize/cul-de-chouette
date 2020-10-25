@@ -192,22 +192,13 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       };
 
       commit("setGame", newGame);
-
-      commit(
-        "rules/levelOne/setIsSouffletteEnabled",
-        form.levelOne.isSouffletteEnabled
-      );
+      commit("rules/levelOne/setLevelOneRules", form.levelOne);
 
       await dispatch("saveGameToLocalStorage");
     },
     resumeGame({ commit }, currentGame: SavedCurrentGame): void {
       commit("setGame", currentGame);
-      commit(
-        "rules/levelOne/setIsSouffletteEnabled",
-        currentGame.rules.levelOne
-          ? currentGame.rules.levelOne.isSouffletteEnabled
-          : false
-      );
+      commit("rules/levelOne/setLevelOneRules", currentGame.rules.levelOne);
     },
     async checkEndGame({ commit, getters, dispatch }): Promise<boolean> {
       const highestPlayer = getters.highestPlayer;

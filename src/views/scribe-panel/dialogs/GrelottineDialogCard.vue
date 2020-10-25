@@ -109,7 +109,6 @@
             </v-card-title>
             <PlayATurnWithDice
               :current-player-name="form.challengedPlayer"
-              :players="players"
               :player-names="playerNames"
               :disabled="!isFormValid"
               :rules="getRules"
@@ -147,7 +146,7 @@ import { Player } from "@/domain/player";
 import {
   GrelottineSouffletteActionPayload,
   SouffletteActionPayload,
-} from "@/domain/soufflette";
+} from "@/domain/level-one/soufflette";
 import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDice.vue";
 import { VForm } from "@/vuetify.interface";
 

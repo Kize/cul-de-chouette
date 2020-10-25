@@ -1,6 +1,7 @@
 import { Player } from "@/domain/player";
 import { AllHistoryLineTypes } from "@/domain/history";
 import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
+import { LevelOneState } from "@/store/current-game/difficulty-levels/level-one.store";
 
 export enum GameStatus {
   CREATION = "creation",
@@ -28,9 +29,7 @@ export interface SavedCurrentGame extends CurrentGameState {
 export interface NewGameForm {
   gameName: string;
   playerNames: Array<string>;
-  levelOne: {
-    isSouffletteEnabled: boolean;
-  };
+  levelOne: LevelOneState;
 }
 
 export interface SloubiActionPayload {

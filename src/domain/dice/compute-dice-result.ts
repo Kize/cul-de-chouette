@@ -1,8 +1,9 @@
 import { HistoryLineType } from "@/domain/history";
 import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
 import { computeLevelOneDiceResult } from "@/domain/dice/compute-dice-result-level-one";
+import { DieValue } from "@/domain/dice/compute-dice-value";
 
-export type DiceForm = [number, number, number];
+export type DiceForm = [DieValue, DieValue, DieValue];
 
 export function isDiceFormValid(diceForm: DiceForm): boolean {
   return diceForm.every((dieValue) => dieValue >= 1 && dieValue <= 6);

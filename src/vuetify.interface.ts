@@ -5,3 +5,16 @@ export interface VForm extends HTMLFormElement {
 
   resetValidation(): void;
 }
+
+export type SelectItemsType = SelectItemValue | SelectItemHeader;
+
+interface SelectItemValue {
+  text: string;
+  value: string | number;
+  disabled: boolean;
+}
+
+interface SelectItemHeader {
+  header?: string;
+  divider?: boolean;
+}

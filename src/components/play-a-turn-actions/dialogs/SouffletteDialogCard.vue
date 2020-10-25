@@ -51,7 +51,6 @@
           >Combinaison réalisée sur le dernier lancé:</span
         >
         <PlayATurnWithDice
-          :players="players"
           :player-names="playerNames"
           :current-player-name="form.challengedPlayer"
           :disabled="!isFormValid"
@@ -70,10 +69,12 @@
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import MainDialogCard from "@/components/MainDialogCard.vue";
-import { Player } from "@/domain/player";
 import { selectNameRules } from "@/domain/form-validation-rules";
 import { HistoryLineAction } from "@/domain/history";
-import { SouffletteActionPayload, SouffletteForm } from "@/domain/soufflette";
+import {
+  SouffletteActionPayload,
+  SouffletteForm,
+} from "@/domain/level-one/soufflette";
 import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
 import BevueMenuAction from "@/components/BevueMenuAction.vue";
 import { VForm } from "@/vuetify.interface";
@@ -93,7 +94,6 @@ const INITIAL_FORM: SouffletteForm = {
 })
 export default class SouffletteDialogCard extends Vue {
   @Prop() currentPlayerName!: string;
-  @Prop() players!: Array<Player>;
   @Prop() playerNames!: Array<string>;
   @Prop() rules!: RulesState;
   @Prop() turnNumber?: number;

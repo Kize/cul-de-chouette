@@ -17,7 +17,6 @@
     <v-card-text>
       <PlayATurnWithDice
         :current-player-name="currentPlayer.name"
-        :players="players"
         :player-names="playerNames"
         :turn-number="turnNumber"
         :rules="getRules"
@@ -43,7 +42,7 @@ import MenuAction from "@/components/MenuAction.vue";
 import { mapGetters, mapState } from "vuex";
 import ChouetteVeluteDialogCard from "@/components/play-a-turn-actions/dialogs/ChouetteVeluteDialogCard.vue";
 import SuiteDialogCard from "@/components/play-a-turn-actions/dialogs/SuiteDialogCard.vue";
-import { SouffletteActionPayload } from "@/domain/soufflette";
+import { SouffletteActionPayload } from "@/domain/level-one/soufflette";
 import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDice.vue";
 
 @Component({
@@ -54,7 +53,7 @@ import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDic
     MenuAction,
   },
   computed: {
-    ...mapState("currentGame", ["players", "turnNumber"]),
+    ...mapState("currentGame", ["turnNumber"]),
     ...mapGetters("currentGame/rules", ["getRules"]),
     ...mapGetters("currentGame", [
       "isCurrentPlayer",

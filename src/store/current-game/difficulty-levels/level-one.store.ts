@@ -4,7 +4,7 @@ import { RootState } from "@/store/app.state";
 import {
   GrelottineSouffletteActionPayload,
   SouffletteActionPayload,
-} from "@/domain/soufflette";
+} from "@/domain/level-one/soufflette";
 import {
   BasicHistoryLineAction,
   HistoryLineApply,
@@ -15,6 +15,8 @@ import { GrelottineActionPayload } from "@/domain/grelottine";
 
 export interface LevelOneState {
   isSouffletteEnabled: boolean;
+  isSiropEnabled: boolean;
+  isAttrapeOiseauEnabled: boolean;
 }
 
 export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
@@ -22,11 +24,15 @@ export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
   state(): LevelOneState {
     return {
       isSouffletteEnabled: false,
+      isSiropEnabled: false,
+      isAttrapeOiseauEnabled: false,
     };
   },
   mutations: {
-    setIsSouffletteEnabled(state, isEnabled: boolean): void {
-      state.isSouffletteEnabled = isEnabled;
+    setLevelOneRules(state, rules: LevelOneState): void {
+      state.isSouffletteEnabled = rules.isSouffletteEnabled;
+      state.isSiropEnabled = rules.isSiropEnabled;
+      state.isAttrapeOiseauEnabled = rules.isAttrapeOiseauEnabled;
     },
   },
   actions: {

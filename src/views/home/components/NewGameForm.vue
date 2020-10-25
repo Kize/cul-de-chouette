@@ -22,11 +22,36 @@
             <v-icon>mdi-star</v-icon>
           </v-card-title>
 
-          <v-card-text>
+          <v-card-text class="d-md-inline-flex">
+            <v-spacer></v-spacer>
             <v-checkbox
               label="La soufflette"
               v-model="form.levelOne.isSouffletteEnabled"
             ></v-checkbox>
+
+            <v-spacer></v-spacer>
+            <v-checkbox
+              label="Le sirop"
+              v-model="form.levelOne.isSiropEnabled"
+              @change="changeSouffletteEnabled"
+            ></v-checkbox>
+
+            <v-spacer></v-spacer>
+            <v-tooltip top :disabled="form.levelOne.isSiropEnabled">
+              <template v-slot:activator="{ on }">
+                <span v-on="on">
+                  <v-checkbox
+                    label="L'attrape oiseau"
+                    :disabled="!form.levelOne.isSiropEnabled"
+                    v-model="form.levelOne.isAttrapeOiseauEnabled"
+                    hide-details
+                  >
+                  </v-checkbox>
+                </span>
+              </template>
+              <span>Le sirop est requis</span>
+            </v-tooltip>
+            <v-spacer></v-spacer>
           </v-card-text>
         </v-card>
       </v-card-text>
@@ -100,8 +125,11 @@ import {
   newPlayerNameRules,
 } from "@/domain/form-validation-rules";
 import { NewGameForm } from "@/store/current-game/current-game.interface";
+import ScribePanel from "@/views/scribe-panel/ScribePanel.vue";
 
-@Component({})
+@Component({
+  components: { ScribePanel },
+})
 export default class NewGameFormSection extends Vue {
   readonly newPlayerNameRules = newPlayerNameRules;
   readonly newGameNameNameRules = newGameNameNameRules;
@@ -112,7 +140,9 @@ export default class NewGameFormSection extends Vue {
     gameName: `Partie du ${new Date().toLocaleString("FR-fr").split(" à ")[0]}`,
     playerNames: ["", ""],
     levelOne: {
-      isSouffletteEnabled: false,
+      isSouffletteEnabled: true,
+      isSiropEnabled: true,
+      isAttrapeOiseauEnabled: true,
     },
   };
 
@@ -136,8 +166,10 @@ export default class NewGameFormSection extends Vue {
     }
   }
 
-  getList(): string {
-    return JSON.stringify(this.form.playerNames);
+  changeSouffletteEnabled(isSouffletteEnabled: boolean): void {
+    if (!isSouffletteEnabled) {
+      this.form.levelOne.isAttrapeOiseauEnabled = false;
+    }
   }
 
   async createGame(): Promise<void> {
@@ -151,8 +183,4 @@ export default class NewGameFormSection extends Vue {
 }
 </script>
 
-<style lang="scss">
-.control .icon.is-clickable {
-  pointer-events: initial;
-}
-</style>
+<style lang="scss"></style>

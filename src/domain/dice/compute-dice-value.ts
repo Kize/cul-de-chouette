@@ -1,11 +1,13 @@
 import { DiceForm } from "@/domain/dice/compute-dice-result";
 import { HistoryLineType } from "@/domain/history";
 
+export type DieValue = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
 function getChouetteNumber([
   dieValue1,
   dieValue2,
   dieValue3,
-]: DiceForm): number {
+]: DiceForm): DieValue {
   if (dieValue1 === dieValue2 || dieValue1 === dieValue3) {
     return dieValue1;
   }
@@ -13,19 +15,19 @@ function getChouetteNumber([
   return dieValue2;
 }
 
-function getVeluteNumber(diceForm: DiceForm): number {
+function getVeluteNumber(diceForm: DiceForm): DieValue {
   //eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return [...diceForm].sort().pop()!;
 }
 
-function getCulDeChouetteNumber([firstValue]: DiceForm): number {
+function getCulDeChouetteNumber([firstValue]: DiceForm): DieValue {
   return firstValue;
 }
 
 export function computeDiceValue(
   diceForm: DiceForm,
   type: HistoryLineType
-): number {
+): DieValue {
   switch (type) {
     case HistoryLineType.CHOUETTE:
       return getChouetteNumber(diceForm);
