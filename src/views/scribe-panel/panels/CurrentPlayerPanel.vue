@@ -24,6 +24,7 @@
         @play-chouette-velute="playChouetteVelute"
         @play-suite="playSuite"
         @play-soufflette="playSoufflette"
+        @play-chouette="playSirop"
       >
       </PlayATurnWithDice>
     </v-card-text>
@@ -44,6 +45,7 @@ import ChouetteVeluteDialogCard from "@/components/play-a-turn-actions/dialogs/C
 import SuiteDialogCard from "@/components/play-a-turn-actions/dialogs/SuiteDialogCard.vue";
 import { SouffletteActionPayload } from "@/domain/level-one/soufflette";
 import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDice.vue";
+import { SiropActionPayload } from "@/domain/level-one/sirop";
 
 @Component({
   components: {
@@ -82,6 +84,10 @@ export default class CurrentPlayerPanel extends Vue {
       "currentGame/rules/levelOne/playSoufflette",
       actionPayload
     );
+  }
+
+  playSirop(actionPayload: SiropActionPayload): void {
+    this.$store.dispatch("currentGame/rules/levelOne/playSirop", actionPayload);
   }
 }
 </script>

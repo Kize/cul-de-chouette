@@ -85,7 +85,7 @@
           <v-btn
             color="green darken-1"
             text
-            @click="confirm"
+            @click="validateSirop"
             :disabled="!isFormValid || !form.siropDieValue"
           >
             {{
@@ -115,6 +115,7 @@ import {
 import DieCard from "@/components/play-a-turn-actions/DieCard.vue";
 import { SelectItemsType, VForm } from "@/vuetify.interface";
 import { DieValue } from "@/domain/dice/compute-dice-value";
+import { HistoryLineType } from "@/domain/history";
 
 function getInitialForm(playerNames: Array<string> = []): SiropForm {
   return {
@@ -183,9 +184,32 @@ export default class SouffletteDialogCard extends Vue {
     return items;
   }
 
-  // TODO: ACTION PAYLOAD
   noChallenge(): void {
-    this.confirm();
+    const payload: SiropActionPayload = {
+      initialChouette: {
+        designation: HistoryLineType.CHOUETTE,
+        playerName: this.currentPlayerName,
+        value: this.chouetteValue,
+        turnNumber: this.turnNumber,
+      },
+      ...this.form,
+      isChouetteNotSirote: true,
+    };
+    this.confirm(payload);
+  }
+
+  validateSirop(): void {
+    const payload: SiropActionPayload = {
+      initialChouette: {
+        designation: HistoryLineType.CHOUETTE,
+        playerName: this.currentPlayerName,
+        value: this.chouetteValue,
+        turnNumber: this.turnNumber,
+      },
+      ...this.form,
+      isChouetteNotSirote: false,
+    };
+    this.confirm(payload);
   }
 
   canPlayerValidateBid(type: BidType): boolean {
@@ -202,13 +226,12 @@ export default class SouffletteDialogCard extends Vue {
     (this.$refs.formRef as VForm).resetValidation();
   }
 
-  // TODO: ACTION PAYLOAD
   @Emit()
-  confirm(): SiropActionPayload {
+  confirm(actionPayload: SiropActionPayload): SiropActionPayload {
     this.form = getInitialForm(this.playerNames);
     (this.$refs.formRef as VForm).resetValidation();
 
-    return {} as SiropActionPayload;
+    return actionPayload;
   }
 }
 </script>

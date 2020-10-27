@@ -7,11 +7,19 @@ import {
 } from "@/domain/level-one/soufflette";
 import {
   BasicHistoryLineAction,
+  getAmount,
   HistoryLineApply,
   HistoryLineType,
   mapHistoryActionToApply,
 } from "@/domain/history";
 import { GrelottineActionPayload } from "@/domain/grelottine";
+import {
+  BidType,
+  isBidValid,
+  SiropActionPayload,
+  SiropBid,
+} from "@/domain/level-one/sirop";
+import { DieValue } from "@/domain/dice/compute-dice-value";
 
 export interface LevelOneState {
   isSouffletteEnabled: boolean;
@@ -154,5 +162,146 @@ export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
         );
       }
     },
+    playSirop(
+      { commit, dispatch, rootGetters, state },
+      siropActionPayload: SiropActionPayload
+    ): void {
+      if (!state.isSiropEnabled) {
+        throw new Error("Le sirop n'a pas été activé. Action impossible");
+      }
+
+      if (
+        !state.isAttrapeOiseauEnabled &&
+        siropActionPayload.attrapeOiseauPlayerName
+      ) {
+        throw new Error(
+          "L'attrape-oiseau n'a pas été activé. Action impossible"
+        );
+      }
+
+      if (siropActionPayload.isChouetteNotSirote) {
+        dispatch(
+          "currentGame/play/playATurn",
+          siropActionPayload.initialChouette,
+          {
+            root: true,
+          }
+        );
+
+        return;
+      }
+
+      if (siropActionPayload.attrapeOiseauPlayerName) {
+        commit(
+          "currentGame/addHistoryLine",
+          mapHistoryActionToApply(siropActionPayload.initialChouette),
+          { root: true }
+        );
+
+        const attrapeOiseauPayload: HandleSiropPayload = {
+          playerName: siropActionPayload.attrapeOiseauPlayerName,
+          chouetteValue: siropActionPayload.initialChouette.value,
+          siropDieValue: siropActionPayload.siropDieValue,
+          isAttrapeOiseau: true,
+        };
+        dispatch("handleSirop", attrapeOiseauPayload);
+      } else {
+        const siropPayload: HandleSiropPayload = {
+          playerName: siropActionPayload.initialChouette.playerName,
+          chouetteValue: siropActionPayload.initialChouette.value,
+          siropDieValue: siropActionPayload.siropDieValue,
+          turnNumber: siropActionPayload.initialChouette.turnNumber,
+          isAttrapeOiseau: false,
+        };
+        dispatch("handleSirop", siropPayload);
+      }
+
+      const bidsPayload: HandleSiropBidsPayload = {
+        chouetteValue: siropActionPayload.initialChouette.value,
+        siropDieValue: siropActionPayload.siropDieValue,
+        bids: siropActionPayload.bids,
+      };
+
+      dispatch("handleSiropBids", bidsPayload);
+
+      dispatch("currentGame/handleEndTurn", null, { root: true });
+    },
+    handleSirop({ commit }, actionPayload: HandleSiropPayload): void {
+      const isSiropWon =
+        actionPayload.chouetteValue === actionPayload.siropDieValue;
+
+      let amount: number;
+      if (isSiropWon) {
+        amount = getAmount(
+          HistoryLineType.CUL_DE_CHOUETTE,
+          actionPayload.chouetteValue
+        );
+      } else {
+        amount = -getAmount(
+          HistoryLineType.CHOUETTE,
+          actionPayload.chouetteValue
+        );
+      }
+
+      const apply: HistoryLineApply = {
+        playerName: actionPayload.playerName,
+        designation: actionPayload.isAttrapeOiseau
+          ? HistoryLineType.ATTRAPE_OISEAU
+          : HistoryLineType.SIROP,
+        amount,
+        turnNumber: actionPayload.turnNumber,
+      };
+      commit("currentGame/addHistoryLine", apply, { root: true });
+    },
+    handleSiropBids(
+      { commit },
+      { bids, chouetteValue, siropDieValue }: HandleSiropBidsPayload
+    ): void {
+      bids
+        .filter(
+          (bid) =>
+            bid.designation !== BidType.COUCHE_SIROP &&
+            bid.designation !== BidType.FILE_SIROP
+        )
+        .forEach((bid) => {
+          const isCurrentBidValid = isBidValid(
+            chouetteValue as DieValue,
+            bid.designation,
+            siropDieValue
+          );
+
+          let amount: number;
+          if (isCurrentBidValid) {
+            if (bid.isBidValidated) {
+              amount = 25;
+            } else {
+              amount = 0;
+            }
+          } else {
+            amount = -5;
+          }
+
+          const apply: HistoryLineApply = {
+            playerName: bid.playerName,
+            designation: HistoryLineType.SIROP_BID,
+            amount,
+          };
+          commit("currentGame/addHistoryLine", apply, { root: true });
+        });
+    },
   },
 };
+
+interface HandleSiropPayload {
+  playerName: string;
+  chouetteValue: number;
+  siropDieValue: DieValue;
+  isAttrapeOiseau: boolean;
+  turnNumber?: number;
+}
+
+interface HandleSiropBidsPayload {
+  bids: Array<SiropBid>;
+  chouetteValue: number;
+  siropDieValue: DieValue;
+}

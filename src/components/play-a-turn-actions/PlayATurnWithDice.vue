@@ -102,6 +102,7 @@ import {
 import { computeDiceValue, DieValue } from "@/domain/dice/compute-dice-value";
 import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
 import ChouetteDialogCard from "@/components/play-a-turn-actions/dialogs/ChouetteDialogCard.vue";
+import { SiropActionPayload } from "@/domain/level-one/sirop";
 
 function getInitialDiceForm(): DiceForm {
   return [0, 0, 0];
@@ -166,6 +167,7 @@ export default class PlayATurnWithDice extends Vue {
             HistoryLineType.CHOUETTE
           );
           this.showChouetteDialog = true;
+          return;
         }
         break;
     }
@@ -234,9 +236,7 @@ export default class PlayATurnWithDice extends Vue {
   }
 
   @Emit()
-  private playChouette(
-    actionPayload: SouffletteActionPayload
-  ): SouffletteActionPayload {
+  private playChouette(actionPayload: SiropActionPayload): SiropActionPayload {
     this.diceForm = getInitialDiceForm();
     this.showChouetteDialog = false;
     return actionPayload;

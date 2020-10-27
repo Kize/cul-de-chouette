@@ -9,14 +9,14 @@ export enum HistoryLineType {
   CUL_DE_CHOUETTE = "Cul de chouette",
   SLOUBI = "Sloubi",
   SOUFFLETTE = "Soufflette",
+  SIROP = "Sirotage",
+  SIROP_BID = "Pari sur un Sirotage",
+  ATTRAPE_OISEAU = "Attrape-oiseau"
 }
 
 export enum NotImplementedHistoryLineType {
   POULETTE = "La poulette",
-  SIROP = "Sirotage",
-  SIROP_CHALLENGE = "Pari de Sirotage",
   CIVET = "Le civet",
-  ATTRAPE_OISEAU = "Attrape-oiseau",
   GRAINES = "Graines",
   ARTICHETTE = "Artichette",
   CONTRE_SIROP = "Contre-sirop",

@@ -1,4 +1,4 @@
-import { HistoryLineAction } from "@/domain/history";
+import { BasicHistoryLineAction, HistoryLineAction } from '@/domain/history';
 import { DieValue } from "@/domain/dice/compute-dice-value";
 
 export enum BidType {
@@ -26,7 +26,7 @@ export interface SiropForm {
 }
 
 export interface SiropActionPayload {
-  initialChouette: HistoryLineAction;
+  initialChouette: BasicHistoryLineAction;
   isChouetteNotSirote: boolean;
   attrapeOiseauPlayerName?: string;
   bids: Array<SiropBid>;
