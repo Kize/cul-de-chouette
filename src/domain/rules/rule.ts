@@ -4,7 +4,7 @@ export type DiceRoll = [DieValue, DieValue, DieValue];
 
 export interface Rule {
   isApplicableToDiceRoll: (diceRoll: DiceRoll) => boolean;
-  applyRule: (context: GameContext) => RuleEffects;
+  applyRule: (context: GameContext) => RuleEffects | Promise<RuleEffects>;
 }
 
 export interface GameContext {

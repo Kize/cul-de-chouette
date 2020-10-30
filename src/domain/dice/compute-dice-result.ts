@@ -1,10 +1,11 @@
 import { HistoryLineType } from "@/domain/history";
 import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
 import { computeLevelOneDiceResult } from "@/domain/dice/compute-dice-result-level-one";
+import { DiceRoll } from "@/domain/rules/rule";
 
-export type DiceForm = [number, number, number];
+export type DiceForm = [number, number, number] | DiceRoll;
 
-export function isDiceFormValid(diceForm: DiceForm): boolean {
+export function isDiceFormValid(diceForm: DiceForm): diceForm is DiceRoll {
   return diceForm.every((dieValue) => dieValue >= 1 && dieValue <= 6);
 }
 

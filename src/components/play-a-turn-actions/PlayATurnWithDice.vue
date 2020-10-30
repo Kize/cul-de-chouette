@@ -17,78 +17,22 @@
           color="green darken-1"
           text
           @click="confirm"
-          :disabled="isConfirmButtonDisabled()"
-          >Valider
+          :disabled="isConfirmButtonDisabled"
+        >
+          Valider
         </v-btn>
       </v-col>
     </v-row>
-
-    <v-dialog v-model="showChouetteVeluteDialog" persistent max-width="800">
-      <ChouetteVeluteDialogCard
-        :current-player-name="currentPlayerName"
-        :player-names="playerNames"
-        @cancel="showChouetteVeluteDialog = false"
-        @confirm="playChouetteVelute($event)"
-      >
-      </ChouetteVeluteDialogCard>
-    </v-dialog>
-
-    <v-dialog v-model="showSuiteDialog" persistent max-width="800">
-      <SuiteDialogCard
-        :current-player-name="currentPlayerName"
-        :player-names="playerNames"
-        @cancel="showSuiteDialog = false"
-        @confirm="playSuite"
-      ></SuiteDialogCard>
-    </v-dialog>
-
-    <v-dialog
-      v-if="rules.levelOne.isSouffletteEnabled && !getIsAlreadySoufflette()"
-      v-model="showSouffletteDialog"
-      persistent
-      max-width="1200"
-    >
-      <SouffletteDialogCard
-        :current-player-name="currentPlayerName"
-        :players="players"
-        :player-names="playerNames"
-        :turn-number="turnNumber"
-        :rules="rules"
-        @confirm="playSoufflette"
-        @cancel="showSouffletteDialog = false"
-      >
-      </SouffletteDialogCard>
-    </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue } from "vue-property-decorator";
-import {
-  ChouetteVeluteHistoryLineAction,
-  HistoryLineAction,
-  HistoryLineType,
-  SuiteHistoryLineAction,
-} from "@/domain/history";
-import { Player } from "@/domain/player";
+import { Component, Vue } from "vue-property-decorator";
 import MenuAction from "@/components/MenuAction.vue";
-import ChouetteVeluteDialogCard, {
-  ChouetteVeluteForm,
-} from "@/components/play-a-turn-actions/dialogs/ChouetteVeluteDialogCard.vue";
-import SuiteDialogCard, {
-  SuiteForm,
-} from "@/components/play-a-turn-actions/dialogs/SuiteDialogCard.vue";
+import ChouetteVeluteDialogCard from "@/components/play-a-turn-actions/dialogs/ChouetteVeluteDialogCard.vue";
 import SouffletteDialogCard from "@/components/play-a-turn-actions/dialogs/SouffletteDialogCard.vue";
-import { SouffletteActionPayload } from "@/domain/soufflette";
 import DieCard from "@/components/play-a-turn-actions/DieCard.vue";
-import {
-  computeDiceResult,
-  DiceForm,
-  isDiceFormValid,
-  isVelute,
-} from "@/domain/dice/compute-dice-result";
-import { computeDiceValue } from "@/domain/dice/compute-dice-value";
-import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
+import { DiceForm, isDiceFormValid } from "@/domain/dice/compute-dice-result";
 
 function getInitialDiceForm(): DiceForm {
   return [0, 0, 0];
@@ -98,113 +42,21 @@ function getInitialDiceForm(): DiceForm {
   components: {
     DieCard,
     SouffletteDialogCard,
-    SuiteDialogCard,
     ChouetteVeluteDialogCard,
     MenuAction,
   },
 })
 export default class PlayATurnWithDice extends Vue {
-  @Prop() currentPlayerName!: string;
-  @Prop() players!: Array<Player>;
-  @Prop() playerNames!: Array<string>;
-  @Prop() rules!: RulesState;
-  @Prop() turnNumber?: number;
-  @Prop() disabled?: boolean;
-  @Prop() isAlreadyInSoufflette?: boolean;
-  readonly playTypes = HistoryLineType;
-
-  showChouetteVeluteDialog = false;
-  showSuiteDialog = false;
-  showSouffletteDialog = false;
-
-  isFormValid = true;
   diceForm: DiceForm = getInitialDiceForm();
 
-  isConfirmButtonDisabled(): boolean {
-    return this.disabled || !isDiceFormValid(this.diceForm);
-  }
-
-  getIsAlreadySoufflette(): boolean {
-    return !!this.isAlreadyInSoufflette;
+  get isConfirmButtonDisabled(): boolean {
+    return !isDiceFormValid(this.diceForm);
   }
 
   confirm(): void {
-    const type = computeDiceResult(this.diceForm, this.rules);
-    switch (type) {
-      case HistoryLineType.CHOUETTE_VELUTE:
-        this.showChouetteVeluteDialog = true;
-        return;
-      case HistoryLineType.SUITE:
-        this.showSuiteDialog = true;
-        return;
-      case HistoryLineType.SOUFFLETTE:
-        if (!this.getIsAlreadySoufflette()) {
-          this.showSouffletteDialog = true;
-          return;
-        }
+    if (isDiceFormValid(this.diceForm)) {
+      this.$emit("confirm", this.diceForm);
     }
-
-    const value = computeDiceValue(this.diceForm, type);
-    this.basicPlay(value, type);
-  }
-
-  @Emit()
-  private basicPlay(
-    value: number,
-    designation: HistoryLineType
-  ): HistoryLineAction {
-    this.diceForm = getInitialDiceForm();
-
-    return {
-      playerName: this.currentPlayerName,
-      designation,
-      value,
-      turnNumber: this.turnNumber,
-    };
-  }
-
-  @Emit()
-  private playChouetteVelute(
-    form: ChouetteVeluteForm
-  ): ChouetteVeluteHistoryLineAction {
-    const action: ChouetteVeluteHistoryLineAction = {
-      playerName: this.currentPlayerName,
-      designation: HistoryLineType.CHOUETTE_VELUTE,
-      value: computeDiceValue(this.diceForm, HistoryLineType.CHOUETTE_VELUTE),
-      shoutingPlayers: form.playerNames,
-      turnNumber: this.turnNumber,
-    };
-
-    this.diceForm = getInitialDiceForm();
-    this.showChouetteVeluteDialog = false;
-
-    return action;
-  }
-
-  @Emit()
-  private playSuite(form: SuiteForm): SuiteHistoryLineAction {
-    const action: SuiteHistoryLineAction = {
-      playerName: this.currentPlayerName,
-      designation: HistoryLineType.SUITE,
-      multiplier: form.multiplier,
-      loosingPlayerName: form.loosingPlayerName,
-      isVelute: isVelute(this.diceForm),
-      turnNumber: this.turnNumber,
-    };
-
-    this.diceForm = getInitialDiceForm();
-    this.showSuiteDialog = false;
-
-    return action;
-  }
-
-  @Emit()
-  private playSoufflette(
-    actionPayload: SouffletteActionPayload
-  ): SouffletteActionPayload {
-    this.diceForm = getInitialDiceForm();
-    this.showSouffletteDialog = false;
-    return actionPayload;
   }
 }
 </script>

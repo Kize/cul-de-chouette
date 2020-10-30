@@ -42,6 +42,8 @@
       </v-col>
     </v-row>
 
+    <SuiteResolverDialog> </SuiteResolverDialog>
+
     <v-dialog v-model="showEndGameDialog" persistent max-width="1000">
       <EndGameDialogCard
         :scoreboard="scoreboard"
@@ -72,9 +74,11 @@ import AddOperationLinesButton from "@/views/scribe-panel/components/AddOperatio
 import EndGameDialogCard from "@/views/scribe-panel/dialogs/EndGameDialogCard.vue";
 import CancelGameDialogCard from "@/views/scribe-panel/dialogs/CancelGameDialogCard.vue";
 import RulesButton from "@/components/RulesButton.vue";
+import SuiteResolverDialog from "@/components/play-a-turn-actions/dialogs/SuiteResolverDialog.vue";
 
 @Component({
   components: {
+    SuiteResolverDialog,
     RulesButton,
     CancelGameDialogCard,
     EndGameDialogCard,

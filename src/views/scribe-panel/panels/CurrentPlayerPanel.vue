@@ -15,41 +15,25 @@
     </v-card-title>
 
     <v-card-text>
-      <PlayATurnWithDice
-        :current-player-name="currentPlayer.name"
-        :players="players"
-        :player-names="playerNames"
-        :turn-number="turnNumber"
-        :rules="getRules"
-        @basic-play="basicPlay"
-        @play-chouette-velute="playChouetteVelute"
-        @play-suite="playSuite"
-        @play-soufflette="playSoufflette"
-      >
-      </PlayATurnWithDice>
+      <PlayATurnWithDice @confirm="basicPlay"></PlayATurnWithDice>
     </v-card-text>
   </v-card>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import {
-  ChouetteVeluteHistoryLineAction,
-  HistoryLineAction,
-  SuiteHistoryLineAction,
-} from "@/domain/history";
 import { Player } from "@/domain/player";
 import MenuAction from "@/components/MenuAction.vue";
 import { mapGetters, mapState } from "vuex";
 import ChouetteVeluteDialogCard from "@/components/play-a-turn-actions/dialogs/ChouetteVeluteDialogCard.vue";
-import SuiteDialogCard from "@/components/play-a-turn-actions/dialogs/SuiteDialogCard.vue";
-import { SouffletteActionPayload } from "@/domain/soufflette";
+import SuiteResolverDialog from "@/components/play-a-turn-actions/dialogs/SuiteResolverDialog.vue";
 import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDice.vue";
+import { DiceRoll } from "@/domain/rules/rule";
 
 @Component({
   components: {
     PlayATurnWithDice,
-    SuiteDialogCard,
+    SuiteDialogCard: SuiteResolverDialog,
     ChouetteVeluteDialogCard,
     MenuAction,
   },
@@ -66,23 +50,8 @@ import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDic
 export default class CurrentPlayerPanel extends Vue {
   @Prop() currentPlayer!: Player;
 
-  basicPlay(action: HistoryLineAction): void {
-    this.$store.dispatch("currentGame/play/playATurn", action);
-  }
-
-  playChouetteVelute(action: ChouetteVeluteHistoryLineAction): void {
-    this.$store.dispatch("currentGame/play/playATurn", action);
-  }
-
-  playSuite(action: SuiteHistoryLineAction): void {
-    this.$store.dispatch("currentGame/play/playATurn", action);
-  }
-
-  playSoufflette(actionPayload: SouffletteActionPayload): void {
-    this.$store.dispatch(
-      "currentGame/rules/levelOne/playSoufflette",
-      actionPayload
-    );
+  basicPlay(diceRoll: DiceRoll): void {
+    this.$store.dispatch("currentGame/play/playATurn", diceRoll);
   }
 }
 </script>

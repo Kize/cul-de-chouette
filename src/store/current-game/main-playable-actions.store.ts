@@ -6,12 +6,55 @@ import {
   ChouetteVeluteHistoryLineAction,
   getAmount,
   HistoryLineAction,
+  HistoryLineApply,
   HistoryLineType,
   mapHistoryActionToApply,
   SuiteHistoryLineAction,
 } from "@/domain/history";
+import { DiceRoll, GameContext, RuleEffetType } from "@/domain/rules/rule";
+import { RuleRunner } from "@/domain/rule-runner";
+import { ChouetteRule } from "@/domain/rules/basic-rules/chouette-rule";
+import { NeantRule } from "@/domain/rules/basic-rules/neant-rule";
+import { VeluteRule } from "@/domain/rules/basic-rules/velute-rule";
+import { CulDeChouetteRule } from "@/domain/rules/basic-rules/cul-de-chouette-rule";
+import {
+  SuiteResolution,
+  SuiteResolver,
+  SuiteRule,
+} from "@/domain/rules/basic-rules/suite-rule";
+import store from "@/store/app.state";
 
 type MainPlayableState = Record<string, unknown>;
+
+// TODO: refacto into abstract RuleResolver
+class AppSuiteResolver implements SuiteResolver {
+  private resolvePromise?: (s: SuiteResolution) => void;
+
+  getSuiteResolution(): Promise<SuiteResolution> {
+    store.dispatch("currentGame/dialogs/openSuiteResolver");
+
+    return new Promise<SuiteResolution>((resolve) => {
+      this.resolvePromise = resolve;
+    });
+  }
+
+  resolve(suiteResolution: SuiteResolution): void {
+    if (this.resolvePromise) {
+      this.resolvePromise(suiteResolution);
+    }
+  }
+}
+
+const appSuiteResolver = new AppSuiteResolver();
+
+const ruleRunner = new RuleRunner([
+  new CulDeChouetteRule(),
+  // new ChouetteVeluteRule(),
+  new VeluteRule(),
+  new ChouetteRule(),
+  new SuiteRule(appSuiteResolver),
+  new NeantRule(),
+]);
 
 export const MainPlayableActionsStoreModule: Module<
   MainPlayableState,
@@ -19,26 +62,46 @@ export const MainPlayableActionsStoreModule: Module<
 > = {
   namespaced: true,
   actions: {
-    playATurn(
-      { rootGetters, commit, dispatch },
-      lineAction: HistoryLineAction
-    ): void {
-      if (
-        rootGetters["currentGame/getState"].currentPlayerName !==
-        lineAction.playerName
-      ) {
-        return;
-      }
+    async playATurn(
+      { rootGetters, commit, dispatch, rootState },
+      diceRoll: DiceRoll
+    ): Promise<void> {
+      const gameContext: GameContext = {
+        currentPlayerName: rootState.currentGame!.currentPlayerName,
+        diceRoll,
+      };
+      const ruleEffects = await ruleRunner.run(diceRoll, gameContext);
+      // TODO: handle reject to cancel
 
-      if (lineAction.designation === HistoryLineType.NEANT) {
-        commit("currentGame/addGrelottine", lineAction.playerName, {
-          root: true,
-        });
-      }
+      ruleEffects.forEach((ruleEffect) => {
+        switch (ruleEffect.type) {
+          case RuleEffetType.ADD_GRELOTTINE:
+            commit("currentGame/addGrelottine", ruleEffect.playerName, {
+              root: true,
+            });
+            return;
+          case RuleEffetType.CHANGE_SCORE:
+            const apply: HistoryLineApply = {
+              playerName: ruleEffect.playerName,
+              amount: ruleEffect.score,
+              designation: HistoryLineType.CHOUETTE,
+            };
 
-      dispatch("handlePlayerLineAction", lineAction);
+            commit("currentGame/addHistoryLine", apply, {
+              root: true,
+            });
+            return;
+        }
+      });
+
       dispatch("currentGame/handleEndTurn", undefined, { root: true });
     },
+    resolveSuite({ commit }, suiteResolution: SuiteResolution): void {
+      appSuiteResolver.resolve(suiteResolution);
+      commit("currentGame/dialogs/setSuiteResolverIsVisible", false, {
+        root: true,
+      });
+    }, // TODO: add cancelSuite that reject the appSuiteResolver
     handleSuiteAction({ commit }, action: SuiteHistoryLineAction): void {
       const isCurrentPlayerTheLooser =
         action.loosingPlayerName === action.playerName;

@@ -28,12 +28,14 @@ import {
 } from "@/domain/grelottine";
 import { MainPlayableActionsStoreModule } from "@/store/current-game/main-playable-actions.store";
 import { RulesStoreModule } from "@/store/current-game/difficulty-levels/rules.store";
+import { DialogsStoreModule } from '@/store/current-game/dialogs.store';
 
 export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
   namespaced: true,
   modules: {
     play: MainPlayableActionsStoreModule,
     rules: RulesStoreModule,
+    dialogs: DialogsStoreModule,
   },
   state(): CurrentGameState {
     return {
