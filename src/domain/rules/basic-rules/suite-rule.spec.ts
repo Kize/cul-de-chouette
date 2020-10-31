@@ -1,12 +1,13 @@
 import { SuiteRule } from "@/domain/rules/basic-rules/suite-rule";
 import { DummyGameContextBuilder } from "@/domain/rules/dummy-game-context-builder";
 import { RuleEffects, RuleEffetType } from "@/domain/rules/rule";
+import { SuiteRuleResolver } from "@/store/current-game/resolver/suite-rule-resolver";
 
 describe("isApplicableToDiceRoll", () => {
   let rule: SuiteRule;
 
   beforeEach(() => {
-    rule = new SuiteRule({ getSuiteResolution: jest.fn() });
+    rule = new SuiteRule({ getResolution: jest.fn() });
   });
 
   it("returns true if dice follows each others", () => {
@@ -21,7 +22,7 @@ describe("isApplicableToDiceRoll", () => {
 describe("applyRule", () => {
   it("registers a change of score of -10 for a given player", async () => {
     const resolver = {
-      getSuiteResolution: jest
+      getResolution: jest
         .fn()
         .mockResolvedValue({ loosingPlayerName: "Alban", multiplier: 1 }),
     };
@@ -41,7 +42,7 @@ describe("applyRule", () => {
 
   it("registers a change of score of -40 for a given player and a multiplier of 4", async () => {
     const resolver = {
-      getSuiteResolution: jest
+      getResolution: jest
         .fn()
         .mockResolvedValue({ loosingPlayerName: "Delphin", multiplier: 4 }),
     };
@@ -55,6 +56,36 @@ describe("applyRule", () => {
         type: RuleEffetType.CHANGE_SCORE,
         playerName: "Delphin",
         score: -40,
+      },
+    ] as RuleEffects);
+  });
+
+  it("registers a change of score of -10 for a given player, and applies the velute for the currentPlayer on 1,2,3", async () => {
+    const resolver = {
+      getResolution: jest
+        .fn()
+        .mockResolvedValue({ loosingPlayerName: "Delphin", multiplier: 1 }),
+    };
+
+    const rule = new SuiteRule(resolver);
+
+    expect(
+      await rule.applyRule(
+        DummyGameContextBuilder.aContext()
+          .withDiceRoll([1, 2, 3])
+          .withCurrentPlayerName("Alban")
+          .build()
+      )
+    ).toEqual([
+      {
+        type: RuleEffetType.CHANGE_SCORE,
+        playerName: "Alban",
+        score: 18,
+      },
+      {
+        type: RuleEffetType.CHANGE_SCORE,
+        playerName: "Delphin",
+        score: -10,
       },
     ] as RuleEffects);
   });

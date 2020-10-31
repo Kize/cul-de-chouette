@@ -17,42 +17,19 @@ import { ChouetteRule } from "@/domain/rules/basic-rules/chouette-rule";
 import { NeantRule } from "@/domain/rules/basic-rules/neant-rule";
 import { VeluteRule } from "@/domain/rules/basic-rules/velute-rule";
 import { CulDeChouetteRule } from "@/domain/rules/basic-rules/cul-de-chouette-rule";
-import {
-  SuiteResolution,
-  SuiteResolver,
-  SuiteRule,
-} from "@/domain/rules/basic-rules/suite-rule";
-import store from "@/store/app.state";
+import { SuiteResolution, SuiteRuleResolver } from '@/store/current-game/resolver/suite-rule-resolver';
+import { SuiteRule } from '@/domain/rules/basic-rules/suite-rule';
 
 type MainPlayableState = Record<string, unknown>;
 
-// TODO: refacto into abstract RuleResolver
-class AppSuiteResolver implements SuiteResolver {
-  private resolvePromise?: (s: SuiteResolution) => void;
-
-  getSuiteResolution(): Promise<SuiteResolution> {
-    store.dispatch("currentGame/dialogs/openSuiteResolver");
-
-    return new Promise<SuiteResolution>((resolve) => {
-      this.resolvePromise = resolve;
-    });
-  }
-
-  resolve(suiteResolution: SuiteResolution): void {
-    if (this.resolvePromise) {
-      this.resolvePromise(suiteResolution);
-    }
-  }
-}
-
-const appSuiteResolver = new AppSuiteResolver();
+const suiteRuleResolver = new SuiteRuleResolver();
 
 const ruleRunner = new RuleRunner([
   new CulDeChouetteRule(),
   // new ChouetteVeluteRule(),
   new VeluteRule(),
   new ChouetteRule(),
-  new SuiteRule(appSuiteResolver),
+  new SuiteRule(suiteRuleResolver),
   new NeantRule(),
 ]);
 
@@ -97,7 +74,7 @@ export const MainPlayableActionsStoreModule: Module<
       dispatch("currentGame/handleEndTurn", undefined, { root: true });
     },
     resolveSuite({ commit }, suiteResolution: SuiteResolution): void {
-      appSuiteResolver.resolve(suiteResolution);
+      suiteRuleResolver.resolve(suiteResolution);
       commit("currentGame/dialogs/setSuiteResolverIsVisible", false, {
         root: true,
       });

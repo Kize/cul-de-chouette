@@ -55,7 +55,8 @@ export default class PlayATurnWithDice extends Vue {
 
   confirm(): void {
     if (isDiceFormValid(this.diceForm)) {
-      this.$emit("confirm", this.diceForm);
+      this.$emit("confirm", [...this.diceForm]);
+      this.diceForm = getInitialDiceForm();
     }
   }
 }

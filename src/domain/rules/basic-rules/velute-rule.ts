@@ -1,5 +1,6 @@
 import {
   DiceRoll,
+  DieValue,
   GameContext,
   Rule,
   RuleEffects,
@@ -8,14 +9,12 @@ import {
 
 export class VeluteRule implements Rule {
   isApplicableToDiceRoll(diceRoll: DiceRoll): boolean {
-    const sortedValues = [...diceRoll].sort();
-    return sortedValues[0] + sortedValues[1] === sortedValues[2];
+    return isVelute(diceRoll);
   }
 
   applyRule({ currentPlayerName, diceRoll }: GameContext): RuleEffects {
-    const veluteValue = [...diceRoll].sort().pop();
+    const score = getVeluteValue(diceRoll);
 
-    const score = 2 * (veluteValue || 0) ** 2;
     return [
       {
         type: RuleEffetType.CHANGE_SCORE,
@@ -24,4 +23,15 @@ export class VeluteRule implements Rule {
       },
     ];
   }
+}
+
+export function isVelute(diceRoll: DiceRoll): boolean {
+  const sortedValues = [...diceRoll].sort();
+  return sortedValues[0] + sortedValues[1] === sortedValues[2];
+}
+
+export function getVeluteValue(diceRoll: DiceRoll): number {
+  const veluteValue = [...diceRoll].sort().pop();
+
+  return 2 * (veluteValue || 0) ** 2;
 }
