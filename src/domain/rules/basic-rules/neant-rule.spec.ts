@@ -1,6 +1,7 @@
 import { NeantRule } from "@/domain/rules/basic-rules/neant-rule";
-import { RuleEffetType } from "@/domain/rules/rule";
+import { RuleEffect, RuleEffetType } from "@/domain/rules/rule";
 import { DummyGameContextBuilder } from "@/domain/rules/dummy-game-context-builder";
+import { HistoryLineType } from "@/domain/history";
 
 describe("isApplicableToDiceRoll", () => {
   it("returns always true", function () {
@@ -37,8 +38,9 @@ describe("applyRule", () => {
 
     expect(neantRollEffect).toEqual({
       type: RuleEffetType.CHANGE_SCORE,
+      designation: HistoryLineType.NEANT,
       playerName: "Alban",
       score: 0,
-    });
+    } as RuleEffect);
   });
 });

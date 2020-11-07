@@ -11,6 +11,7 @@ import {
   getVeluteValue,
   isVelute,
 } from "@/domain/rules/basic-rules/velute-rule";
+import { HistoryLineType } from "@/domain/history";
 
 export class SuiteRule implements Rule {
   constructor(private readonly resolver: Resolver<SuiteResolution>) {}
@@ -30,6 +31,7 @@ export class SuiteRule implements Rule {
     if (isVelute(diceRoll)) {
       ruleEffects.push({
         type: RuleEffetType.CHANGE_SCORE,
+        designation: HistoryLineType.VELUTE,
         playerName: currentPlayerName,
         score: getVeluteValue(diceRoll),
       });
@@ -39,6 +41,7 @@ export class SuiteRule implements Rule {
 
     ruleEffects.push({
       type: RuleEffetType.CHANGE_SCORE,
+      designation: HistoryLineType.SUITE,
       playerName: suiteResolution.loosingPlayerName,
       score: -10 * suiteResolution.multiplier,
     });

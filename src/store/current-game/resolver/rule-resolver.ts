@@ -6,10 +6,10 @@ export abstract class RuleResolver<T> implements Resolver<T> {
   protected resolveCallback?: (s: T) => void;
   protected rejectCallback?: () => void;
 
-  abstract openResolver(): void;
+  abstract initResolution(): void;
 
   getResolution(): Promise<T> {
-    this.openResolver();
+    this.initResolution();
 
     return new Promise<T>((resolve, reject) => {
       this.resolveCallback = resolve;

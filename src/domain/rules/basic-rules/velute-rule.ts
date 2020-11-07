@@ -1,11 +1,5 @@
-import {
-  DiceRoll,
-  DieValue,
-  GameContext,
-  Rule,
-  RuleEffects,
-  RuleEffetType,
-} from "@/domain/rules/rule";
+import { DiceRoll, GameContext, Rule, RuleEffects, RuleEffetType } from '@/domain/rules/rule';
+import { HistoryLineType } from '@/domain/history';
 
 export class VeluteRule implements Rule {
   isApplicableToDiceRoll(diceRoll: DiceRoll): boolean {
@@ -18,6 +12,7 @@ export class VeluteRule implements Rule {
     return [
       {
         type: RuleEffetType.CHANGE_SCORE,
+        designation: HistoryLineType.VELUTE,
         playerName: currentPlayerName,
         score,
       },

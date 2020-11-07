@@ -1,6 +1,7 @@
-import { DummyGameContextBuilder } from "@/domain/rules/dummy-game-context-builder";
-import { RuleEffects, RuleEffetType } from "@/domain/rules/rule";
-import { VeluteRule } from "@/domain/rules/basic-rules/velute-rule";
+import { DummyGameContextBuilder } from '@/domain/rules/dummy-game-context-builder';
+import { RuleEffects, RuleEffetType } from '@/domain/rules/rule';
+import { VeluteRule } from '@/domain/rules/basic-rules/velute-rule';
+import { HistoryLineType } from '@/domain/history';
 
 describe("isApplicableToDiceRoll", () => {
   it("returns true if two dice sum equals the third one", () => {
@@ -29,6 +30,7 @@ describe("applyRule", () => {
       {
         type: RuleEffetType.CHANGE_SCORE,
         playerName: "Alban",
+        designation: HistoryLineType.VELUTE,
         score: 32,
       },
     ] as RuleEffects);

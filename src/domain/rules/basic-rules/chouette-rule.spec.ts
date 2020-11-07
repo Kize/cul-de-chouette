@@ -1,6 +1,7 @@
-import { DummyGameContextBuilder } from "@/domain/rules/dummy-game-context-builder";
-import { RuleEffect, RuleEffects, RuleEffetType } from "@/domain/rules/rule";
-import { ChouetteRule } from "@/domain/rules/basic-rules/chouette-rule";
+import { DummyGameContextBuilder } from '@/domain/rules/dummy-game-context-builder';
+import { RuleEffects, RuleEffetType } from '@/domain/rules/rule';
+import { ChouetteRule } from '@/domain/rules/basic-rules/chouette-rule';
+import { HistoryLineType } from '@/domain/history';
 
 describe("isApplicableToDiceRoll", () => {
   it("returns true if two dice have the same value", () => {
@@ -28,6 +29,7 @@ describe("applyRule", () => {
     expect(effects).toEqual([
       {
         type: RuleEffetType.CHANGE_SCORE,
+        designation: HistoryLineType.CHOUETTE,
         playerName: "Alban",
         score: 25,
       },

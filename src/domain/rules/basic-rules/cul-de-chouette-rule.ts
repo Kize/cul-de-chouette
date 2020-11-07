@@ -1,10 +1,5 @@
-import {
-  DiceRoll,
-  GameContext,
-  Rule,
-  RuleEffects,
-  RuleEffetType,
-} from "@/domain/rules/rule";
+import { DiceRoll, GameContext, Rule, RuleEffects, RuleEffetType } from '@/domain/rules/rule';
+import { HistoryLineType } from '@/domain/history';
 
 export class CulDeChouetteRule implements Rule {
   isApplicableToDiceRoll([dieValue1, dieValue2, dieValue3]: DiceRoll): boolean {
@@ -17,6 +12,7 @@ export class CulDeChouetteRule implements Rule {
       {
         type: RuleEffetType.CHANGE_SCORE,
         playerName: context.currentPlayerName,
+        designation: HistoryLineType.CUL_DE_CHOUETTE,
         score,
       },
     ];

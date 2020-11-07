@@ -83,6 +83,8 @@ export default class SuiteResolverDialog extends Vue {
   cancel(): void {
     this.form = { ...INITIAL_FORM };
     (this.$refs.formRef as VForm).resetValidation();
+
+    this.$store.dispatch("currentGame/play/cancelSuite");
   }
 
   confirm(): void {

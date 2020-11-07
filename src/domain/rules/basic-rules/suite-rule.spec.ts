@@ -1,7 +1,7 @@
-import { SuiteRule } from "@/domain/rules/basic-rules/suite-rule";
-import { DummyGameContextBuilder } from "@/domain/rules/dummy-game-context-builder";
-import { RuleEffects, RuleEffetType } from "@/domain/rules/rule";
-import { SuiteRuleResolver } from "@/store/current-game/resolver/suite-rule-resolver";
+import { SuiteRule } from '@/domain/rules/basic-rules/suite-rule';
+import { DummyGameContextBuilder } from '@/domain/rules/dummy-game-context-builder';
+import { RuleEffects, RuleEffetType } from '@/domain/rules/rule';
+import { HistoryLineType } from '@/domain/history';
 
 describe("isApplicableToDiceRoll", () => {
   let rule: SuiteRule;
@@ -34,6 +34,7 @@ describe("applyRule", () => {
     ).toEqual([
       {
         type: RuleEffetType.CHANGE_SCORE,
+        designation: HistoryLineType.SUITE,
         playerName: "Alban",
         score: -10,
       },
@@ -54,6 +55,7 @@ describe("applyRule", () => {
     ).toEqual([
       {
         type: RuleEffetType.CHANGE_SCORE,
+        designation: HistoryLineType.SUITE,
         playerName: "Delphin",
         score: -40,
       },
@@ -79,11 +81,13 @@ describe("applyRule", () => {
     ).toEqual([
       {
         type: RuleEffetType.CHANGE_SCORE,
+        designation: HistoryLineType.VELUTE,
         playerName: "Alban",
         score: 18,
       },
       {
         type: RuleEffetType.CHANGE_SCORE,
+        designation: HistoryLineType.SUITE,
         playerName: "Delphin",
         score: -10,
       },

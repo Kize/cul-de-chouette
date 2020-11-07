@@ -12,7 +12,7 @@ export class SuiteRuleResolver extends RuleResolver<SuiteResolution> {
     super();
   }
 
-  openResolver(): void {
+  initResolution(): void {
     store.dispatch("currentGame/dialogs/openSuiteResolver");
   }
 }

@@ -11,14 +11,22 @@ import {
   mapHistoryActionToApply,
   SuiteHistoryLineAction,
 } from "@/domain/history";
-import { DiceRoll, GameContext, RuleEffetType } from "@/domain/rules/rule";
+import {
+  DiceRoll,
+  GameContext,
+  RuleEffects,
+  RuleEffetType,
+} from "@/domain/rules/rule";
 import { RuleRunner } from "@/domain/rule-runner";
 import { ChouetteRule } from "@/domain/rules/basic-rules/chouette-rule";
 import { NeantRule } from "@/domain/rules/basic-rules/neant-rule";
 import { VeluteRule } from "@/domain/rules/basic-rules/velute-rule";
 import { CulDeChouetteRule } from "@/domain/rules/basic-rules/cul-de-chouette-rule";
-import { SuiteResolution, SuiteRuleResolver } from '@/store/current-game/resolver/suite-rule-resolver';
-import { SuiteRule } from '@/domain/rules/basic-rules/suite-rule';
+import {
+  SuiteResolution,
+  SuiteRuleResolver,
+} from "@/store/current-game/resolver/suite-rule-resolver";
+import { SuiteRule } from "@/domain/rules/basic-rules/suite-rule";
 
 type MainPlayableState = Record<string, unknown>;
 
@@ -27,9 +35,9 @@ const suiteRuleResolver = new SuiteRuleResolver();
 const ruleRunner = new RuleRunner([
   new CulDeChouetteRule(),
   // new ChouetteVeluteRule(),
+  new SuiteRule(suiteRuleResolver),
   new VeluteRule(),
   new ChouetteRule(),
-  new SuiteRule(suiteRuleResolver),
   new NeantRule(),
 ]);
 
@@ -47,8 +55,17 @@ export const MainPlayableActionsStoreModule: Module<
         currentPlayerName: rootState.currentGame!.currentPlayerName,
         diceRoll,
       };
-      const ruleEffects = await ruleRunner.run(diceRoll, gameContext);
-      // TODO: handle reject to cancel
+
+      let ruleEffects: RuleEffects;
+      try {
+        ruleEffects = await ruleRunner.run(diceRoll, gameContext);
+      } catch (e) {
+        if (e) {
+          console.error(e);
+        }
+
+        return;
+      }
 
       ruleEffects.forEach((ruleEffect) => {
         switch (ruleEffect.type) {
@@ -58,10 +75,17 @@ export const MainPlayableActionsStoreModule: Module<
             });
             return;
           case RuleEffetType.CHANGE_SCORE:
+            const gameTurnNumber = rootState.currentGame!.turnNumber;
+            const turnNumber =
+              gameContext.currentPlayerName === ruleEffect.playerName
+                ? gameTurnNumber
+                : undefined;
+
             const apply: HistoryLineApply = {
               playerName: ruleEffect.playerName,
               amount: ruleEffect.score,
-              designation: HistoryLineType.CHOUETTE,
+              designation: ruleEffect.designation,
+              turnNumber,
             };
 
             commit("currentGame/addHistoryLine", apply, {
@@ -78,7 +102,15 @@ export const MainPlayableActionsStoreModule: Module<
       commit("currentGame/dialogs/setSuiteResolverIsVisible", false, {
         root: true,
       });
-    }, // TODO: add cancelSuite that reject the appSuiteResolver
+    },
+    cancelSuite({ commit }): void {
+      suiteRuleResolver.reject();
+      commit("currentGame/dialogs/setSuiteResolverIsVisible", false, {
+        root: true,
+      });
+    },
+
+    // Still used by grelottine, should be removed later
     handleSuiteAction({ commit }, action: SuiteHistoryLineAction): void {
       const isCurrentPlayerTheLooser =
         action.loosingPlayerName === action.playerName;
