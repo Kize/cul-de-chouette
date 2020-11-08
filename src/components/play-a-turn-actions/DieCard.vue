@@ -52,7 +52,7 @@ export default class DieCard extends Vue {
     color: #2962ff;
   }
 
-  & > .v-btn.v-btn.die-face {
+  & > .v-btn.v-btn.v-size--default.die-face {
     border-color: #bdbdbd !important;
     border-width: 2px;
     border-radius: 6px;
