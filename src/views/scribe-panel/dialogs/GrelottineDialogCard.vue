@@ -141,7 +141,7 @@ import {
   selectChallengeRules,
   selectNameRules,
   inputRuleFunction,
-} from "@/domain/form-validation-rules";
+} from "@/form-validation/form-validation-rules";
 import { HistoryLineAction } from "@/domain/history";
 import { Player } from "@/domain/player";
 import {

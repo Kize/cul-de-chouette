@@ -4,11 +4,14 @@ import {
   Rule,
   RuleEffects,
   RuleEffetType,
-} from "@/domain/rules/rule";
-import { Resolver } from "@/store/current-game/resolver/rule-resolver";
-import { ChouetteVeluteResolution } from "@/store/current-game/resolver/chouette-velute-rule-resolver";
-import { getVeluteValue } from "@/domain/rules/basic-rules/velute-rule";
-import { HistoryLineType } from "@/domain/history";
+} from "../rule";
+import { getVeluteValue } from "./velute-rule";
+import { HistoryLineType } from '@/domain/history';
+import { Resolver } from '../rule-resolver';
+
+export interface ChouetteVeluteResolution {
+  playerNames: Array<string>;
+}
 
 export class ChouetteVeluteRule implements Rule {
   constructor(private readonly resolver: Resolver<ChouetteVeluteResolution>) {}

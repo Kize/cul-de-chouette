@@ -1,7 +1,7 @@
-import { NeantRule } from "@/domain/rules/basic-rules/neant-rule";
-import { RuleEffect, RuleEffetType } from "@/domain/rules/rule";
-import { DummyGameContextBuilder } from "@/domain/rules/dummy-game-context-builder";
-import { HistoryLineType } from "@/domain/history";
+import { NeantRule } from "./neant-rule";
+import { RuleEffect, RuleEffetType } from "../rule";
+import { DummyGameContextBuilder } from "../dummy-game-context-builder";
+import { HistoryLineType } from "../../../src/domain/history";
 
 describe("isApplicableToDiceRoll", () => {
   it("returns always true", function () {

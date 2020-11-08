@@ -1,10 +1,6 @@
-import { RuleResolver } from "@/store/current-game/resolver/rule-resolver";
+import { RuleResolver } from "../../../../domain/rules/rule-resolver";
 import store from "@/store/app.state";
-
-export interface SuiteResolution {
-  loosingPlayerName: string;
-  multiplier: number;
-}
+import { SuiteResolution } from "../../../../domain/rules/basic-rules/suite-rule";
 
 export class SuiteRuleResolver extends RuleResolver<SuiteResolution> {
   constructor() {

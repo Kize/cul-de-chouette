@@ -1,5 +1,4 @@
-import { DiceRoll, GameContext, Rule, RuleEffects } from "@/domain/rules/rule";
-
+import { DiceRoll, GameContext, Rule, RuleEffects } from "./rules/rule";
 
 export class RuleRunner {
   constructor(private readonly rules: Array<Rule>) {}

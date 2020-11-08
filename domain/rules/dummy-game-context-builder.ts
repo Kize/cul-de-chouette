@@ -1,4 +1,4 @@
-import { DiceRoll, GameContext } from "@/domain/rules/rule";
+import { DiceRoll, GameContext } from "./rule";
 
 export class DummyGameContextBuilder {
   private currentPlayerName: string = "";

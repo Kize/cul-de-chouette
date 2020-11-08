@@ -4,14 +4,15 @@ import {
   Rule,
   RuleEffects,
   RuleEffetType,
-} from "@/domain/rules/rule";
-import { SuiteResolution } from "@/store/current-game/resolver/suite-rule-resolver";
-import { Resolver } from "@/store/current-game/resolver/rule-resolver";
-import {
-  getVeluteValue,
-  isVelute,
-} from "@/domain/rules/basic-rules/velute-rule";
+} from "../rule";
+import { Resolver } from "../rule-resolver";
+import { getVeluteValue, isVelute } from "./velute-rule";
 import { HistoryLineType } from "@/domain/history";
+
+export interface SuiteResolution {
+  loosingPlayerName: string;
+  multiplier: number;
+}
 
 export class SuiteRule implements Rule {
   constructor(private readonly resolver: Resolver<SuiteResolution>) {}

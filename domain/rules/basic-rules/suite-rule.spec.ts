@@ -1,7 +1,7 @@
-import { SuiteRule } from '@/domain/rules/basic-rules/suite-rule';
-import { DummyGameContextBuilder } from '@/domain/rules/dummy-game-context-builder';
-import { RuleEffects, RuleEffetType } from '@/domain/rules/rule';
-import { HistoryLineType } from '@/domain/history';
+import { SuiteRule } from './suite-rule';
+import { DummyGameContextBuilder } from '../dummy-game-context-builder';
+import { RuleEffects, RuleEffetType } from '../rule';
+import { HistoryLineType } from '../../../src/domain/history';
 
 describe("isApplicableToDiceRoll", () => {
   let rule: SuiteRule;

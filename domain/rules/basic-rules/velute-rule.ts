@@ -1,5 +1,5 @@
-import { DiceRoll, GameContext, Rule, RuleEffects, RuleEffetType } from '@/domain/rules/rule';
-import { HistoryLineType } from '@/domain/history';
+import { DiceRoll, GameContext, Rule, RuleEffects, RuleEffetType } from '../rule';
+import { HistoryLineType } from '../../../src/domain/history';
 
 export class VeluteRule implements Rule {
   isApplicableToDiceRoll(diceRoll: DiceRoll): boolean {

@@ -1,8 +1,7 @@
-import { ChouetteVeluteRule } from "@/domain/rules/basic-rules/chouette-velute-rule";
-import { ChouetteVeluteResolution } from "@/store/current-game/resolver/chouette-velute-rule-resolver";
-import { DummyGameContextBuilder } from "@/domain/rules/dummy-game-context-builder";
-import { RuleEffects, RuleEffetType } from "@/domain/rules/rule";
-import { HistoryLineType } from "@/domain/history";
+import { ChouetteVeluteResolution, ChouetteVeluteRule } from './chouette-velute-rule';
+import { DummyGameContextBuilder } from "../dummy-game-context-builder";
+import { RuleEffects, RuleEffetType } from "../rule";
+import { HistoryLineType } from "../../../src/domain/history";
 
 describe("isApplicableToDiceRoll", () => {
   it("returns true if two dice have the same value and those two dice sum equals the third one", () => {

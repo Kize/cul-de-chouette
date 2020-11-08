@@ -1,6 +1,6 @@
-import { DiceRoll, Rule, RuleEffects } from "@/domain/rules/rule";
-import { RuleRunner } from "@/domain/rule-runner";
-import { DummyGameContextBuilder } from "@/domain/rules/dummy-game-context-builder";
+import { RuleRunner } from "./rule-runner";
+import { DummyGameContextBuilder } from "./rules/dummy-game-context-builder";
+import { DiceRoll, Rule, RuleEffects } from "./rules/rule";
 
 it("applies the correct rule", async () => {
   const invalidRule: Rule = {

@@ -1,7 +1,7 @@
-import { DummyGameContextBuilder } from '@/domain/rules/dummy-game-context-builder';
-import { RuleEffects, RuleEffetType } from '@/domain/rules/rule';
-import { ChouetteRule } from '@/domain/rules/basic-rules/chouette-rule';
-import { HistoryLineType } from '@/domain/history';
+import { DummyGameContextBuilder } from '../dummy-game-context-builder';
+import { RuleEffects, RuleEffetType } from '../rule';
+import { ChouetteRule } from './chouette-rule';
+import { HistoryLineType } from '../../../src/domain/history';
 
 describe("isApplicableToDiceRoll", () => {
   it("returns true if two dice have the same value", () => {

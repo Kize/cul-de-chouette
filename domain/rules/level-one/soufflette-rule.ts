@@ -1,4 +1,4 @@
-import { DiceRoll, GameContext, Rule, RuleEffects } from "@/domain/rules/rule";
+import { DiceRoll, GameContext, Rule, RuleEffects } from "../rule";
 
 export class SouffletteRule implements Rule {
   isApplicableToDiceRoll(diceRoll: DiceRoll): boolean {

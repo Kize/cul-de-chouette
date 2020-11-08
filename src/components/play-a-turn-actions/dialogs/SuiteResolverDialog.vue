@@ -46,7 +46,7 @@ import MainDialogCard from "@/components/MainDialogCard.vue";
 import {
   inputStrictlyPositiveIntegerRules,
   selectNameRules,
-} from "@/domain/form-validation-rules";
+} from "@/form-validation/form-validation-rules";
 import { VForm } from "@/vuetify.interface";
 import { mapGetters, mapState } from "vuex";
 

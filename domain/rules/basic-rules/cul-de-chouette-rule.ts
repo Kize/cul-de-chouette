@@ -1,5 +1,5 @@
-import { DiceRoll, GameContext, Rule, RuleEffects, RuleEffetType } from '@/domain/rules/rule';
-import { HistoryLineType } from '@/domain/history';
+import { DiceRoll, GameContext, Rule, RuleEffects, RuleEffetType } from '../rule';
+import { HistoryLineType } from '../../../src/domain/history';
 
 export class CulDeChouetteRule implements Rule {
   isApplicableToDiceRoll([dieValue1, dieValue2, dieValue3]: DiceRoll): boolean {

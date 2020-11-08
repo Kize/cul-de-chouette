@@ -1,6 +1,16 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Module } from "vuex";
-import { RootState } from "@/store/app.state";
+import {
+  DiceRoll,
+  GameContext,
+  RuleEffects,
+  RuleEffetType,
+} from "../../../domain/rules/rule";
+import { CulDeChouetteRule } from "../../../domain/rules/basic-rules/cul-de-chouette-rule";
+import {
+  SuiteResolution,
+  SuiteRule,
+} from "../../../domain/rules/basic-rules/suite-rule";
+import { SuiteRuleResolver } from "@/store/current-game/resolver/suite-rule-resolver";
 import {
   BasicHistoryLineAction,
   ChouetteVeluteHistoryLineAction,
@@ -11,27 +21,16 @@ import {
   mapHistoryActionToApply,
   SuiteHistoryLineAction,
 } from "@/domain/history";
-import {
-  DiceRoll,
-  GameContext,
-  RuleEffects,
-  RuleEffetType,
-} from "@/domain/rules/rule";
-import { RuleRunner } from "@/domain/rule-runner";
-import { ChouetteRule } from "@/domain/rules/basic-rules/chouette-rule";
-import { NeantRule } from "@/domain/rules/basic-rules/neant-rule";
-import { VeluteRule } from "@/domain/rules/basic-rules/velute-rule";
-import { CulDeChouetteRule } from "@/domain/rules/basic-rules/cul-de-chouette-rule";
-import {
-  SuiteResolution,
-  SuiteRuleResolver,
-} from "@/store/current-game/resolver/suite-rule-resolver";
-import { SuiteRule } from "@/domain/rules/basic-rules/suite-rule";
-import { ChouetteVeluteRule } from "@/domain/rules/basic-rules/chouette-velute-rule";
+import { RuleRunner } from "../../../domain/rule-runner";
+import { NeantRule } from "../../../domain/rules/basic-rules/neant-rule";
+import { VeluteRule } from "../../../domain/rules/basic-rules/velute-rule";
 import {
   ChouetteVeluteResolution,
-  ChouetteVeluteRuleResolver,
-} from "@/store/current-game/resolver/chouette-velute-rule-resolver";
+  ChouetteVeluteRule,
+} from "../../../domain/rules/basic-rules/chouette-velute-rule";
+import { ChouetteRule } from "../../../domain/rules/basic-rules/chouette-rule";
+import { RootState } from "@/store/app.state";
+import { ChouetteVeluteRuleResolver } from "@/store/current-game/resolver/chouette-velute-rule-resolver";
 
 type MainPlayableState = Record<string, unknown>;
 

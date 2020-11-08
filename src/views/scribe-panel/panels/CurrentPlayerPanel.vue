@@ -26,7 +26,7 @@ import { Player } from "@/domain/player";
 import MenuAction from "@/components/MenuAction.vue";
 import { mapGetters, mapState } from "vuex";
 import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDice.vue";
-import { DiceRoll } from "@/domain/rules/rule";
+import { DiceRoll } from "../../../../domain/rules/rule";
 
 @Component({
   components: {

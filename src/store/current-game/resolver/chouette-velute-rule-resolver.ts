@@ -1,11 +1,10 @@
-import { RuleResolver } from "@/store/current-game/resolver/rule-resolver";
+import { RuleResolver } from "../../../../domain/rules/rule-resolver";
 import store from "@/store/app.state";
+import { ChouetteVeluteResolution } from "../../../../domain/rules/basic-rules/chouette-velute-rule";
 
-export interface ChouetteVeluteResolution {
-  playerNames: Array<string>;
-}
-
-export class ChouetteVeluteRuleResolver extends RuleResolver<ChouetteVeluteResolution> {
+export class ChouetteVeluteRuleResolver extends RuleResolver<
+  ChouetteVeluteResolution
+> {
   constructor() {
     super();
   }

@@ -98,7 +98,7 @@ import { ROUTES } from "@/router";
 import {
   newGameNameNameRules,
   newPlayerNameRules,
-} from "@/domain/form-validation-rules";
+} from "@/form-validation/form-validation-rules";
 import { NewGameForm } from "@/store/current-game/current-game.interface";
 
 @Component({})

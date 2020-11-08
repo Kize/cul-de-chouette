@@ -1,4 +1,4 @@
-import { SouffletteRule } from "@/domain/rules/level-one/soufflette-rule";
+import { SouffletteRule } from "./soufflette-rule";
 
 describe("isApplicableToDiceRoll", () => {
   it("returns true if dice make a 4, 2, 1 combination", () => {
