@@ -4,7 +4,10 @@ import { RootState } from "@/store/app.state";
 export interface DialogsState {
   suiteResolverDialog: {
     isVisible: boolean;
-  };
+  },
+  chouetteVeluteResolverDialog: {
+    isVisible: boolean;
+  },
 }
 
 export const DialogsStoreModule: Module<DialogsState, RootState> = {
@@ -14,6 +17,9 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
       suiteResolverDialog: {
         isVisible: false,
       },
+      chouetteVeluteResolverDialog: {
+        isVisible: false
+      }
     };
   },
   getters: {},
@@ -21,10 +27,16 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
     setSuiteResolverIsVisible(state, isVisible): void {
       state.suiteResolverDialog.isVisible = isVisible;
     },
+    setChouetteVeluteResolverIsVisible(state, isVisible): void {
+      state.chouetteVeluteResolverDialog.isVisible = isVisible;
+    },
   },
   actions: {
     openSuiteResolver({ commit }): void {
       commit("setSuiteResolverIsVisible", true);
+    },
+    openChouetteVeluteResolver({ commit }): void {
+      commit("setChouetteVeluteResolverIsVisible", true);
     },
   },
 };

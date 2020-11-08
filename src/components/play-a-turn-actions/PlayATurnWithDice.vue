@@ -28,9 +28,6 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import MenuAction from "@/components/MenuAction.vue";
-import ChouetteVeluteDialogCard from "@/components/play-a-turn-actions/dialogs/ChouetteVeluteDialogCard.vue";
-import SouffletteDialogCard from "@/components/play-a-turn-actions/dialogs/SouffletteDialogCard.vue";
 import DieCard from "@/components/play-a-turn-actions/DieCard.vue";
 import { DiceForm, isDiceFormValid } from "@/domain/dice/compute-dice-result";
 
@@ -41,9 +38,6 @@ function getInitialDiceForm(): DiceForm {
 @Component({
   components: {
     DieCard,
-    SouffletteDialogCard,
-    ChouetteVeluteDialogCard,
-    MenuAction,
   },
 })
 export default class PlayATurnWithDice extends Vue {

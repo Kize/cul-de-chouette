@@ -25,16 +25,12 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { Player } from "@/domain/player";
 import MenuAction from "@/components/MenuAction.vue";
 import { mapGetters, mapState } from "vuex";
-import ChouetteVeluteDialogCard from "@/components/play-a-turn-actions/dialogs/ChouetteVeluteDialogCard.vue";
-import SuiteResolverDialog from "@/components/play-a-turn-actions/dialogs/SuiteResolverDialog.vue";
 import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDice.vue";
 import { DiceRoll } from "@/domain/rules/rule";
 
 @Component({
   components: {
     PlayATurnWithDice,
-    SuiteDialogCard: SuiteResolverDialog,
-    ChouetteVeluteDialogCard,
     MenuAction,
   },
   computed: {

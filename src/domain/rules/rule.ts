@@ -12,7 +12,6 @@ export interface Rule {
 export interface GameContext {
   currentPlayerName: string;
   diceRoll: DiceRoll;
-  turnNumber?: number;
 }
 
 export type RuleEffects = Array<RuleEffect>;

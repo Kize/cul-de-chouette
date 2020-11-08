@@ -27,15 +27,21 @@ import {
   SuiteRuleResolver,
 } from "@/store/current-game/resolver/suite-rule-resolver";
 import { SuiteRule } from "@/domain/rules/basic-rules/suite-rule";
+import { ChouetteVeluteRule } from "@/domain/rules/basic-rules/chouette-velute-rule";
+import {
+  ChouetteVeluteResolution,
+  ChouetteVeluteRuleResolver,
+} from "@/store/current-game/resolver/chouette-velute-rule-resolver";
 
 type MainPlayableState = Record<string, unknown>;
 
 const suiteRuleResolver = new SuiteRuleResolver();
+const chouetteVeluteRuleResolver = new ChouetteVeluteRuleResolver();
 
 const ruleRunner = new RuleRunner([
   new CulDeChouetteRule(),
-  // new ChouetteVeluteRule(),
   new SuiteRule(suiteRuleResolver),
+  new ChouetteVeluteRule(chouetteVeluteRuleResolver),
   new VeluteRule(),
   new ChouetteRule(),
   new NeantRule(),
@@ -106,6 +112,21 @@ export const MainPlayableActionsStoreModule: Module<
     cancelSuite({ commit }): void {
       suiteRuleResolver.reject();
       commit("currentGame/dialogs/setSuiteResolverIsVisible", false, {
+        root: true,
+      });
+    },
+    resolveChouetteVelute(
+      { commit },
+      chouetteVeluteResolution: ChouetteVeluteResolution
+    ): void {
+      chouetteVeluteRuleResolver.resolve(chouetteVeluteResolution);
+      commit("currentGame/dialogs/setChouetteVeluteResolverIsVisible", false, {
+        root: true,
+      });
+    },
+    cancelChouetteVelute({ commit }): void {
+      chouetteVeluteRuleResolver.reject();
+      commit("currentGame/dialogs/setChouetteVeluteResolverIsVisible", false, {
         root: true,
       });
     },
