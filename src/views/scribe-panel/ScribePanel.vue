@@ -75,8 +75,8 @@ import AddOperationLinesButton from "@/views/scribe-panel/components/AddOperatio
 import EndGameDialogCard from "@/views/scribe-panel/dialogs/EndGameDialogCard.vue";
 import CancelGameDialogCard from "@/views/scribe-panel/dialogs/CancelGameDialogCard.vue";
 import RulesButton from "@/components/RulesButton.vue";
-import SuiteResolverDialog from "@/components/play-a-turn-actions/dialogs/SuiteResolverDialog.vue";
-import ChouetteVeluteResolverDialog from "@/components/play-a-turn-actions/dialogs/ChouetteVeluteResolverDialog.vue";
+import SuiteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/SuiteResolverDialog.vue";
+import ChouetteVeluteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/ChouetteVeluteResolverDialog.vue";
 
 @Component({
   components: {
