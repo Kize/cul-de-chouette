@@ -27,6 +27,14 @@
               label="La soufflette"
               v-model="form.levelOne.isSouffletteEnabled"
             ></v-checkbox>
+            <v-checkbox
+              label="Le sirop"
+              v-model="form.levelOne.isSiropEnabled"
+            ></v-checkbox>
+            <v-checkbox
+              label="L'attrape-oiseau"
+              v-model="form.levelOne.isAttrapeOiseauEnabled"
+            ></v-checkbox>
           </v-card-text>
         </v-card>
       </v-card-text>
@@ -113,6 +121,8 @@ export default class NewGameFormSection extends Vue {
     playerNames: ["", ""],
     levelOne: {
       isSouffletteEnabled: false,
+      isSiropEnabled: false,
+      isAttrapeOiseauEnabled: false,
     },
   };
 

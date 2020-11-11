@@ -6,12 +6,7 @@ import {
   RuleEffects,
   RuleEffetType,
 } from "../../../domain/rules/rule";
-import { CulDeChouetteRule } from "../../../domain/rules/basic-rules/cul-de-chouette-rule";
-import {
-  SuiteResolution,
-  SuiteRule,
-} from "../../../domain/rules/basic-rules/suite-rule";
-import { SuiteRuleResolver } from "@/store/current-game/resolver/suite-rule-resolver";
+import { SuiteResolution } from "../../../domain/rules/basic-rules/suite-rule";
 import {
   BasicHistoryLineAction,
   ChouetteVeluteHistoryLineAction,
@@ -22,39 +17,17 @@ import {
   mapHistoryActionToApply,
   SuiteHistoryLineAction,
 } from "@/domain/history";
-import { RuleRunner } from "../../../domain/rule-runner";
-import { NeantRule } from "../../../domain/rules/basic-rules/neant-rule";
-import { VeluteRule } from "../../../domain/rules/basic-rules/velute-rule";
-import {
-  ChouetteVeluteResolution,
-  ChouetteVeluteRule,
-} from "../../../domain/rules/basic-rules/chouette-velute-rule";
-import { ChouetteRule } from "../../../domain/rules/basic-rules/chouette-rule";
+import { ChouetteVeluteResolution } from "../../../domain/rules/basic-rules/chouette-velute-rule";
 import { RootState } from "@/store/app.state";
-import { ChouetteVeluteRuleResolver } from "@/store/current-game/resolver/chouette-velute-rule-resolver";
+import { AttrapeOiseauResolution } from "../../../domain/rules/level-one/attrape-oiseau-rule";
 import {
-  AttrapeOiseauResolution,
-  AttrapeOiseauRule,
-} from "../../../domain/rules/level-one/attrape-oiseau-rule";
-import { SiropRuleResolver } from "@/store/current-game/resolver/sirop-rule-resolver";
-import { SirotageRule } from "../../../domain/rules/level-one/sirotage-rule";
+  chouetteVeluteRuleResolver,
+  gameRuleRunner,
+  siropRuleResolver,
+  suiteRuleResolver,
+} from "@/store/current-game/game-rule-runner";
 
 type MainPlayableState = Record<string, unknown>;
-
-const suiteRuleResolver = new SuiteRuleResolver();
-const chouetteVeluteRuleResolver = new ChouetteVeluteRuleResolver();
-const siropRuleResolver = new SiropRuleResolver();
-
-const ruleRunner = new RuleRunner([
-  new CulDeChouetteRule(),
-  new SuiteRule(suiteRuleResolver),
-  new ChouetteVeluteRule(chouetteVeluteRuleResolver),
-  new VeluteRule(),
-  new AttrapeOiseauRule(siropRuleResolver),
-  new SirotageRule(siropRuleResolver),
-  new ChouetteRule(),
-  new NeantRule(),
-]);
 
 export const MainPlayableActionsStoreModule: Module<
   MainPlayableState,
@@ -72,7 +45,9 @@ export const MainPlayableActionsStoreModule: Module<
       };
       let ruleEffects: RuleEffects;
       try {
-        ruleEffects = await ruleRunner.run(diceRoll, gameContext);
+        ruleEffects = await gameRuleRunner
+          .getRunner()
+          .run(diceRoll, gameContext);
       } catch (e) {
         if (e) {
           console.error(e);
