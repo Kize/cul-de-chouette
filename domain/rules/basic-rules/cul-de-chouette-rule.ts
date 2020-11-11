@@ -1,5 +1,11 @@
-import { DiceRoll, GameContext, Rule, RuleEffects, RuleEffetType } from '../rule';
-import { HistoryLineType } from '../../../src/domain/history';
+import {
+  DiceRoll,
+  GameContext,
+  Rule,
+  RuleEffects,
+  RuleEffetType,
+} from "../rule";
+import { HistoryLineType } from "../../../src/domain/history";
 
 export class CulDeChouetteRule implements Rule {
   isApplicableToDiceRoll([dieValue1, dieValue2, dieValue3]: DiceRoll): boolean {
@@ -7,7 +13,7 @@ export class CulDeChouetteRule implements Rule {
   }
 
   applyRule(context: GameContext): RuleEffects {
-    const score = 40 + 10 * context.diceRoll[0];
+    const score = getCulDeChouetteScore(context.diceRoll);
     return [
       {
         type: RuleEffetType.CHANGE_SCORE,
@@ -17,4 +23,8 @@ export class CulDeChouetteRule implements Rule {
       },
     ];
   }
+}
+
+export function getCulDeChouetteScore(diceRoll: DiceRoll) {
+  return 40 + 10 * diceRoll[0];
 }

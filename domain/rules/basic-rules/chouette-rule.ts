@@ -1,5 +1,11 @@
-import { DiceRoll, GameContext, Rule, RuleEffects, RuleEffetType } from '../rule';
-import { HistoryLineType } from '../../../src/domain/history';
+import {
+  DiceRoll,
+  GameContext,
+  Rule,
+  RuleEffects,
+  RuleEffetType,
+} from "../rule";
+import { HistoryLineType } from "../../../src/domain/history";
 
 export class ChouetteRule implements Rule {
   isApplicableToDiceRoll([dieValue1, dieValue2, dieValue3]: DiceRoll): boolean {
@@ -10,14 +16,12 @@ export class ChouetteRule implements Rule {
     );
   }
 
-  applyRule({ currentPlayerName, diceRoll }: GameContext): RuleEffects {
-    const [dieValue1, dieValue2, dieValue3] = diceRoll;
-    const chouetteValue =
-      dieValue1 === dieValue2 || dieValue1 === dieValue3
-        ? dieValue1
-        : dieValue2;
+  async applyRule({
+    currentPlayerName,
+    diceRoll,
+  }: GameContext): Promise<RuleEffects> {
+    const score = this.getChouetteScore(diceRoll);
 
-    const score = chouetteValue ** 2;
     return [
       {
         type: RuleEffetType.CHANGE_SCORE,
@@ -26,5 +30,17 @@ export class ChouetteRule implements Rule {
         score,
       },
     ];
+  }
+
+  protected getChouetteScore(diceRoll: DiceRoll): number {
+    const chouetteValue = this.getChouetteValue(diceRoll);
+
+    return chouetteValue ** 2;
+  }
+
+  protected getChouetteValue([dieValue1, dieValue2, dieValue3]: DiceRoll) {
+    return dieValue1 === dieValue2 || dieValue1 === dieValue3
+      ? dieValue1
+      : dieValue2;
   }
 }
