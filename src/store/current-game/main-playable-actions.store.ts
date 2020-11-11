@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Module } from "vuex";
 import {
   DiceRoll,
@@ -60,7 +61,6 @@ export const MainPlayableActionsStoreModule: Module<
         currentPlayerName: rootState.currentGame!.currentPlayerName,
         diceRoll,
       };
-
       let ruleEffects: RuleEffects;
       try {
         ruleEffects = await ruleRunner.run(diceRoll, gameContext);
@@ -73,14 +73,14 @@ export const MainPlayableActionsStoreModule: Module<
       }
 
       ruleEffects.forEach((ruleEffect) => {
+        const gameTurnNumber = rootState.currentGame!.turnNumber;
         switch (ruleEffect.type) {
           case RuleEffetType.ADD_GRELOTTINE:
             commit("currentGame/addGrelottine", ruleEffect.playerName, {
               root: true,
             });
             return;
-          case RuleEffetType.CHANGE_SCORE:
-            const gameTurnNumber = rootState.currentGame!.turnNumber;
+          case RuleEffetType.CHANGE_SCORE: {
             const turnNumber =
               gameContext.currentPlayerName === ruleEffect.playerName
                 ? gameTurnNumber
@@ -97,6 +97,7 @@ export const MainPlayableActionsStoreModule: Module<
               root: true,
             });
             return;
+          }
         }
       });
 

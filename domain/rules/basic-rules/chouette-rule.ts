@@ -1,5 +1,7 @@
 import {
+  ChangeScoreRuleEffect,
   DiceRoll,
+  DieValue,
   GameContext,
   Rule,
   RuleEffects,
@@ -16,20 +18,24 @@ export class ChouetteRule implements Rule {
     );
   }
 
+  protected getChouetteRuleEffect(
+    playerName: string,
+    diceRoll: DiceRoll
+  ): ChangeScoreRuleEffect {
+    const score = this.getChouetteScore(diceRoll);
+    return {
+      type: RuleEffetType.CHANGE_SCORE,
+      designation: HistoryLineType.CHOUETTE,
+      playerName,
+      score,
+    };
+  }
+
   async applyRule({
     currentPlayerName,
     diceRoll,
   }: GameContext): Promise<RuleEffects> {
-    const score = this.getChouetteScore(diceRoll);
-
-    return [
-      {
-        type: RuleEffetType.CHANGE_SCORE,
-        designation: HistoryLineType.CHOUETTE,
-        playerName: currentPlayerName,
-        score,
-      },
-    ];
+    return [this.getChouetteRuleEffect(currentPlayerName, diceRoll)];
   }
 
   protected getChouetteScore(diceRoll: DiceRoll): number {
@@ -38,7 +44,11 @@ export class ChouetteRule implements Rule {
     return chouetteValue ** 2;
   }
 
-  protected getChouetteValue([dieValue1, dieValue2, dieValue3]: DiceRoll) {
+  protected getChouetteValue([
+    dieValue1,
+    dieValue2,
+    dieValue3,
+  ]: DiceRoll): DieValue {
     return dieValue1 === dieValue2 || dieValue1 === dieValue3
       ? dieValue1
       : dieValue2;

@@ -1,7 +1,7 @@
 import { HistoryLineType } from "@/domain/history";
 import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
 import { computeLevelOneDiceResult } from "@/domain/dice/compute-dice-result-level-one";
-import { DiceRoll } from '../../../domain/rules/rule';
+import { DiceRoll } from "../../../domain/rules/rule";
 
 export type DiceForm = [number, number, number] | DiceRoll;
 

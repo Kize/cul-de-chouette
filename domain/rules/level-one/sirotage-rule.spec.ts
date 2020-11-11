@@ -1,174 +1,182 @@
-import { BidType, SiropBid, SirotageRule } from "./sirotage-rule";
+import {
+  BidType,
+  SiropBid,
+  SirotageResolution,
+  SirotageRule,
+} from "./sirotage-rule";
 import { DummyGameContextBuilder } from "../dummy-game-context-builder";
 import { ChouetteRule } from "../basic-rules/chouette-rule";
 import { RuleEffetType } from "../rule";
 import { HistoryLineType } from "../../../src/domain/history";
+import { RuleResolver } from "../rule-resolver";
+export function testSirotageRule(
+  getSirotageRuleForResolution: (resolution: SirotageResolution) => SirotageRule
+): void {
+  describe("applyRule", () => {
+    it("applies the chouette rule when there is no sirotage", async () => {
+      const sirotageRule = getSirotageRuleForResolution({ isSirote: false });
 
-describe("applyRule", () => {
-  it("applies the chouette rule when there is no sirotage", async () => {
-    const resolver = {
-      getResolution: jest.fn().mockResolvedValue({ isSirote: false }),
-    };
-    const sirotageRule = new SirotageRule(resolver);
-    const chouetteRule = new ChouetteRule();
+      const chouetteRule = new ChouetteRule();
 
-    const gameContext = DummyGameContextBuilder.aContext()
-      .withCurrentPlayerName("Alban")
-      .withDiceRoll([2, 3, 2])
-      .build();
+      const gameContext = DummyGameContextBuilder.aContext()
+        .withCurrentPlayerName("Alban")
+        .withDiceRoll([2, 3, 2])
+        .build();
 
-    expect(await sirotageRule.applyRule(gameContext)).toEqual(
-      await chouetteRule.applyRule(gameContext)
-    );
-  });
-
-  it("registers a negative change of score for the player when the sirotage is failed", async () => {
-    const resolver = {
-      getResolution: jest
-        .fn()
-        .mockResolvedValue({ isSirote: true, lastDieValue: 4, bids: [] }),
-    };
-    const sirotageRule = new SirotageRule(resolver);
-
-    const gameContext = DummyGameContextBuilder.aContext()
-      .withCurrentPlayerName("Alban")
-      .withDiceRoll([2, 3, 2])
-      .build();
-
-    expect(await sirotageRule.applyRule(gameContext)).toContainEqual({
-      type: RuleEffetType.CHANGE_SCORE,
-      designation: HistoryLineType.SIROP,
-      playerName: "Alban",
-      score: -4,
+      expect(await sirotageRule.applyRule(gameContext)).toEqual(
+        await chouetteRule.applyRule(gameContext)
+      );
     });
-  });
 
-  it("registers a positive change of score for the player when the sirotage is won", async () => {
-    const resolver = {
-      getResolution: jest
-        .fn()
-        .mockResolvedValue({ isSirote: true, lastDieValue: 2, bids: [] }),
-    };
-    const sirotageRule = new SirotageRule(resolver);
+    it("registers a negative change of score for the player when the sirotage is failed", async () => {
+      const sirotageRule = getSirotageRuleForResolution({
+        isSirote: true,
+        lastDieValue: 4,
+        bids: [],
+      });
+      const gameContext = DummyGameContextBuilder.aContext()
+        .withCurrentPlayerName("Alban")
+        .withDiceRoll([2, 3, 2])
+        .build();
 
-    const gameContext = DummyGameContextBuilder.aContext()
-      .withCurrentPlayerName("Alban")
-      .withDiceRoll([2, 3, 2])
-      .build();
-
-    expect(await sirotageRule.applyRule(gameContext)).toContainEqual({
-      type: RuleEffetType.CHANGE_SCORE,
-      designation: HistoryLineType.SIROP,
-      playerName: "Alban",
-      score: 60,
-    });
-  });
-
-  it("registers a change of score for each player's bet", async () => {
-    const bids: Array<SiropBid> = [
-      {
+      expect(await sirotageRule.applyRule(gameContext)).toContainEqual({
+        type: RuleEffetType.CHANGE_SCORE,
+        designation: HistoryLineType.SIROP,
         playerName: "Alban",
-        playerBid: BidType.MOUETTE,
-        isBidValidated: false,
-      },
-      {
+        score: -4,
+      });
+    });
+
+    it("registers a positive change of score for the player when the sirotage is won", async () => {
+      const sirotageRule = getSirotageRuleForResolution({
+        isSirote: true,
+        lastDieValue: 2,
+        bids: [],
+      });
+
+      const gameContext = DummyGameContextBuilder.aContext()
+        .withCurrentPlayerName("Alban")
+        .withDiceRoll([2, 3, 2])
+        .build();
+
+      expect(await sirotageRule.applyRule(gameContext)).toContainEqual({
+        type: RuleEffetType.CHANGE_SCORE,
+        designation: HistoryLineType.SIROP,
+        playerName: "Alban",
+        score: 60,
+      });
+    });
+
+    it("registers a change of score for each player's bet", async () => {
+      const bids: Array<SiropBid> = [
+        {
+          playerName: "Alban",
+          playerBid: BidType.MOUETTE,
+          isBidValidated: false,
+        },
+        {
+          playerName: "DelphinWinner",
+          playerBid: BidType.CHOUETTE,
+          isBidValidated: true,
+        },
+        {
+          playerName: "NathanTooSlowToWin",
+          playerBid: BidType.CHOUETTE,
+          isBidValidated: false,
+        },
+        {
+          playerName: "JulesNotBetting",
+          playerBid: BidType.COUCHE_SIROP,
+          isBidValidated: false,
+        },
+      ];
+
+      const sirotageRule = getSirotageRuleForResolution({
+        isSirote: true,
+        lastDieValue: 6,
+        bids,
+      });
+
+      const gameContext = DummyGameContextBuilder.aContext()
+        .withCurrentPlayerName("Alban")
+        .withDiceRoll([2, 3, 2])
+        .build();
+
+      const ruleEffects = await sirotageRule.applyRule(gameContext);
+      expect(ruleEffects).toContainEqual({
+        type: RuleEffetType.CHANGE_SCORE,
+        designation: HistoryLineType.SIROP_CHALLENGE,
+        playerName: "Alban",
+        score: -5,
+      });
+
+      expect(ruleEffects).toContainEqual({
+        type: RuleEffetType.CHANGE_SCORE,
+        designation: HistoryLineType.SIROP_CHALLENGE,
         playerName: "DelphinWinner",
-        playerBid: BidType.CHOUETTE,
-        isBidValidated: true,
-      },
-      {
+        score: 25,
+      });
+
+      expect(ruleEffects).toContainEqual({
+        type: RuleEffetType.CHANGE_SCORE,
+        designation: HistoryLineType.SIROP_CHALLENGE,
         playerName: "NathanTooSlowToWin",
-        playerBid: BidType.CHOUETTE,
-        isBidValidated: false,
-      },
-      {
+        score: 0,
+      });
+
+      expect(ruleEffects).toContainEqual({
+        type: RuleEffetType.CHANGE_SCORE,
+        designation: HistoryLineType.SIROP_CHALLENGE,
         playerName: "JulesNotBetting",
-        playerBid: BidType.COUCHE_SIROP,
-        isBidValidated: false,
-      },
-    ];
-
-    const resolver = {
-      getResolution: jest
-        .fn()
-        .mockResolvedValue({ isSirote: true, lastDieValue: 6, bids }),
-    };
-    const sirotageRule = new SirotageRule(resolver);
-
-    const gameContext = DummyGameContextBuilder.aContext()
-      .withCurrentPlayerName("Alban")
-      .withDiceRoll([2, 3, 2])
-      .build();
-
-    const ruleEffects = await sirotageRule.applyRule(gameContext);
-    expect(ruleEffects).toContainEqual({
-      type: RuleEffetType.CHANGE_SCORE,
-      designation: HistoryLineType.SIROP_CHALLENGE,
-      playerName: "Alban",
-      score: -5,
+        score: 0,
+      });
     });
 
-    expect(ruleEffects).toContainEqual({
-      type: RuleEffetType.CHANGE_SCORE,
-      designation: HistoryLineType.SIROP_CHALLENGE,
-      playerName: "DelphinWinner",
-      score: 25,
-    });
+    it("registers a change of score for each player's bet on a beau sirop", async () => {
+      const bids: Array<SiropBid> = [
+        {
+          playerName: "Alban",
+          playerBid: BidType.BEAU_SIROP,
+          isBidValidated: true,
+        },
+        {
+          playerName: "DelphinTooSlow",
+          playerBid: BidType.BEAU_SIROP,
+          isBidValidated: false,
+        },
+      ];
 
-    expect(ruleEffects).toContainEqual({
-      type: RuleEffetType.CHANGE_SCORE,
-      designation: HistoryLineType.SIROP_CHALLENGE,
-      playerName: "NathanTooSlowToWin",
-      score: 0,
-    });
+      const sirotageRule = getSirotageRuleForResolution({
+        isSirote: true,
+        lastDieValue: 3,
+        bids,
+      });
 
-    expect(ruleEffects).toContainEqual({
-      type: RuleEffetType.CHANGE_SCORE,
-      designation: HistoryLineType.SIROP_CHALLENGE,
-      playerName: "JulesNotBetting",
-      score: 0,
-    });
-  });
+      const gameContext = DummyGameContextBuilder.aContext()
+        .withCurrentPlayerName("Alban")
+        .withDiceRoll([3, 3, 5])
+        .build();
 
-  it("registers a change of score for each player's bet on a beau sirop", async () => {
-    const bids: Array<SiropBid> = [
-      {
+      const ruleEffects = await sirotageRule.applyRule(gameContext);
+      expect(ruleEffects).toContainEqual({
+        type: RuleEffetType.CHANGE_SCORE,
+        designation: HistoryLineType.SIROP_CHALLENGE,
         playerName: "Alban",
-        playerBid: BidType.BEAU_SIROP,
-        isBidValidated: true,
-      },
-      {
+        score: 25,
+      });
+
+      expect(ruleEffects).toContainEqual({
+        type: RuleEffetType.CHANGE_SCORE,
+        designation: HistoryLineType.SIROP_CHALLENGE,
         playerName: "DelphinTooSlow",
-        playerBid: BidType.BEAU_SIROP,
-        isBidValidated: false,
-      },
-    ];
-
-    const resolver = {
-      getResolution: jest
-        .fn()
-        .mockResolvedValue({ isSirote: true, lastDieValue: 3, bids }),
-    };
-    const sirotageRule = new SirotageRule(resolver);
-
-    const gameContext = DummyGameContextBuilder.aContext()
-      .withCurrentPlayerName("Alban")
-      .withDiceRoll([3, 3, 5])
-      .build();
-
-    const ruleEffects = await sirotageRule.applyRule(gameContext);
-    expect(ruleEffects).toContainEqual({
-      type: RuleEffetType.CHANGE_SCORE,
-      designation: HistoryLineType.SIROP_CHALLENGE,
-      playerName: "Alban",
-      score: 25,
-    });
-
-    expect(ruleEffects).toContainEqual({
-      type: RuleEffetType.CHANGE_SCORE,
-      designation: HistoryLineType.SIROP_CHALLENGE,
-      playerName: "DelphinTooSlow",
-      score: 0,
+        score: 0,
+      });
     });
   });
+}
+
+testSirotageRule((resolution) => {
+  const resolver = <RuleResolver<SirotageResolution>>{};
+  resolver.getResolution = jest.fn().mockResolvedValue(resolution);
+  return new SirotageRule(resolver);
 });

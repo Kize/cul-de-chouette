@@ -1,6 +1,8 @@
 import { ChouetteRule } from "../basic-rules/chouette-rule";
 import { Resolver } from "../rule-resolver";
 import {
+  ChangeScoreRuleEffect,
+  DiceRoll,
   DieValue,
   GameContext,
   RuleEffect,
@@ -28,32 +30,27 @@ export class SirotageRule extends ChouetteRule {
     diceRoll,
   }: GameContext): Promise<RuleEffects> {
     const resolution = await this.sirotageResolver.getResolution();
-
     if (!resolution.isSirote) {
-      return super.applyRule({ currentPlayerName, diceRoll });
+      return [this.getChouetteRuleEffect(currentPlayerName, diceRoll)];
     }
+    const sirotageRuleEffect = this.getSirotageRuleEffect(
+      resolution,
+      diceRoll,
+      currentPlayerName
+    );
+    const bidRuleEffects = this.getBidRuleEffects(resolution, diceRoll);
+    return [sirotageRuleEffect, ...bidRuleEffects];
+  }
 
-    const sirotageRuleEffect: RuleEffect = {
-      type: RuleEffetType.CHANGE_SCORE,
-      designation: HistoryLineType.SIROP,
-      playerName: currentPlayerName,
-      score: 0,
-    };
-
-    const chouetteValue = this.getChouetteValue(diceRoll);
-    const isSirotageWon = resolution.lastDieValue === chouetteValue;
-
-    if (isSirotageWon) {
-      sirotageRuleEffect.score = getCulDeChouetteScore(diceRoll);
-    } else {
-      sirotageRuleEffect.score = -this.getChouetteScore(diceRoll);
-    }
-
-    const bidRuleEffects = resolution.bids.map((bid) => {
+  protected getBidRuleEffects(
+    resolution: ActiveSirotageResolution,
+    diceRoll: [DieValue, DieValue, DieValue]
+  ): RuleEffects {
+    return resolution.bids.map((bid) => {
       let score: number;
 
       const winningBet =
-        resolution.lastDieValue === chouetteValue
+        resolution.lastDieValue === this.getChouetteValue(diceRoll)
           ? BidType.BEAU_SIROP
           : dieValueToBidType.get(resolution.lastDieValue);
 
@@ -72,8 +69,29 @@ export class SirotageRule extends ChouetteRule {
         score,
       };
     });
+  }
 
-    return [sirotageRuleEffect, ...bidRuleEffects];
+  protected getSirotageRuleEffect(
+    resolution: ActiveSirotageResolution,
+    diceRoll: DiceRoll,
+    currentPlayerName: string
+  ): ChangeScoreRuleEffect {
+    const sirotageRuleEffect: ChangeScoreRuleEffect = {
+      type: RuleEffetType.CHANGE_SCORE,
+      designation: HistoryLineType.SIROP,
+      playerName: currentPlayerName,
+      score: 0,
+    };
+
+    const chouetteValue = this.getChouetteValue(diceRoll);
+    const isSirotageWon = resolution.lastDieValue === chouetteValue;
+
+    if (isSirotageWon) {
+      sirotageRuleEffect.score = getCulDeChouetteScore(diceRoll);
+    } else {
+      sirotageRuleEffect.score = -this.getChouetteScore(diceRoll);
+    }
+    return sirotageRuleEffect;
   }
 }
 

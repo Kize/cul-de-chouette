@@ -1,13 +1,14 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Module } from "vuex";
 import { RootState } from "@/store/app.state";
 
 export interface DialogsState {
   suiteResolverDialog: {
     isVisible: boolean;
-  },
+  };
   chouetteVeluteResolverDialog: {
     isVisible: boolean;
-  },
+  };
 }
 
 export const DialogsStoreModule: Module<DialogsState, RootState> = {
@@ -18,8 +19,8 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
         isVisible: false,
       },
       chouetteVeluteResolverDialog: {
-        isVisible: false
-      }
+        isVisible: false,
+      },
     };
   },
   getters: {},
