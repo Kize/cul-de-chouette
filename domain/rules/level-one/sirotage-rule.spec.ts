@@ -1,6 +1,7 @@
 import {
   BidType,
   SiropBid,
+  SiropResolutionPayload,
   SirotageResolution,
   SirotageRule,
 } from "./sirotage-rule";
@@ -176,7 +177,38 @@ export function testSirotageRule(
 }
 
 testSirotageRule((resolution) => {
-  const resolver = <RuleResolver<SirotageResolution>>{};
+  const resolver = <RuleResolver<SirotageResolution, SiropResolutionPayload>>{};
   resolver.getResolution = jest.fn().mockResolvedValue(resolution);
   return new SirotageRule(resolver);
+});
+
+describe("resolver params", () => {
+  it("gives the playable bids to the resolver", async () => {
+    const resolver = {
+      getResolution: jest.fn().mockResolvedValue({}),
+    };
+    const sirotageRule = new SirotageRule(resolver);
+
+    const gameContext = DummyGameContextBuilder.aContext()
+      .withCurrentPlayerName("Alban")
+      .withDiceRoll([3, 3, 5])
+      .build();
+
+    await sirotageRule.applyRule(gameContext);
+    expect(resolver.getResolution).toHaveBeenCalledWith<
+      [SiropResolutionPayload]
+    >({
+      playableBids: [
+        { type: BidType.BEAU_SIROP, isPlayable: true },
+        { type: BidType.COUCHE_SIROP, isPlayable: true },
+        { type: BidType.LINOTTE, isPlayable: true },
+        { type: BidType.ALOUETTE, isPlayable: true },
+        { type: BidType.FAUVETTE, isPlayable: false },
+        { type: BidType.MOUETTE, isPlayable: true },
+        { type: BidType.BERGERONNETTE, isPlayable: true },
+        { type: BidType.CHOUETTE, isPlayable: true },
+      ],
+      chouetteValue: 3,
+    });
+  });
 });

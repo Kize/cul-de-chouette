@@ -12,6 +12,16 @@ import {
 import { HistoryLineType } from "../../../src/domain/history";
 import { getCulDeChouetteScore } from "../basic-rules/cul-de-chouette-rule";
 
+export interface PlayableBid {
+  type: BidType;
+  isPlayable: boolean;
+}
+
+export interface SiropResolutionPayload {
+  playableBids: Array<PlayableBid>;
+  chouetteValue: DieValue;
+}
+
 export type SirotageResolution = { isSirote: false } | ActiveSirotageResolution;
 
 export interface ActiveSirotageResolution {
@@ -21,15 +31,35 @@ export interface ActiveSirotageResolution {
 }
 
 export class SirotageRule extends ChouetteRule {
-  constructor(private readonly sirotageResolver: Resolver<SirotageResolution>) {
+  constructor(
+    private readonly sirotageResolver: Resolver<
+      SirotageResolution,
+      SiropResolutionPayload
+    >
+  ) {
     super();
+  }
+
+  protected getPlayableBids(
+    chouetteValue: DieValue,
+    ruleBidTypes: Array<BidType>
+  ): Array<PlayableBid> {
+    const disableBidType = dieValueToBidType.get(chouetteValue);
+    return ruleBidTypes.map((bidType) => ({
+      type: bidType,
+      isPlayable: bidType !== disableBidType,
+    }));
   }
 
   async applyRule({
     currentPlayerName,
     diceRoll,
   }: GameContext): Promise<RuleEffects> {
-    const resolution = await this.sirotageResolver.getResolution();
+    const chouetteValue = this.getChouetteValue(diceRoll);
+    const resolution = await this.sirotageResolver.getResolution({
+      chouetteValue,
+      playableBids: this.getPlayableBids(chouetteValue, SIROTAGE_BID_TYPES),
+    });
     if (!resolution.isSirote) {
       return [this.getChouetteRuleEffect(currentPlayerName, diceRoll)];
     }
@@ -42,33 +72,45 @@ export class SirotageRule extends ChouetteRule {
     return [sirotageRuleEffect, ...bidRuleEffects];
   }
 
+  protected mapPlayerBidToRuleEffect(
+    playerBid: SiropBid,
+    diceRoll: DiceRoll,
+    lastDieValue: DieValue
+  ): RuleEffect {
+    let score: number;
+
+    const winningBet =
+      lastDieValue === this.getChouetteValue(diceRoll)
+        ? BidType.BEAU_SIROP
+        : dieValueToBidType.get(lastDieValue);
+
+    if (playerBid.playerBid === winningBet) {
+      score = playerBid.isBidValidated ? 25 : 0;
+    } else if (playerBid.playerBid === BidType.COUCHE_SIROP) {
+      score = 0;
+    } else {
+      score = -5;
+    }
+
+    return {
+      type: RuleEffetType.CHANGE_SCORE,
+      designation: HistoryLineType.SIROP_CHALLENGE,
+      playerName: playerBid.playerName,
+      score,
+    };
+  }
+
   protected getBidRuleEffects(
     resolution: ActiveSirotageResolution,
     diceRoll: [DieValue, DieValue, DieValue]
   ): RuleEffects {
-    return resolution.bids.map((bid) => {
-      let score: number;
-
-      const winningBet =
-        resolution.lastDieValue === this.getChouetteValue(diceRoll)
-          ? BidType.BEAU_SIROP
-          : dieValueToBidType.get(resolution.lastDieValue);
-
-      if (bid.playerBid === winningBet) {
-        score = bid.isBidValidated ? 25 : 0;
-      } else if (bid.playerBid === BidType.COUCHE_SIROP) {
-        score = 0;
-      } else {
-        score = -5;
-      }
-
-      return {
-        type: RuleEffetType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP_CHALLENGE,
-        playerName: bid.playerName,
-        score,
-      };
-    });
+    return resolution.bids.map((playerBid) =>
+      this.mapPlayerBidToRuleEffect(
+        playerBid,
+        diceRoll,
+        resolution.lastDieValue
+      )
+    );
   }
 
   protected getSirotageRuleEffect(
@@ -112,6 +154,17 @@ export enum BidType {
   BERGERONNETTE = "Bergeronnette",
   CHOUETTE = "Chouette",
 }
+
+const SIROTAGE_BID_TYPES = [
+  BidType.BEAU_SIROP,
+  BidType.COUCHE_SIROP,
+  BidType.LINOTTE,
+  BidType.ALOUETTE,
+  BidType.FAUVETTE,
+  BidType.MOUETTE,
+  BidType.BERGERONNETTE,
+  BidType.CHOUETTE,
+];
 
 export const dieValueToBidType = new Map([
   [1, BidType.LINOTTE],

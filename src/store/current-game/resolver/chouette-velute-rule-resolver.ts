@@ -8,8 +8,11 @@ export class ChouetteVeluteRuleResolver extends RuleResolver<
   constructor() {
     super();
   }
-
   initResolution(): void {
     store.dispatch("currentGame/dialogs/openChouetteVeluteResolver");
+  }
+
+  endResolution(): void {
+    store.dispatch("currentGame/dialogs/closeChouetteVeluteResolver");
   }
 }

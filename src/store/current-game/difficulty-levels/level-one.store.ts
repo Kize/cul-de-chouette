@@ -15,6 +15,8 @@ import { GrelottineActionPayload } from "@/domain/grelottine";
 
 export interface LevelOneState {
   isSouffletteEnabled: boolean;
+  isSiropEnabled: boolean;
+  isAttrapeOiseauEnabled: boolean;
 }
 
 export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
@@ -22,11 +24,20 @@ export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
   state(): LevelOneState {
     return {
       isSouffletteEnabled: false,
+      // TODO DAU : add the form to active rule
+      isSiropEnabled: true,
+      isAttrapeOiseauEnabled: true,
     };
   },
   mutations: {
     setIsSouffletteEnabled(state, isEnabled: boolean): void {
       state.isSouffletteEnabled = isEnabled;
+    },
+    setIsSiropEnabled(state, isEnabled: boolean): void {
+      state.isSiropEnabled = isEnabled;
+    },
+    setIsAttrapeOiseauEnabled(state, isEnabled: boolean): void {
+      state.isAttrapeOiseauEnabled = isEnabled;
     },
   },
   actions: {

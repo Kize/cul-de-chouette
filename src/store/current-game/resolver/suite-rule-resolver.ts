@@ -6,4 +6,8 @@ export class SuiteRuleResolver extends RuleResolver<SuiteResolution> {
   initResolution(): void {
     store.dispatch("currentGame/dialogs/openSuiteResolver");
   }
+
+  endResolution(): void {
+    store.dispatch("currentGame/dialogs/closeSuiteResolver");
+  }
 }

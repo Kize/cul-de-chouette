@@ -32,17 +32,26 @@ import {
 import { ChouetteRule } from "../../../domain/rules/basic-rules/chouette-rule";
 import { RootState } from "@/store/app.state";
 import { ChouetteVeluteRuleResolver } from "@/store/current-game/resolver/chouette-velute-rule-resolver";
+import {
+  AttrapeOiseauResolution,
+  AttrapeOiseauRule,
+} from "../../../domain/rules/level-one/attrape-oiseau-rule";
+import { SiropRuleResolver } from "@/store/current-game/resolver/sirop-rule-resolver";
+import { SirotageRule } from "../../../domain/rules/level-one/sirotage-rule";
 
 type MainPlayableState = Record<string, unknown>;
 
 const suiteRuleResolver = new SuiteRuleResolver();
 const chouetteVeluteRuleResolver = new ChouetteVeluteRuleResolver();
+const siropRuleResolver = new SiropRuleResolver();
 
 const ruleRunner = new RuleRunner([
   new CulDeChouetteRule(),
   new SuiteRule(suiteRuleResolver),
   new ChouetteVeluteRule(chouetteVeluteRuleResolver),
   new VeluteRule(),
+  new AttrapeOiseauRule(siropRuleResolver),
+  new SirotageRule(siropRuleResolver),
   new ChouetteRule(),
   new NeantRule(),
 ]);
@@ -105,30 +114,28 @@ export const MainPlayableActionsStoreModule: Module<
     },
     resolveSuite({ commit }, suiteResolution: SuiteResolution): void {
       suiteRuleResolver.resolve(suiteResolution);
-      commit("currentGame/dialogs/setSuiteResolverIsVisible", false, {
-        root: true,
-      });
     },
     cancelSuite({ commit }): void {
       suiteRuleResolver.reject();
-      commit("currentGame/dialogs/setSuiteResolverIsVisible", false, {
-        root: true,
-      });
     },
     resolveChouetteVelute(
       { commit },
       chouetteVeluteResolution: ChouetteVeluteResolution
     ): void {
       chouetteVeluteRuleResolver.resolve(chouetteVeluteResolution);
-      commit("currentGame/dialogs/setChouetteVeluteResolverIsVisible", false, {
-        root: true,
-      });
     },
     cancelChouetteVelute({ commit }): void {
       chouetteVeluteRuleResolver.reject();
-      commit("currentGame/dialogs/setChouetteVeluteResolverIsVisible", false, {
-        root: true,
-      });
+    },
+
+    resolveSirop(
+      { commit },
+      attrapeOiseauResolution: AttrapeOiseauResolution
+    ): void {
+      siropRuleResolver.resolve(attrapeOiseauResolution);
+    },
+    cancelSirop({ commit }): void {
+      siropRuleResolver.reject();
     },
 
     // Still used by grelottine, should be removed later

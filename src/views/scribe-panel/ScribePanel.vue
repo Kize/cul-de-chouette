@@ -44,6 +44,7 @@
 
     <SuiteResolverDialog></SuiteResolverDialog>
     <ChouetteVeluteResolverDialog></ChouetteVeluteResolverDialog>
+    <SiropDialog></SiropDialog>
 
     <v-dialog v-model="showEndGameDialog" persistent max-width="1000">
       <EndGameDialogCard
@@ -77,9 +78,11 @@ import CancelGameDialogCard from "@/views/scribe-panel/dialogs/CancelGameDialogC
 import RulesButton from "@/components/RulesButton.vue";
 import SuiteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/SuiteResolverDialog.vue";
 import ChouetteVeluteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/ChouetteVeluteResolverDialog.vue";
+import SiropDialog from "@/views/scribe-panel/dialogs/rule-resolvers/SiropDialogCard.vue";
 
 @Component({
   components: {
+    SiropDialog,
     SuiteResolverDialog,
     ChouetteVeluteResolverDialog,
     RulesButton,
