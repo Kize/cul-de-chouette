@@ -30,10 +30,12 @@
             <v-checkbox
               label="Le sirop"
               v-model="form.levelOne.isSiropEnabled"
+              @change="changeSiropEnabled"
             ></v-checkbox>
             <v-checkbox
               label="L'attrape-oiseau"
               v-model="form.levelOne.isAttrapeOiseauEnabled"
+              :disabled="isAttrapeOiseauDisabled"
             ></v-checkbox>
           </v-card-text>
         </v-card>
@@ -126,6 +128,10 @@ export default class NewGameFormSection extends Vue {
     },
   };
 
+  get isAttrapeOiseauDisabled(): boolean {
+    return !this.form.levelOne.isSiropEnabled;
+  }
+
   canRemovePlayer(): boolean {
     return this.form.playerNames.length > 2;
   }
@@ -137,6 +143,12 @@ export default class NewGameFormSection extends Vue {
   removePlayer(index: number): void {
     if (this.canRemovePlayer()) {
       this.form.playerNames.splice(index, 1);
+    }
+  }
+
+  changeSiropEnabled(newStatus: boolean): void {
+    if (!newStatus) {
+      this.form.levelOne.isAttrapeOiseauEnabled = false;
     }
   }
 
