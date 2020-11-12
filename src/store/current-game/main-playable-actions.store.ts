@@ -1,22 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Module } from "vuex";
-import {
-  DiceRoll,
-  GameContext,
-  RuleEffects,
-  RuleEffetType,
-} from "../../../domain/rules/rule";
 import { SuiteResolution } from "../../../domain/rules/basic-rules/suite-rule";
-import {
-  BasicHistoryLineAction,
-  ChouetteVeluteHistoryLineAction,
-  getAmount,
-  HistoryLineAction,
-  HistoryLineApply,
-  HistoryLineType,
-  mapHistoryActionToApply,
-  SuiteHistoryLineAction,
-} from "@/domain/history";
+import { HistoryLineApply } from "@/domain/history";
 import { ChouetteVeluteResolution } from "../../../domain/rules/basic-rules/chouette-velute-rule";
 import { RootState } from "@/store/app.state";
 import { AttrapeOiseauResolution } from "../../../domain/rules/level-one/attrape-oiseau-rule";
@@ -26,6 +11,13 @@ import {
   siropRuleResolver,
   suiteRuleResolver,
 } from "@/store/current-game/game-rule-runner";
+import { DiceRoll } from "../../../domain/rules/dice-rule";
+import { RuleEffects, RuleEffetType } from "../../../domain/rules/rule-effect";
+import {
+  GameContext,
+  GameContextEvent,
+  GameContextEventType,
+} from "../../../domain/game-context-event";
 
 type MainPlayableState = Record<string, unknown>;
 
@@ -43,11 +35,17 @@ export const MainPlayableActionsStoreModule: Module<
         currentPlayerName: rootState.currentGame!.currentPlayerName,
         diceRoll,
       };
+
+      const gameContextEvent: GameContextEvent = {
+        type: GameContextEventType.PLAY_TURN,
+        gameContext,
+      };
+
       let ruleEffects: RuleEffects;
       try {
         ruleEffects = await gameRuleRunner
           .getRunner()
-          .run(diceRoll, gameContext);
+          .handleDiceRoll(gameContextEvent);
       } catch (e) {
         if (e) {
           console.error(e);
@@ -90,7 +88,7 @@ export const MainPlayableActionsStoreModule: Module<
     resolveSuite({ commit }, suiteResolution: SuiteResolution): void {
       suiteRuleResolver.resolve(suiteResolution);
     },
-    cancelSuite({ commit }): void {
+    cancelSuite(): void {
       suiteRuleResolver.reject();
     },
     resolveChouetteVelute(
@@ -99,121 +97,17 @@ export const MainPlayableActionsStoreModule: Module<
     ): void {
       chouetteVeluteRuleResolver.resolve(chouetteVeluteResolution);
     },
-    cancelChouetteVelute({ commit }): void {
+    cancelChouetteVelute(): void {
       chouetteVeluteRuleResolver.reject();
     },
-
     resolveSirop(
       { commit },
       attrapeOiseauResolution: AttrapeOiseauResolution
     ): void {
       siropRuleResolver.resolve(attrapeOiseauResolution);
     },
-    cancelSirop({ commit }): void {
+    cancelSirop(): void {
       siropRuleResolver.reject();
-    },
-
-    // Still used by grelottine, should be removed later
-    handleSuiteAction({ commit }, action: SuiteHistoryLineAction): void {
-      const isCurrentPlayerTheLooser =
-        action.loosingPlayerName === action.playerName;
-
-      if (!isCurrentPlayerTheLooser) {
-        const historyLineAction: HistoryLineAction = {
-          playerName: action.loosingPlayerName,
-          designation: HistoryLineType.SUITE,
-          value: action.multiplier * 10,
-        };
-        commit(
-          "currentGame/addHistoryLine",
-          mapHistoryActionToApply(historyLineAction),
-          { root: true }
-        );
-      }
-
-      const value = isCurrentPlayerTheLooser ? action.multiplier * 10 : 0;
-      const historyLineApply = mapHistoryActionToApply({
-        playerName: action.playerName,
-        designation: HistoryLineType.SUITE,
-        value,
-        turnNumber: action.turnNumber,
-      });
-
-      if (action.isVelute) {
-        historyLineApply.amount += getAmount(HistoryLineType.VELUTE, 3);
-      }
-
-      commit("currentGame/addHistoryLine", historyLineApply, { root: true });
-    },
-    handleChouetteVeluteAction(
-      { commit, rootGetters },
-      action: ChouetteVeluteHistoryLineAction
-    ): void {
-      if (action.shoutingPlayers.length === 1) {
-        const newAction: BasicHistoryLineAction = {
-          playerName: action.shoutingPlayers[0],
-          designation: HistoryLineType.CHOUETTE_VELUTE,
-          value: action.value,
-          turnNumber: rootGetters["currentGame/isCurrentPlayer"](
-            action.shoutingPlayers[0]
-          )
-            ? action.turnNumber
-            : undefined,
-        };
-        commit(
-          "currentGame/addHistoryLine",
-          mapHistoryActionToApply(newAction),
-          { root: true }
-        );
-      } else {
-        action.shoutingPlayers.forEach((playerName) => {
-          const historyLineApply = mapHistoryActionToApply({
-            playerName,
-            designation: HistoryLineType.CHOUETTE_VELUTE,
-            value: action.value,
-            turnNumber: rootGetters["currentGame/isCurrentPlayer"](playerName)
-              ? action.turnNumber
-              : undefined,
-          });
-
-          historyLineApply.amount = -historyLineApply.amount;
-          commit("currentGame/addHistoryLine", historyLineApply, {
-            root: true,
-          });
-        });
-      }
-
-      if (!action.shoutingPlayers.includes(action.playerName)) {
-        commit(
-          "currentGame/addHistoryLine",
-          mapHistoryActionToApply({
-            playerName: action.playerName,
-            designation: HistoryLineType.CHOUETTE_VELUTE,
-            value: 0,
-            turnNumber: action.turnNumber,
-          }),
-          { root: true }
-        );
-      }
-    },
-    handlePlayerLineAction(
-      { commit, dispatch },
-      lineAction: HistoryLineAction
-    ): void {
-      switch (lineAction.designation) {
-        case HistoryLineType.CHOUETTE_VELUTE:
-          dispatch("handleChouetteVeluteAction", lineAction);
-          break;
-        case HistoryLineType.SUITE:
-          dispatch("handleSuiteAction", lineAction);
-          break;
-        default:
-          commit(
-            "currentGame/addHistoryLine",
-            mapHistoryActionToApply(lineAction),
-            { root: true }
-          );
-      }
     },
   },
 };

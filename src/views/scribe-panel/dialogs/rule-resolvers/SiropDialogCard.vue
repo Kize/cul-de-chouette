@@ -250,7 +250,6 @@ export default class SiropDialog extends Vue {
     this.$store.dispatch("currentGame/play/resolveSirop", {
       isSirote: false,
     });
-    return;
   }
 
   confirmSirote(): void {

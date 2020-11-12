@@ -1,18 +1,14 @@
-import {
-  DiceRoll,
-  GameContext,
-  Rule,
-  RuleEffects,
-  RuleEffetType,
-} from "../rule";
-import { HistoryLineType } from "../../../src/domain/history";
+import { HistoryLineType } from "@/domain/history";
+import { DiceRoll, DiceRule } from '../dice-rule';
+import { RuleEffects, RuleEffetType } from '../rule-effect';
+import { GameContext, PlayTurnGameContext } from '../../game-context-event';
 
-export class CulDeChouetteRule implements Rule {
+export class CulDeChouetteRule extends DiceRule {
   isApplicableToDiceRoll([dieValue1, dieValue2, dieValue3]: DiceRoll): boolean {
     return dieValue1 === dieValue2 && dieValue1 === dieValue3;
   }
 
-  applyRule(context: GameContext): RuleEffects {
+  applyRule(context: PlayTurnGameContext): RuleEffects {
     const score = getCulDeChouetteScore(context.diceRoll);
     return [
       {

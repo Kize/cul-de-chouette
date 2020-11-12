@@ -1,7 +1,7 @@
 import { NeantRule } from "./neant-rule";
-import { RuleEffect, RuleEffetType } from "../rule";
-import { DummyGameContextBuilder } from "../dummy-game-context-builder";
 import { HistoryLineType } from "../../../src/domain/history";
+import { RuleEffect, RuleEffetType } from '../rule-effect';
+import { DummyPlayTurnGameContextBuilder } from '../../tests/dummy-game-context-builder';
 
 describe("isApplicableToDiceRoll", () => {
   it("returns always true", function () {
@@ -14,7 +14,7 @@ describe("isApplicableToDiceRoll", () => {
 describe("applyRule", () => {
   it("applies a grelottine to the current player", () => {
     const effects = new NeantRule().applyRule(
-      DummyGameContextBuilder.aContext().withCurrentPlayerName("Alban").build()
+      DummyPlayTurnGameContextBuilder.aContext().withCurrentPlayerName("Alban").build()
     );
 
     const grelottineEffect = effects.find(
@@ -29,7 +29,7 @@ describe("applyRule", () => {
 
   it("registers a change of score the the current player", () => {
     const effects = new NeantRule().applyRule(
-      DummyGameContextBuilder.aContext().withCurrentPlayerName("Alban").build()
+      DummyPlayTurnGameContextBuilder.aContext().withCurrentPlayerName("Alban").build()
     );
 
     const neantRollEffect = effects.find(

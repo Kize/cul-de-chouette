@@ -1,13 +1,14 @@
-import { DiceRoll, GameContext } from "./rule";
+import { DiceRoll } from "../rules/dice-rule";
+import { PlayTurnGameContext } from "../game-context-event";
 
-export class DummyGameContextBuilder {
+export class DummyPlayTurnGameContextBuilder {
   private currentPlayerName: string = "";
   private diceRoll: DiceRoll = [1, 1, 1];
 
   private constructor() {}
 
-  static aContext(): DummyGameContextBuilder {
-    return new DummyGameContextBuilder();
+  static aContext(): DummyPlayTurnGameContextBuilder {
+    return new DummyPlayTurnGameContextBuilder();
   }
 
   withCurrentPlayerName(playerName: string): this {
@@ -20,7 +21,7 @@ export class DummyGameContextBuilder {
     return this;
   }
 
-  build(): GameContext {
+  build(): PlayTurnGameContext {
     return {
       currentPlayerName: this.currentPlayerName,
       diceRoll: this.diceRoll,

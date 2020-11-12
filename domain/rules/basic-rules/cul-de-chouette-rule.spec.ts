@@ -1,7 +1,7 @@
 import { CulDeChouetteRule } from './cul-de-chouette-rule';
-import { DummyGameContextBuilder } from '../dummy-game-context-builder';
-import { RuleEffects, RuleEffetType } from '../rule';
 import { HistoryLineType } from '../../../src/domain/history';
+import { RuleEffects, RuleEffetType } from '../rule-effect';
+import { DummyPlayTurnGameContextBuilder } from '../../tests/dummy-game-context-builder';
 
 describe("isApplicableToDiceRoll", () => {
   it("returns true if all dice have the same value", () => {
@@ -20,7 +20,7 @@ describe("isApplicableToDiceRoll", () => {
 describe("applyRule", () => {
   it("registers a change of score of 60 for a cul de chouette of 2", () => {
     const effects = new CulDeChouetteRule().applyRule(
-      DummyGameContextBuilder.aContext()
+      DummyPlayTurnGameContextBuilder.aContext()
         .withCurrentPlayerName("Alban")
         .withDiceRoll([2, 2, 2])
         .build()

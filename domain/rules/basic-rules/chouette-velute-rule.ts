@@ -1,20 +1,18 @@
-import {
-  DiceRoll,
-  GameContext,
-  Rule,
-  RuleEffects,
-  RuleEffetType,
-} from "../rule";
 import { getVeluteValue } from "./velute-rule";
-import { HistoryLineType } from '@/domain/history';
-import { Resolver } from '../rule-resolver';
+import { HistoryLineType } from "@/domain/history";
+import { Resolver } from "../rule-resolver";
+import { DiceRoll, DiceRule } from '../dice-rule';
+import { RuleEffects, RuleEffetType } from '../rule-effect';
+import { GameContext, PlayTurnGameContext } from '../../game-context-event';
 
 export interface ChouetteVeluteResolution {
   playerNames: Array<string>;
 }
 
-export class ChouetteVeluteRule implements Rule {
-  constructor(private readonly resolver: Resolver<ChouetteVeluteResolution>) {}
+export class ChouetteVeluteRule extends DiceRule {
+  constructor(private readonly resolver: Resolver<ChouetteVeluteResolution>) {
+    super();
+  }
 
   isApplicableToDiceRoll(diceRoll: DiceRoll): boolean {
     const [dieValue1, dieValue2, dieValue3] = [...diceRoll].sort();
@@ -25,7 +23,7 @@ export class ChouetteVeluteRule implements Rule {
   async applyRule({
     diceRoll,
     currentPlayerName,
-  }: GameContext): Promise<RuleEffects> {
+  }: PlayTurnGameContext): Promise<RuleEffects> {
     const { playerNames } = await this.resolver.getResolution();
 
     const effects: RuleEffects = [];

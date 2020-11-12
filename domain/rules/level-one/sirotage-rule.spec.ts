@@ -5,11 +5,13 @@ import {
   SirotageResolution,
   SirotageRule,
 } from "./sirotage-rule";
-import { DummyGameContextBuilder } from "../dummy-game-context-builder";
+
 import { ChouetteRule } from "../basic-rules/chouette-rule";
-import { RuleEffetType } from "../rule";
 import { HistoryLineType } from "../../../src/domain/history";
 import { RuleResolver } from "../rule-resolver";
+import { RuleEffetType } from "../rule-effect";
+import { DummyPlayTurnGameContextBuilder } from "../../tests/dummy-game-context-builder";
+
 export function testSirotageRule(
   getSirotageRuleForResolution: (resolution: SirotageResolution) => SirotageRule
 ): void {
@@ -19,7 +21,7 @@ export function testSirotageRule(
 
       const chouetteRule = new ChouetteRule();
 
-      const gameContext = DummyGameContextBuilder.aContext()
+      const gameContext = DummyPlayTurnGameContextBuilder.aContext()
         .withCurrentPlayerName("Alban")
         .withDiceRoll([2, 3, 2])
         .build();
@@ -35,7 +37,7 @@ export function testSirotageRule(
         lastDieValue: 4,
         bids: [],
       });
-      const gameContext = DummyGameContextBuilder.aContext()
+      const gameContext = DummyPlayTurnGameContextBuilder.aContext()
         .withCurrentPlayerName("Alban")
         .withDiceRoll([2, 3, 2])
         .build();
@@ -55,7 +57,7 @@ export function testSirotageRule(
         bids: [],
       });
 
-      const gameContext = DummyGameContextBuilder.aContext()
+      const gameContext = DummyPlayTurnGameContextBuilder.aContext()
         .withCurrentPlayerName("Alban")
         .withDiceRoll([2, 3, 2])
         .build();
@@ -98,7 +100,7 @@ export function testSirotageRule(
         bids,
       });
 
-      const gameContext = DummyGameContextBuilder.aContext()
+      const gameContext = DummyPlayTurnGameContextBuilder.aContext()
         .withCurrentPlayerName("Alban")
         .withDiceRoll([2, 3, 2])
         .build();
@@ -153,7 +155,7 @@ export function testSirotageRule(
         bids,
       });
 
-      const gameContext = DummyGameContextBuilder.aContext()
+      const gameContext = DummyPlayTurnGameContextBuilder.aContext()
         .withCurrentPlayerName("Alban")
         .withDiceRoll([3, 3, 5])
         .build();
@@ -189,7 +191,7 @@ describe("resolver params", () => {
     };
     const sirotageRule = new SirotageRule(resolver);
 
-    const gameContext = DummyGameContextBuilder.aContext()
+    const gameContext = DummyPlayTurnGameContextBuilder.aContext()
       .withCurrentPlayerName("Alban")
       .withDiceRoll([3, 3, 5])
       .build();

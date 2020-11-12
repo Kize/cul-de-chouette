@@ -2,17 +2,12 @@ import {
   AttrapeOiseauResolution,
   AttrapeOiseauRule,
 } from "./attrape-oiseau-rule";
-import { DummyGameContextBuilder } from "../dummy-game-context-builder";
-import { RuleEffect, RuleEffetType } from "../rule";
 import { HistoryLineType } from "../../../src/domain/history";
 import { testSirotageRule } from "./sirotage-rule.spec";
 import { RuleResolver } from "../rule-resolver";
-import {
-  BidType,
-  SiropBid,
-  SiropResolutionPayload,
-  SirotageRule,
-} from "./sirotage-rule";
+import { BidType, SiropBid, SiropResolutionPayload } from "./sirotage-rule";
+import { RuleEffect, RuleEffetType } from "../rule-effect";
+import { DummyPlayTurnGameContextBuilder } from "../../tests/dummy-game-context-builder";
 
 describe("has the sirotage behaviour if there is no attrape oiseau", () => {
   testSirotageRule((resolution) => {
@@ -40,7 +35,7 @@ it("applies the sirotage to the player who stole the sirop if attrape oiseau is 
   const rule = new AttrapeOiseauRule(resolver);
 
   const ruleEffects = await rule.applyRule(
-    DummyGameContextBuilder.aContext()
+    DummyPlayTurnGameContextBuilder.aContext()
       .withCurrentPlayerName("Alban")
       .withDiceRoll([3, 3, 4])
       .build()
@@ -74,7 +69,7 @@ it("applies the sirotage to the player who stole the sirop if attrape oiseau is 
   const rule = new AttrapeOiseauRule(resolver);
 
   const ruleEffects = await rule.applyRule(
-    DummyGameContextBuilder.aContext()
+    DummyPlayTurnGameContextBuilder.aContext()
       .withCurrentPlayerName("Alban")
       .withDiceRoll([3, 3, 4])
       .build()
@@ -113,7 +108,7 @@ it("handle the fil sirop bet", async () => {
   };
   const attrapeOiseauRule = new AttrapeOiseauRule(resolver);
 
-  const gameContext = DummyGameContextBuilder.aContext()
+  const gameContext = DummyPlayTurnGameContextBuilder.aContext()
     .withCurrentPlayerName("Alban")
     .withDiceRoll([2, 3, 2])
     .build();
@@ -135,7 +130,7 @@ describe("resolver params", () => {
     };
     const attrapeOiseauRule = new AttrapeOiseauRule(resolver);
 
-    const gameContext = DummyGameContextBuilder.aContext()
+    const gameContext = DummyPlayTurnGameContextBuilder.aContext()
       .withCurrentPlayerName("Alban")
       .withDiceRoll([3, 3, 5])
       .build();

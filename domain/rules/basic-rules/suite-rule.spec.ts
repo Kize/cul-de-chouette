@@ -1,7 +1,7 @@
 import { SuiteRule } from './suite-rule';
-import { DummyGameContextBuilder } from '../dummy-game-context-builder';
-import { RuleEffects, RuleEffetType } from '../rule';
 import { HistoryLineType } from '../../../src/domain/history';
+import { RuleEffects, RuleEffetType } from '../rule-effect';
+import { DummyPlayTurnGameContextBuilder } from '../../tests/dummy-game-context-builder';
 
 describe("isApplicableToDiceRoll", () => {
   let rule: SuiteRule;
@@ -30,7 +30,7 @@ describe("applyRule", () => {
     const rule = new SuiteRule(resolver);
 
     expect(
-      await rule.applyRule(DummyGameContextBuilder.aContext().build())
+      await rule.applyRule(DummyPlayTurnGameContextBuilder.aContext().build())
     ).toEqual([
       {
         type: RuleEffetType.CHANGE_SCORE,
@@ -51,7 +51,7 @@ describe("applyRule", () => {
     const rule = new SuiteRule(resolver);
 
     expect(
-      await rule.applyRule(DummyGameContextBuilder.aContext().build())
+      await rule.applyRule(DummyPlayTurnGameContextBuilder.aContext().build())
     ).toEqual([
       {
         type: RuleEffetType.CHANGE_SCORE,
@@ -73,7 +73,7 @@ describe("applyRule", () => {
 
     expect(
       await rule.applyRule(
-        DummyGameContextBuilder.aContext()
+        DummyPlayTurnGameContextBuilder.aContext()
           .withDiceRoll([1, 2, 3])
           .withCurrentPlayerName("Alban")
           .build()

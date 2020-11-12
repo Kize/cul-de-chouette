@@ -1,7 +1,8 @@
 import { ChouetteVeluteResolution, ChouetteVeluteRule } from './chouette-velute-rule';
-import { DummyGameContextBuilder } from "../dummy-game-context-builder";
-import { RuleEffects, RuleEffetType } from "../rule";
+
 import { HistoryLineType } from "../../../src/domain/history";
+import { RuleEffects, RuleEffetType } from '../rule-effect';
+import { DummyPlayTurnGameContextBuilder } from '../../tests/dummy-game-context-builder';
 
 describe("isApplicableToDiceRoll", () => {
   it("returns true if two dice have the same value and those two dice sum equals the third one", () => {
@@ -29,7 +30,7 @@ describe("applyRule", () => {
 
     expect(
       await rule.applyRule(
-        DummyGameContextBuilder.aContext()
+        DummyPlayTurnGameContextBuilder.aContext()
           .withCurrentPlayerName("Alban")
           .withDiceRoll([2, 2, 4])
           .build()
@@ -55,7 +56,7 @@ describe("applyRule", () => {
 
     expect(
       await rule.applyRule(
-        DummyGameContextBuilder.aContext()
+        DummyPlayTurnGameContextBuilder.aContext()
           .withCurrentPlayerName("Alban")
           .withDiceRoll([2, 2, 4])
           .build()
@@ -87,7 +88,7 @@ describe("applyRule", () => {
 
     expect(
       await rule.applyRule(
-        DummyGameContextBuilder.aContext()
+        DummyPlayTurnGameContextBuilder.aContext()
           .withCurrentPlayerName("Alban")
           .withDiceRoll([3, 3, 6])
           .build()

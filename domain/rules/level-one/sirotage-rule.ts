@@ -1,16 +1,15 @@
 import { ChouetteRule } from "../basic-rules/chouette-rule";
 import { Resolver } from "../rule-resolver";
+import { HistoryLineType } from "@/domain/history";
+import { getCulDeChouetteScore } from "../basic-rules/cul-de-chouette-rule";
+import { DiceRoll, DieValue } from "../dice-rule";
 import {
   ChangeScoreRuleEffect,
-  DiceRoll,
-  DieValue,
-  GameContext,
   RuleEffect,
   RuleEffects,
   RuleEffetType,
-} from "../rule";
-import { HistoryLineType } from "../../../src/domain/history";
-import { getCulDeChouetteScore } from "../basic-rules/cul-de-chouette-rule";
+} from "../rule-effect";
+import { PlayTurnGameContext } from "../../game-context-event";
 
 export interface PlayableBid {
   type: BidType;
@@ -54,7 +53,7 @@ export class SirotageRule extends ChouetteRule {
   async applyRule({
     currentPlayerName,
     diceRoll,
-  }: GameContext): Promise<RuleEffects> {
+  }: PlayTurnGameContext): Promise<RuleEffects> {
     const chouetteValue = this.getChouetteValue(diceRoll);
     const resolution = await this.sirotageResolver.getResolution({
       chouetteValue,

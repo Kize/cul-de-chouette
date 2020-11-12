@@ -1,12 +1,14 @@
-import { DiceRoll, GameContext, Rule, RuleEffects, RuleEffetType } from '../rule';
-import { HistoryLineType } from '../../../src/domain/history';
+import { HistoryLineType } from "@/domain/history";
+import { DiceRoll, DiceRule } from "../dice-rule";
+import { RuleEffects, RuleEffetType } from "../rule-effect";
+import { PlayTurnGameContext } from "../../game-context-event";
 
-export class VeluteRule implements Rule {
+export class VeluteRule extends DiceRule {
   isApplicableToDiceRoll(diceRoll: DiceRoll): boolean {
     return isVelute(diceRoll);
   }
 
-  applyRule({ currentPlayerName, diceRoll }: GameContext): RuleEffects {
+  applyRule({ currentPlayerName, diceRoll }: PlayTurnGameContext): RuleEffects {
     const score = getVeluteValue(diceRoll);
 
     return [

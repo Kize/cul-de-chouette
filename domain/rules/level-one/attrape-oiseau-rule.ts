@@ -6,16 +6,15 @@ import {
   SirotageRule,
 } from "./sirotage-rule";
 import { Resolver } from "../rule-resolver";
+import { HistoryLineType } from "@/domain/history";
+import { DiceRoll, DieValue } from "../dice-rule";
 import {
   ChangeScoreRuleEffect,
-  DiceRoll,
-  DieValue,
-  GameContext,
   RuleEffect,
   RuleEffects,
   RuleEffetType,
-} from "../rule";
-import { HistoryLineType } from "@/domain/history";
+} from "../rule-effect";
+import { GameContext, PlayTurnGameContext } from "../../game-context-event";
 
 export type AttrapeOiseauResolution =
   | { isSirote: false }
@@ -68,7 +67,7 @@ export class AttrapeOiseauRule extends SirotageRule {
   async applyRule({
     currentPlayerName,
     diceRoll,
-  }: GameContext): Promise<RuleEffects> {
+  }: PlayTurnGameContext): Promise<RuleEffects> {
     let initialChouetteRuleEffect: RuleEffect | undefined = undefined;
     const chouetteValue = this.getChouetteValue(diceRoll);
     const resolution = await this.attrapeOiseauResolver.getResolution({

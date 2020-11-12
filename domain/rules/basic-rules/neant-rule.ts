@@ -1,12 +1,14 @@
-import { DiceRoll, GameContext, Rule, RuleEffects, RuleEffetType } from '../rule';
-import { HistoryLineType } from '../../../src/domain/history';
+import { HistoryLineType } from '@/domain/history';
+import { DiceRoll, DiceRule } from "../dice-rule";
+import { RuleEffects, RuleEffetType } from "../rule-effect";
+import { PlayTurnGameContext } from "../../game-context-event";
 
-export class NeantRule implements Rule {
+export class NeantRule extends DiceRule {
   isApplicableToDiceRoll(_: DiceRoll): boolean {
     return true;
   }
 
-  applyRule(context: GameContext): RuleEffects {
+  applyRule(context: PlayTurnGameContext): RuleEffects {
     return [
       {
         type: RuleEffetType.ADD_GRELOTTINE,

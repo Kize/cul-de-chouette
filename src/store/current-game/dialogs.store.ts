@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Module } from "vuex";
 import { RootState } from "@/store/app.state";
-import { DieValue } from "../../../domain/rules/rule";
 import {
   PlayableBid,
   SiropResolutionPayload,
 } from "../../../domain/rules/level-one/sirotage-rule";
+import { DieValue } from "../../../domain/rules/dice-rule";
 
 export interface DialogsState {
   suiteResolverDialog: {

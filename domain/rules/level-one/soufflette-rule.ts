@@ -1,6 +1,8 @@
-import { DiceRoll, GameContext, Rule, RuleEffects } from "../rule";
+import { DiceRoll, DiceRule } from '../dice-rule';
+import { RuleEffects } from '../rule-effect';
+import { GameContext } from '../../game-context-event';
 
-export class SouffletteRule implements Rule {
+export class SouffletteRule extends DiceRule {
   isApplicableToDiceRoll(diceRoll: DiceRoll): boolean {
     const [dieValue1, dieValue2, dieValue3] = [...diceRoll].sort();
 

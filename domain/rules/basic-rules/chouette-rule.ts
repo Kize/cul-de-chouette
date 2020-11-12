@@ -1,15 +1,9 @@
-import {
-  ChangeScoreRuleEffect,
-  DiceRoll,
-  DieValue,
-  GameContext,
-  Rule,
-  RuleEffects,
-  RuleEffetType,
-} from "../rule";
-import { HistoryLineType } from "../../../src/domain/history";
+import { HistoryLineType } from "@/domain/history";
+import { DiceRoll, DiceRule, DieValue } from '../dice-rule';
+import { ChangeScoreRuleEffect, RuleEffects, RuleEffetType } from '../rule-effect';
+import { GameContext, PlayTurnGameContext } from '../../game-context-event';
 
-export class ChouetteRule implements Rule {
+export class ChouetteRule extends DiceRule {
   isApplicableToDiceRoll([dieValue1, dieValue2, dieValue3]: DiceRoll): boolean {
     return (
       dieValue1 === dieValue2 ||
@@ -34,7 +28,7 @@ export class ChouetteRule implements Rule {
   async applyRule({
     currentPlayerName,
     diceRoll,
-  }: GameContext): Promise<RuleEffects> {
+  }: PlayTurnGameContext): Promise<RuleEffects> {
     return [this.getChouetteRuleEffect(currentPlayerName, diceRoll)];
   }
 

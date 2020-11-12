@@ -1,21 +1,19 @@
-import {
-  DiceRoll,
-  GameContext,
-  Rule,
-  RuleEffects,
-  RuleEffetType,
-} from "../rule";
 import { Resolver } from "../rule-resolver";
 import { getVeluteValue, isVelute } from "./velute-rule";
 import { HistoryLineType } from "@/domain/history";
+import { DiceRoll, DiceRule } from '../dice-rule';
+import { RuleEffects, RuleEffetType } from '../rule-effect';
+import { GameContext, PlayTurnGameContext } from '../../game-context-event';
 
 export interface SuiteResolution {
   loosingPlayerName: string;
   multiplier: number;
 }
 
-export class SuiteRule implements Rule {
-  constructor(private readonly resolver: Resolver<SuiteResolution>) {}
+export class SuiteRule extends DiceRule {
+  constructor(private readonly resolver: Resolver<SuiteResolution>) {
+    super();
+  }
 
   isApplicableToDiceRoll(diceRoll: DiceRoll): boolean {
     const [dieValue1, dieValue2, dieValue3] = [...diceRoll].sort();
@@ -26,7 +24,7 @@ export class SuiteRule implements Rule {
   async applyRule({
     diceRoll,
     currentPlayerName,
-  }: GameContext): Promise<RuleEffects> {
+  }: PlayTurnGameContext): Promise<RuleEffects> {
     const ruleEffects: RuleEffects = [];
 
     if (isVelute(diceRoll)) {
