@@ -1,9 +1,9 @@
 import { Resolver } from "../rule-resolver";
 import { getVeluteValue, isVelute } from "./velute-rule";
 import { HistoryLineType } from "@/domain/history";
-import { DiceRoll, DiceRule } from '../dice-rule';
-import { RuleEffects, RuleEffetType } from '../rule-effect';
-import { GameContext, PlayTurnGameContext } from '../../game-context-event';
+import { DiceRoll, DiceRule } from "../dice-rule";
+import { RuleEffects, RuleEffetType } from "../rule-effect";
+import { PlayTurnGameContext } from "../../game-context-event";
 
 export interface SuiteResolution {
   loosingPlayerName: string;
@@ -21,7 +21,7 @@ export class SuiteRule extends DiceRule {
     return dieValue2 - dieValue1 === 1 && dieValue3 - dieValue2 === 1;
   }
 
-  async applyRule({
+  async applyDiceRule({
     diceRoll,
     currentPlayerName,
   }: PlayTurnGameContext): Promise<RuleEffects> {

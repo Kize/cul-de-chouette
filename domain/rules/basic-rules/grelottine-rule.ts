@@ -1,13 +1,16 @@
 import { Rule } from "../rule";
 import { RuleEffects } from "../rule-effect";
-import { GameContext, GameContextEvent } from "../../game-context-event";
+import {
+  GameContextWrapper,
+  UnknownGameContext,
+} from "../../game-context-event";
 
 export class GrelottineRule implements Rule {
-  isApplicableToGameContextEvent(context: GameContextEvent): boolean {
+  isApplicableToGameContext(_context: UnknownGameContext): boolean {
     return false;
   }
 
-  applyRule(context: GameContext): RuleEffects | Promise<RuleEffects> {
+  applyRule(_context: GameContextWrapper): RuleEffects | Promise<RuleEffects> {
     return [];
   }
 }

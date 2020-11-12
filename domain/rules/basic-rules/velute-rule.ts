@@ -8,7 +8,10 @@ export class VeluteRule extends DiceRule {
     return isVelute(diceRoll);
   }
 
-  applyRule({ currentPlayerName, diceRoll }: PlayTurnGameContext): RuleEffects {
+  applyDiceRule({
+    currentPlayerName,
+    diceRoll,
+  }: PlayTurnGameContext): RuleEffects {
     const score = getVeluteValue(diceRoll);
 
     return [

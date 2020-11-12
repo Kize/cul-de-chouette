@@ -1,11 +1,12 @@
 import { DiceRoll } from "../rules/dice-rule";
-import { PlayTurnGameContext } from "../game-context-event";
+import {
+  GameContextEventType,
+  GameContextWrapper,
+} from "../game-context-event";
 
 export class DummyPlayTurnGameContextBuilder {
-  private currentPlayerName: string = "";
+  private currentPlayerName = "";
   private diceRoll: DiceRoll = [1, 1, 1];
-
-  private constructor() {}
 
   static aContext(): DummyPlayTurnGameContextBuilder {
     return new DummyPlayTurnGameContextBuilder();
@@ -21,10 +22,11 @@ export class DummyPlayTurnGameContextBuilder {
     return this;
   }
 
-  build(): PlayTurnGameContext {
-    return {
+  build(): GameContextWrapper {
+    return new GameContextWrapper({
+      type: GameContextEventType.PLAY_TURN,
       currentPlayerName: this.currentPlayerName,
       diceRoll: this.diceRoll,
-    };
+    });
   }
 }

@@ -1,7 +1,7 @@
 import { NeantRule } from "./neant-rule";
 import { HistoryLineType } from "../../../src/domain/history";
-import { RuleEffect, RuleEffetType } from '../rule-effect';
-import { DummyPlayTurnGameContextBuilder } from '../../tests/dummy-game-context-builder';
+import { RuleEffect, RuleEffetType } from "../rule-effect";
+import { DummyPlayTurnGameContextBuilder } from "../../tests/dummy-game-context-builder";
 
 describe("isApplicableToDiceRoll", () => {
   it("returns always true", function () {
@@ -14,33 +14,29 @@ describe("isApplicableToDiceRoll", () => {
 describe("applyRule", () => {
   it("applies a grelottine to the current player", () => {
     const effects = new NeantRule().applyRule(
-      DummyPlayTurnGameContextBuilder.aContext().withCurrentPlayerName("Alban").build()
+      DummyPlayTurnGameContextBuilder.aContext()
+        .withCurrentPlayerName("Alban")
+        .build()
     );
 
-    const grelottineEffect = effects.find(
-      (effect) => effect.type === RuleEffetType.ADD_GRELOTTINE
-    );
-
-    expect(grelottineEffect).toEqual({
+    expect(effects).toContainEqual<RuleEffect>({
       type: RuleEffetType.ADD_GRELOTTINE,
       playerName: "Alban",
     });
   });
 
-  it("registers a change of score the the current player", () => {
+  it("registers a change of score the the current player", async () => {
     const effects = new NeantRule().applyRule(
-      DummyPlayTurnGameContextBuilder.aContext().withCurrentPlayerName("Alban").build()
+      DummyPlayTurnGameContextBuilder.aContext()
+        .withCurrentPlayerName("Alban")
+        .build()
     );
 
-    const neantRollEffect = effects.find(
-      (effect) => effect.type === RuleEffetType.CHANGE_SCORE
-    );
-
-    expect(neantRollEffect).toEqual({
+    expect(effects).toContainEqual<RuleEffect>({
       type: RuleEffetType.CHANGE_SCORE,
       designation: HistoryLineType.NEANT,
       playerName: "Alban",
       score: 0,
-    } as RuleEffect);
+    });
   });
 });

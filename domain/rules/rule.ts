@@ -1,7 +1,9 @@
 import { RuleEffects } from "./rule-effect";
-import { GameContextEvent, GameContext } from '../game-context-event';
+import { GameContextWrapper, UnknownGameContext } from "../game-context-event";
 
 export interface Rule {
-  isApplicableToGameContextEvent: (context: GameContextEvent) => boolean;
-  applyRule: (context: GameContext) => RuleEffects | Promise<RuleEffects>;
+  isApplicableToGameContext: (context: UnknownGameContext) => boolean;
+  applyRule: (
+    context: GameContextWrapper
+  ) => RuleEffects | Promise<RuleEffects>;
 }

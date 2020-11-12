@@ -14,9 +14,8 @@ import {
 import { DiceRoll } from "../../../domain/rules/dice-rule";
 import { RuleEffects, RuleEffetType } from "../../../domain/rules/rule-effect";
 import {
-  GameContext,
-  GameContextEvent,
   GameContextEventType,
+  PlayTurnGameContext,
 } from "../../../domain/game-context-event";
 
 type MainPlayableState = Record<string, unknown>;
@@ -28,24 +27,20 @@ export const MainPlayableActionsStoreModule: Module<
   namespaced: true,
   actions: {
     async playATurn(
-      { rootGetters, commit, dispatch, rootState },
+      { commit, dispatch, rootState },
       diceRoll: DiceRoll
     ): Promise<void> {
-      const gameContext: GameContext = {
+      const gameContext: PlayTurnGameContext = {
+        type: GameContextEventType.PLAY_TURN,
         currentPlayerName: rootState.currentGame!.currentPlayerName,
         diceRoll,
-      };
-
-      const gameContextEvent: GameContextEvent = {
-        type: GameContextEventType.PLAY_TURN,
-        gameContext,
       };
 
       let ruleEffects: RuleEffects;
       try {
         ruleEffects = await gameRuleRunner
           .getRunner()
-          .handleDiceRoll(gameContextEvent);
+          .handleDiceRoll(gameContext);
       } catch (e) {
         if (e) {
           console.error(e);
@@ -85,14 +80,14 @@ export const MainPlayableActionsStoreModule: Module<
 
       dispatch("currentGame/handleEndTurn", undefined, { root: true });
     },
-    resolveSuite({ commit }, suiteResolution: SuiteResolution): void {
+    resolveSuite(_, suiteResolution: SuiteResolution): void {
       suiteRuleResolver.resolve(suiteResolution);
     },
     cancelSuite(): void {
       suiteRuleResolver.reject();
     },
     resolveChouetteVelute(
-      { commit },
+      _,
       chouetteVeluteResolution: ChouetteVeluteResolution
     ): void {
       chouetteVeluteRuleResolver.resolve(chouetteVeluteResolution);
@@ -100,10 +95,7 @@ export const MainPlayableActionsStoreModule: Module<
     cancelChouetteVelute(): void {
       chouetteVeluteRuleResolver.reject();
     },
-    resolveSirop(
-      { commit },
-      attrapeOiseauResolution: AttrapeOiseauResolution
-    ): void {
+    resolveSirop(_, attrapeOiseauResolution: AttrapeOiseauResolution): void {
       siropRuleResolver.resolve(attrapeOiseauResolution);
     },
     cancelSirop(): void {

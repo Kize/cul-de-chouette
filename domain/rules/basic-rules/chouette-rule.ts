@@ -1,7 +1,11 @@
 import { HistoryLineType } from "@/domain/history";
-import { DiceRoll, DiceRule, DieValue } from '../dice-rule';
-import { ChangeScoreRuleEffect, RuleEffects, RuleEffetType } from '../rule-effect';
-import { GameContext, PlayTurnGameContext } from '../../game-context-event';
+import { DiceRoll, DiceRule, DieValue } from "../dice-rule";
+import {
+  ChangeScoreRuleEffect,
+  RuleEffects,
+  RuleEffetType,
+} from "../rule-effect";
+import { PlayTurnGameContext } from "../../game-context-event";
 
 export class ChouetteRule extends DiceRule {
   isApplicableToDiceRoll([dieValue1, dieValue2, dieValue3]: DiceRoll): boolean {

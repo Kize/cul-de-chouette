@@ -1,9 +1,9 @@
 import { getVeluteValue } from "./velute-rule";
 import { HistoryLineType } from "@/domain/history";
 import { Resolver } from "../rule-resolver";
-import { DiceRoll, DiceRule } from '../dice-rule';
-import { RuleEffects, RuleEffetType } from '../rule-effect';
-import { GameContext, PlayTurnGameContext } from '../../game-context-event';
+import { DiceRoll, DiceRule } from "../dice-rule";
+import { RuleEffects, RuleEffetType } from "../rule-effect";
+import { PlayTurnGameContext } from "../../game-context-event";
 
 export interface ChouetteVeluteResolution {
   playerNames: Array<string>;
@@ -20,7 +20,7 @@ export class ChouetteVeluteRule extends DiceRule {
     return dieValue1 === dieValue2 && dieValue1 + dieValue2 === dieValue3;
   }
 
-  async applyRule({
+  async applyDiceRule({
     diceRoll,
     currentPlayerName,
   }: PlayTurnGameContext): Promise<RuleEffects> {

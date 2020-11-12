@@ -14,7 +14,7 @@ import {
   RuleEffects,
   RuleEffetType,
 } from "../rule-effect";
-import { GameContext, PlayTurnGameContext } from "../../game-context-event";
+import { PlayTurnGameContext } from "../../game-context-event";
 
 export type AttrapeOiseauResolution =
   | { isSirote: false }
@@ -64,7 +64,7 @@ export class AttrapeOiseauRule extends SirotageRule {
     return super.mapPlayerBidToRuleEffect(playerBid, diceRoll, lastDieValue);
   }
 
-  async applyRule({
+  async applyDiceRule({
     currentPlayerName,
     diceRoll,
   }: PlayTurnGameContext): Promise<RuleEffects> {

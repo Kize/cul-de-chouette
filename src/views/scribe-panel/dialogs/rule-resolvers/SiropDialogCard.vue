@@ -246,10 +246,10 @@ export default class SiropDialog extends Vue {
   }
 
   confirmNotSirote(): void {
-    this.resetForm();
     this.$store.dispatch("currentGame/play/resolveSirop", {
       isSirote: false,
     });
+    this.resetForm();
   }
 
   confirmSirote(): void {
@@ -259,7 +259,7 @@ export default class SiropDialog extends Vue {
         isSirote: true,
         lastDieValue,
         playerWhoMakeAttrapeOiseau,
-        bids,
+        bids: bids.map((bid) => ({ ...bid })),
       };
       this.resetForm();
       this.$store.dispatch("currentGame/play/resolveSirop", resolution);

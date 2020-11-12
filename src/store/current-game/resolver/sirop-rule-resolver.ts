@@ -1,6 +1,5 @@
 import { RuleResolver } from "../../../../domain/rules/rule-resolver";
 import store from "@/store/app.state";
-import { SuiteResolution } from "../../../../domain/rules/basic-rules/suite-rule";
 import { AttrapeOiseauResolution } from "../../../../domain/rules/level-one/attrape-oiseau-rule";
 import { SiropResolutionPayload } from "../../../../domain/rules/level-one/sirotage-rule";
 

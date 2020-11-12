@@ -1,10 +1,10 @@
 import { Rule } from "./rule";
 import { RuleEffects } from "./rule-effect";
 import {
-  GameContext,
-  GameContextEvent,
   GameContextEventType,
+  GameContextWrapper,
   PlayTurnGameContext,
+  UnknownGameContext,
 } from "../game-context-event";
 
 export type DieValue = 1 | 2 | 3 | 4 | 5 | 6;
@@ -17,24 +17,14 @@ export abstract class DiceRule implements Rule {
     context: PlayTurnGameContext
   ): RuleEffects | Promise<RuleEffects>;
 
-  isApplicableToGameContextEvent(event: GameContextEvent): boolean {
-    if (event.type === GameContextEventType.PLAY_TURN) {
-      return this.isApplicableToDiceRoll(event.gameContext.diceRoll);
+  isApplicableToGameContext(context: UnknownGameContext): boolean {
+    if (context.type === GameContextEventType.PLAY_TURN) {
+      return this.isApplicableToDiceRoll(context.diceRoll);
     }
     return false;
   }
 
-  applyRule(context: GameContext): RuleEffects | Promise<RuleEffects> {
-    if (isPlayTurnGameContext(context)) {
-      return this.applyDiceRule(context);
-    }
-
-    return [];
+  applyRule(context: GameContextWrapper): RuleEffects | Promise<RuleEffects> {
+    return this.applyDiceRule(context.asPlayTurn());
   }
-}
-
-function isPlayTurnGameContext(
-  gameContext: GameContext
-): gameContext is PlayTurnGameContext {
-  return gameContext.type === GameContextEventType.PLAY_TURN;
 }

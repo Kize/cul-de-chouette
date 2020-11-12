@@ -1,20 +1,20 @@
 import { RuleRunner } from "./rule-runner";
-import { Rule} from "./rules/rule";
-import { DiceRoll } from './rules/dice-rule';
-import { RuleEffects } from './rules/rule-effect';
-import { DummyPlayTurnGameContextBuilder } from './tests/dummy-game-context-builder';
+import { Rule } from "./rules/rule";
+import { DiceRoll } from "./rules/dice-rule";
+import { RuleEffects } from "./rules/rule-effect";
+import { DummyPlayTurnGameContextBuilder } from "./tests/dummy-game-context-builder";
 
 describe("handleDiceRoll", () => {
   it("applies the correct rule", async () => {
     const invalidRule: Rule = {
-      isApplicableToGameContextEvent: jest.fn().mockReturnValue(false),
+      isApplicableToGameContext: jest.fn().mockReturnValue(false),
       applyRule: jest.fn(),
     };
 
     const expectedRuleEffects: RuleEffects = [];
 
     const validRule: Rule = {
-      isApplicableToGameContextEvent: jest.fn().mockReturnValue(true),
+      isApplicableToGameContext: jest.fn().mockReturnValue(true),
       applyRule: jest.fn().mockReturnValue(expectedRuleEffects),
     };
 
@@ -24,12 +24,14 @@ describe("handleDiceRoll", () => {
     const gameContext = DummyPlayTurnGameContextBuilder.aContext()
       .withDiceRoll(diceRoll)
       .build();
-    const result = await runner.handleDiceRoll(gameContext);
+    const result = await runner.handleDiceRoll(gameContext.asPlayTurn());
 
-    expect(invalidRule.isApplicableToGameContextEvent).toHaveBeenCalledWith(
-      diceRoll
+    expect(invalidRule.isApplicableToGameContext).toHaveBeenCalledWith(
+      gameContext.asPlayTurn()
     );
-    expect(validRule.isApplicableToGameContextEvent).toHaveBeenCalledWith(diceRoll);
+    expect(validRule.isApplicableToGameContext).toHaveBeenCalledWith(
+      gameContext.asPlayTurn()
+    );
 
     expect(invalidRule.applyRule).not.toHaveBeenCalled();
 

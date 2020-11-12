@@ -50,7 +50,7 @@ export class SirotageRule extends ChouetteRule {
     }));
   }
 
-  async applyRule({
+  async applyDiceRule({
     currentPlayerName,
     diceRoll,
   }: PlayTurnGameContext): Promise<RuleEffects> {

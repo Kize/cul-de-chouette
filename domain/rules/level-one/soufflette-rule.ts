@@ -1,6 +1,6 @@
-import { DiceRoll, DiceRule } from '../dice-rule';
-import { RuleEffects } from '../rule-effect';
-import { GameContext } from '../../game-context-event';
+import { DiceRoll, DiceRule } from "../dice-rule";
+import { RuleEffects } from "../rule-effect";
+import { PlayTurnGameContext } from "../../game-context-event";
 
 export class SouffletteRule extends DiceRule {
   isApplicableToDiceRoll(diceRoll: DiceRoll): boolean {
@@ -9,7 +9,7 @@ export class SouffletteRule extends DiceRule {
     return dieValue1 === 1 && dieValue2 === 2 && dieValue3 === 4;
   }
 
-  applyRule(context: GameContext): RuleEffects {
+  applyDiceRule(context: PlayTurnGameContext): RuleEffects {
     return [];
   }
 }
