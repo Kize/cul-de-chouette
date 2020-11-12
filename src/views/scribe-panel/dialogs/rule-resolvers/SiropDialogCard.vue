@@ -1,8 +1,9 @@
 <template>
   <v-dialog :value="siropResolverDialog.isVisible" persistent max-width="75%">
     <v-card>
-      <v-card-title>
+      <v-card-title class="px-12">
         <span>
+          <b class="sirop-title">Sirotage</b> <br />
           {{ currentPlayerName }} a réalisé une chouette de
           {{ siropResolverDialog.chouetteValue }}
         </span>
@@ -16,7 +17,7 @@
 
       <v-card-text>
         <v-form ref="formRef" v-model="isFormValid">
-          <v-card class="mb-4" outlined>
+          <v-card class="sirop-actions-card mb-4" outlined>
             <v-card-title class="py-2">Actions:</v-card-title>
             <v-card-text class="pb-0">
               <v-row dense>
@@ -25,12 +26,17 @@
                 </v-col>
                 <v-col md="8" cols="12">
                   <v-select
+                    v-if="getRules.levelOne.isAttrapeOiseauEnabled"
                     label="Joueur ayant fait un attrape-oiseau"
                     v-model="form.playerWhoMakeAttrapeOiseau"
                     clearable
                     outlined
                     :items="getFilteredPlayerNames()"
                   ></v-select>
+
+                  <p v-else>
+                    L'attrape-oiseau n'est pas activé pour cette partie
+                  </p>
                 </v-col>
               </v-row>
             </v-card-text>
@@ -269,7 +275,12 @@ export default class SiropDialog extends Vue {
 </script>
 
 <style scoped lang="scss">
-.bet-validation-card {
+.sirop-title {
+  font-size: 2rem;
+}
+
+.bet-validation-card,
+.sirop-actions-card {
   min-height: 130px;
 }
 </style>
