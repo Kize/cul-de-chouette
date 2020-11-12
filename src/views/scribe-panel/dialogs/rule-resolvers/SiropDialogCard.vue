@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="siropResolverDialog.isVisible" persistent max-width="800">
+  <v-dialog :value="siropResolverDialog.isVisible" persistent max-width="75%">
     <v-card>
       <v-card-title>
         <span>
@@ -64,7 +64,7 @@
             </v-card-text>
           </v-card>
 
-          <v-card class="mb-4" outlined>
+          <v-card class="bet-validation-card mb-4" outlined>
             <v-card-title class="py-2">Validation des annonces:</v-card-title>
             <v-card-text class="pb-0">
               <v-row dense>
@@ -267,4 +267,8 @@ export default class SiropDialog extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.bet-validation-card {
+  min-height: 130px;
+}
+</style>
