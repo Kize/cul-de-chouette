@@ -241,6 +241,13 @@ export default class SiropDialog extends Vue {
 
   confirm(isSirote: boolean): void {
     const { lastDieValue, bids, playerWhoMakeAttrapeOiseau } = this.form;
+    if (!isSirote) {
+      this.resetForm();
+      this.$store.dispatch("currentGame/play/resolveSirop", {
+        isSirote,
+      });
+      return;
+    }
     if (lastDieValue !== 0) {
       const resolution: AttrapeOiseauResolution = {
         lastDieValue,
