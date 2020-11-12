@@ -21,7 +21,7 @@
             <v-card-text class="pb-0">
               <v-row dense>
                 <v-col md="3" cols="12">
-                  <v-btn large @click="confirm(false)">Aucun sirotage</v-btn>
+                  <v-btn large @click="confirmNotSirote">Aucun sirotage</v-btn>
                 </v-col>
                 <v-col md="8" cols="12">
                   <v-select
@@ -87,7 +87,7 @@
             <v-btn
               color="green darken-1"
               text
-              @click="confirm(true)"
+              @click="confirmSirote"
               :disabled="!isValidButtonActive"
             >
               {{
@@ -239,21 +239,22 @@ export default class SiropDialog extends Vue {
     this.$store.dispatch("currentGame/play/cancelSirop");
   }
 
-  confirm(isSirote: boolean): void {
+  confirmNotSirote(): void {
+    this.resetForm();
+    this.$store.dispatch("currentGame/play/resolveSirop", {
+      isSirote: false,
+    });
+    return;
+  }
+
+  confirmSirote(): void {
     const { lastDieValue, bids, playerWhoMakeAttrapeOiseau } = this.form;
-    if (!isSirote) {
-      this.resetForm();
-      this.$store.dispatch("currentGame/play/resolveSirop", {
-        isSirote,
-      });
-      return;
-    }
     if (lastDieValue !== 0) {
       const resolution: AttrapeOiseauResolution = {
+        isSirote: true,
         lastDieValue,
-        bids,
         playerWhoMakeAttrapeOiseau,
-        isSirote,
+        bids,
       };
       this.resetForm();
       this.$store.dispatch("currentGame/play/resolveSirop", resolution);
