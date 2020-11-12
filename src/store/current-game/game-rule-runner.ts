@@ -41,7 +41,7 @@ export enum RuleName {
   Neant,
 }
 
-export const ALL_RULES_ORDERED = [
+export const ALL_RULES_ORDERED: Array<{ name: RuleName; rule: Rule }> = [
   { name: RuleName.CulDeChouette, rule: new CulDeChouetteRule() },
   { name: RuleName.Suite, rule: new SuiteRule(suiteRuleResolver) },
   {

@@ -23,15 +23,16 @@ export type GameContext =
   | ApplyBevueGameContext;
 
 export interface PlayTurnGameContext {
+  type: GameContextEventType.PLAY_TURN;
   currentPlayerName: string;
   diceRoll: DiceRoll;
 }
 
 export interface ChallengeGrelottineGameContext {
-  currentPlayerName: string;
-  diceRoll: DiceRoll;
+  type: GameContextEventType.CHALLENGE_GRELOTTINE;
 }
 
 export interface ApplyBevueGameContext {
+  type: GameContextEventType.APPLY_BEVUE;
   currentPlayerName: string;
 }

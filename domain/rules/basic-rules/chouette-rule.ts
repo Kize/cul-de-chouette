@@ -25,7 +25,7 @@ export class ChouetteRule extends DiceRule {
     };
   }
 
-  async applyRule({
+  async applyDiceRule({
     currentPlayerName,
     diceRoll,
   }: PlayTurnGameContext): Promise<RuleEffects> {
