@@ -18,7 +18,6 @@ import {
 import {
   HistoryLineAction,
   HistoryLineApply,
-  HistoryLineType,
   mapHistoryActionToApply,
 } from "@/domain/history";
 import { RootState } from "@/store/app.state";
@@ -33,6 +32,7 @@ import {
   gameRuleRunner,
   RuleName,
 } from "@/store/current-game/game-rule-runner";
+import { RuleEffectEvent } from "../../../domain/rules/rule-effect";
 
 export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
   namespaced: true,
@@ -303,7 +303,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         const action: HistoryLineAction = {
           playerName,
           value: 0,
-          designation: HistoryLineType.BEVUE,
+          designation: RuleEffectEvent.BEVUE,
         };
         commit("addHistoryLine", mapHistoryActionToApply(action));
 
@@ -357,7 +357,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         name: sloubi.name,
         history: [
           {
-            designation: HistoryLineType.SLOUBI,
+            designation: RuleEffectEvent.SLOUBI,
             amount: sloubiAmount,
             turnNumber: state.turnNumber,
           },

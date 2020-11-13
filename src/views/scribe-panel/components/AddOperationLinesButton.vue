@@ -100,12 +100,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
 import MainDialogCard from "@/components/MainDialogCard.vue";
-import {
-  AllHistoryLineTypes,
-  GodModLineType,
-  HistoryLineType,
-  NotImplementedHistoryLineType,
-} from "@/domain/history";
+import { AllHistoryLineTypes, GodModLineType } from "@/domain/history";
 import {
   requiredAmountInputRules,
   selectLineTypeRules,
@@ -116,6 +111,10 @@ import {
   OperationLineActionPayload,
 } from "@/store/current-game/current-game.interface";
 import { sortStrings } from "@/domain/sort";
+import {
+  NotImplementedHistoryLineType,
+  RuleEffectEvent,
+} from "../../../../domain/rules/rule-effect";
 
 interface OperationLineForm {
   playerName?: string;
@@ -170,7 +169,7 @@ export default class PlayersBanner extends Vue {
   form: AddOperationLinesForm = getInitialForm();
 
   get lineTypes(): Array<string> {
-    const implementedLineTypes = Object.values(HistoryLineType);
+    const implementedLineTypes = Object.values(RuleEffectEvent);
     const notImplementedLineTypes = Object.values(
       NotImplementedHistoryLineType
     );

@@ -13,7 +13,10 @@ import {
   suiteRuleResolver,
 } from "@/store/current-game/game-rule-runner";
 import { DiceRoll } from "../../../domain/rules/dice-rule";
-import { RuleEffects, RuleEffectType } from "../../../domain/rules/rule-effect";
+import {
+  RuleEffectEvent,
+  RuleEffects,
+} from "../../../domain/rules/rule-effect";
 import {
   ChallengeGrelottineGameContext,
   GameContextEvent,
@@ -78,18 +81,18 @@ export const MainPlayableActionsStoreModule: Module<
 
       ruleEffects.forEach((ruleEffect) => {
         const gameTurnNumber = rootState.currentGame!.turnNumber;
-        switch (ruleEffect.type) {
-          case RuleEffectType.ADD_GRELOTTINE:
+        switch (ruleEffect.event) {
+          case RuleEffectEvent.ADD_GRELOTTINE:
             commit("currentGame/addGrelottine", ruleEffect.playerName, {
               root: true,
             });
             return;
-          case RuleEffectType.REMOVE_GRELOTTINE:
+          case RuleEffectEvent.REMOVE_GRELOTTINE:
             commit("currentGame/removeGrelottine", ruleEffect.playerName, {
               root: true,
             });
             return;
-          case RuleEffectType.CHANGE_SCORE: {
+          default: {
             const turnNumber =
               rootState.currentGame!.currentPlayerName === ruleEffect.playerName
                 ? gameTurnNumber
@@ -98,7 +101,7 @@ export const MainPlayableActionsStoreModule: Module<
             const apply: HistoryLineApply = {
               playerName: ruleEffect.playerName,
               amount: ruleEffect.score,
-              designation: ruleEffect.designation,
+              designation: ruleEffect.event,
               turnNumber,
             };
 

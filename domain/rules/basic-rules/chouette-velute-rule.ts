@@ -1,8 +1,7 @@
 import { getVeluteValue } from "./velute-rule";
-import { HistoryLineType } from "@/domain/history";
 import { Resolver } from "../rule-resolver";
 import { DiceRoll, DiceRule } from "../dice-rule";
-import { RuleEffects, RuleEffectType } from "../rule-effect";
+import { RuleEffectEvent, RuleEffects } from "../rule-effect";
 import { PlayTurnGameContext } from "../../game-context-event";
 
 export interface ChouetteVeluteResolution {
@@ -30,8 +29,7 @@ export class ChouetteVeluteRule extends DiceRule {
 
     if (!playerNames.includes(currentPlayerName)) {
       effects.push({
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.CHOUETTE_VELUTE_NOT_CLAIMED,
+        event: RuleEffectEvent.CHOUETTE_VELUTE_NOT_CLAIMED,
         playerName: currentPlayerName,
         score: 0,
       });
@@ -41,13 +39,12 @@ export class ChouetteVeluteRule extends DiceRule {
     const isChouetteVeluteWon = playerNames.length === 1;
     const score = isChouetteVeluteWon ? veluteValue : -veluteValue;
     const event = isChouetteVeluteWon
-      ? HistoryLineType.CHOUETTE_VELUTE_WON
-      : HistoryLineType.CHOUETTE_VELUTE_LOST;
+      ? RuleEffectEvent.CHOUETTE_VELUTE_WON
+      : RuleEffectEvent.CHOUETTE_VELUTE_LOST;
 
     playerNames.forEach((playerName) => {
       effects.push({
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: event,
+        event: event,
         score,
         playerName,
       });

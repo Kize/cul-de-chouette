@@ -114,11 +114,12 @@ import { Component, Vue } from "vue-property-decorator";
 import MainDialogCard from "@/components/MainDialogCard.vue";
 import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
 import BevueMenuAction from "@/components/BevueMenuAction.vue";
-import { isBidValid, SiropForm } from "@/domain/level-one/sirop";
+import { SiropForm } from "@/domain/level-one/sirop";
 import DieCard from "@/components/dice/DieCard.vue";
 import { SelectItemsType, SelectItemValue, VForm } from "@/vuetify.interface";
 import {
   BidType,
+  canBetPlayerValidateIsBet,
   PlayableBid,
 } from "../../../../../domain/rules/level-one/sirotage-rule";
 import { selectNameRules } from "@/form-validation/form-validation-rules";
@@ -217,7 +218,7 @@ export default class SiropResolverDialog extends Vue {
       throw new Error("The chouette value is mandatory");
     }
 
-    return isBidValid(
+    return canBetPlayerValidateIsBet(
       this.siropResolverDialog.chouetteValue,
       playerBidType,
       this.form.lastDieValue

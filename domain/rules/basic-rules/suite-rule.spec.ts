@@ -1,7 +1,6 @@
-import { SuiteRule } from './suite-rule';
-import { HistoryLineType } from '../../../src/domain/history';
-import { RuleEffects, RuleEffectType } from '../rule-effect';
-import { DummyContextBuilder } from '../../tests/dummy-game-context-builder';
+import { SuiteRule } from "./suite-rule";
+import { RuleEffectEvent, RuleEffects } from "../rule-effect";
+import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
 
 describe("isApplicableToDiceRoll", () => {
   let rule: SuiteRule;
@@ -31,14 +30,13 @@ describe("applyRule", () => {
 
     expect(
       await rule.applyRule(DummyContextBuilder.aPlayTurnContext().build())
-    ).toEqual([
+    ).toEqual<RuleEffects>([
       {
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SUITE,
+        event: RuleEffectEvent.SUITE,
         playerName: "Alban",
         score: -10,
       },
-    ] as RuleEffects);
+    ]);
   });
 
   it("registers a change of score of -40 for a given player and a multiplier of 4", async () => {
@@ -52,14 +50,13 @@ describe("applyRule", () => {
 
     expect(
       await rule.applyRule(DummyContextBuilder.aPlayTurnContext().build())
-    ).toEqual([
+    ).toEqual<RuleEffects>([
       {
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SUITE,
+        event: RuleEffectEvent.SUITE,
         playerName: "Delphin",
         score: -40,
       },
-    ] as RuleEffects);
+    ]);
   });
 
   it("registers a change of score of -10 for a given player, and applies the velute for the currentPlayer on 1,2,3", async () => {
@@ -78,19 +75,17 @@ describe("applyRule", () => {
           .withCurrentPlayerName("Alban")
           .build()
       )
-    ).toEqual([
+    ).toEqual<RuleEffects>([
       {
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.VELUTE,
+        event: RuleEffectEvent.VELUTE,
         playerName: "Alban",
         score: 18,
       },
       {
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SUITE,
+        event: RuleEffectEvent.SUITE,
         playerName: "Delphin",
         score: -10,
       },
-    ] as RuleEffects);
+    ]);
   });
 });

@@ -1,10 +1,5 @@
-import { HistoryLineType } from "@/domain/history";
 import { DiceRoll, DiceRule, DieValue } from "../dice-rule";
-import {
-  ChangeScoreRuleEffect,
-  RuleEffects,
-  RuleEffectType,
-} from "../rule-effect";
+import { RuleEffect, RuleEffectEvent, RuleEffects } from "../rule-effect";
 import { PlayTurnGameContext } from "../../game-context-event";
 
 export class ChouetteRule extends DiceRule {
@@ -19,11 +14,10 @@ export class ChouetteRule extends DiceRule {
   protected getChouetteRuleEffect(
     playerName: string,
     diceRoll: DiceRoll
-  ): ChangeScoreRuleEffect {
+  ): RuleEffect {
     const score = this.getChouetteScore(diceRoll);
     return {
-      type: RuleEffectType.CHANGE_SCORE,
-      designation: HistoryLineType.CHOUETTE,
+      event: RuleEffectEvent.CHOUETTE,
       playerName,
       score,
     };

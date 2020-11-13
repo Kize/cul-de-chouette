@@ -1,57 +1,14 @@
-export enum HistoryLineType {
-  NEANT = "Néant",
-  BEVUE = "Bévue",
-  GRELOTTINE_CHALLENGE = "Défi de grelottine",
-  CHOUETTE = "Chouette",
-  VELUTE = "Velute",
-  SUITE = "Suite",
-  // TODO DAU : Remove chouette velute event
-  CHOUETTE_VELUTE = "Chouette velute",
-  CHOUETTE_VELUTE_NOT_CLAIMED = "Chouette velute non clammée",
-  CUL_DE_CHOUETTE = "Cul de chouette",
-  SLOUBI = "Sloubi",
-  SOUFFLETTE = "Soufflette",
-  SIROP = "Sirotage",
-  SIROP_BET_WON = "Pari de Sirotage gagné",
-  ATTRAPE_OISEAU = "Attrape-oiseau",
-  CHOUETTE_VELUTE_WON = "Chouette velute gagnée",
-  CHOUETTE_VELUTE_LOST = "Chouette velute perdue",
-  GRELOTTINE_CHALLENGE_WON = "Défi de grelottine gagné",
-  GRELOTTINE_CHALLENGE_LOST = "Défi de grelottine perdu",
-  ATTRAPE_OISEAU_WON = "Attrape-oiseau gagné",
-  ATTRAPE_OISEAU_LOST = "Attrape-oiseau perdu",
-  SIROP_BET_LOST = "Pari de Sirotage perdu",
-  SIROP_BET_WON_BUT_NOT_CLAIMED = "Pari de Sirotage gagné mais pas clamé",
-  SIROP_WON = "Sirop gagné",
-  SIROP_LOST = "Sirop perdu",
-}
-
-export enum NotImplementedHistoryLineType {
-  POULETTE = "La poulette",
-  CIVET = "Le civet",
-  GRAINES = "Graines",
-  ARTICHETTE = "Artichette",
-  CONTRE_SIROP = "Contre-sirop",
-  SIROP_JEANNOT = "Sirop-Jeannot",
-  CIVET_DOUBLE = "Civet doublé",
-  PASSE_GRELOT = "Passe-grelot",
-  RIGODON = "Rigodon",
-  CUL_DE_CHOUETTE_DOUBLE = "Cul de chouette doublé",
-  BLEU_ROUGE = "Bleu-rouge",
-  PELICAN = "Pélican",
-  VERDIER = "Verdier",
-  ACHAT = "Achat",
-  DOUBLE_ACHAT = "Double Achat",
-  JARRET = "Jarret",
-  FLAN = "Flan",
-}
+import {
+  NotImplementedHistoryLineType,
+  RuleEffectEvent,
+} from "../../domain/rules/rule-effect";
 
 export enum GodModLineType {
   GOD_MOD = "Ligne custom",
 }
 
 export type AllHistoryLineTypes =
-  | HistoryLineType
+  | RuleEffectEvent
   | NotImplementedHistoryLineType
   | GodModLineType;
 
@@ -71,14 +28,16 @@ export type HistoryLineAction =
   | SuiteHistoryLineAction;
 
 export interface BasicHistoryLineAction {
-  designation: HistoryLineType;
+  designation: RuleEffectEvent;
   playerName: string;
   value: number;
   turnNumber?: number;
 }
 
 export interface ChouetteVeluteHistoryLineAction {
-  designation: HistoryLineType.CHOUETTE_VELUTE;
+  designation:
+    | RuleEffectEvent.CHOUETTE_VELUTE_WON
+    | RuleEffectEvent.CHOUETTE_VELUTE_LOST;
   playerName: string;
   value: number;
   shoutingPlayers: Array<string>;
@@ -86,7 +45,7 @@ export interface ChouetteVeluteHistoryLineAction {
 }
 
 export interface SuiteHistoryLineAction {
-  designation: HistoryLineType.SUITE;
+  designation: RuleEffectEvent.SUITE;
   playerName: string;
   multiplier: number;
   loosingPlayerName: string;
@@ -94,22 +53,25 @@ export interface SuiteHistoryLineAction {
   turnNumber?: number;
 }
 
-export function getAmount(type: HistoryLineType, value: number): number {
+// TODO DAU : Remove this after refactoring the bevue
+export function getAmount(type: RuleEffectEvent, value: number): number {
   switch (type) {
-    case HistoryLineType.NEANT:
+    case RuleEffectEvent.NEANT:
       return 0;
-    case HistoryLineType.BEVUE:
+    case RuleEffectEvent.BEVUE:
       return -5;
-    case HistoryLineType.CHOUETTE:
+    case RuleEffectEvent.CHOUETTE:
       return value ** 2;
-    case HistoryLineType.VELUTE:
-    case HistoryLineType.CHOUETTE_VELUTE:
+    case RuleEffectEvent.VELUTE:
+    case RuleEffectEvent.CHOUETTE_VELUTE_WON:
+    case RuleEffectEvent.CHOUETTE_VELUTE_LOST:
+    case RuleEffectEvent.CHOUETTE_VELUTE_NOT_CLAIMED:
       return 2 * value ** 2;
-    case HistoryLineType.CUL_DE_CHOUETTE:
+    case RuleEffectEvent.CUL_DE_CHOUETTE:
       return 40 + 10 * value;
-    case HistoryLineType.SUITE:
+    case RuleEffectEvent.SUITE:
       return -value;
-    case HistoryLineType.SOUFFLETTE:
+    case RuleEffectEvent.SOUFFLETTE:
       return value;
   }
 
