@@ -42,8 +42,12 @@ export class GrelottineRule implements Rule {
     const getLoserScore = () => -resolution.gambledAmount;
     const getWinnerScore = () => resolution.gambledAmount;
 
-    // TODO DAU : Remove grelottine rule effect
     return [
+      {
+        type: RuleEffectType.REMOVE_GRELOTTINE,
+        playerName: resolution.grelottinPlayer,
+      },
+      ...lastCombinationRuleEffects,
       {
         type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.GRELOTTINE_CHALLENGE,
@@ -56,7 +60,6 @@ export class GrelottineRule implements Rule {
         playerName: resolution.challengedPlayer,
         score: isGrelottineWon ? getWinnerScore() : getLoserScore(),
       },
-      ...lastCombinationRuleEffects,
     ];
   }
 }

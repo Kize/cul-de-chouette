@@ -173,7 +173,6 @@ const INITIAL_FORM: GrelottineForm = {
   },
 })
 export default class GrelottineResolverDialog extends Vue {
-  // readonly challenges = Object.values(GrelottineBet);
   readonly selectChallengeRules = selectChallengeRules;
   readonly inputPositiveIntegerRules = inputPositiveIntegerRules;
 

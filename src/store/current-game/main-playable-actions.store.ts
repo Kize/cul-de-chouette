@@ -49,7 +49,7 @@ export const MainPlayableActionsStoreModule: Module<
         runner: gameRuleRunner.getRunner(),
       };
       await dispatch("handleGameEvent", grelottineContext);
-      await dispatch("currentGame/checkEndGame", null, { root: true});
+      await dispatch("currentGame/checkEndGame", null, { root: true });
     },
 
     async handleGameEvent(
@@ -74,6 +74,11 @@ export const MainPlayableActionsStoreModule: Module<
         switch (ruleEffect.type) {
           case RuleEffectType.ADD_GRELOTTINE:
             commit("currentGame/addGrelottine", ruleEffect.playerName, {
+              root: true,
+            });
+            return;
+          case RuleEffectType.REMOVE_GRELOTTINE:
+            commit("currentGame/removeGrelottine", ruleEffect.playerName, {
               root: true,
             });
             return;

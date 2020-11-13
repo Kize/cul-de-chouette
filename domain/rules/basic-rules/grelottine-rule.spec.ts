@@ -68,6 +68,28 @@ describe("applyRule", () => {
     });
   });
 
+  it("removes the grelottine for the grelottin", async () => {
+    const resolver = {
+      getResolution: jest.fn().mockResolvedValue({
+        grelottinPlayer: "Alban",
+        challengedPlayer: "Delphin",
+        grelottinBet: GrelottineBet.CHOUETTE,
+        diceRoll: [1, 6, 4],
+        gambledAmount: 12,
+      }),
+    };
+
+    const rule = new GrelottineRule(resolver);
+    const ruleEffects = await rule.applyRule(
+      DummyContextBuilder.aGrelottineContext().build()
+    );
+
+    expect(ruleEffects).toContainEqual<RuleEffect>({
+      type: RuleEffectType.REMOVE_GRELOTTINE,
+      playerName: "Alban",
+    });
+  });
+
   it("handles a won grelottine challenge", async () => {
     const resolver = {
       getResolution: jest.fn().mockResolvedValue({
