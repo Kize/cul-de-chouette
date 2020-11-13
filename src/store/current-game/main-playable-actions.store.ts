@@ -1,15 +1,26 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Module } from "vuex";
+import { SuiteResolution } from "../../../domain/rules/basic-rules/suite-rule";
+import { HistoryLineApply } from "@/domain/history";
+import { ChouetteVeluteResolution } from "../../../domain/rules/basic-rules/chouette-velute-rule";
 import { RootState } from "@/store/app.state";
+import { AttrapeOiseauResolution } from "../../../domain/rules/level-one/attrape-oiseau-rule";
 import {
-  BasicHistoryLineAction,
-  ChouetteVeluteHistoryLineAction,
-  getAmount,
-  HistoryLineAction,
-  HistoryLineType,
-  mapHistoryActionToApply,
-  SuiteHistoryLineAction,
-} from "@/domain/history";
+  chouetteVeluteRuleResolver,
+  gameRuleRunner,
+  grelottineRuleResolver,
+  siropRuleResolver,
+  suiteRuleResolver,
+} from "@/store/current-game/game-rule-runner";
+import { DiceRoll } from "../../../domain/rules/dice-rule";
+import { RuleEffects, RuleEffectType } from "../../../domain/rules/rule-effect";
+import {
+  ChallengeGrelottineGameContext,
+  GameContextEvent,
+  PlayTurnGameContext,
+  UnknownGameContext,
+} from "../../../domain/game-context-event";
+import { GrelottineResolution } from "../../../domain/rules/basic-rules/grelottine-rule";
 
 type MainPlayableState = Record<string, unknown>;
 
@@ -19,126 +30,109 @@ export const MainPlayableActionsStoreModule: Module<
 > = {
   namespaced: true,
   actions: {
-    playATurn(
-      { rootGetters, commit, dispatch },
-      lineAction: HistoryLineAction
-    ): void {
-      if (
-        rootGetters["currentGame/getState"].currentPlayerName !==
-        lineAction.playerName
-      ) {
-        return;
-      }
+    async playATurn(
+      { commit, dispatch, rootState },
+      diceRoll: DiceRoll
+    ): Promise<void> {
+      const gameContext: PlayTurnGameContext = {
+        event: GameContextEvent.PLAY_TURN,
+        currentPlayerName: rootState.currentGame!.currentPlayerName,
+        diceRoll,
+      };
 
-      if (lineAction.designation === HistoryLineType.NEANT) {
-        commit("currentGame/addGrelottine", lineAction.playerName, {
-          root: true,
-        });
-      }
-
-      dispatch("handlePlayerLineAction", lineAction);
+      await dispatch("handleGameEvent", gameContext);
       dispatch("currentGame/handleEndTurn", undefined, { root: true });
     },
-    handleSuiteAction({ commit }, action: SuiteHistoryLineAction): void {
-      const isCurrentPlayerTheLooser =
-        action.loosingPlayerName === action.playerName;
+    async startGrelottineChallenge({ dispatch }): Promise<void> {
+      const grelottineContext: ChallengeGrelottineGameContext = {
+        event: GameContextEvent.CHALLENGE_GRELOTTINE,
+        runner: gameRuleRunner.getRunner(),
+      };
+      await dispatch("handleGameEvent", grelottineContext);
+      await dispatch("currentGame/checkEndGame", null, { root: true });
+    },
 
-      if (!isCurrentPlayerTheLooser) {
-        const historyLineAction: HistoryLineAction = {
-          playerName: action.loosingPlayerName,
-          designation: HistoryLineType.SUITE,
-          value: action.multiplier * 10,
-        };
-        commit(
-          "currentGame/addHistoryLine",
-          mapHistoryActionToApply(historyLineAction),
-          { root: true }
-        );
+    async handleGameEvent(
+      { commit, rootState },
+      gameContext: UnknownGameContext
+    ): Promise<void> {
+      let ruleEffects: RuleEffects;
+      try {
+        ruleEffects = await gameRuleRunner
+          .getRunner()
+          .handleDiceRoll(gameContext);
+      } catch (e) {
+        const isCancelAResolution = !e;
+        if (isCancelAResolution) {
+          return;
+        }
+        throw e;
       }
 
-      const value = isCurrentPlayerTheLooser ? action.multiplier * 10 : 0;
-      const historyLineApply = mapHistoryActionToApply({
-        playerName: action.playerName,
-        designation: HistoryLineType.SUITE,
-        value,
-        turnNumber: action.turnNumber,
+      ruleEffects.forEach((ruleEffect) => {
+        const gameTurnNumber = rootState.currentGame!.turnNumber;
+        switch (ruleEffect.type) {
+          case RuleEffectType.ADD_GRELOTTINE:
+            commit("currentGame/addGrelottine", ruleEffect.playerName, {
+              root: true,
+            });
+            return;
+          case RuleEffectType.REMOVE_GRELOTTINE:
+            commit("currentGame/removeGrelottine", ruleEffect.playerName, {
+              root: true,
+            });
+            return;
+          case RuleEffectType.CHANGE_SCORE: {
+            const turnNumber =
+              rootState.currentGame!.currentPlayerName === ruleEffect.playerName
+                ? gameTurnNumber
+                : undefined;
+
+            const apply: HistoryLineApply = {
+              playerName: ruleEffect.playerName,
+              amount: ruleEffect.score,
+              designation: ruleEffect.designation,
+              turnNumber,
+            };
+
+            commit("currentGame/addHistoryLine", apply, {
+              root: true,
+            });
+            return;
+          }
+        }
       });
-
-      if (action.isVelute) {
-        historyLineApply.amount += getAmount(HistoryLineType.VELUTE, 3);
-      }
-
-      commit("currentGame/addHistoryLine", historyLineApply, { root: true });
     },
-    handleChouetteVeluteAction(
-      { commit, rootGetters },
-      action: ChouetteVeluteHistoryLineAction
-    ): void {
-      if (action.shoutingPlayers.length === 1) {
-        const newAction: BasicHistoryLineAction = {
-          playerName: action.shoutingPlayers[0],
-          designation: HistoryLineType.CHOUETTE_VELUTE,
-          value: action.value,
-          turnNumber: rootGetters["currentGame/isCurrentPlayer"](
-            action.shoutingPlayers[0]
-          )
-            ? action.turnNumber
-            : undefined,
-        };
-        commit(
-          "currentGame/addHistoryLine",
-          mapHistoryActionToApply(newAction),
-          { root: true }
-        );
-      } else {
-        action.shoutingPlayers.forEach((playerName) => {
-          const historyLineApply = mapHistoryActionToApply({
-            playerName,
-            designation: HistoryLineType.CHOUETTE_VELUTE,
-            value: action.value,
-            turnNumber: rootGetters["currentGame/isCurrentPlayer"](playerName)
-              ? action.turnNumber
-              : undefined,
-          });
 
-          historyLineApply.amount = -historyLineApply.amount;
-          commit("currentGame/addHistoryLine", historyLineApply, {
-            root: true,
-          });
-        });
-      }
-
-      if (!action.shoutingPlayers.includes(action.playerName)) {
-        commit(
-          "currentGame/addHistoryLine",
-          mapHistoryActionToApply({
-            playerName: action.playerName,
-            designation: HistoryLineType.CHOUETTE_VELUTE,
-            value: 0,
-            turnNumber: action.turnNumber,
-          }),
-          { root: true }
-        );
-      }
+    resolveSuite(_, suiteResolution: SuiteResolution): void {
+      suiteRuleResolver.resolve(suiteResolution);
     },
-    handlePlayerLineAction(
-      { commit, dispatch },
-      lineAction: HistoryLineAction
+    cancelSuite(): void {
+      suiteRuleResolver.reject();
+    },
+
+    resolveGrelottine(_, grelottineResolution: GrelottineResolution): void {
+      grelottineRuleResolver.resolve(grelottineResolution);
+    },
+    cancelGrelottine(): void {
+      grelottineRuleResolver.reject();
+    },
+
+    resolveChouetteVelute(
+      _,
+      chouetteVeluteResolution: ChouetteVeluteResolution
     ): void {
-      switch (lineAction.designation) {
-        case HistoryLineType.CHOUETTE_VELUTE:
-          dispatch("handleChouetteVeluteAction", lineAction);
-          break;
-        case HistoryLineType.SUITE:
-          dispatch("handleSuiteAction", lineAction);
-          break;
-        default:
-          commit(
-            "currentGame/addHistoryLine",
-            mapHistoryActionToApply(lineAction),
-            { root: true }
-          );
-      }
+      chouetteVeluteRuleResolver.resolve(chouetteVeluteResolution);
+    },
+    cancelChouetteVelute(): void {
+      chouetteVeluteRuleResolver.reject();
+    },
+
+    resolveSirop(_, attrapeOiseauResolution: AttrapeOiseauResolution): void {
+      siropRuleResolver.resolve(attrapeOiseauResolution);
+    },
+    cancelSirop(): void {
+      siropRuleResolver.reject();
     },
   },
 };

@@ -30,6 +30,8 @@ export interface NewGameForm {
   playerNames: Array<string>;
   levelOne: {
     isSouffletteEnabled: boolean;
+    isSiropEnabled: boolean;
+    isAttrapeOiseauEnabled: boolean;
   };
 }
 

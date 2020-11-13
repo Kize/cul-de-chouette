@@ -22,18 +22,24 @@ import {
   mapHistoryActionToApply,
 } from "@/domain/history";
 import { RootState } from "@/store/app.state";
-import {
-  GrelottineActionPayload,
-  isGrelottineChallengeSuccessful,
-} from "@/domain/grelottine";
 import { MainPlayableActionsStoreModule } from "@/store/current-game/main-playable-actions.store";
-import { RulesStoreModule } from "@/store/current-game/difficulty-levels/rules.store";
+import {
+  RulesState,
+  RulesStoreModule,
+} from "@/store/current-game/difficulty-levels/rules.store";
+import { DialogsStoreModule } from "@/store/current-game/dialogs.store";
+import {
+  ALL_RULES_ORDERED,
+  gameRuleRunner,
+  RuleName,
+} from "@/store/current-game/game-rule-runner";
 
 export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
   namespaced: true,
   modules: {
     play: MainPlayableActionsStoreModule,
     rules: RulesStoreModule,
+    dialogs: DialogsStoreModule,
   },
   state(): CurrentGameState {
     return {
@@ -190,24 +196,51 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         currentPlayerName: playerNames[0],
         turnNumber: 1,
       };
-
       commit("setGame", newGame);
-
-      commit(
-        "rules/levelOne/setIsSouffletteEnabled",
-        form.levelOne.isSouffletteEnabled
-      );
+      dispatch("activeEnabledRules", form);
 
       await dispatch("saveGameToLocalStorage");
     },
-    resumeGame({ commit }, currentGame: SavedCurrentGame): void {
+    activeEnabledRules({ commit }, payload: RulesState): void {
+      const enabledRules = new Set([
+        RuleName.CUL_DE_CHOUETTE,
+        RuleName.SUITE,
+        RuleName.CHOUETTE_VELUTE,
+        RuleName.VELUTE,
+        RuleName.CHOUETTE,
+        RuleName.NEANT,
+        RuleName.GRELOTTINE,
+      ]);
+
+      if (payload.levelOne?.isSouffletteEnabled) {
+        commit("rules/levelOne/setIsSouffletteEnabled", true);
+      } else {
+        commit("rules/levelOne/setIsSouffletteEnabled", false);
+      }
+
+      if (payload.levelOne?.isSiropEnabled) {
+        commit("rules/levelOne/setIsSiropEnabled", true);
+        enabledRules.add(RuleName.SIROTAGE);
+      } else {
+        commit("rules/levelOne/setIsSiropEnabled", false);
+      }
+
+      if (payload.levelOne?.isAttrapeOiseauEnabled) {
+        commit("rules/levelOne/setIsAttrapeOiseauEnabled", true);
+        enabledRules.add(RuleName.ATTRAPE_OISEAU);
+      } else {
+        commit("rules/levelOne/setIsAttrapeOiseauEnabled", false);
+      }
+
+      const rulesToEnable = ALL_RULES_ORDERED.filter(({ name }) =>
+        enabledRules.has(name)
+      ).map(({ rule }) => rule);
+
+      gameRuleRunner.setRules(rulesToEnable);
+    },
+    resumeGame({ commit, dispatch }, currentGame: SavedCurrentGame): void {
       commit("setGame", currentGame);
-      commit(
-        "rules/levelOne/setIsSouffletteEnabled",
-        currentGame.rules.levelOne
-          ? currentGame.rules.levelOne.isSouffletteEnabled
-          : false
-      );
+      dispatch("activeEnabledRules", currentGame.rules);
     },
     async checkEndGame({ commit, getters, dispatch }): Promise<boolean> {
       const highestPlayer = getters.highestPlayer;
@@ -335,47 +368,6 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       commit("addPlayer", { player, previousPlayer: sloubi.previousPlayer });
 
       await dispatch("saveGameToLocalStorage");
-    },
-    async grelottineChallenge(
-      { commit, dispatch },
-      grelottineActionPayload: GrelottineActionPayload
-    ): Promise<void> {
-      const isChallengePassed = isGrelottineChallengeSuccessful(
-        grelottineActionPayload.challenge,
-        grelottineActionPayload.challengedPlayerAction
-      );
-
-      let winner: string, looser: string;
-      if (isChallengePassed) {
-        winner = grelottineActionPayload.challengedPlayer;
-        looser = grelottineActionPayload.grelottin;
-      } else {
-        winner = grelottineActionPayload.grelottin;
-        looser = grelottineActionPayload.challengedPlayer;
-      }
-
-      const winnerApply: HistoryLineApply = {
-        playerName: winner,
-        designation: HistoryLineType.GRELOTTINE_CHALLENGE,
-        amount: grelottineActionPayload.gambledAmount,
-      };
-      commit("addHistoryLine", winnerApply);
-
-      const looserApply: HistoryLineApply = {
-        playerName: looser,
-        designation: HistoryLineType.GRELOTTINE_CHALLENGE,
-        amount: -grelottineActionPayload.gambledAmount,
-      };
-      commit("addHistoryLine", looserApply);
-
-      dispatch(
-        "currentGame/play/handlePlayerLineAction",
-        grelottineActionPayload.challengedPlayerAction,
-        { root: true }
-      );
-      commit("removeGrelottine", grelottineActionPayload.grelottin);
-
-      await dispatch("checkEndGame");
     },
   },
 };

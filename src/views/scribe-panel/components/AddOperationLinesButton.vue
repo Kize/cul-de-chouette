@@ -110,7 +110,7 @@ import {
   requiredAmountInputRules,
   selectLineTypeRules,
   selectNameRules,
-} from "@/domain/form-validation-rules";
+} from "@/form-validation/form-validation-rules";
 import {
   AddOperationLinesActionPayload,
   OperationLineActionPayload,

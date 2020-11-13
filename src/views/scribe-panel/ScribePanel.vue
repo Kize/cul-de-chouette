@@ -42,6 +42,11 @@
       </v-col>
     </v-row>
 
+    <SuiteResolverDialog></SuiteResolverDialog>
+    <ChouetteVeluteResolverDialog></ChouetteVeluteResolverDialog>
+    <SiropResolverDialog></SiropResolverDialog>
+    <GrelottineResolverDialog></GrelottineResolverDialog>
+
     <v-dialog v-model="showEndGameDialog" persistent max-width="1000">
       <EndGameDialogCard
         :scoreboard="scoreboard"
@@ -72,9 +77,17 @@ import AddOperationLinesButton from "@/views/scribe-panel/components/AddOperatio
 import EndGameDialogCard from "@/views/scribe-panel/dialogs/EndGameDialogCard.vue";
 import CancelGameDialogCard from "@/views/scribe-panel/dialogs/CancelGameDialogCard.vue";
 import RulesButton from "@/components/RulesButton.vue";
+import SuiteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/SuiteResolverDialog.vue";
+import ChouetteVeluteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/ChouetteVeluteResolverDialog.vue";
+import SiropResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/SiropResolverDialog.vue";
+import GrelottineResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/GrelottineResolverDialog.vue";
 
 @Component({
   components: {
+    GrelottineResolverDialog,
+    SiropResolverDialog,
+    SuiteResolverDialog,
+    ChouetteVeluteResolverDialog,
     RulesButton,
     CancelGameDialogCard,
     EndGameDialogCard,

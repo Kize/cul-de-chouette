@@ -26,6 +26,18 @@
             <v-checkbox
               label="La soufflette"
               v-model="form.levelOne.isSouffletteEnabled"
+              messages="La fonctionnalité revient bientôt"
+              :disabled="true"
+            ></v-checkbox>
+            <v-checkbox
+              label="Le sirop"
+              v-model="form.levelOne.isSiropEnabled"
+              @change="changeSiropEnabled"
+            ></v-checkbox>
+            <v-checkbox
+              label="L'attrape-oiseau"
+              v-model="form.levelOne.isAttrapeOiseauEnabled"
+              :disabled="isAttrapeOiseauDisabled"
             ></v-checkbox>
           </v-card-text>
         </v-card>
@@ -98,7 +110,7 @@ import { ROUTES } from "@/router";
 import {
   newGameNameNameRules,
   newPlayerNameRules,
-} from "@/domain/form-validation-rules";
+} from "@/form-validation/form-validation-rules";
 import { NewGameForm } from "@/store/current-game/current-game.interface";
 
 @Component({})
@@ -113,8 +125,14 @@ export default class NewGameFormSection extends Vue {
     playerNames: ["", ""],
     levelOne: {
       isSouffletteEnabled: false,
+      isSiropEnabled: false,
+      isAttrapeOiseauEnabled: false,
     },
   };
+
+  get isAttrapeOiseauDisabled(): boolean {
+    return !this.form.levelOne.isSiropEnabled;
+  }
 
   canRemovePlayer(): boolean {
     return this.form.playerNames.length > 2;
@@ -127,6 +145,12 @@ export default class NewGameFormSection extends Vue {
   removePlayer(index: number): void {
     if (this.canRemovePlayer()) {
       this.form.playerNames.splice(index, 1);
+    }
+  }
+
+  changeSiropEnabled(newStatus: boolean): void {
+    if (!newStatus) {
+      this.form.levelOne.isAttrapeOiseauEnabled = false;
     }
   }
 

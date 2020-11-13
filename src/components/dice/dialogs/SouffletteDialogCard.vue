@@ -71,7 +71,7 @@
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import MainDialogCard from "@/components/MainDialogCard.vue";
 import { Player } from "@/domain/player";
-import { selectNameRules } from "@/domain/form-validation-rules";
+import { selectNameRules } from "@/form-validation/form-validation-rules";
 import { HistoryLineAction } from "@/domain/history";
 import { SouffletteActionPayload, SouffletteForm } from "@/domain/soufflette";
 import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
@@ -86,8 +86,7 @@ const INITIAL_FORM: SouffletteForm = {
 @Component({
   components: {
     BevueMenuAction,
-    PlayATurnWithDice: () =>
-      import("@/components/play-a-turn-actions/PlayATurnWithDice.vue"),
+    PlayATurnWithDice: () => import("@/components/dice/DiceRollInput.vue"),
     MainDialogCard,
   },
 })

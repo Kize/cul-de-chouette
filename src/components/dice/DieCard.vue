@@ -3,7 +3,11 @@
     :value="value"
     @change="changeDieValue"
     active-class="active-die"
-    :class="isCul ? 'cul-die' : 'chouette-die'"
+    :class="{
+      'cul-die': isCul,
+      'chouette-die': !isCul,
+      'vertical-die': !isHorizontal,
+    }"
   >
     <v-btn
       class="die-face pa-0"
@@ -26,15 +30,16 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class DieCard extends Vue {
   @Prop(Number) value!: number;
   @Prop(Boolean) isCul!: number;
+  @Prop(Boolean) isHorizontal?: boolean;
 
-  changeDieValue(dieValueIndex: number): void {
-    this.$emit("input", dieValueIndex);
+  changeDieValue(dieValue: number | undefined): void {
+    this.$emit("input", dieValue || 0);
   }
 }
 </script>
 
 <style scoped lang="scss">
-.v-btn-toggle {
+.v-btn-toggle.vertical-die {
   flex-direction: column;
 }
 
@@ -52,7 +57,7 @@ export default class DieCard extends Vue {
     color: #2962ff;
   }
 
-  & > .v-btn.v-btn.die-face {
+  & > .v-btn.v-btn.v-size--default.die-face {
     border-color: #bdbdbd !important;
     border-width: 2px;
     border-radius: 6px;
