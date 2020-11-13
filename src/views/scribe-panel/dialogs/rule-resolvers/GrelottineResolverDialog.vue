@@ -276,10 +276,6 @@ export default class GrelottineResolverDialog extends Vue {
     }
   }
 
-  onDiceRollValidated(diceRoll: DiceRoll): void {
-    this.diceRoll = diceRoll;
-  }
-
   confirm(): void {
     if (!this.isFormComplete(this.form) || !isDiceFormValid(this.diceForm)) {
       return;
