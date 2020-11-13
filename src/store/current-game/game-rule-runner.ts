@@ -34,31 +34,31 @@ export const siropRuleResolver = new SiropRuleResolver();
 export const grelottineRuleResolver = new GrelottineRuleResolver();
 
 export enum RuleName {
-  CulDeChouette,
-  Suite,
-  ChouetteVelute,
-  Velute,
-  AttrapeOiseau,
-  Sirotage,
-  Chouette,
-  Neant,
-  Grelottine,
+  CUL_DE_CHOUETTE,
+  SUITE,
+  CHOUETTE_VELUTE,
+  VELUTE,
+  ATTRAPE_OISEAU,
+  SIROTAGE,
+  CHOUETTE,
+  NEANT,
+  GRELOTTINE,
 }
 
 export const ALL_RULES_ORDERED: Array<{ name: RuleName; rule: Rule }> = [
-  { name: RuleName.Grelottine, rule: new GrelottineRule(grelottineRuleResolver) },
-  { name: RuleName.CulDeChouette, rule: new CulDeChouetteRule() },
-  { name: RuleName.Suite, rule: new SuiteRule(suiteRuleResolver) },
+  { name: RuleName.GRELOTTINE, rule: new GrelottineRule(grelottineRuleResolver) },
+  { name: RuleName.CUL_DE_CHOUETTE, rule: new CulDeChouetteRule() },
+  { name: RuleName.SUITE, rule: new SuiteRule(suiteRuleResolver) },
   {
-    name: RuleName.ChouetteVelute,
+    name: RuleName.CHOUETTE_VELUTE,
     rule: new ChouetteVeluteRule(chouetteVeluteRuleResolver),
   },
-  { name: RuleName.Velute, rule: new VeluteRule() },
+  { name: RuleName.VELUTE, rule: new VeluteRule() },
   {
-    name: RuleName.AttrapeOiseau,
+    name: RuleName.ATTRAPE_OISEAU,
     rule: new AttrapeOiseauRule(siropRuleResolver),
   },
-  { name: RuleName.Sirotage, rule: new SirotageRule(siropRuleResolver) },
-  { name: RuleName.Chouette, rule: new ChouetteRule() },
-  { name: RuleName.Neant, rule: new NeantRule() },
+  { name: RuleName.SIROTAGE, rule: new SirotageRule(siropRuleResolver) },
+  { name: RuleName.CHOUETTE, rule: new ChouetteRule() },
+  { name: RuleName.NEANT, rule: new NeantRule() },
 ];

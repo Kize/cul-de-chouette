@@ -203,13 +203,13 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     },
     activeEnabledRules({ commit }, payload: RulesState): void {
       const enabledRules = new Set([
-        RuleName.CulDeChouette,
-        RuleName.Suite,
-        RuleName.ChouetteVelute,
-        RuleName.Velute,
-        RuleName.Chouette,
-        RuleName.Neant,
-        RuleName.Grelottine,
+        RuleName.CUL_DE_CHOUETTE,
+        RuleName.SUITE,
+        RuleName.CHOUETTE_VELUTE,
+        RuleName.VELUTE,
+        RuleName.CHOUETTE,
+        RuleName.NEANT,
+        RuleName.GRELOTTINE,
       ]);
 
       if (payload.levelOne?.isSouffletteEnabled) {
@@ -220,14 +220,14 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
 
       if (payload.levelOne?.isSiropEnabled) {
         commit("rules/levelOne/setIsSiropEnabled", true);
-        enabledRules.add(RuleName.Sirotage);
+        enabledRules.add(RuleName.SIROTAGE);
       } else {
         commit("rules/levelOne/setIsSiropEnabled", false);
       }
 
       if (payload.levelOne?.isAttrapeOiseauEnabled) {
         commit("rules/levelOne/setIsAttrapeOiseauEnabled", true);
-        enabledRules.add(RuleName.AttrapeOiseau);
+        enabledRules.add(RuleName.ATTRAPE_OISEAU);
       } else {
         commit("rules/levelOne/setIsAttrapeOiseauEnabled", false);
       }

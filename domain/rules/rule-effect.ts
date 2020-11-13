@@ -10,7 +10,7 @@ export type RuleEffect =
 export type ChangeScoreRuleEffect = SpecificRuleEffect<{
   type: RuleEffectType.CHANGE_SCORE;
   score: number;
-  designation: HistoryLineType;
+  designation: HistoryLineType; //TODO: rename prop | Move interface & rename interface associated
 }>;
 
 export type AddGrelottineRuleEffect = SpecificRuleEffect<{
