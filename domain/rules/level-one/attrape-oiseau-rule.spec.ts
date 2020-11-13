@@ -43,14 +43,14 @@ it("applies the sirotage to the player who stole the sirop if attrape oiseau is 
 
   expect(ruleEffects).toContainEqual<RuleEffect>({
     type: RuleEffectType.CHANGE_SCORE,
-    designation: HistoryLineType.ATTRAPE_OISEAU,
+    designation: HistoryLineType.ATTRAPE_OISEAU_LOST,
     playerName: "Delphin",
     score: -9,
   });
 
   expect(ruleEffects).toContainEqual<RuleEffect>({
     type: RuleEffectType.CHANGE_SCORE,
-    designation: HistoryLineType.ATTRAPE_OISEAU,
+    designation: HistoryLineType.CHOUETTE,
     playerName: "Alban",
     score: 9,
   });
@@ -77,14 +77,14 @@ it("applies the sirotage to the player who stole the sirop if attrape oiseau is 
 
   expect(ruleEffects).toContainEqual<RuleEffect>({
     type: RuleEffectType.CHANGE_SCORE,
-    designation: HistoryLineType.ATTRAPE_OISEAU,
+    designation: HistoryLineType.ATTRAPE_OISEAU_WON,
     playerName: "Delphin",
     score: 70,
   });
 
   expect(ruleEffects).toContainEqual<RuleEffect>({
     type: RuleEffectType.CHANGE_SCORE,
-    designation: HistoryLineType.ATTRAPE_OISEAU,
+    designation: HistoryLineType.CHOUETTE,
     playerName: "Alban",
     score: 9,
   });
@@ -117,7 +117,7 @@ it("handle the fil sirop bet", async () => {
 
   expect(ruleEffects).toContainEqual({
     type: RuleEffectType.CHANGE_SCORE,
-    designation: HistoryLineType.SIROP_CHALLENGE,
+    designation: HistoryLineType.SIROP_BET_WON,
     playerName: "Alban",
     score: 0,
   });

@@ -1,8 +1,11 @@
-import { ChouetteVeluteResolution, ChouetteVeluteRule } from './chouette-velute-rule';
+import {
+  ChouetteVeluteResolution,
+  ChouetteVeluteRule,
+} from "./chouette-velute-rule";
 
 import { HistoryLineType } from "../../../src/domain/history";
-import { RuleEffects, RuleEffectType } from '../rule-effect';
-import { DummyContextBuilder } from '../../tests/dummy-game-context-builder';
+import { RuleEffects, RuleEffectType } from "../rule-effect";
+import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
 
 describe("isApplicableToDiceRoll", () => {
   it("returns true if two dice have the same value and those two dice sum equals the third one", () => {
@@ -35,14 +38,14 @@ describe("applyRule", () => {
           .withDiceRoll([2, 2, 4])
           .build()
       )
-    ).toEqual([
+    ).toEqual<RuleEffects>([
       {
         type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.CHOUETTE_VELUTE,
+        designation: HistoryLineType.CHOUETTE_VELUTE_WON,
         playerName: "Alban",
         score: 32,
       },
-    ] as RuleEffects);
+    ]);
   });
 
   it("returns a positive change of score for a claimer, and a neutral change of score for the current player", async () => {
@@ -64,13 +67,13 @@ describe("applyRule", () => {
     ).toEqual([
       {
         type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.CHOUETTE_VELUTE,
+        designation: HistoryLineType.CHOUETTE_VELUTE_NOT_CLAIMED,
         playerName: "Alban",
         score: 0,
       },
       {
         type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.CHOUETTE_VELUTE,
+        designation: HistoryLineType.CHOUETTE_VELUTE_WON,
         playerName: "Delphin",
         score: 32,
       },
@@ -96,13 +99,13 @@ describe("applyRule", () => {
     ).toEqual([
       {
         type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.CHOUETTE_VELUTE,
+        designation: HistoryLineType.CHOUETTE_VELUTE_LOST,
         playerName: "Alban",
         score: -72,
       },
       {
         type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.CHOUETTE_VELUTE,
+        designation: HistoryLineType.CHOUETTE_VELUTE_LOST,
         playerName: "Delphin",
         score: -72,
       },

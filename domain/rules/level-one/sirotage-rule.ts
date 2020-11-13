@@ -83,17 +83,23 @@ export class SirotageRule extends ChouetteRule {
         ? BidType.BEAU_SIROP
         : dieValueToBidType.get(lastDieValue);
 
+    let event: HistoryLineType;
     if (playerBid.playerBid === winningBet) {
       score = playerBid.isBidValidated ? 25 : 0;
+      event = playerBid.isBidValidated
+        ? HistoryLineType.SIROP_BET_WON
+        : HistoryLineType.SIROP_BET_WON_BUT_NOT_CLAIMED;
     } else if (playerBid.playerBid === BidType.COUCHE_SIROP) {
       score = 0;
+      event = HistoryLineType.SIROP_BET_WON;
     } else {
       score = -5;
+      event = HistoryLineType.SIROP_BET_LOST;
     }
 
     return {
       type: RuleEffectType.CHANGE_SCORE,
-      designation: HistoryLineType.SIROP_CHALLENGE,
+      designation: event,
       playerName: playerBid.playerName,
       score,
     };
@@ -117,22 +123,23 @@ export class SirotageRule extends ChouetteRule {
     diceRoll: DiceRoll,
     currentPlayerName: string
   ): ChangeScoreRuleEffect {
-    const sirotageRuleEffect: ChangeScoreRuleEffect = {
-      type: RuleEffectType.CHANGE_SCORE,
-      designation: HistoryLineType.SIROP,
-      playerName: currentPlayerName,
-      score: 0,
-    };
-
     const chouetteValue = this.getChouetteValue(diceRoll);
     const isSirotageWon = resolution.lastDieValue === chouetteValue;
-
     if (isSirotageWon) {
-      sirotageRuleEffect.score = getCulDeChouetteScore(diceRoll);
+      return {
+        type: RuleEffectType.CHANGE_SCORE,
+        designation: HistoryLineType.SIROP_WON,
+        playerName: currentPlayerName,
+        score: getCulDeChouetteScore(diceRoll),
+      };
     } else {
-      sirotageRuleEffect.score = -this.getChouetteScore(diceRoll);
+      return {
+        type: RuleEffectType.CHANGE_SCORE,
+        designation: HistoryLineType.SIROP_LOST,
+        playerName: currentPlayerName,
+        score: -this.getChouetteScore(diceRoll),
+      };
     }
-    return sirotageRuleEffect;
   }
 }
 

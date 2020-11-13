@@ -5,13 +5,25 @@ export enum HistoryLineType {
   CHOUETTE = "Chouette",
   VELUTE = "Velute",
   SUITE = "Suite",
+  // TODO DAU : Remove chouette velute event
   CHOUETTE_VELUTE = "Chouette velute",
+  CHOUETTE_VELUTE_NOT_CLAIMED = "Chouette velute non clammée",
   CUL_DE_CHOUETTE = "Cul de chouette",
   SLOUBI = "Sloubi",
   SOUFFLETTE = "Soufflette",
   SIROP = "Sirotage",
-  SIROP_CHALLENGE = "Pari de Sirotage",
+  SIROP_BET_WON = "Pari de Sirotage gagné",
   ATTRAPE_OISEAU = "Attrape-oiseau",
+  CHOUETTE_VELUTE_WON = "Chouette velute gagnée",
+  CHOUETTE_VELUTE_LOST = "Chouette velute perdue",
+  GRELOTTINE_CHALLENGE_WON = "Défi de grelottine gagné",
+  GRELOTTINE_CHALLENGE_LOST = "Défi de grelottine perdu",
+  ATTRAPE_OISEAU_WON = "Attrape-oiseau gagné",
+  ATTRAPE_OISEAU_LOST = "Attrape-oiseau perdu",
+  SIROP_BET_LOST = "Pari de Sirotage perdu",
+  SIROP_BET_WON_BUT_NOT_CLAIMED = "Pari de Sirotage gagné mais pas clamé",
+  SIROP_WON = "Sirop gagné",
+  SIROP_LOST = "Sirop perdu",
 }
 
 export enum NotImplementedHistoryLineType {

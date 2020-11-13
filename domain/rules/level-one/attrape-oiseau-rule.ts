@@ -55,7 +55,7 @@ export class AttrapeOiseauRule extends SirotageRule {
     if (playerBid.playerBid === BidType.FILE_SIROP) {
       return {
         type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP_CHALLENGE,
+        designation: HistoryLineType.SIROP_BET_WON,
         playerName: playerBid.playerName,
         score: 0,
       };
@@ -91,12 +91,15 @@ export class AttrapeOiseauRule extends SirotageRule {
       );
       attrapeOiseauRuleEffect = {
         ...sirotageRuleEffect,
-        designation: HistoryLineType.ATTRAPE_OISEAU,
+        designation:
+          sirotageRuleEffect.designation === HistoryLineType.SIROP_WON
+            ? HistoryLineType.ATTRAPE_OISEAU_WON
+            : HistoryLineType.ATTRAPE_OISEAU_LOST,
       };
-      initialChouetteRuleEffect = {
-        ...this.getChouetteRuleEffect(currentPlayerName, diceRoll),
-        designation: HistoryLineType.ATTRAPE_OISEAU,
-      };
+      initialChouetteRuleEffect = this.getChouetteRuleEffect(
+        currentPlayerName,
+        diceRoll
+      );
     } else {
       attrapeOiseauRuleEffect = await this.getSirotageRuleEffect(
         resolution,

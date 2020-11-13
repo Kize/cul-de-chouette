@@ -44,7 +44,7 @@ export function testSirotageRule(
 
       expect(await sirotageRule.applyRule(gameContext)).toContainEqual({
         type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP,
+        designation: HistoryLineType.SIROP_LOST,
         playerName: "Alban",
         score: -4,
       });
@@ -64,7 +64,7 @@ export function testSirotageRule(
 
       expect(await sirotageRule.applyRule(gameContext)).toContainEqual({
         type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP,
+        designation: HistoryLineType.SIROP_WON,
         playerName: "Alban",
         score: 60,
       });
@@ -108,28 +108,28 @@ export function testSirotageRule(
       const ruleEffects = await sirotageRule.applyRule(gameContext);
       expect(ruleEffects).toContainEqual({
         type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP_CHALLENGE,
+        designation: HistoryLineType.SIROP_BET_LOST,
         playerName: "Alban",
         score: -5,
       });
 
       expect(ruleEffects).toContainEqual({
         type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP_CHALLENGE,
+        designation: HistoryLineType.SIROP_BET_WON,
         playerName: "DelphinWinner",
         score: 25,
       });
 
       expect(ruleEffects).toContainEqual({
         type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP_CHALLENGE,
+        designation: HistoryLineType.SIROP_BET_WON_BUT_NOT_CLAIMED,
         playerName: "NathanTooSlowToWin",
         score: 0,
       });
 
       expect(ruleEffects).toContainEqual({
         type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP_CHALLENGE,
+        designation: HistoryLineType.SIROP_BET_WON,
         playerName: "JulesNotBetting",
         score: 0,
       });
@@ -163,14 +163,14 @@ export function testSirotageRule(
       const ruleEffects = await sirotageRule.applyRule(gameContext);
       expect(ruleEffects).toContainEqual({
         type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP_CHALLENGE,
+        designation: HistoryLineType.SIROP_BET_WON,
         playerName: "Alban",
         score: 25,
       });
 
       expect(ruleEffects).toContainEqual({
         type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP_CHALLENGE,
+        designation: HistoryLineType.SIROP_BET_WON_BUT_NOT_CLAIMED,
         playerName: "DelphinTooSlow",
         score: 0,
       });

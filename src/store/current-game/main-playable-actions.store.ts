@@ -31,7 +31,7 @@ export const MainPlayableActionsStoreModule: Module<
   namespaced: true,
   actions: {
     async playATurn(
-      { commit, dispatch, rootState },
+      { dispatch, rootState },
       diceRoll: DiceRoll
     ): Promise<void> {
       const gameContext: PlayTurnGameContext = {

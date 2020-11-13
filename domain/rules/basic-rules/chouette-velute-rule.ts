@@ -31,19 +31,23 @@ export class ChouetteVeluteRule extends DiceRule {
     if (!playerNames.includes(currentPlayerName)) {
       effects.push({
         type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.CHOUETTE_VELUTE,
+        designation: HistoryLineType.CHOUETTE_VELUTE_NOT_CLAIMED,
         playerName: currentPlayerName,
         score: 0,
       });
     }
 
     const veluteValue = getVeluteValue(diceRoll);
-    const score = playerNames.length === 1 ? veluteValue : -veluteValue;
+    const isChouetteVeluteWon = playerNames.length === 1;
+    const score = isChouetteVeluteWon ? veluteValue : -veluteValue;
+    const event = isChouetteVeluteWon
+      ? HistoryLineType.CHOUETTE_VELUTE_WON
+      : HistoryLineType.CHOUETTE_VELUTE_LOST;
 
     playerNames.forEach((playerName) => {
       effects.push({
         type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.CHOUETTE_VELUTE,
+        designation: event,
         score,
         playerName,
       });

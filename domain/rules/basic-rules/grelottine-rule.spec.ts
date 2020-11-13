@@ -55,14 +55,14 @@ describe("applyRule", () => {
 
     expect(ruleEffects).toContainEqual<RuleEffect>({
       type: RuleEffectType.CHANGE_SCORE,
-      designation: HistoryLineType.GRELOTTINE_CHALLENGE,
+      designation: HistoryLineType.GRELOTTINE_CHALLENGE_WON,
       playerName: "Alban",
       score: 12,
     });
 
     expect(ruleEffects).toContainEqual<RuleEffect>({
       type: RuleEffectType.CHANGE_SCORE,
-      designation: HistoryLineType.GRELOTTINE_CHALLENGE,
+      designation: HistoryLineType.GRELOTTINE_CHALLENGE_LOST,
       playerName: "Delphin",
       score: -12,
     });
@@ -110,14 +110,14 @@ describe("applyRule", () => {
 
     expect(ruleEffects).toContainEqual<RuleEffect>({
       type: RuleEffectType.CHANGE_SCORE,
-      designation: HistoryLineType.GRELOTTINE_CHALLENGE,
+      designation: HistoryLineType.GRELOTTINE_CHALLENGE_LOST,
       playerName: "Alban",
       score: -32,
     });
 
     expect(ruleEffects).toContainEqual<RuleEffect>({
       type: RuleEffectType.CHANGE_SCORE,
-      designation: HistoryLineType.GRELOTTINE_CHALLENGE,
+      designation: HistoryLineType.GRELOTTINE_CHALLENGE_WON,
       playerName: "Delphin",
       score: 32,
     });

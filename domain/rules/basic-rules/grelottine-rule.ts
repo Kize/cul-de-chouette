@@ -1,5 +1,9 @@
 import { Rule } from "../rule";
-import { RuleEffects, RuleEffectType } from "../rule-effect";
+import {
+  ChangeScoreRuleEffect,
+  RuleEffects,
+  RuleEffectType,
+} from "../rule-effect";
 import {
   GameContextEvent,
   GameContextWrapper,
@@ -35,9 +39,13 @@ export class GrelottineRule implements Rule {
         diceRoll: resolution.diceRoll,
       });
 
-    const isGrelottineWon = grelottineBetToRuleEffectChecker[
-      resolution.grelottinBet
-    ](lastCombinationRuleEffects);
+    // TODO DAU : remove the `as ChangeScoreRuleEffect` when all rule effects would have the same shape
+    const isGrelottineWon = lastCombinationRuleEffects.some(
+      (lastCombinationRuleEffect) =>
+        grelottineBetToRuleEffectsToCheck[resolution.grelottinBet].has(
+          (lastCombinationRuleEffect as ChangeScoreRuleEffect).designation
+        )
+    );
 
     const getLoserScore = () => -resolution.gambledAmount;
     const getWinnerScore = () => resolution.gambledAmount;
@@ -50,13 +58,17 @@ export class GrelottineRule implements Rule {
       ...lastCombinationRuleEffects,
       {
         type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.GRELOTTINE_CHALLENGE,
+        designation: isGrelottineWon
+          ? HistoryLineType.GRELOTTINE_CHALLENGE_LOST
+          : HistoryLineType.GRELOTTINE_CHALLENGE_WON,
         playerName: resolution.grelottinPlayer,
         score: isGrelottineWon ? getLoserScore() : getWinnerScore(),
       },
       {
         type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.GRELOTTINE_CHALLENGE,
+        designation: isGrelottineWon
+          ? HistoryLineType.GRELOTTINE_CHALLENGE_WON
+          : HistoryLineType.GRELOTTINE_CHALLENGE_LOST,
         playerName: resolution.challengedPlayer,
         score: isGrelottineWon ? getWinnerScore() : getLoserScore(),
       },
@@ -72,40 +84,19 @@ export enum GrelottineBet {
   SIROP_GRELOT = "Sirop-grelot",
 }
 
-const grelottineBetToRuleEffectChecker: Record<
+const grelottineBetToRuleEffectsToCheck: Record<
   GrelottineBet,
-  (r: RuleEffects) => boolean
+  Set<HistoryLineType>
 > = {
-  [GrelottineBet.CHOUETTE]: checkRuleEffectsAgainstType(
-    HistoryLineType.CHOUETTE
-  ),
-  [GrelottineBet.CHOUETTE_VELUTE]: checkRuleEffectsAgainstType(
-    HistoryLineType.CHOUETTE_VELUTE
-  ),
-  [GrelottineBet.CUL_DE_CHOUETTE]: checkRuleEffectsAgainstType(
-    HistoryLineType.CUL_DE_CHOUETTE
-  ),
-  [GrelottineBet.VELUTE]: checkRuleEffectsAgainstType(HistoryLineType.VELUTE),
-  [GrelottineBet.SIROP_GRELOT]: checkRuleEffectsAgainstSiropGrelot,
+  [GrelottineBet.CHOUETTE]: new Set([HistoryLineType.CHOUETTE]),
+  [GrelottineBet.CHOUETTE_VELUTE]: new Set([
+    HistoryLineType.CHOUETTE_VELUTE_WON,
+    HistoryLineType.CHOUETTE_VELUTE_LOST,
+  ]),
+  [GrelottineBet.CUL_DE_CHOUETTE]: new Set([HistoryLineType.CUL_DE_CHOUETTE]),
+  [GrelottineBet.VELUTE]: new Set([HistoryLineType.VELUTE]),
+  [GrelottineBet.SIROP_GRELOT]: new Set([HistoryLineType.SIROP_WON]),
 };
-
-function checkRuleEffectsAgainstType(winningHistoryLine: HistoryLineType) {
-  return (ruleEffects: RuleEffects) =>
-    ruleEffects.some(
-      (ruleEffect) =>
-        ruleEffect.type === RuleEffectType.CHANGE_SCORE &&
-        ruleEffect.designation === winningHistoryLine
-    );
-}
-
-function checkRuleEffectsAgainstSiropGrelot(ruleEffects: RuleEffects) {
-  return ruleEffects.some(
-    (ruleEffect) =>
-      ruleEffect.type === RuleEffectType.CHANGE_SCORE &&
-      ruleEffect.designation === HistoryLineType.SIROP &&
-      ruleEffect.score > 0
-  );
-}
 
 export function getMaxGrelottinePossibleAmount(
   lowestScore: number,
