@@ -1,7 +1,7 @@
 import { ChouetteRule } from './chouette-rule';
 import { HistoryLineType } from '../../../src/domain/history';
-import { RuleEffects, RuleEffetType } from '../rule-effect';
-import { DummyPlayTurnGameContextBuilder } from '../../tests/dummy-game-context-builder';
+import { RuleEffects, RuleEffectType } from '../rule-effect';
+import { DummyContextBuilder } from '../../tests/dummy-game-context-builder';
 
 describe("isApplicableToDiceRoll", () => {
   it("returns true if two dice have the same value", () => {
@@ -20,7 +20,7 @@ describe("isApplicableToDiceRoll", () => {
 describe("applyRule", () => {
   it("registers a change of score of 25 for a chouette of 5", async () => {
     const effects = await new ChouetteRule().applyRule(
-      DummyPlayTurnGameContextBuilder.aContext()
+      DummyContextBuilder.aPlayTurnContext()
         .withCurrentPlayerName("Alban")
         .withDiceRoll([5, 5, 2])
         .build()
@@ -28,7 +28,7 @@ describe("applyRule", () => {
 
     expect(effects).toEqual([
       {
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.CHOUETTE,
         playerName: "Alban",
         score: 25,

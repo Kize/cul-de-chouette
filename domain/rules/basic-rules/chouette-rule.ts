@@ -3,7 +3,7 @@ import { DiceRoll, DiceRule, DieValue } from "../dice-rule";
 import {
   ChangeScoreRuleEffect,
   RuleEffects,
-  RuleEffetType,
+  RuleEffectType,
 } from "../rule-effect";
 import { PlayTurnGameContext } from "../../game-context-event";
 
@@ -22,7 +22,7 @@ export class ChouetteRule extends DiceRule {
   ): ChangeScoreRuleEffect {
     const score = this.getChouetteScore(diceRoll);
     return {
-      type: RuleEffetType.CHANGE_SCORE,
+      type: RuleEffectType.CHANGE_SCORE,
       designation: HistoryLineType.CHOUETTE,
       playerName,
       score,

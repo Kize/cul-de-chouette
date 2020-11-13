@@ -1,7 +1,7 @@
 import { Rule } from "./rule";
 import { RuleEffects } from "./rule-effect";
 import {
-  GameContextEventType,
+  GameContextEvent,
   GameContextWrapper,
   PlayTurnGameContext,
   UnknownGameContext,
@@ -18,7 +18,7 @@ export abstract class DiceRule implements Rule {
   ): RuleEffects | Promise<RuleEffects>;
 
   isApplicableToGameContext(context: UnknownGameContext): boolean {
-    if (context.type === GameContextEventType.PLAY_TURN) {
+    if (context.event === GameContextEvent.PLAY_TURN) {
       return this.isApplicableToDiceRoll(context.diceRoll);
     }
     return false;

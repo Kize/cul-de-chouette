@@ -1,7 +1,7 @@
 import { SuiteRule } from './suite-rule';
 import { HistoryLineType } from '../../../src/domain/history';
-import { RuleEffects, RuleEffetType } from '../rule-effect';
-import { DummyPlayTurnGameContextBuilder } from '../../tests/dummy-game-context-builder';
+import { RuleEffects, RuleEffectType } from '../rule-effect';
+import { DummyContextBuilder } from '../../tests/dummy-game-context-builder';
 
 describe("isApplicableToDiceRoll", () => {
   let rule: SuiteRule;
@@ -30,10 +30,10 @@ describe("applyRule", () => {
     const rule = new SuiteRule(resolver);
 
     expect(
-      await rule.applyRule(DummyPlayTurnGameContextBuilder.aContext().build())
+      await rule.applyRule(DummyContextBuilder.aPlayTurnContext().build())
     ).toEqual([
       {
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.SUITE,
         playerName: "Alban",
         score: -10,
@@ -51,10 +51,10 @@ describe("applyRule", () => {
     const rule = new SuiteRule(resolver);
 
     expect(
-      await rule.applyRule(DummyPlayTurnGameContextBuilder.aContext().build())
+      await rule.applyRule(DummyContextBuilder.aPlayTurnContext().build())
     ).toEqual([
       {
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.SUITE,
         playerName: "Delphin",
         score: -40,
@@ -73,20 +73,20 @@ describe("applyRule", () => {
 
     expect(
       await rule.applyRule(
-        DummyPlayTurnGameContextBuilder.aContext()
+        DummyContextBuilder.aPlayTurnContext()
           .withDiceRoll([1, 2, 3])
           .withCurrentPlayerName("Alban")
           .build()
       )
     ).toEqual([
       {
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.VELUTE,
         playerName: "Alban",
         score: 18,
       },
       {
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.SUITE,
         playerName: "Delphin",
         score: -10,

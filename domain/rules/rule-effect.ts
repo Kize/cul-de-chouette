@@ -8,20 +8,20 @@ export type RuleEffect =
   | RemoveGrelottineRuleEffect;
 
 export type ChangeScoreRuleEffect = SpecificRuleEffect<{
-  type: RuleEffetType.CHANGE_SCORE;
+  type: RuleEffectType.CHANGE_SCORE;
   score: number;
   designation: HistoryLineType;
 }>;
 
 export type AddGrelottineRuleEffect = SpecificRuleEffect<{
-  type: RuleEffetType.ADD_GRELOTTINE;
+  type: RuleEffectType.ADD_GRELOTTINE;
 }>;
 
 export type RemoveGrelottineRuleEffect = SpecificRuleEffect<{
-  type: RuleEffetType.REMOVE_GRELOTTINE;
+  type: RuleEffectType.REMOVE_GRELOTTINE;
 }>;
 
-export enum RuleEffetType {
+export enum RuleEffectType {
   ADD_GRELOTTINE = "addGrelottine",
   REMOVE_GRELOTTINE = "removeGrelottine",
   CHANGE_SCORE = "changeScore",

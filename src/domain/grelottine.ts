@@ -1,80 +1,34 @@
-import {
-  HistoryLineAction,
-  HistoryLineType,
-  SuiteHistoryLineAction,
-} from "@/domain/history";
+import {HistoryLineAction, HistoryLineType, SuiteHistoryLineAction,} from "@/domain/history";
+import {GrelottineBet} from "../../domain/rules/basic-rules/grelottine-rule";
+import {DiceRoll} from "../../domain/rules/dice-rule";
 
-export enum GrelottineChallenges {
-  CHOUETTE = "Chouette",
-  VELUTE = "Velute",
-  CUL_DE_CHOUETTE = "Cul de chouette",
-  CHOUETTE_VELUTE = "Chouette-velute",
-  SIROP_GRELOT = "Sirop-grelot",
-}
 
 export interface GrelottineForm {
-  challenge?: GrelottineChallenges;
-  grelottin?: string;
+  grelottinPlayer?: string;
   challengedPlayer?: string;
-  challengedPlayerAction?: HistoryLineAction;
+  grelottinBet?: GrelottineBet;
   gambledAmount: number;
 }
 
-export interface GrelottineActionPayload {
-  challenge: GrelottineChallenges;
-  grelottin: string;
-  challengedPlayer: string;
-  challengedPlayerAction: HistoryLineAction;
-  gambledAmount: number;
-}
-
-export function getMaxGrelottinePossibleAmount(
-  lowestScore: number,
-  challenge?: GrelottineChallenges
-): number {
-  if (!challenge) {
-    return 0;
-  }
-
-  let percentage = 0;
-  switch (challenge) {
-    case GrelottineChallenges.CHOUETTE:
-      percentage = 0.33;
-      break;
-    case GrelottineChallenges.VELUTE:
-      percentage = 0.25;
-      break;
-    case GrelottineChallenges.CUL_DE_CHOUETTE:
-      percentage = 0.12;
-      break;
-    case GrelottineChallenges.CHOUETTE_VELUTE:
-      percentage = 0.06;
-      break;
-    case GrelottineChallenges.SIROP_GRELOT:
-      percentage = 0.03;
-      break;
-  }
-
-  return Math.ceil(lowestScore * percentage);
-}
+export type ValidGrelottineForm = Required<GrelottineForm>
 
 export function isGrelottineChallengeSuccessful(
-  challenge: GrelottineChallenges,
+  challenge: GrelottineBet,
   action: HistoryLineAction
 ): boolean {
   const suiteAction = action as SuiteHistoryLineAction;
 
   switch (action.designation) {
     case HistoryLineType.CHOUETTE:
-      return challenge === GrelottineChallenges.CHOUETTE;
+      return challenge === GrelottineBet.CHOUETTE;
     case HistoryLineType.VELUTE:
-      return challenge === GrelottineChallenges.VELUTE;
+      return challenge === GrelottineBet.VELUTE;
     case HistoryLineType.CUL_DE_CHOUETTE:
-      return challenge === GrelottineChallenges.CUL_DE_CHOUETTE;
+      return challenge === GrelottineBet.CUL_DE_CHOUETTE;
     case HistoryLineType.CHOUETTE_VELUTE:
-      return challenge === GrelottineChallenges.CHOUETTE_VELUTE;
+      return challenge === GrelottineBet.CHOUETTE_VELUTE;
     case HistoryLineType.SUITE:
-      return challenge === GrelottineChallenges.VELUTE && suiteAction.isVelute;
+      return challenge === GrelottineBet.VELUTE && suiteAction.isVelute;
   }
 
   return false;

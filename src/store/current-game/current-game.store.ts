@@ -22,10 +22,6 @@ import {
   mapHistoryActionToApply,
 } from "@/domain/history";
 import { RootState } from "@/store/app.state";
-import {
-  GrelottineActionPayload,
-  isGrelottineChallengeSuccessful,
-} from "@/domain/grelottine";
 import { MainPlayableActionsStoreModule } from "@/store/current-game/main-playable-actions.store";
 import {
   RulesState,
@@ -213,6 +209,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         RuleName.Velute,
         RuleName.Chouette,
         RuleName.Neant,
+        RuleName.Grelottine,
       ]);
 
       if (payload.levelOne?.isSouffletteEnabled) {
@@ -371,47 +368,6 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       commit("addPlayer", { player, previousPlayer: sloubi.previousPlayer });
 
       await dispatch("saveGameToLocalStorage");
-    },
-    async grelottineChallenge(
-      { commit, dispatch },
-      grelottineActionPayload: GrelottineActionPayload
-    ): Promise<void> {
-      const isChallengePassed = isGrelottineChallengeSuccessful(
-        grelottineActionPayload.challenge,
-        grelottineActionPayload.challengedPlayerAction
-      );
-
-      let winner: string, looser: string;
-      if (isChallengePassed) {
-        winner = grelottineActionPayload.challengedPlayer;
-        looser = grelottineActionPayload.grelottin;
-      } else {
-        winner = grelottineActionPayload.grelottin;
-        looser = grelottineActionPayload.challengedPlayer;
-      }
-
-      const winnerApply: HistoryLineApply = {
-        playerName: winner,
-        designation: HistoryLineType.GRELOTTINE_CHALLENGE,
-        amount: grelottineActionPayload.gambledAmount,
-      };
-      commit("addHistoryLine", winnerApply);
-
-      const looserApply: HistoryLineApply = {
-        playerName: looser,
-        designation: HistoryLineType.GRELOTTINE_CHALLENGE,
-        amount: -grelottineActionPayload.gambledAmount,
-      };
-      commit("addHistoryLine", looserApply);
-
-      dispatch(
-        "currentGame/play/handlePlayerLineAction",
-        grelottineActionPayload.challengedPlayerAction,
-        { root: true }
-      );
-      commit("removeGrelottine", grelottineActionPayload.grelottin);
-
-      await dispatch("checkEndGame");
     },
   },
 };

@@ -1,28 +1,29 @@
 import { DiceRoll } from "./rules/dice-rule";
+import {RuleRunner} from "./rule-runner";
 
-export enum GameContextEventType {
+export type UnknownGameContext =
+    | PlayTurnGameContext
+    | ChallengeGrelottineGameContext
+    | ApplyBevueGameContext;
+
+export enum GameContextEvent {
   PLAY_TURN,
   CHALLENGE_GRELOTTINE,
   APPLY_BEVUE,
 }
 
-export type UnknownGameContext =
-  | PlayTurnGameContext
-  | ChallengeGrelottineGameContext
-  | ApplyBevueGameContext;
-
 export class GameContextWrapper {
   constructor(private gameContext: UnknownGameContext) {}
 
   asPlayTurn(): PlayTurnGameContext {
-    if (this.gameContext.type === GameContextEventType.PLAY_TURN) {
+    if (this.gameContext.event === GameContextEvent.PLAY_TURN) {
       return this.gameContext;
     }
     throw new Error("The given game context should be a PlayTurnGameContext");
   }
 
   asChallengeGrelottine(): ChallengeGrelottineGameContext {
-    if (this.gameContext.type === GameContextEventType.CHALLENGE_GRELOTTINE) {
+    if (this.gameContext.event === GameContextEvent.CHALLENGE_GRELOTTINE) {
       return this.gameContext;
     }
     throw new Error(
@@ -31,7 +32,7 @@ export class GameContextWrapper {
   }
 
   asApplyBevue(): ApplyBevueGameContext {
-    if (this.gameContext.type === GameContextEventType.APPLY_BEVUE) {
+    if (this.gameContext.event === GameContextEvent.APPLY_BEVUE) {
       return this.gameContext;
     }
     throw new Error("The given game context should be a ApplyBevueGameContext");
@@ -39,16 +40,17 @@ export class GameContextWrapper {
 }
 
 export interface PlayTurnGameContext {
-  type: GameContextEventType.PLAY_TURN;
+  event: GameContextEvent.PLAY_TURN;
   currentPlayerName: string;
   diceRoll: DiceRoll;
 }
 
 export interface ChallengeGrelottineGameContext {
-  type: GameContextEventType.CHALLENGE_GRELOTTINE;
+  event: GameContextEvent.CHALLENGE_GRELOTTINE;
+  runner: RuleRunner
 }
 
 export interface ApplyBevueGameContext {
-  type: GameContextEventType.APPLY_BEVUE;
+  event: GameContextEvent.APPLY_BEVUE;
   currentPlayerName: string;
 }

@@ -7,7 +7,7 @@ import {
   ChangeScoreRuleEffect,
   RuleEffect,
   RuleEffects,
-  RuleEffetType,
+  RuleEffectType,
 } from "../rule-effect";
 import { PlayTurnGameContext } from "../../game-context-event";
 
@@ -92,7 +92,7 @@ export class SirotageRule extends ChouetteRule {
     }
 
     return {
-      type: RuleEffetType.CHANGE_SCORE,
+      type: RuleEffectType.CHANGE_SCORE,
       designation: HistoryLineType.SIROP_CHALLENGE,
       playerName: playerBid.playerName,
       score,
@@ -118,7 +118,7 @@ export class SirotageRule extends ChouetteRule {
     currentPlayerName: string
   ): ChangeScoreRuleEffect {
     const sirotageRuleEffect: ChangeScoreRuleEffect = {
-      type: RuleEffetType.CHANGE_SCORE,
+      type: RuleEffectType.CHANGE_SCORE,
       designation: HistoryLineType.SIROP,
       playerName: currentPlayerName,
       score: 0,

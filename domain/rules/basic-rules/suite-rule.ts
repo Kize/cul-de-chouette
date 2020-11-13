@@ -2,7 +2,7 @@ import { Resolver } from "../rule-resolver";
 import { getVeluteValue, isVelute } from "./velute-rule";
 import { HistoryLineType } from "@/domain/history";
 import { DiceRoll, DiceRule } from "../dice-rule";
-import { RuleEffects, RuleEffetType } from "../rule-effect";
+import { RuleEffects, RuleEffectType } from "../rule-effect";
 import { PlayTurnGameContext } from "../../game-context-event";
 
 export interface SuiteResolution {
@@ -29,7 +29,7 @@ export class SuiteRule extends DiceRule {
 
     if (isVelute(diceRoll)) {
       ruleEffects.push({
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.VELUTE,
         playerName: currentPlayerName,
         score: getVeluteValue(diceRoll),
@@ -39,7 +39,7 @@ export class SuiteRule extends DiceRule {
     const suiteResolution = await this.resolver.getResolution();
 
     ruleEffects.push({
-      type: RuleEffetType.CHANGE_SCORE,
+      type: RuleEffectType.CHANGE_SCORE,
       designation: HistoryLineType.SUITE,
       playerName: suiteResolution.loosingPlayerName,
       score: -10 * suiteResolution.multiplier,

@@ -1,8 +1,8 @@
 import { ChouetteVeluteResolution, ChouetteVeluteRule } from './chouette-velute-rule';
 
 import { HistoryLineType } from "../../../src/domain/history";
-import { RuleEffects, RuleEffetType } from '../rule-effect';
-import { DummyPlayTurnGameContextBuilder } from '../../tests/dummy-game-context-builder';
+import { RuleEffects, RuleEffectType } from '../rule-effect';
+import { DummyContextBuilder } from '../../tests/dummy-game-context-builder';
 
 describe("isApplicableToDiceRoll", () => {
   it("returns true if two dice have the same value and those two dice sum equals the third one", () => {
@@ -30,14 +30,14 @@ describe("applyRule", () => {
 
     expect(
       await rule.applyRule(
-        DummyPlayTurnGameContextBuilder.aContext()
+        DummyContextBuilder.aPlayTurnContext()
           .withCurrentPlayerName("Alban")
           .withDiceRoll([2, 2, 4])
           .build()
       )
     ).toEqual([
       {
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.CHOUETTE_VELUTE,
         playerName: "Alban",
         score: 32,
@@ -56,20 +56,20 @@ describe("applyRule", () => {
 
     expect(
       await rule.applyRule(
-        DummyPlayTurnGameContextBuilder.aContext()
+        DummyContextBuilder.aPlayTurnContext()
           .withCurrentPlayerName("Alban")
           .withDiceRoll([2, 2, 4])
           .build()
       )
     ).toEqual([
       {
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.CHOUETTE_VELUTE,
         playerName: "Alban",
         score: 0,
       },
       {
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.CHOUETTE_VELUTE,
         playerName: "Delphin",
         score: 32,
@@ -88,20 +88,20 @@ describe("applyRule", () => {
 
     expect(
       await rule.applyRule(
-        DummyPlayTurnGameContextBuilder.aContext()
+        DummyContextBuilder.aPlayTurnContext()
           .withCurrentPlayerName("Alban")
           .withDiceRoll([3, 3, 6])
           .build()
       )
     ).toEqual([
       {
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.CHOUETTE_VELUTE,
         playerName: "Alban",
         score: -72,
       },
       {
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.CHOUETTE_VELUTE,
         playerName: "Delphin",
         score: -72,

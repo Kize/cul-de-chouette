@@ -2,7 +2,7 @@ import { RuleRunner } from "./rule-runner";
 import { Rule } from "./rules/rule";
 import { DiceRoll } from "./rules/dice-rule";
 import { RuleEffects } from "./rules/rule-effect";
-import { DummyPlayTurnGameContextBuilder } from "./tests/dummy-game-context-builder";
+import { DummyContextBuilder } from "./tests/dummy-game-context-builder";
 
 describe("handleDiceRoll", () => {
   it("applies the correct rule", async () => {
@@ -21,7 +21,7 @@ describe("handleDiceRoll", () => {
     const runner = new RuleRunner([invalidRule, validRule]);
 
     const diceRoll: DiceRoll = [1, 5, 6];
-    const gameContext = DummyPlayTurnGameContextBuilder.aContext()
+    const gameContext = DummyContextBuilder.aPlayTurnContext()
       .withDiceRoll(diceRoll)
       .build();
     const result = await runner.handleDiceRoll(gameContext.asPlayTurn());

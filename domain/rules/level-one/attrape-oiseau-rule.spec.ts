@@ -6,8 +6,8 @@ import { HistoryLineType } from "../../../src/domain/history";
 import { testSirotageRule } from "./sirotage-rule.spec";
 import { RuleResolver } from "../rule-resolver";
 import { BidType, SiropBid, SiropResolutionPayload } from "./sirotage-rule";
-import { RuleEffect, RuleEffetType } from "../rule-effect";
-import { DummyPlayTurnGameContextBuilder } from "../../tests/dummy-game-context-builder";
+import { RuleEffect, RuleEffectType } from "../rule-effect";
+import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
 
 describe("has the sirotage behaviour if there is no attrape oiseau", () => {
   testSirotageRule((resolution) => {
@@ -35,21 +35,21 @@ it("applies the sirotage to the player who stole the sirop if attrape oiseau is 
   const rule = new AttrapeOiseauRule(resolver);
 
   const ruleEffects = await rule.applyRule(
-    DummyPlayTurnGameContextBuilder.aContext()
+    DummyContextBuilder.aPlayTurnContext()
       .withCurrentPlayerName("Alban")
       .withDiceRoll([3, 3, 4])
       .build()
   );
 
   expect(ruleEffects).toContainEqual<RuleEffect>({
-    type: RuleEffetType.CHANGE_SCORE,
+    type: RuleEffectType.CHANGE_SCORE,
     designation: HistoryLineType.ATTRAPE_OISEAU,
     playerName: "Delphin",
     score: -9,
   });
 
   expect(ruleEffects).toContainEqual<RuleEffect>({
-    type: RuleEffetType.CHANGE_SCORE,
+    type: RuleEffectType.CHANGE_SCORE,
     designation: HistoryLineType.ATTRAPE_OISEAU,
     playerName: "Alban",
     score: 9,
@@ -69,21 +69,21 @@ it("applies the sirotage to the player who stole the sirop if attrape oiseau is 
   const rule = new AttrapeOiseauRule(resolver);
 
   const ruleEffects = await rule.applyRule(
-    DummyPlayTurnGameContextBuilder.aContext()
+    DummyContextBuilder.aPlayTurnContext()
       .withCurrentPlayerName("Alban")
       .withDiceRoll([3, 3, 4])
       .build()
   );
 
   expect(ruleEffects).toContainEqual<RuleEffect>({
-    type: RuleEffetType.CHANGE_SCORE,
+    type: RuleEffectType.CHANGE_SCORE,
     designation: HistoryLineType.ATTRAPE_OISEAU,
     playerName: "Delphin",
     score: 70,
   });
 
   expect(ruleEffects).toContainEqual<RuleEffect>({
-    type: RuleEffetType.CHANGE_SCORE,
+    type: RuleEffectType.CHANGE_SCORE,
     designation: HistoryLineType.ATTRAPE_OISEAU,
     playerName: "Alban",
     score: 9,
@@ -108,7 +108,7 @@ it("handle the fil sirop bet", async () => {
   };
   const attrapeOiseauRule = new AttrapeOiseauRule(resolver);
 
-  const gameContext = DummyPlayTurnGameContextBuilder.aContext()
+  const gameContext = DummyContextBuilder.aPlayTurnContext()
     .withCurrentPlayerName("Alban")
     .withDiceRoll([2, 3, 2])
     .build();
@@ -116,7 +116,7 @@ it("handle the fil sirop bet", async () => {
   const ruleEffects = await attrapeOiseauRule.applyRule(gameContext);
 
   expect(ruleEffects).toContainEqual({
-    type: RuleEffetType.CHANGE_SCORE,
+    type: RuleEffectType.CHANGE_SCORE,
     designation: HistoryLineType.SIROP_CHALLENGE,
     playerName: "Alban",
     score: 0,
@@ -130,7 +130,7 @@ describe("resolver params", () => {
     };
     const attrapeOiseauRule = new AttrapeOiseauRule(resolver);
 
-    const gameContext = DummyPlayTurnGameContextBuilder.aContext()
+    const gameContext = DummyContextBuilder.aPlayTurnContext()
       .withCurrentPlayerName("Alban")
       .withDiceRoll([3, 3, 5])
       .build();

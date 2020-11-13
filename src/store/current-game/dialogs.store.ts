@@ -20,6 +20,9 @@ export interface DialogsState {
     chouetteValue?: DieValue;
     playableBids: Array<PlayableBid>;
   };
+  grelottineResolverDialog: {
+    isVisible: boolean;
+  };
 }
 
 export const DialogsStoreModule: Module<DialogsState, RootState> = {
@@ -37,6 +40,9 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
         chouetteValue: undefined,
         playableBids: [],
       },
+      grelottineResolverDialog: {
+        isVisible: false,
+      },
     };
   },
   getters: {},
@@ -49,6 +55,9 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
     },
     setSiropResolverIsVisible(state, isVisible): void {
       state.siropResolverDialog.isVisible = isVisible;
+    },
+    setGrelottineResolverIsVisible(state, isVisible): void {
+      state.grelottineResolverDialog.isVisible = isVisible;
     },
     setSiropResolverPayload(
       state,
@@ -77,6 +86,12 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
     },
     closeSiropResolver({ commit }): void {
       commit("setSiropResolverIsVisible", false);
+    },
+    openGrelottineResolver({ commit }): void {
+      commit("setGrelottineResolverIsVisible", true);
+    },
+    closeGrelottineResolver({ commit }): void {
+      commit("setGrelottineResolverIsVisible", false);
     },
   },
 };

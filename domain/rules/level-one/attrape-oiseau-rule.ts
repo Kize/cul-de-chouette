@@ -12,7 +12,7 @@ import {
   ChangeScoreRuleEffect,
   RuleEffect,
   RuleEffects,
-  RuleEffetType,
+  RuleEffectType,
 } from "../rule-effect";
 import { PlayTurnGameContext } from "../../game-context-event";
 
@@ -54,7 +54,7 @@ export class AttrapeOiseauRule extends SirotageRule {
   ): RuleEffect {
     if (playerBid.playerBid === BidType.FILE_SIROP) {
       return {
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.SIROP_CHALLENGE,
         playerName: playerBid.playerName,
         score: 0,

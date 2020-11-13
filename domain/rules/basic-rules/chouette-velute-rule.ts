@@ -2,7 +2,7 @@ import { getVeluteValue } from "./velute-rule";
 import { HistoryLineType } from "@/domain/history";
 import { Resolver } from "../rule-resolver";
 import { DiceRoll, DiceRule } from "../dice-rule";
-import { RuleEffects, RuleEffetType } from "../rule-effect";
+import { RuleEffects, RuleEffectType } from "../rule-effect";
 import { PlayTurnGameContext } from "../../game-context-event";
 
 export interface ChouetteVeluteResolution {
@@ -30,7 +30,7 @@ export class ChouetteVeluteRule extends DiceRule {
 
     if (!playerNames.includes(currentPlayerName)) {
       effects.push({
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.CHOUETTE_VELUTE,
         playerName: currentPlayerName,
         score: 0,
@@ -42,7 +42,7 @@ export class ChouetteVeluteRule extends DiceRule {
 
     playerNames.forEach((playerName) => {
       effects.push({
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.CHOUETTE_VELUTE,
         score,
         playerName,

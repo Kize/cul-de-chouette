@@ -9,8 +9,8 @@ import {
 import { ChouetteRule } from "../basic-rules/chouette-rule";
 import { HistoryLineType } from "../../../src/domain/history";
 import { RuleResolver } from "../rule-resolver";
-import { RuleEffetType } from "../rule-effect";
-import { DummyPlayTurnGameContextBuilder } from "../../tests/dummy-game-context-builder";
+import { RuleEffectType } from "../rule-effect";
+import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
 
 export function testSirotageRule(
   getSirotageRuleForResolution: (resolution: SirotageResolution) => SirotageRule
@@ -21,7 +21,7 @@ export function testSirotageRule(
 
       const chouetteRule = new ChouetteRule();
 
-      const gameContext = DummyPlayTurnGameContextBuilder.aContext()
+      const gameContext = DummyContextBuilder.aPlayTurnContext()
         .withCurrentPlayerName("Alban")
         .withDiceRoll([2, 3, 2])
         .build();
@@ -37,13 +37,13 @@ export function testSirotageRule(
         lastDieValue: 4,
         bids: [],
       });
-      const gameContext = DummyPlayTurnGameContextBuilder.aContext()
+      const gameContext = DummyContextBuilder.aPlayTurnContext()
         .withCurrentPlayerName("Alban")
         .withDiceRoll([2, 3, 2])
         .build();
 
       expect(await sirotageRule.applyRule(gameContext)).toContainEqual({
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.SIROP,
         playerName: "Alban",
         score: -4,
@@ -57,13 +57,13 @@ export function testSirotageRule(
         bids: [],
       });
 
-      const gameContext = DummyPlayTurnGameContextBuilder.aContext()
+      const gameContext = DummyContextBuilder.aPlayTurnContext()
         .withCurrentPlayerName("Alban")
         .withDiceRoll([2, 3, 2])
         .build();
 
       expect(await sirotageRule.applyRule(gameContext)).toContainEqual({
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.SIROP,
         playerName: "Alban",
         score: 60,
@@ -100,35 +100,35 @@ export function testSirotageRule(
         bids,
       });
 
-      const gameContext = DummyPlayTurnGameContextBuilder.aContext()
+      const gameContext = DummyContextBuilder.aPlayTurnContext()
         .withCurrentPlayerName("Alban")
         .withDiceRoll([2, 3, 2])
         .build();
 
       const ruleEffects = await sirotageRule.applyRule(gameContext);
       expect(ruleEffects).toContainEqual({
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.SIROP_CHALLENGE,
         playerName: "Alban",
         score: -5,
       });
 
       expect(ruleEffects).toContainEqual({
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.SIROP_CHALLENGE,
         playerName: "DelphinWinner",
         score: 25,
       });
 
       expect(ruleEffects).toContainEqual({
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.SIROP_CHALLENGE,
         playerName: "NathanTooSlowToWin",
         score: 0,
       });
 
       expect(ruleEffects).toContainEqual({
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.SIROP_CHALLENGE,
         playerName: "JulesNotBetting",
         score: 0,
@@ -155,21 +155,21 @@ export function testSirotageRule(
         bids,
       });
 
-      const gameContext = DummyPlayTurnGameContextBuilder.aContext()
+      const gameContext = DummyContextBuilder.aPlayTurnContext()
         .withCurrentPlayerName("Alban")
         .withDiceRoll([3, 3, 5])
         .build();
 
       const ruleEffects = await sirotageRule.applyRule(gameContext);
       expect(ruleEffects).toContainEqual({
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.SIROP_CHALLENGE,
         playerName: "Alban",
         score: 25,
       });
 
       expect(ruleEffects).toContainEqual({
-        type: RuleEffetType.CHANGE_SCORE,
+        type: RuleEffectType.CHANGE_SCORE,
         designation: HistoryLineType.SIROP_CHALLENGE,
         playerName: "DelphinTooSlow",
         score: 0,
@@ -191,7 +191,7 @@ describe("resolver params", () => {
     };
     const sirotageRule = new SirotageRule(resolver);
 
-    const gameContext = DummyPlayTurnGameContextBuilder.aContext()
+    const gameContext = DummyContextBuilder.aPlayTurnContext()
       .withCurrentPlayerName("Alban")
       .withDiceRoll([3, 3, 5])
       .build();

@@ -8,15 +8,19 @@ import { AttrapeOiseauResolution } from "../../../domain/rules/level-one/attrape
 import {
   chouetteVeluteRuleResolver,
   gameRuleRunner,
+  grelottineRuleResolver,
   siropRuleResolver,
   suiteRuleResolver,
 } from "@/store/current-game/game-rule-runner";
 import { DiceRoll } from "../../../domain/rules/dice-rule";
-import { RuleEffects, RuleEffetType } from "../../../domain/rules/rule-effect";
+import { RuleEffects, RuleEffectType } from "../../../domain/rules/rule-effect";
 import {
-  GameContextEventType,
+  ChallengeGrelottineGameContext,
+  GameContextEvent,
   PlayTurnGameContext,
+  UnknownGameContext,
 } from "../../../domain/game-context-event";
+import { GrelottineResolution } from "../../../domain/rules/basic-rules/grelottine-rule";
 
 type MainPlayableState = Record<string, unknown>;
 
@@ -31,35 +35,51 @@ export const MainPlayableActionsStoreModule: Module<
       diceRoll: DiceRoll
     ): Promise<void> {
       const gameContext: PlayTurnGameContext = {
-        type: GameContextEventType.PLAY_TURN,
+        event: GameContextEvent.PLAY_TURN,
         currentPlayerName: rootState.currentGame!.currentPlayerName,
         diceRoll,
       };
 
+      await dispatch("handleGameEvent", gameContext);
+      dispatch("currentGame/handleEndTurn", undefined, { root: true });
+    },
+    async startGrelottineChallenge({ dispatch }): Promise<void> {
+      const grelottineContext: ChallengeGrelottineGameContext = {
+        event: GameContextEvent.CHALLENGE_GRELOTTINE,
+        runner: gameRuleRunner.getRunner(),
+      };
+      await dispatch("handleGameEvent", grelottineContext);
+      await dispatch("currentGame/checkEndGame", null, { root: true});
+    },
+
+    async handleGameEvent(
+      { commit, rootState },
+      gameContext: UnknownGameContext
+    ): Promise<void> {
       let ruleEffects: RuleEffects;
       try {
         ruleEffects = await gameRuleRunner
           .getRunner()
           .handleDiceRoll(gameContext);
       } catch (e) {
-        if (e) {
-          console.error(e);
+        const isCancelAResolution = !e;
+        if (isCancelAResolution) {
+          return;
         }
-
-        return;
+        throw e;
       }
 
       ruleEffects.forEach((ruleEffect) => {
         const gameTurnNumber = rootState.currentGame!.turnNumber;
         switch (ruleEffect.type) {
-          case RuleEffetType.ADD_GRELOTTINE:
+          case RuleEffectType.ADD_GRELOTTINE:
             commit("currentGame/addGrelottine", ruleEffect.playerName, {
               root: true,
             });
             return;
-          case RuleEffetType.CHANGE_SCORE: {
+          case RuleEffectType.CHANGE_SCORE: {
             const turnNumber =
-              gameContext.currentPlayerName === ruleEffect.playerName
+              rootState.currentGame!.currentPlayerName === ruleEffect.playerName
                 ? gameTurnNumber
                 : undefined;
 
@@ -77,15 +97,22 @@ export const MainPlayableActionsStoreModule: Module<
           }
         }
       });
-
-      dispatch("currentGame/handleEndTurn", undefined, { root: true });
     },
+
     resolveSuite(_, suiteResolution: SuiteResolution): void {
       suiteRuleResolver.resolve(suiteResolution);
     },
     cancelSuite(): void {
       suiteRuleResolver.reject();
     },
+
+    resolveGrelottine(_, grelottineResolution: GrelottineResolution): void {
+      grelottineRuleResolver.resolve(grelottineResolution);
+    },
+    cancelGrelottine(): void {
+      grelottineRuleResolver.reject();
+    },
+
     resolveChouetteVelute(
       _,
       chouetteVeluteResolution: ChouetteVeluteResolution
