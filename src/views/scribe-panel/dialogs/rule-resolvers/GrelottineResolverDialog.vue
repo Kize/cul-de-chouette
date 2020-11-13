@@ -2,7 +2,6 @@
   <v-dialog
     :value="grelottineResolverDialog.isVisible"
     fullscreen
-    hide-overlay
     transition="dialog-bottom-transition"
   >
     <v-card>
@@ -107,20 +106,27 @@
               </v-row>
             </v-card>
           </v-col>
-          <v-col cols="12" md="6">
+
+          <v-col md="6" cols="12">
             <v-card class="pa-4" outlined>
               <v-card-title>
-                Combinaison du joueur défié réalisée
-                {{ isFormValid ? "" : " - (Renseigne les conditions du défi)" }}
+                <span>
+                  Combinaison réalisée par le joueur défié
+                  <span
+                    v-if="form.challengedPlayer"
+                    class="challenged-player-hint"
+                  >
+                    ({{ form.challengedPlayer }})
+                  </span>
+                </span>
               </v-card-title>
-              <PlayATurnWithDice
-                @confirm="onDiceRollValidated"
-              ></PlayATurnWithDice>
+              <DiceRollInput v-model="diceForm"></DiceRollInput>
             </v-card>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col cols="2" offset="10">
+
+        <v-row class="mx-md-12 mx-6" justify="end">
+          <v-col cols="6" md="2">
             <v-btn :disabled="!isValidateButtonEnabled" @click="confirm"
               >Valider
             </v-btn>
@@ -144,7 +150,7 @@ import {
   selectNameRules,
 } from "@/form-validation/form-validation-rules";
 import { Player } from "@/domain/player";
-import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDice.vue";
+import DiceRollInput from "@/components/dice/DiceRollInput.vue";
 import { SelectItemsType, VForm } from "@/vuetify.interface";
 import { DiceRoll } from "../../../../../domain/rules/dice-rule";
 import {
@@ -153,13 +159,18 @@ import {
   GrelottineResolution,
 } from "../../../../../domain/rules/basic-rules/grelottine-rule";
 import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
+import {
+  DiceForm,
+  getInitialDiceForm,
+  isDiceFormValid,
+} from "@/components/dice/dice-form";
 
 const INITIAL_FORM: GrelottineForm = {
   gambledAmount: 0,
 };
 
 @Component({
-  components: { PlayATurnWithDice, BevueMenuAction },
+  components: { DiceRollInput, BevueMenuAction },
   computed: {
     ...mapState("currentGame", ["players", "turnNumber"]),
     ...mapState("currentGame/dialogs", ["grelottineResolverDialog"]),
@@ -181,7 +192,7 @@ export default class GrelottineResolverDialog extends Vue {
   readonly getPlayerScore!: (name: string) => number;
   readonly grelottineResolverDialog!: { isVisible: boolean };
 
-  diceRoll?: DiceRoll = undefined;
+  diceForm: DiceForm = getInitialDiceForm();
   form: GrelottineForm = { ...INITIAL_FORM };
   isFormValid = true;
 
@@ -219,14 +230,12 @@ export default class GrelottineResolverDialog extends Vue {
     });
   }
 
+  get isDiceFormValid(): boolean {
+    return isDiceFormValid(this.diceForm);
+  }
+
   get isValidateButtonEnabled(): boolean {
-    return true;
-    // TODO DAU : handle the validation
-    // console.log({
-    //   "this.isFormValid": this.isFormValid,
-    //   "!!this.diceRoll": !!this.diceRoll,
-    // });
-    // return this.isFormValid && !!this.diceRoll;
+    return this.isFormValid && this.isDiceFormValid;
   }
 
   get grelottineAmountRules(): ReadonlyArray<inputRuleFunction> {
@@ -272,18 +281,24 @@ export default class GrelottineResolverDialog extends Vue {
   }
 
   confirm(): void {
-    if (!this.isFormComplete(this.form) || !this.diceRoll) {
+    if (!this.isFormComplete(this.form) || !isDiceFormValid(this.diceForm)) {
       return;
     }
+
+    const diceRoll: DiceRoll = [...this.diceForm];
+
     const resolution: GrelottineResolution = {
       gambledAmount: this.form.gambledAmount,
       grelottinBet: this.form.grelottinBet,
       challengedPlayer: this.form.challengedPlayer,
       grelottinPlayer: this.form.grelottinPlayer,
-      diceRoll: this.diceRoll,
+      diceRoll,
     };
-    this.$store.dispatch("currentGame/play/resolveGrelottine", resolution);
+
+    this.diceForm = getInitialDiceForm();
     (this.$refs.formRef as VForm).reset();
+
+    this.$store.dispatch("currentGame/play/resolveGrelottine", resolution);
   }
 
   cancel(): void {
@@ -311,4 +326,8 @@ export default class GrelottineResolverDialog extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.challenged-player-hint {
+  color: #2962ff;
+}
+</style>

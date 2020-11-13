@@ -115,7 +115,7 @@ import MainDialogCard from "@/components/MainDialogCard.vue";
 import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
 import BevueMenuAction from "@/components/BevueMenuAction.vue";
 import { isBidValid, SiropForm } from "@/domain/level-one/sirop";
-import DieCard from "@/components/play-a-turn-actions/DieCard.vue";
+import DieCard from "@/components/dice/DieCard.vue";
 import { SelectItemsType, SelectItemValue, VForm } from "@/vuetify.interface";
 import {
   BidType,
@@ -137,8 +137,7 @@ function getInitialForm(): SiropForm {
   components: {
     DieCard,
     BevueMenuAction,
-    PlayATurnWithDice: () =>
-      import("@/components/play-a-turn-actions/PlayATurnWithDice.vue"),
+    PlayATurnWithDice: () => import("@/components/dice/DiceRollInput.vue"),
     MainDialogCard,
   },
   computed: {

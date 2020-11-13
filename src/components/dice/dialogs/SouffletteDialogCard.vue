@@ -86,8 +86,7 @@ const INITIAL_FORM: SouffletteForm = {
 @Component({
   components: {
     BevueMenuAction,
-    PlayATurnWithDice: () =>
-      import("@/components/play-a-turn-actions/PlayATurnWithDice.vue"),
+    PlayATurnWithDice: () => import("@/components/dice/DiceRollInput.vue"),
     MainDialogCard,
   },
 })

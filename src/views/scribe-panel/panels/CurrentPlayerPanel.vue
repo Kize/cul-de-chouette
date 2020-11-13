@@ -15,8 +15,14 @@
     </v-card-title>
 
     <v-card-text>
-      <PlayATurnWithDice @confirm="basicPlay"></PlayATurnWithDice>
+      <DiceRollInput v-model="diceForm"></DiceRollInput>
     </v-card-text>
+
+    <v-card-actions class="d-flex justify-end pb-8 pr-12">
+      <v-btn color="success" :disabled="!isFormValid" @click="basicPlay">
+        Valider
+      </v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 
@@ -25,12 +31,17 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import { Player } from "@/domain/player";
 import MenuAction from "@/components/MenuAction.vue";
 import { mapGetters, mapState } from "vuex";
-import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDice.vue";
+import DiceRollInput from "@/components/dice/DiceRollInput.vue";
+import {
+  DiceForm,
+  getInitialDiceForm,
+  isDiceFormValid,
+} from "@/components/dice/dice-form";
 import { DiceRoll } from "../../../../domain/rules/dice-rule";
 
 @Component({
   components: {
-    PlayATurnWithDice,
+    DiceRollInput,
     MenuAction,
   },
   computed: {
@@ -46,8 +57,18 @@ import { DiceRoll } from "../../../../domain/rules/dice-rule";
 export default class CurrentPlayerPanel extends Vue {
   @Prop() currentPlayer!: Player;
 
-  basicPlay(diceRoll: DiceRoll): void {
-    this.$store.dispatch("currentGame/play/playATurn", diceRoll);
+  diceForm: DiceForm = getInitialDiceForm();
+
+  get isFormValid(): boolean {
+    return isDiceFormValid(this.diceForm);
+  }
+
+  basicPlay(): void {
+    if (isDiceFormValid(this.diceForm)) {
+      const diceRoll: DiceRoll = [...this.diceForm];
+      this.diceForm = getInitialDiceForm();
+      this.$store.dispatch("currentGame/play/playATurn", diceRoll);
+    }
   }
 }
 </script>
