@@ -122,6 +122,7 @@ export const MainPlayableActionsStoreModule: Module<
     cancelChouetteVelute(): void {
       chouetteVeluteRuleResolver.reject();
     },
+
     resolveSirop(_, attrapeOiseauResolution: AttrapeOiseauResolution): void {
       siropRuleResolver.resolve(attrapeOiseauResolution);
     },

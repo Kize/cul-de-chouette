@@ -35,7 +35,7 @@ import { DiceRoll } from "../../../../domain/rules/dice-rule";
   },
   computed: {
     ...mapState("currentGame", ["players", "turnNumber"]),
-    ...mapGetters("currentGame/rules", ["getRules"]),
+    ...mapGetters("currentGame/rules", ["rules"]),
     ...mapGetters("currentGame", [
       "isCurrentPlayer",
       "playerNames",

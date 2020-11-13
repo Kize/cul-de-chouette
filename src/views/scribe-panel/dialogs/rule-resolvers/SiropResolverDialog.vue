@@ -26,7 +26,7 @@
                 </v-col>
                 <v-col md="8" cols="12">
                   <v-select
-                    v-if="getRules.levelOne.isAttrapeOiseauEnabled"
+                    v-if="rules.levelOne.isAttrapeOiseauEnabled"
                     label="Joueur ayant fait un attrape-oiseau"
                     v-model="form.playerWhoMakeAttrapeOiseau"
                     clearable
@@ -144,11 +144,11 @@ function getInitialForm(): SiropForm {
   computed: {
     ...mapState("currentGame", ["currentPlayerName", "turnNumber"]),
     ...mapState("currentGame/dialogs", ["siropResolverDialog"]),
-    ...mapGetters("currentGame/rules", ["getRules"]),
+    ...mapGetters("currentGame/rules", ["rules"]),
     ...mapGetters("currentGame", ["playerNames"]),
   },
 })
-export default class SiropDialog extends Vue {
+export default class SiropResolverDialog extends Vue {
   currentPlayerName!: string;
   playerNames!: Array<string>;
   turnNumber?: number;

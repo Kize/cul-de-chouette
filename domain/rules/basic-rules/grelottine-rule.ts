@@ -7,49 +7,7 @@ import {
 } from "../../game-context-event";
 import { Resolver } from "../rule-resolver";
 import { DiceRoll } from "../dice-rule";
-import { HistoryLineType } from "../../../src/domain/history";
-
-export enum GrelottineBet {
-  CHOUETTE = "Chouette",
-  VELUTE = "Velute",
-  CUL_DE_CHOUETTE = "Cul de chouette",
-  CHOUETTE_VELUTE = "Chouette-velute",
-  SIROP_GRELOT = "Sirop-grelot",
-}
-
-const checkRuleEffectsAgainstType = (winningHistoryLine: HistoryLineType) => (
-  ruleEffects: RuleEffects
-) =>
-  ruleEffects.some(
-    (ruleEffect) =>
-      ruleEffect.type === RuleEffectType.CHANGE_SCORE &&
-      ruleEffect.designation === winningHistoryLine
-  );
-
-const checkRuleEffectsAgainstSiropGrelot = (ruleEffects: RuleEffects) =>
-  ruleEffects.some(
-    (ruleEffect) =>
-      ruleEffect.type === RuleEffectType.CHANGE_SCORE &&
-      ruleEffect.designation === HistoryLineType.SIROP &&
-      ruleEffect.score > 0
-  );
-
-const grelottineBetToRuleEffectChecker: Record<
-  GrelottineBet,
-  (r: RuleEffects) => boolean
-> = {
-  [GrelottineBet.CHOUETTE]: checkRuleEffectsAgainstType(
-    HistoryLineType.CHOUETTE
-  ),
-  [GrelottineBet.CHOUETTE_VELUTE]: checkRuleEffectsAgainstType(
-    HistoryLineType.CHOUETTE_VELUTE
-  ),
-  [GrelottineBet.CUL_DE_CHOUETTE]: checkRuleEffectsAgainstType(
-    HistoryLineType.CUL_DE_CHOUETTE
-  ),
-  [GrelottineBet.VELUTE]: checkRuleEffectsAgainstType(HistoryLineType.VELUTE),
-  [GrelottineBet.SIROP_GRELOT]: checkRuleEffectsAgainstSiropGrelot,
-};
+import { HistoryLineType } from "@/domain/history";
 
 export interface GrelottineResolution {
   grelottinPlayer: string;
@@ -69,39 +27,83 @@ export class GrelottineRule implements Rule {
   async applyRule(context: GameContextWrapper): Promise<RuleEffects> {
     const resolution = await this.resolver.getResolution();
 
-      const lastCombinationRuleEffects = await context
-        .asChallengeGrelottine()
-        .runner.handleDiceRoll({
-          event: GameContextEvent.PLAY_TURN,
-          currentPlayerName: resolution.challengedPlayer,
-          diceRoll: resolution.diceRoll,
-        });
+    const lastCombinationRuleEffects = await context
+      .asChallengeGrelottine()
+      .runner.handleDiceRoll({
+        event: GameContextEvent.PLAY_TURN,
+        currentPlayerName: resolution.challengedPlayer,
+        diceRoll: resolution.diceRoll,
+      });
 
-      const isGrelottineWon = grelottineBetToRuleEffectChecker[
-        resolution.grelottinBet
-      ](lastCombinationRuleEffects);
+    const isGrelottineWon = grelottineBetToRuleEffectChecker[
+      resolution.grelottinBet
+    ](lastCombinationRuleEffects);
 
-      const getLoserScore = () => -resolution.gambledAmount;
-      const getWinnerScore = () => resolution.gambledAmount;
+    const getLoserScore = () => -resolution.gambledAmount;
+    const getWinnerScore = () => resolution.gambledAmount;
 
     // TODO DAU : Remove grelottine rule effect
-      return [
-        {
-          type: RuleEffectType.CHANGE_SCORE,
-          designation: HistoryLineType.GRELOTTINE_CHALLENGE,
-          playerName: resolution.grelottinPlayer,
-          score: isGrelottineWon ? getLoserScore() : getWinnerScore(),
-        },
-        {
-          type: RuleEffectType.CHANGE_SCORE,
-          designation: HistoryLineType.GRELOTTINE_CHALLENGE,
-          playerName: resolution.challengedPlayer,
-          score: isGrelottineWon ? getWinnerScore() : getLoserScore(),
-        },
-        ...lastCombinationRuleEffects,
-      ];
+    return [
+      {
+        type: RuleEffectType.CHANGE_SCORE,
+        designation: HistoryLineType.GRELOTTINE_CHALLENGE,
+        playerName: resolution.grelottinPlayer,
+        score: isGrelottineWon ? getLoserScore() : getWinnerScore(),
+      },
+      {
+        type: RuleEffectType.CHANGE_SCORE,
+        designation: HistoryLineType.GRELOTTINE_CHALLENGE,
+        playerName: resolution.challengedPlayer,
+        score: isGrelottineWon ? getWinnerScore() : getLoserScore(),
+      },
+      ...lastCombinationRuleEffects,
+    ];
   }
 }
+
+export enum GrelottineBet {
+  CHOUETTE = "Chouette",
+  VELUTE = "Velute",
+  CUL_DE_CHOUETTE = "Cul de chouette",
+  CHOUETTE_VELUTE = "Chouette-velute",
+  SIROP_GRELOT = "Sirop-grelot",
+}
+
+const grelottineBetToRuleEffectChecker: Record<
+  GrelottineBet,
+  (r: RuleEffects) => boolean
+> = {
+  [GrelottineBet.CHOUETTE]: checkRuleEffectsAgainstType(
+    HistoryLineType.CHOUETTE
+  ),
+  [GrelottineBet.CHOUETTE_VELUTE]: checkRuleEffectsAgainstType(
+    HistoryLineType.CHOUETTE_VELUTE
+  ),
+  [GrelottineBet.CUL_DE_CHOUETTE]: checkRuleEffectsAgainstType(
+    HistoryLineType.CUL_DE_CHOUETTE
+  ),
+  [GrelottineBet.VELUTE]: checkRuleEffectsAgainstType(HistoryLineType.VELUTE),
+  [GrelottineBet.SIROP_GRELOT]: checkRuleEffectsAgainstSiropGrelot,
+};
+
+function checkRuleEffectsAgainstType(winningHistoryLine: HistoryLineType) {
+  return (ruleEffects: RuleEffects) =>
+    ruleEffects.some(
+      (ruleEffect) =>
+        ruleEffect.type === RuleEffectType.CHANGE_SCORE &&
+        ruleEffect.designation === winningHistoryLine
+    );
+}
+
+function checkRuleEffectsAgainstSiropGrelot(ruleEffects: RuleEffects) {
+  return ruleEffects.some(
+    (ruleEffect) =>
+      ruleEffect.type === RuleEffectType.CHANGE_SCORE &&
+      ruleEffect.designation === HistoryLineType.SIROP &&
+      ruleEffect.score > 0
+  );
+}
+
 export function getMaxGrelottinePossibleAmount(
   lowestScore: number,
   challenge: GrelottineBet

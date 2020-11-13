@@ -72,7 +72,7 @@
                 <v-col md="6" cols="12">
                   <v-select
                     label="Défi"
-                    :items="challenges"
+                    :items="grelottineChallengeBets"
                     v-model="form.grelottinBet"
                     :rules="selectChallengeRules"
                     :hint="
@@ -119,20 +119,20 @@
             </v-card>
           </v-col>
         </v-row>
-        <v-row
-          ><v-col cols="2" offset="10"
-            ><v-btn :disabled="!isValidateButtonEnabled" @click="confirm"
-              >Valider</v-btn
-            ></v-col
-          ></v-row
-        >
+        <v-row>
+          <v-col cols="2" offset="10">
+            <v-btn :disabled="!isValidateButtonEnabled" @click="confirm"
+              >Valider
+            </v-btn>
+          </v-col>
+        </v-row>
       </v-form>
     </v-card>
   </v-dialog>
 </template>
 
 <script lang="ts">
-import { Component, Emit, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import BevueMenuAction from "@/components/BevueMenuAction.vue";
 import { GrelottineForm, ValidGrelottineForm } from "@/domain/grelottine";
 import { mapGetters, mapState } from "vuex";
@@ -145,13 +145,14 @@ import {
 } from "@/form-validation/form-validation-rules";
 import { Player } from "@/domain/player";
 import PlayATurnWithDice from "@/components/play-a-turn-actions/PlayATurnWithDice.vue";
-import { VForm } from "@/vuetify.interface";
+import { SelectItemsType, VForm } from "@/vuetify.interface";
 import { DiceRoll } from "../../../../../domain/rules/dice-rule";
 import {
   getMaxGrelottinePossibleAmount,
   GrelottineBet,
   GrelottineResolution,
 } from "../../../../../domain/rules/basic-rules/grelottine-rule";
+import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
 
 const INITIAL_FORM: GrelottineForm = {
   gambledAmount: 0,
@@ -162,7 +163,7 @@ const INITIAL_FORM: GrelottineForm = {
   computed: {
     ...mapState("currentGame", ["players", "turnNumber"]),
     ...mapState("currentGame/dialogs", ["grelottineResolverDialog"]),
-    ...mapGetters("currentGame/rules", ["getRules"]),
+    ...mapGetters("currentGame/rules", ["rules"]),
     ...mapGetters("currentGame", [
       "currentPlayer",
       "getPlayerScore",
@@ -172,17 +173,16 @@ const INITIAL_FORM: GrelottineForm = {
   },
 })
 export default class GrelottineResolverDialog extends Vue {
-  readonly challenges = Object.values(GrelottineBet);
+  // readonly challenges = Object.values(GrelottineBet);
   readonly selectChallengeRules = selectChallengeRules;
   readonly inputPositiveIntegerRules = inputPositiveIntegerRules;
 
+  readonly players!: Array<Player>;
+  readonly rules!: RulesState;
   readonly getPlayerScore!: (name: string) => number;
-  players!: Array<Player>;
-
-  grelottineResolverDialog!: { isVisible: boolean };
+  readonly grelottineResolverDialog!: { isVisible: boolean };
 
   diceRoll?: DiceRoll = undefined;
-
   form: GrelottineForm = { ...INITIAL_FORM };
   isFormValid = true;
 
@@ -204,6 +204,20 @@ export default class GrelottineResolverDialog extends Vue {
         return true;
       },
     ];
+  }
+
+  get grelottineChallengeBets(): Array<SelectItemsType<GrelottineBet>> {
+    return Object.values(GrelottineBet).map((bet: GrelottineBet) => {
+      const disabled =
+        bet === GrelottineBet.SIROP_GRELOT &&
+        !this.rules.levelOne.isSiropEnabled;
+
+      return {
+        text: bet,
+        value: bet,
+        disabled,
+      };
+    });
   }
 
   get isValidateButtonEnabled(): boolean {
@@ -258,10 +272,6 @@ export default class GrelottineResolverDialog extends Vue {
     this.diceRoll = diceRoll;
   }
 
-  private isFormComplete(form: GrelottineForm): form is ValidGrelottineForm {
-    return this.isFormValid;
-  }
-
   confirm(): void {
     if (!this.isFormComplete(this.form) || !this.diceRoll) {
       return;
@@ -276,18 +286,21 @@ export default class GrelottineResolverDialog extends Vue {
     this.$store.dispatch("currentGame/play/resolveGrelottine", resolution);
     (this.$refs.formRef as VForm).reset();
   }
+
   cancel(): void {
     this.form = { ...INITIAL_FORM };
     this.$store.dispatch("currentGame/play/cancelGrelottine");
     (this.$refs.formRef as VForm).reset();
   }
 
+  private isFormComplete(form: GrelottineForm): form is ValidGrelottineForm {
+    return this.isFormValid;
+  }
+
   private get lowestScore(): number | undefined {
     if (this.form.grelottinPlayer && this.form.challengedPlayer) {
-      const grelottinScore: number = this.getPlayerScore(
-        this.form.grelottinPlayer
-      );
-      const challengedPlayerScore: number = this.getPlayerScore(
+      const grelottinScore = this.getPlayerScore(this.form.grelottinPlayer);
+      const challengedPlayerScore = this.getPlayerScore(
         this.form.challengedPlayer
       );
 

@@ -18,7 +18,7 @@ export const RulesStoreModule: Module<RulesState, RootState> = {
     return {} as RulesState;
   },
   getters: {
-    getRules(state: RulesState): RulesState {
+    rules(state: RulesState): RulesState {
       return state;
     },
   },
