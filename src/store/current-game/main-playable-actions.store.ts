@@ -40,27 +40,9 @@ export const MainPlayableActionsStoreModule: Module<
         diceRoll,
       };
 
-      await dispatch("handleGameEvent", gameContext);
-      dispatch("currentGame/handleEndTurn", undefined, { root: true });
-    },
-    async startGrelottineChallenge({ dispatch }): Promise<void> {
-      const grelottineContext: ChallengeGrelottineGameContext = {
-        event: GameContextEvent.CHALLENGE_GRELOTTINE,
-        runner: gameRuleRunner.getRunner(),
-      };
-      await dispatch("handleGameEvent", grelottineContext);
-      await dispatch("currentGame/checkEndGame", null, { root: true });
-    },
-
-    async handleGameEvent(
-      { commit, rootState },
-      gameContext: UnknownGameContext
-    ): Promise<void> {
-      let ruleEffects: RuleEffects;
       try {
-        ruleEffects = await gameRuleRunner
-          .getRunner()
-          .handleDiceRoll(gameContext);
+        await dispatch("handleGameEvent", gameContext);
+        dispatch("currentGame/handleEndTurn", undefined, { root: true });
       } catch (e) {
         const isCancelAResolution = !e;
         if (isCancelAResolution) {
@@ -68,6 +50,31 @@ export const MainPlayableActionsStoreModule: Module<
         }
         throw e;
       }
+    },
+    async startGrelottineChallenge({ dispatch }): Promise<void> {
+      const grelottineContext: ChallengeGrelottineGameContext = {
+        event: GameContextEvent.CHALLENGE_GRELOTTINE,
+        runner: gameRuleRunner.getRunner(),
+      };
+      try {
+        await dispatch("handleGameEvent", grelottineContext);
+        await dispatch("currentGame/checkEndGame", null, { root: true });
+      } catch (e) {
+        const isCancelAResolution = !e;
+        if (isCancelAResolution) {
+          return;
+        }
+        throw e;
+      }
+    },
+
+    async handleGameEvent(
+      { commit, rootState },
+      gameContext: UnknownGameContext
+    ): Promise<void> {
+      const ruleEffects: RuleEffects = await gameRuleRunner
+        .getRunner()
+        .handleDiceRoll(gameContext);
 
       ruleEffects.forEach((ruleEffect) => {
         const gameTurnNumber = rootState.currentGame!.turnNumber;
