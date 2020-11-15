@@ -2,7 +2,7 @@ import { Resolver } from "../rule-resolver";
 import { getVeluteValue, isVelute } from "./velute-rule";
 import { DiceRoll, DiceRule } from "../dice-rule";
 import { RuleEffectEvent, RuleEffects } from "../rule-effect";
-import { PlayTurnGameContext } from "../../game-context-event";
+import { DiceRollGameContext } from "../../game-context-event";
 
 export interface SuiteResolution {
   loosingPlayerName: string;
@@ -22,14 +22,14 @@ export class SuiteRule extends DiceRule {
 
   async applyDiceRule({
     diceRoll,
-    currentPlayerName,
-  }: PlayTurnGameContext): Promise<RuleEffects> {
+    playerName,
+  }: DiceRollGameContext): Promise<RuleEffects> {
     const ruleEffects: RuleEffects = [];
 
     if (isVelute(diceRoll)) {
       ruleEffects.push({
         event: RuleEffectEvent.VELUTE,
-        playerName: currentPlayerName,
+        playerName: playerName,
         score: getVeluteValue(diceRoll),
       });
     }

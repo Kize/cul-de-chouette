@@ -20,8 +20,8 @@ export function testSirotageRule(
 
       const chouetteRule = new ChouetteRule();
 
-      const gameContext = DummyContextBuilder.aPlayTurnContext()
-        .withCurrentPlayerName("Alban")
+      const gameContext = DummyContextBuilder.aDiceRollContext()
+        .withPlayerName("Alban")
         .withDiceRoll([2, 3, 2])
         .build();
 
@@ -36,8 +36,8 @@ export function testSirotageRule(
         lastDieValue: 4,
         bids: [],
       });
-      const gameContext = DummyContextBuilder.aPlayTurnContext()
-        .withCurrentPlayerName("Alban")
+      const gameContext = DummyContextBuilder.aDiceRollContext()
+        .withPlayerName("Alban")
         .withDiceRoll([2, 3, 2])
         .build();
 
@@ -57,8 +57,8 @@ export function testSirotageRule(
         bids: [],
       });
 
-      const gameContext = DummyContextBuilder.aPlayTurnContext()
-        .withCurrentPlayerName("Alban")
+      const gameContext = DummyContextBuilder.aDiceRollContext()
+        .withPlayerName("Alban")
         .withDiceRoll([2, 3, 2])
         .build();
 
@@ -101,8 +101,8 @@ export function testSirotageRule(
         bids,
       });
 
-      const gameContext = DummyContextBuilder.aPlayTurnContext()
-        .withCurrentPlayerName("Alban")
+      const gameContext = DummyContextBuilder.aDiceRollContext()
+        .withPlayerName("Alban")
         .withDiceRoll([2, 3, 2])
         .build();
 
@@ -152,8 +152,8 @@ export function testSirotageRule(
         bids,
       });
 
-      const gameContext = DummyContextBuilder.aPlayTurnContext()
-        .withCurrentPlayerName("Alban")
+      const gameContext = DummyContextBuilder.aDiceRollContext()
+        .withPlayerName("Alban")
         .withDiceRoll([3, 3, 5])
         .build();
 
@@ -186,8 +186,8 @@ describe("resolver params", () => {
     };
     const sirotageRule = new SirotageRule(resolver);
 
-    const gameContext = DummyContextBuilder.aPlayTurnContext()
-      .withCurrentPlayerName("Alban")
+    const gameContext = DummyContextBuilder.aDiceRollContext()
+      .withPlayerName("Alban")
       .withDiceRoll([3, 3, 5])
       .build();
 

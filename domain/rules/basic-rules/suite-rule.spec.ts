@@ -29,7 +29,7 @@ describe("applyRule", () => {
     const rule = new SuiteRule(resolver);
 
     expect(
-      await rule.applyRule(DummyContextBuilder.aPlayTurnContext().build())
+      await rule.applyRule(DummyContextBuilder.aDiceRollContext().build())
     ).toEqual<RuleEffects>([
       {
         event: RuleEffectEvent.SUITE,
@@ -49,7 +49,7 @@ describe("applyRule", () => {
     const rule = new SuiteRule(resolver);
 
     expect(
-      await rule.applyRule(DummyContextBuilder.aPlayTurnContext().build())
+      await rule.applyRule(DummyContextBuilder.aDiceRollContext().build())
     ).toEqual<RuleEffects>([
       {
         event: RuleEffectEvent.SUITE,
@@ -70,9 +70,9 @@ describe("applyRule", () => {
 
     expect(
       await rule.applyRule(
-        DummyContextBuilder.aPlayTurnContext()
+        DummyContextBuilder.aDiceRollContext()
           .withDiceRoll([1, 2, 3])
-          .withCurrentPlayerName("Alban")
+          .withPlayerName("Alban")
           .build()
       )
     ).toEqual<RuleEffects>([

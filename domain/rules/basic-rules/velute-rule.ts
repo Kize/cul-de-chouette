@@ -1,6 +1,6 @@
 import { DiceRoll, DiceRule } from "../dice-rule";
 import { RuleEffectEvent, RuleEffects } from "../rule-effect";
-import { PlayTurnGameContext } from "../../game-context-event";
+import { DiceRollGameContext } from "../../game-context-event";
 
 export class VeluteRule extends DiceRule {
   isApplicableToDiceRoll(diceRoll: DiceRoll): boolean {
@@ -8,15 +8,15 @@ export class VeluteRule extends DiceRule {
   }
 
   applyDiceRule({
-    currentPlayerName,
+    playerName,
     diceRoll,
-  }: PlayTurnGameContext): RuleEffects {
+  }: DiceRollGameContext): RuleEffects {
     const score = getVeluteValue(diceRoll);
 
     return [
       {
         event: RuleEffectEvent.VELUTE,
-        playerName: currentPlayerName,
+        playerName: playerName,
         score,
       },
     ];

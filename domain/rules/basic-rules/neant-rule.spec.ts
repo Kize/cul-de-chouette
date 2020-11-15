@@ -13,8 +13,8 @@ describe("isApplicableToDiceRoll", () => {
 describe("applyRule", () => {
   it("applies a grelottine to the current player", () => {
     const effects = new NeantRule().applyRule(
-      DummyContextBuilder.aPlayTurnContext()
-        .withCurrentPlayerName("Alban")
+      DummyContextBuilder.aDiceRollContext()
+        .withPlayerName("Alban")
         .build()
     );
 
@@ -27,9 +27,7 @@ describe("applyRule", () => {
 
   it("registers a change of score the the current player", async () => {
     const effects = new NeantRule().applyRule(
-      DummyContextBuilder.aPlayTurnContext()
-        .withCurrentPlayerName("Alban")
-        .build()
+      DummyContextBuilder.aDiceRollContext().withPlayerName("Alban").build()
     );
 
     expect(effects).toContainEqual<RuleEffect>({

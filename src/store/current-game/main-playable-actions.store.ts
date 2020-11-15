@@ -9,9 +9,9 @@ import {
   chouetteVeluteRuleResolver,
   gameRuleRunner,
   grelottineRuleResolver,
-  siropRuleResolver,
+  siropRuleResolver, souffletteRuleResolver,
   suiteRuleResolver,
-} from "@/store/current-game/game-rule-runner";
+} from '@/store/current-game/game-rule-runner';
 import { DiceRoll } from "../../../domain/rules/dice-rule";
 import {
   RuleEffectEvent,
@@ -21,10 +21,11 @@ import {
   ApplyBevueGameContext,
   ChallengeGrelottineGameContext,
   GameContextEvent,
-  PlayTurnGameContext,
+  DiceRollGameContext,
   UnknownGameContext,
 } from "../../../domain/game-context-event";
 import { GrelottineResolution } from "../../../domain/rules/basic-rules/grelottine-rule";
+import { SouffletteResolution } from '../../../domain/rules/level-one/soufflette-rule';
 
 type MainPlayableState = Record<string, unknown>;
 
@@ -38,10 +39,11 @@ export const MainPlayableActionsStoreModule: Module<
       { dispatch, rootState },
       diceRoll: DiceRoll
     ): Promise<void> {
-      const gameContext: PlayTurnGameContext = {
-        event: GameContextEvent.PLAY_TURN,
-        currentPlayerName: rootState.currentGame!.currentPlayerName,
+      const gameContext: DiceRollGameContext = {
+        event: GameContextEvent.DICE_ROLL,
+        playerName: rootState.currentGame!.currentPlayerName,
         diceRoll,
+        runner: gameRuleRunner.getRunner(),
       };
 
       try {
@@ -158,6 +160,13 @@ export const MainPlayableActionsStoreModule: Module<
     },
     cancelSirop(): void {
       siropRuleResolver.reject();
+    },
+
+    resolveSoufflette(_, souffletteResolution: SouffletteResolution): void {
+      souffletteRuleResolver.resolve(souffletteResolution);
+    },
+    cancelSoufflette(): void {
+      souffletteRuleResolver.reject();
     },
   },
 };

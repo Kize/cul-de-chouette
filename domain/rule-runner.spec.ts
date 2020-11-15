@@ -21,7 +21,7 @@ describe("handleDiceRoll", () => {
     const runner = new RuleRunner([invalidRule, validRule]);
 
     const diceRoll: DiceRoll = [1, 5, 6];
-    const gameContext = DummyContextBuilder.aPlayTurnContext()
+    const gameContext = DummyContextBuilder.aDiceRollContext()
       .withDiceRoll(diceRoll)
       .build();
     const result = await runner.handleDiceRoll(gameContext.asPlayTurn());

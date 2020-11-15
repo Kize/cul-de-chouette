@@ -14,6 +14,8 @@ import { NeantRule } from "../../../domain/rules/basic-rules/neant-rule";
 import { GrelottineRuleResolver } from "@/store/current-game/resolver/grelottine-rule-resolver";
 import { GrelottineRule } from "../../../domain/rules/basic-rules/grelottine-rule";
 import { BevueRule } from "../../../domain/rules/basic-rules/bevue-rule";
+import { SouffletteRule } from '../../../domain/rules/level-one/soufflette-rule';
+import { SouffletteRuleResolver } from '@/store/current-game/resolver/soufflette-rule-resolver';
 
 class GameRuleRunner {
   private ruleRunner = new RuleRunner([]);
@@ -33,18 +35,20 @@ export const suiteRuleResolver = new SuiteRuleResolver();
 export const chouetteVeluteRuleResolver = new ChouetteVeluteRuleResolver();
 export const siropRuleResolver = new SiropRuleResolver();
 export const grelottineRuleResolver = new GrelottineRuleResolver();
+export const souffletteRuleResolver = new SouffletteRuleResolver();
 
 export enum RuleName {
-  CUL_DE_CHOUETTE,
-  SUITE,
-  CHOUETTE_VELUTE,
-  VELUTE,
   ATTRAPE_OISEAU,
-  SIROTAGE,
-  CHOUETTE,
-  NEANT,
-  GRELOTTINE,
   BEVUE,
+  CHOUETTE,
+  CHOUETTE_VELUTE,
+  CUL_DE_CHOUETTE,
+  GRELOTTINE,
+  NEANT,
+  SIROTAGE,
+  SOUFFLETTE,
+  SUITE,
+  VELUTE,
 }
 
 export const ALL_RULES_ORDERED: Array<{ name: RuleName; rule: Rule }> = [
@@ -66,5 +70,6 @@ export const ALL_RULES_ORDERED: Array<{ name: RuleName; rule: Rule }> = [
   },
   { name: RuleName.SIROTAGE, rule: new SirotageRule(siropRuleResolver) },
   { name: RuleName.CHOUETTE, rule: new ChouetteRule() },
+  { name: RuleName.SOUFFLETTE, rule: new SouffletteRule(souffletteRuleResolver) },
   { name: RuleName.NEANT, rule: new NeantRule() },
 ];

@@ -26,13 +26,13 @@ export class GrelottineRule implements Rule {
   async applyRule(context: GameContextWrapper): Promise<RuleEffects> {
     const resolution = await this.resolver.getResolution();
 
-    const lastCombinationRuleEffects = await context
-      .asChallengeGrelottine()
-      .runner.handleDiceRoll({
-        event: GameContextEvent.PLAY_TURN,
-        currentPlayerName: resolution.challengedPlayer,
-        diceRoll: resolution.diceRoll,
-      });
+    const runner = context.asChallengeGrelottine().runner;
+    const lastCombinationRuleEffects = await runner.handleDiceRoll({
+      event: GameContextEvent.DICE_ROLL,
+      playerName: resolution.challengedPlayer,
+      diceRoll: resolution.diceRoll,
+      runner,
+    });
 
     const isGrelottineWon = lastCombinationRuleEffects.some(
       (lastCombinationRuleEffect) =>

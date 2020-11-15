@@ -26,8 +26,6 @@
             <v-checkbox
               label="La soufflette"
               v-model="form.levelOne.isSouffletteEnabled"
-              messages="La fonctionnalité revient bientôt"
-              :disabled="true"
             ></v-checkbox>
             <v-checkbox
               label="Le sirop"

@@ -23,6 +23,9 @@ export interface DialogsState {
   grelottineResolverDialog: {
     isVisible: boolean;
   };
+  souffletteResolverDialog: {
+    isVisible: boolean;
+  };
 }
 
 export const DialogsStoreModule: Module<DialogsState, RootState> = {
@@ -43,6 +46,9 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
       grelottineResolverDialog: {
         isVisible: false,
       },
+      souffletteResolverDialog: {
+        isVisible: false,
+      },
     };
   },
   getters: {},
@@ -58,6 +64,9 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
     },
     setGrelottineResolverIsVisible(state, isVisible): void {
       state.grelottineResolverDialog.isVisible = isVisible;
+    },
+    setSouffletteResolverIsVisible(state, isVisible): void {
+      state.souffletteResolverDialog.isVisible = isVisible;
     },
     setSiropResolverPayload(
       state,
@@ -92,6 +101,12 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
     },
     closeGrelottineResolver({ commit }): void {
       commit("setGrelottineResolverIsVisible", false);
+    },
+    openSouffletteResolver({ commit }): void {
+      commit("setSouffletteResolverIsVisible", true);
+    },
+    closeSouffletteResolver({ commit }): void {
+      commit("setSouffletteResolverIsVisible", false);
     },
   },
 };

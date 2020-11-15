@@ -44,8 +44,9 @@
 
     <SuiteResolverDialog></SuiteResolverDialog>
     <ChouetteVeluteResolverDialog></ChouetteVeluteResolverDialog>
-    <SiropResolverDialog></SiropResolverDialog>
     <GrelottineResolverDialog></GrelottineResolverDialog>
+    <SouffletteResolverDialog></SouffletteResolverDialog>
+    <SiropResolverDialog></SiropResolverDialog>
 
     <v-dialog v-model="showEndGameDialog" persistent max-width="1000">
       <EndGameDialogCard
@@ -81,9 +82,11 @@ import SuiteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/Sui
 import ChouetteVeluteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/ChouetteVeluteResolverDialog.vue";
 import SiropResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/SiropResolverDialog.vue";
 import GrelottineResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/GrelottineResolverDialog.vue";
+import SouffletteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/SouffletteResolverDialog.vue";
 
 @Component({
   components: {
+    SouffletteResolverDialog,
     GrelottineResolverDialog,
     SiropResolverDialog,
     SuiteResolverDialog,

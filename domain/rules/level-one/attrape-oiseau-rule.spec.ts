@@ -34,8 +34,8 @@ it("applies the sirotage to the player who stole the sirop if attrape oiseau is 
   const rule = new AttrapeOiseauRule(resolver);
 
   const ruleEffects = await rule.applyRule(
-    DummyContextBuilder.aPlayTurnContext()
-      .withCurrentPlayerName("Alban")
+    DummyContextBuilder.aDiceRollContext()
+      .withPlayerName("Alban")
       .withDiceRoll([3, 3, 4])
       .build()
   );
@@ -66,8 +66,8 @@ it("applies the sirotage to the player who stole the sirop if attrape oiseau is 
   const rule = new AttrapeOiseauRule(resolver);
 
   const ruleEffects = await rule.applyRule(
-    DummyContextBuilder.aPlayTurnContext()
-      .withCurrentPlayerName("Alban")
+    DummyContextBuilder.aDiceRollContext()
+      .withPlayerName("Alban")
       .withDiceRoll([3, 3, 4])
       .build()
   );
@@ -103,8 +103,8 @@ it("handle the fil sirop bet", async () => {
   };
   const attrapeOiseauRule = new AttrapeOiseauRule(resolver);
 
-  const gameContext = DummyContextBuilder.aPlayTurnContext()
-    .withCurrentPlayerName("Alban")
+  const gameContext = DummyContextBuilder.aDiceRollContext()
+    .withPlayerName("Alban")
     .withDiceRoll([2, 3, 2])
     .build();
 
@@ -124,8 +124,8 @@ describe("resolver params", () => {
     };
     const attrapeOiseauRule = new AttrapeOiseauRule(resolver);
 
-    const gameContext = DummyContextBuilder.aPlayTurnContext()
-      .withCurrentPlayerName("Alban")
+    const gameContext = DummyContextBuilder.aDiceRollContext()
+      .withPlayerName("Alban")
       .withDiceRoll([3, 3, 5])
       .build();
 
