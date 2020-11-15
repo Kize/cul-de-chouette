@@ -112,7 +112,7 @@ import {
 } from "@/store/current-game/current-game.interface";
 import { sortStrings } from "@/domain/sort";
 import {
-  NotImplementedHistoryLineType,
+  NotImplementedRuleEffectEvent,
   RuleEffectEvent,
 } from "../../../../domain/rules/rule-effect";
 
@@ -171,7 +171,7 @@ export default class PlayersBanner extends Vue {
   get lineTypes(): Array<string> {
     const implementedLineTypes = Object.values(RuleEffectEvent);
     const notImplementedLineTypes = Object.values(
-      NotImplementedHistoryLineType
+      NotImplementedRuleEffectEvent
     );
     const godModLineTypes = Object.values(GodModLineType);
 

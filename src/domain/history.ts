@@ -1,5 +1,5 @@
 import {
-  NotImplementedHistoryLineType,
+  NotImplementedRuleEffectEvent,
   RuleEffectEvent,
 } from "../../domain/rules/rule-effect";
 
@@ -9,7 +9,7 @@ export enum GodModLineType {
 
 export type AllHistoryLineTypes =
   | RuleEffectEvent
-  | NotImplementedHistoryLineType
+  | NotImplementedRuleEffectEvent
   | GodModLineType;
 
 export interface HistoryLine {
@@ -65,7 +65,7 @@ export function getAmount(type: RuleEffectEvent, value: number): number {
     case RuleEffectEvent.VELUTE:
     case RuleEffectEvent.CHOUETTE_VELUTE_WON:
     case RuleEffectEvent.CHOUETTE_VELUTE_LOST:
-    case RuleEffectEvent.CHOUETTE_VELUTE_NOT_CLAIMED:
+    case RuleEffectEvent.CHOUETTE_VELUTE_STOLEN:
       return 2 * value ** 2;
     case RuleEffectEvent.CUL_DE_CHOUETTE:
       return 40 + 10 * value;

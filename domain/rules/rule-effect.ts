@@ -12,7 +12,7 @@ export enum RuleEffectEvent {
   CHOUETTE = "Chouette",
   VELUTE = "Velute",
   SUITE = "Suite",
-  CHOUETTE_VELUTE_NOT_CLAIMED = "Chouette velute non clammée",
+  CHOUETTE_VELUTE_STOLEN = "Chouette velute volée",
   CUL_DE_CHOUETTE = "Cul de chouette",
   SLOUBI = "Sloubi",
   SOUFFLETTE = "Soufflette",
@@ -31,7 +31,7 @@ export enum RuleEffectEvent {
   ADD_GRELOTTINE = "Grelottine ajoutée",
 }
 
-export enum NotImplementedHistoryLineType {
+export enum NotImplementedRuleEffectEvent {
   POULETTE = "La poulette",
   CIVET = "Le civet",
   GRAINES = "Graines",

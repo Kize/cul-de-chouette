@@ -172,7 +172,7 @@ export const dieValueToBidType = new Map([
   [6, BidType.CHOUETTE],
 ]);
 
-export function canBetPlayerValidateIsBet(
+export function isPlayerBidClaimable(
   chouetteValue: DieValue,
   playerBid: BidType,
   siropDieValue: DieValue

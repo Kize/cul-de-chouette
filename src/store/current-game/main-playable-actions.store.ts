@@ -81,35 +81,33 @@ export const MainPlayableActionsStoreModule: Module<
 
       ruleEffects.forEach((ruleEffect) => {
         const gameTurnNumber = rootState.currentGame!.turnNumber;
+        const playerTurnNumber =
+          rootState.currentGame!.currentPlayerName === ruleEffect.playerName
+            ? gameTurnNumber
+            : undefined;
+
+        const apply: HistoryLineApply = {
+          playerName: ruleEffect.playerName,
+          amount: ruleEffect.score,
+          designation: ruleEffect.event,
+          turnNumber: playerTurnNumber,
+        };
+
+        commit("currentGame/addHistoryLine", apply, {
+          root: true,
+        });
+
         switch (ruleEffect.event) {
           case RuleEffectEvent.ADD_GRELOTTINE:
             commit("currentGame/addGrelottine", ruleEffect.playerName, {
               root: true,
             });
-            return;
+            break;
           case RuleEffectEvent.REMOVE_GRELOTTINE:
             commit("currentGame/removeGrelottine", ruleEffect.playerName, {
               root: true,
             });
-            return;
-          default: {
-            const turnNumber =
-              rootState.currentGame!.currentPlayerName === ruleEffect.playerName
-                ? gameTurnNumber
-                : undefined;
-
-            const apply: HistoryLineApply = {
-              playerName: ruleEffect.playerName,
-              amount: ruleEffect.score,
-              designation: ruleEffect.event,
-              turnNumber,
-            };
-
-            commit("currentGame/addHistoryLine", apply, {
-              root: true,
-            });
-            return;
-          }
+            break;
         }
       });
     },

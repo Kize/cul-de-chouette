@@ -64,7 +64,7 @@ describe("applyRule", () => {
       )
     ).toEqual<RuleEffects>([
       {
-        event: RuleEffectEvent.CHOUETTE_VELUTE_NOT_CLAIMED,
+        event: RuleEffectEvent.CHOUETTE_VELUTE_STOLEN,
         playerName: "Alban",
         score: 0,
       },

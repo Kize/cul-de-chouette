@@ -119,7 +119,7 @@ import DieCard from "@/components/dice/DieCard.vue";
 import { SelectItemsType, SelectItemValue, VForm } from "@/vuetify.interface";
 import {
   BidType,
-  canBetPlayerValidateIsBet,
+  isPlayerBidClaimable,
   PlayableBid,
 } from "../../../../../domain/rules/level-one/sirotage-rule";
 import { selectNameRules } from "@/form-validation/form-validation-rules";
@@ -218,7 +218,7 @@ export default class SiropResolverDialog extends Vue {
       throw new Error("The chouette value is mandatory");
     }
 
-    return canBetPlayerValidateIsBet(
+    return isPlayerBidClaimable(
       this.siropResolverDialog.chouetteValue,
       playerBidType,
       this.form.lastDieValue
