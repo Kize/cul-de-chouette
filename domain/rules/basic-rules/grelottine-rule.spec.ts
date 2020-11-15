@@ -4,8 +4,7 @@ import {
   GrelottineRule,
 } from "./grelottine-rule";
 import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
-import { HistoryLineType } from "../../../src/domain/history";
-import { RuleEffect, RuleEffectType } from "../rule-effect";
+import { RuleEffect, RuleEffectEvent } from "../rule-effect";
 import { Resolver } from "../rule-resolver";
 import { RuleRunner } from "../../rule-runner";
 import { ChouetteRule } from "./chouette-rule";
@@ -54,15 +53,13 @@ describe("applyRule", () => {
     );
 
     expect(ruleEffects).toContainEqual<RuleEffect>({
-      type: RuleEffectType.CHANGE_SCORE,
-      designation: HistoryLineType.GRELOTTINE_CHALLENGE,
+      event: RuleEffectEvent.GRELOTTINE_CHALLENGE_WON,
       playerName: "Alban",
       score: 12,
     });
 
     expect(ruleEffects).toContainEqual<RuleEffect>({
-      type: RuleEffectType.CHANGE_SCORE,
-      designation: HistoryLineType.GRELOTTINE_CHALLENGE,
+      event: RuleEffectEvent.GRELOTTINE_CHALLENGE_LOST,
       playerName: "Delphin",
       score: -12,
     });
@@ -85,7 +82,8 @@ describe("applyRule", () => {
     );
 
     expect(ruleEffects).toContainEqual<RuleEffect>({
-      type: RuleEffectType.REMOVE_GRELOTTINE,
+      event: RuleEffectEvent.REMOVE_GRELOTTINE,
+      score: 0,
       playerName: "Alban",
     });
   });
@@ -109,15 +107,13 @@ describe("applyRule", () => {
     );
 
     expect(ruleEffects).toContainEqual<RuleEffect>({
-      type: RuleEffectType.CHANGE_SCORE,
-      designation: HistoryLineType.GRELOTTINE_CHALLENGE,
+      event: RuleEffectEvent.GRELOTTINE_CHALLENGE_LOST,
       playerName: "Alban",
       score: -32,
     });
 
     expect(ruleEffects).toContainEqual<RuleEffect>({
-      type: RuleEffectType.CHANGE_SCORE,
-      designation: HistoryLineType.GRELOTTINE_CHALLENGE,
+      event: RuleEffectEvent.GRELOTTINE_CHALLENGE_WON,
       playerName: "Delphin",
       score: 32,
     });
@@ -137,8 +133,7 @@ describe("applyRule", () => {
     const rule = new GrelottineRule(resolver);
     const ruleRunner = <RuleRunner>{};
     const aRuleEffect = {
-      type: RuleEffectType.CHANGE_SCORE,
-      designation: HistoryLineType.CUL_DE_CHOUETTE,
+      event: RuleEffectEvent.CUL_DE_CHOUETTE,
       playerName: "Delphin",
       score: 70,
     };

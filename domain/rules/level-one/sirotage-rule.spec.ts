@@ -7,9 +7,8 @@ import {
 } from "./sirotage-rule";
 
 import { ChouetteRule } from "../basic-rules/chouette-rule";
-import { HistoryLineType } from "../../../src/domain/history";
 import { RuleResolver } from "../rule-resolver";
-import { RuleEffectType } from "../rule-effect";
+import { RuleEffect, RuleEffectEvent, RuleEffects } from "../rule-effect";
 import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
 
 export function testSirotageRule(
@@ -42,9 +41,10 @@ export function testSirotageRule(
         .withDiceRoll([2, 3, 2])
         .build();
 
-      expect(await sirotageRule.applyRule(gameContext)).toContainEqual({
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP,
+      expect(await sirotageRule.applyRule(gameContext)).toContainEqual<
+        RuleEffect
+      >({
+        event: RuleEffectEvent.SIROP_LOST,
         playerName: "Alban",
         score: -4,
       });
@@ -62,9 +62,10 @@ export function testSirotageRule(
         .withDiceRoll([2, 3, 2])
         .build();
 
-      expect(await sirotageRule.applyRule(gameContext)).toContainEqual({
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP,
+      expect(await sirotageRule.applyRule(gameContext)).toContainEqual<
+        RuleEffect
+      >({
+        event: RuleEffectEvent.SIROP_WON,
         playerName: "Alban",
         score: 60,
       });
@@ -106,30 +107,26 @@ export function testSirotageRule(
         .build();
 
       const ruleEffects = await sirotageRule.applyRule(gameContext);
-      expect(ruleEffects).toContainEqual({
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP_CHALLENGE,
+      expect(ruleEffects).toContainEqual<RuleEffect>({
+        event: RuleEffectEvent.SIROP_BET_LOST,
         playerName: "Alban",
         score: -5,
       });
 
-      expect(ruleEffects).toContainEqual({
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP_CHALLENGE,
+      expect(ruleEffects).toContainEqual<RuleEffect>({
+        event: RuleEffectEvent.SIROP_BET_WON,
         playerName: "DelphinWinner",
         score: 25,
       });
 
-      expect(ruleEffects).toContainEqual({
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP_CHALLENGE,
+      expect(ruleEffects).toContainEqual<RuleEffect>({
+        event: RuleEffectEvent.SIROP_BET_WON_BUT_NOT_CLAIMED,
         playerName: "NathanTooSlowToWin",
         score: 0,
       });
 
-      expect(ruleEffects).toContainEqual({
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP_CHALLENGE,
+      expect(ruleEffects).toContainEqual<RuleEffect>({
+        event: RuleEffectEvent.SIROP_BET_WON,
         playerName: "JulesNotBetting",
         score: 0,
       });
@@ -161,16 +158,14 @@ export function testSirotageRule(
         .build();
 
       const ruleEffects = await sirotageRule.applyRule(gameContext);
-      expect(ruleEffects).toContainEqual({
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP_CHALLENGE,
+      expect(ruleEffects).toContainEqual<RuleEffect>({
+        event: RuleEffectEvent.SIROP_BET_WON,
         playerName: "Alban",
         score: 25,
       });
 
-      expect(ruleEffects).toContainEqual({
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP_CHALLENGE,
+      expect(ruleEffects).toContainEqual<RuleEffect>({
+        event: RuleEffectEvent.SIROP_BET_WON_BUT_NOT_CLAIMED,
         playerName: "DelphinTooSlow",
         score: 0,
       });

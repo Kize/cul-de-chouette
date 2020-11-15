@@ -6,14 +6,8 @@ import {
   SirotageRule,
 } from "./sirotage-rule";
 import { Resolver } from "../rule-resolver";
-import { HistoryLineType } from "@/domain/history";
 import { DiceRoll, DieValue } from "../dice-rule";
-import {
-  ChangeScoreRuleEffect,
-  RuleEffect,
-  RuleEffects,
-  RuleEffectType,
-} from "../rule-effect";
+import { RuleEffect, RuleEffectEvent, RuleEffects } from "../rule-effect";
 import { PlayTurnGameContext } from "../../game-context-event";
 
 export type AttrapeOiseauResolution =
@@ -54,8 +48,7 @@ export class AttrapeOiseauRule extends SirotageRule {
   ): RuleEffect {
     if (playerBid.playerBid === BidType.FILE_SIROP) {
       return {
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.SIROP_CHALLENGE,
+        event: RuleEffectEvent.SIROP_BET_WON,
         playerName: playerBid.playerName,
         score: 0,
       };
@@ -82,7 +75,7 @@ export class AttrapeOiseauRule extends SirotageRule {
       return [this.getChouetteRuleEffect(currentPlayerName, diceRoll)];
     }
 
-    let attrapeOiseauRuleEffect: ChangeScoreRuleEffect;
+    let attrapeOiseauRuleEffect: RuleEffect;
     if (resolution.playerWhoMakeAttrapeOiseau) {
       const sirotageRuleEffect = await this.getSirotageRuleEffect(
         resolution,
@@ -91,12 +84,15 @@ export class AttrapeOiseauRule extends SirotageRule {
       );
       attrapeOiseauRuleEffect = {
         ...sirotageRuleEffect,
-        designation: HistoryLineType.ATTRAPE_OISEAU,
+        event:
+          sirotageRuleEffect.event === RuleEffectEvent.SIROP_WON
+            ? RuleEffectEvent.ATTRAPE_OISEAU_WON
+            : RuleEffectEvent.ATTRAPE_OISEAU_LOST,
       };
-      initialChouetteRuleEffect = {
-        ...this.getChouetteRuleEffect(currentPlayerName, diceRoll),
-        designation: HistoryLineType.ATTRAPE_OISEAU,
-      };
+      initialChouetteRuleEffect = this.getChouetteRuleEffect(
+        currentPlayerName,
+        diceRoll
+      );
     } else {
       attrapeOiseauRuleEffect = await this.getSirotageRuleEffect(
         resolution,

@@ -1,7 +1,6 @@
-import { VeluteRule } from './velute-rule';
-import { HistoryLineType } from '../../../src/domain/history';
-import { RuleEffects, RuleEffectType } from '../rule-effect';
-import { DummyContextBuilder } from '../../tests/dummy-game-context-builder';
+import { VeluteRule } from "./velute-rule";
+import { RuleEffectEvent, RuleEffects } from "../rule-effect";
+import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
 
 describe("isApplicableToDiceRoll", () => {
   it("returns true if two dice sum equals the third one", () => {
@@ -26,13 +25,12 @@ describe("applyRule", () => {
         .build()
     );
 
-    expect(effects).toEqual([
+    expect(effects).toEqual<RuleEffects>([
       {
-        type: RuleEffectType.CHANGE_SCORE,
         playerName: "Alban",
-        designation: HistoryLineType.VELUTE,
+        event: RuleEffectEvent.VELUTE,
         score: 32,
       },
-    ] as RuleEffects);
+    ]);
   });
 });

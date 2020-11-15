@@ -1,6 +1,5 @@
 import { NeantRule } from "./neant-rule";
-import { HistoryLineType } from "../../../src/domain/history";
-import { RuleEffect, RuleEffectType } from "../rule-effect";
+import { RuleEffect, RuleEffectEvent } from "../rule-effect";
 import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
 
 describe("isApplicableToDiceRoll", () => {
@@ -20,8 +19,9 @@ describe("applyRule", () => {
     );
 
     expect(effects).toContainEqual<RuleEffect>({
-      type: RuleEffectType.ADD_GRELOTTINE,
+      event: RuleEffectEvent.ADD_GRELOTTINE,
       playerName: "Alban",
+      score: 0,
     });
   });
 
@@ -33,8 +33,7 @@ describe("applyRule", () => {
     );
 
     expect(effects).toContainEqual<RuleEffect>({
-      type: RuleEffectType.CHANGE_SCORE,
-      designation: HistoryLineType.NEANT,
+      event: RuleEffectEvent.NEANT,
       playerName: "Alban",
       score: 0,
     });

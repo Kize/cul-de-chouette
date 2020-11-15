@@ -1,8 +1,10 @@
-import { ChouetteVeluteResolution, ChouetteVeluteRule } from './chouette-velute-rule';
+import {
+  ChouetteVeluteResolution,
+  ChouetteVeluteRule,
+} from "./chouette-velute-rule";
 
-import { HistoryLineType } from "../../../src/domain/history";
-import { RuleEffects, RuleEffectType } from '../rule-effect';
-import { DummyContextBuilder } from '../../tests/dummy-game-context-builder';
+import { RuleEffectEvent, RuleEffects } from "../rule-effect";
+import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
 
 describe("isApplicableToDiceRoll", () => {
   it("returns true if two dice have the same value and those two dice sum equals the third one", () => {
@@ -35,14 +37,13 @@ describe("applyRule", () => {
           .withDiceRoll([2, 2, 4])
           .build()
       )
-    ).toEqual([
+    ).toEqual<RuleEffects>([
       {
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.CHOUETTE_VELUTE,
+        event: RuleEffectEvent.CHOUETTE_VELUTE_WON,
         playerName: "Alban",
         score: 32,
       },
-    ] as RuleEffects);
+    ]);
   });
 
   it("returns a positive change of score for a claimer, and a neutral change of score for the current player", async () => {
@@ -61,20 +62,18 @@ describe("applyRule", () => {
           .withDiceRoll([2, 2, 4])
           .build()
       )
-    ).toEqual([
+    ).toEqual<RuleEffects>([
       {
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.CHOUETTE_VELUTE,
+        event: RuleEffectEvent.CHOUETTE_VELUTE_STOLEN,
         playerName: "Alban",
         score: 0,
       },
       {
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.CHOUETTE_VELUTE,
+        event: RuleEffectEvent.CHOUETTE_VELUTE_WON,
         playerName: "Delphin",
         score: 32,
       },
-    ] as RuleEffects);
+    ]);
   });
 
   it("returns a negative change of score for every claimers", async () => {
@@ -93,19 +92,17 @@ describe("applyRule", () => {
           .withDiceRoll([3, 3, 6])
           .build()
       )
-    ).toEqual([
+    ).toEqual<RuleEffects>([
       {
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.CHOUETTE_VELUTE,
+        event: RuleEffectEvent.CHOUETTE_VELUTE_LOST,
         playerName: "Alban",
         score: -72,
       },
       {
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.CHOUETTE_VELUTE,
+        event: RuleEffectEvent.CHOUETTE_VELUTE_LOST,
         playerName: "Delphin",
         score: -72,
       },
-    ] as RuleEffects);
+    ]);
   });
 });

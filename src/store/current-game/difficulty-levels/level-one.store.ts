@@ -13,9 +13,8 @@ export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
   state(): LevelOneState {
     return {
       isSouffletteEnabled: false,
-      // TODO DAU : add the form to active rule
-      isSiropEnabled: true,
-      isAttrapeOiseauEnabled: true,
+      isSiropEnabled: false,
+      isAttrapeOiseauEnabled: false,
     };
   },
   mutations: {

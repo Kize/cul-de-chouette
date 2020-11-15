@@ -1,7 +1,6 @@
-import { CulDeChouetteRule } from './cul-de-chouette-rule';
-import { HistoryLineType } from '../../../src/domain/history';
-import { RuleEffects, RuleEffectType } from '../rule-effect';
-import { DummyContextBuilder } from '../../tests/dummy-game-context-builder';
+import { CulDeChouetteRule } from "./cul-de-chouette-rule";
+import { RuleEffectEvent, RuleEffects } from "../rule-effect";
+import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
 
 describe("isApplicableToDiceRoll", () => {
   it("returns true if all dice have the same value", () => {
@@ -26,13 +25,12 @@ describe("applyRule", () => {
         .build()
     );
 
-    expect(effects).toEqual([
+    expect(effects).toEqual<RuleEffects>([
       {
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.CUL_DE_CHOUETTE,
+        event: RuleEffectEvent.CUL_DE_CHOUETTE,
         playerName: "Alban",
         score: 60,
-      }
-    ] as RuleEffects);
+      },
+    ]);
   });
 });

@@ -1,6 +1,5 @@
-import { HistoryLineType } from "@/domain/history";
 import { DiceRoll, DiceRule } from "../dice-rule";
-import { RuleEffects, RuleEffectType } from "../rule-effect";
+import { RuleEffectEvent, RuleEffects } from "../rule-effect";
 import { PlayTurnGameContext } from "../../game-context-event";
 
 export class VeluteRule extends DiceRule {
@@ -16,8 +15,7 @@ export class VeluteRule extends DiceRule {
 
     return [
       {
-        type: RuleEffectType.CHANGE_SCORE,
-        designation: HistoryLineType.VELUTE,
+        event: RuleEffectEvent.VELUTE,
         playerName: currentPlayerName,
         score,
       },
