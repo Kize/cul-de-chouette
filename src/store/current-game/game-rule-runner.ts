@@ -13,6 +13,7 @@ import { ChouetteRule } from "../../../domain/rules/basic-rules/chouette-rule";
 import { NeantRule } from "../../../domain/rules/basic-rules/neant-rule";
 import { GrelottineRuleResolver } from "@/store/current-game/resolver/grelottine-rule-resolver";
 import { GrelottineRule } from "../../../domain/rules/basic-rules/grelottine-rule";
+import { BevueRule } from "../../../domain/rules/basic-rules/bevue-rule";
 
 class GameRuleRunner {
   private ruleRunner = new RuleRunner([]);
@@ -43,10 +44,15 @@ export enum RuleName {
   CHOUETTE,
   NEANT,
   GRELOTTINE,
+  BEVUE,
 }
 
 export const ALL_RULES_ORDERED: Array<{ name: RuleName; rule: Rule }> = [
-  { name: RuleName.GRELOTTINE, rule: new GrelottineRule(grelottineRuleResolver) },
+  {
+    name: RuleName.GRELOTTINE,
+    rule: new GrelottineRule(grelottineRuleResolver),
+  },
+  { name: RuleName.BEVUE, rule: new BevueRule() },
   { name: RuleName.CUL_DE_CHOUETTE, rule: new CulDeChouetteRule() },
   { name: RuleName.SUITE, rule: new SuiteRule(suiteRuleResolver) },
   {

@@ -1,7 +1,7 @@
 import { DiceRoll } from "../rules/dice-rule";
 import { GameContextEvent, GameContextWrapper } from "../game-context-event";
 import { RuleRunner } from "../rule-runner";
-import {NeantRule} from "../rules/basic-rules/neant-rule";
+import { NeantRule } from "../rules/basic-rules/neant-rule";
 
 export class DummyContextBuilder {
   static aPlayTurnContext(): DummyPlayTurnContextBuilder {
@@ -10,6 +10,10 @@ export class DummyContextBuilder {
 
   static aGrelottineContext(): DummyGrelottineContextBuilder {
     return new DummyGrelottineContextBuilder();
+  }
+
+  static aBevueContext(): DummyBevueContextBuilder {
+    return new DummyBevueContextBuilder();
   }
 }
 
@@ -38,15 +42,32 @@ class DummyPlayTurnContextBuilder {
 
 class DummyGrelottineContextBuilder {
   private ruleRunner: RuleRunner = new RuleRunner([new NeantRule()]);
+
+  withRuleRunner(ruleRunner: RuleRunner): this {
+    this.ruleRunner = ruleRunner;
+    return this;
+  }
+
   build(): GameContextWrapper {
     return new GameContextWrapper({
       event: GameContextEvent.CHALLENGE_GRELOTTINE,
       runner: this.ruleRunner,
     });
   }
+}
 
-  withRuleRunner(ruleRunner: RuleRunner): this {
-    this.ruleRunner = ruleRunner;
+class DummyBevueContextBuilder {
+  private playerWhoMadeABevue = "APlayerName";
+
+  withPlayerWhoMadeABevue(playerWhoMadeABevue: string): this {
+    this.playerWhoMadeABevue = playerWhoMadeABevue;
     return this;
+  }
+
+  build(): GameContextWrapper {
+    return new GameContextWrapper({
+      event: GameContextEvent.APPLY_BEVUE,
+      playerWhoMadeABevue: this.playerWhoMadeABevue,
+    });
   }
 }
