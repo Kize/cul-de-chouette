@@ -3,8 +3,16 @@ import { RuleEffectEvent, RuleEffects } from "../rule-effect";
 import { DiceRollGameContext } from "../../game-context-event";
 import { Resolver } from "../rule-resolver";
 
-export interface SouffletteResolution {
-  isChallenge: boolean;
+export type SouffletteResolution =
+  | NoChallengeSouffletteResolution
+  | ChallengeSouffletteResolution;
+
+interface NoChallengeSouffletteResolution {
+  isChallenge: false;
+}
+
+interface ChallengeSouffletteResolution {
+  isChallenge: true;
   challengedPlayer: string;
   diceThrowsNumber: 1 | 2 | 3;
   diceRoll: DiceRoll;

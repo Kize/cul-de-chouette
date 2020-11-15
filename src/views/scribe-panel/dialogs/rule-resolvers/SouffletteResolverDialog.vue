@@ -105,8 +105,12 @@ export default class SouffletteResolverDialog extends Vue {
   }
 
   noChallenge(): void {
-    this.form.isChallenge = false;
-    this.confirm();
+    const resolution: SouffletteResolution = {
+      isChallenge: false,
+    };
+
+    this.resetForms();
+    this.$store.dispatch("currentGame/play/resolveSoufflette", resolution);
   }
 
   cancel(): void {
@@ -117,7 +121,7 @@ export default class SouffletteResolverDialog extends Vue {
   confirm(): void {
     if (this.form.challengedPlayer && isDiceFormValid(this.diceForm)) {
       const resolution: SouffletteResolution = {
-        isChallenge: this.form.isChallenge,
+        isChallenge: true,
         challengedPlayer: this.form.challengedPlayer,
         diceThrowsNumber: this.form.diceThrowsNumber,
         diceRoll: [...this.diceForm],
