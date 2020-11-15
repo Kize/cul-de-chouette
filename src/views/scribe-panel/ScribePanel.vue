@@ -69,7 +69,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { GameStatus } from "@/store/current-game/current-game.interface";
 import { mapGetters, mapState } from "vuex";
-import { Player } from "@/domain/player";
+import { Player } from "../../../domain/player";
 import PlayersBanner from "@/views/scribe-panel/components/PlayersBanner.vue";
 import CurrentPlayerPanel from "@/views/scribe-panel/panels/CurrentPlayerPanel.vue";
 import MainActionsPanel from "@/views/scribe-panel/panels/MainActionsPanel.vue";

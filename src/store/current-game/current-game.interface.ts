@@ -1,4 +1,4 @@
-import { Player } from "@/domain/player";
+import { Player } from "../../../domain/player";
 import { AllHistoryLineTypes } from "@/domain/history";
 import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
 

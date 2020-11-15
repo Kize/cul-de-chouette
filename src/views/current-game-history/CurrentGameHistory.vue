@@ -60,7 +60,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import { ROUTES } from "@/router";
 import { mapGetters, mapState } from "vuex";
-import { computePlayerScore, Player } from "@/domain/player";
+import { computePlayerScore, Player } from "../../../domain/player";
 
 @Component({
   components: {},

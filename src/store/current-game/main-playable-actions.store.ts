@@ -9,9 +9,10 @@ import {
   chouetteVeluteRuleResolver,
   gameRuleRunner,
   grelottineRuleResolver,
-  siropRuleResolver, souffletteRuleResolver,
+  siropRuleResolver,
+  souffletteRuleResolver,
   suiteRuleResolver,
-} from '@/store/current-game/game-rule-runner';
+} from "@/store/current-game/game-rule-runner";
 import { DiceRoll } from "../../../domain/rules/dice-rule";
 import {
   RuleEffectEvent,
@@ -25,7 +26,7 @@ import {
   UnknownGameContext,
 } from "../../../domain/game-context-event";
 import { GrelottineResolution } from "../../../domain/rules/basic-rules/grelottine-rule";
-import { SouffletteResolution } from '../../../domain/rules/level-one/soufflette-rule';
+import { SouffletteResolution } from "../../../domain/rules/level-one/soufflette-rule";
 
 type MainPlayableState = Record<string, unknown>;
 

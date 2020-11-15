@@ -58,9 +58,9 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import MainDialogCard from "@/components/MainDialogCard.vue";
-import { Player } from "@/domain/player";
+import { Player } from "../../../../../domain/player";
 import { selectNameRules } from "@/form-validation/form-validation-rules";
-import { getInitialForm, SouffletteForm } from "@/domain/soufflette";
+import { getInitialForm, SouffletteForm } from "@/domain/level-one/soufflette";
 import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
 import BevueMenuAction from "@/components/BevueMenuAction.vue";
 import { VForm } from "@/vuetify.interface";

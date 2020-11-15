@@ -69,7 +69,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import BevueMenuAction from "@/components/BevueMenuAction.vue";
 import { SloubiActionPayload } from "@/store/current-game/current-game.interface";
-import { Player } from "@/domain/player";
+import { Player } from "../../../../domain/player";
 import { mapGetters } from "vuex";
 import SloubiDialogCard from "@/views/scribe-panel/dialogs/SloubiDialogCard.vue";
 import GrelottineDialogCard from "@/views/scribe-panel/dialogs/rule-resolvers/GrelottineResolverDialog.vue";

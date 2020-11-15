@@ -149,7 +149,7 @@ import {
   selectChallengeRules,
   selectNameRules,
 } from "@/form-validation/form-validation-rules";
-import { Player } from "@/domain/player";
+import { Player } from "../../../../../domain/player";
 import DiceRollInput from "@/components/dice/DiceRollInput.vue";
 import { SelectItemsType, VForm } from "@/vuetify.interface";
 import { DiceRoll } from "../../../../../domain/rules/dice-rule";

@@ -14,7 +14,7 @@ import {
   computePlayerScore,
   getNextPlayer,
   Player,
-} from "@/domain/player";
+} from "../../../domain/player";
 import { HistoryLineApply } from "@/domain/history";
 import { RootState } from "@/store/app.state";
 import { MainPlayableActionsStoreModule } from "@/store/current-game/main-playable-actions.store";

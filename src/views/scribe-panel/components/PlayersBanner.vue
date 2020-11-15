@@ -60,7 +60,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { Player } from "@/domain/player";
+import { Player } from "../../../../domain/player";
 import { mapGetters } from "vuex";
 
 @Component({
