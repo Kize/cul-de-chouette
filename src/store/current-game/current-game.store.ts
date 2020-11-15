@@ -15,11 +15,7 @@ import {
   getNextPlayer,
   Player,
 } from "@/domain/player";
-import {
-  HistoryLineAction,
-  HistoryLineApply,
-  mapHistoryActionToApply,
-} from "@/domain/history";
+import { HistoryLineApply } from "@/domain/history";
 import { RootState } from "@/store/app.state";
 import { MainPlayableActionsStoreModule } from "@/store/current-game/main-playable-actions.store";
 import {
@@ -58,7 +54,6 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       return state.players.map((player) => player.name);
     },
     currentPlayer(state): Player {
-      //eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return state.players.find(
         (player) => player.name === state.currentPlayerName
       )!;
@@ -210,6 +205,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         RuleName.CHOUETTE,
         RuleName.NEANT,
         RuleName.GRELOTTINE,
+        RuleName.BEVUE,
       ]);
 
       if (payload.levelOne?.isSouffletteEnabled) {
@@ -296,23 +292,6 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     },
     saveGameToLocalStorage({ state }, storage = localStorage): void {
       storage.setItem("currentGame", JSON.stringify(state));
-    },
-    applyBevue({ state, commit, dispatch }, playerName: string): void {
-      const player = state.players.find(byName(playerName));
-      if (player) {
-        const action: HistoryLineAction = {
-          playerName,
-          value: 0,
-          designation: RuleEffectEvent.BEVUE,
-        };
-        commit("addHistoryLine", mapHistoryActionToApply(action));
-
-        dispatch("saveGameToLocalStorage");
-      } else {
-        throw new Error(
-          "La bévue n'a pas été appliquée. Le joueur n'a pas été trouvé"
-        );
-      }
     },
     addOperations(
       { dispatch, commit, state },

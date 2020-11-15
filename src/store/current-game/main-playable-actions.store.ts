@@ -18,6 +18,7 @@ import {
   RuleEffects,
 } from "../../../domain/rules/rule-effect";
 import {
+  ApplyBevueGameContext,
   ChallengeGrelottineGameContext,
   GameContextEvent,
   PlayTurnGameContext,
@@ -110,6 +111,22 @@ export const MainPlayableActionsStoreModule: Module<
             break;
         }
       });
+    },
+    async applyBevue({ dispatch }, playerWhoMadeABevue: string): Promise<void> {
+      const bevueContext: ApplyBevueGameContext = {
+        event: GameContextEvent.APPLY_BEVUE,
+        playerWhoMadeABevue,
+      };
+      try {
+        await dispatch("handleGameEvent", bevueContext);
+        await dispatch("currentGame/checkEndGame", null, { root: true });
+      } catch (e) {
+        const isCancelAResolution = !e;
+        if (isCancelAResolution) {
+          return;
+        }
+        throw e;
+      }
     },
 
     resolveSuite(_, suiteResolution: SuiteResolution): void {

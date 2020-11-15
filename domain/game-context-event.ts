@@ -1,10 +1,10 @@
 import { DiceRoll } from "./rules/dice-rule";
-import {RuleRunner} from "./rule-runner";
+import { RuleRunner } from "./rule-runner";
 
 export type UnknownGameContext =
-    | PlayTurnGameContext
-    | ChallengeGrelottineGameContext
-    | ApplyBevueGameContext;
+  | PlayTurnGameContext
+  | ChallengeGrelottineGameContext
+  | ApplyBevueGameContext;
 
 export enum GameContextEvent {
   PLAY_TURN,
@@ -47,10 +47,10 @@ export interface PlayTurnGameContext {
 
 export interface ChallengeGrelottineGameContext {
   event: GameContextEvent.CHALLENGE_GRELOTTINE;
-  runner: RuleRunner
+  runner: RuleRunner;
 }
 
 export interface ApplyBevueGameContext {
   event: GameContextEvent.APPLY_BEVUE;
-  currentPlayerName: string;
+  playerWhoMadeABevue: string;
 }

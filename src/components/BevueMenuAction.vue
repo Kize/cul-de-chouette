@@ -57,7 +57,7 @@ export default class BevueMenuAction extends Vue {
 
   applyBevue(playerName: string): void {
     this.playerNameBevue = playerName;
-    this.$store.dispatch("currentGame/applyBevue", playerName);
+    this.$store.dispatch("currentGame/play/applyBevue", playerName);
 
     this.snackBarDisplay = true;
   }

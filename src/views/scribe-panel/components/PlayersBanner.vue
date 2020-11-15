@@ -72,7 +72,7 @@ export default class PlayersBanner extends Vue {
   @Prop() players!: Array<Player>;
 
   applyBevue(player: Player): void {
-    this.$store.dispatch("currentGame/applyBevue", player.name);
+    this.$store.dispatch("currentGame/play/applyBevue", player.name);
   }
 }
 </script>
