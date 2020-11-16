@@ -23,7 +23,7 @@
                     clearable
                     outlined
                     rounded
-                    :items="playableBetValues"
+                    :items="getPlayableBetValues(playerName)"
                     @change="registerPlayerBet(playerName, $event)"
                   ></v-select>
                 </v-col>
@@ -46,7 +46,7 @@ import { Component, Vue } from "vue-property-decorator";
 import MainDialogCard from "@/components/MainDialogCard.vue";
 import { rulesOfAmountInput } from "@/form-validation/form-validation-rules";
 import BevueMenuAction from "@/components/BevueMenuAction.vue";
-import { VForm } from "@/vuetify.interface";
+import { SelectItemsType, VForm } from "@/vuetify.interface";
 import DiceRollInput from "@/components/dice/DiceRollInput.vue";
 import { DiceForm, isDiceFormValid } from "@/components/dice/dice-form";
 import { mapGetters, mapState } from "vuex";
@@ -80,8 +80,20 @@ export default class BleuRougeResolverDialog extends Vue {
   form: BleuRougeForm = getInitialForm();
   isFormValid = true;
 
-  get playableBetValues(): Array<number> {
-    return [...Array(16)].map((_, index) => index + 3);
+  getPlayableBetValues(playerName: string): Array<SelectItemsType<number>> {
+    return [...Array(16)].map((_, index) => {
+      const betValue = index + 3;
+
+      const isBetValueAlreadySelectedByAnotherPlayer = !!this.form.bids.find(
+        (bid) => bid.bet === betValue && bid.playerName !== playerName
+      );
+
+      return {
+        text: `${betValue}`,
+        value: betValue,
+        disabled: isBetValueAlreadySelectedByAnotherPlayer,
+      };
+    });
   }
 
   get isValidButtonActive(): boolean {

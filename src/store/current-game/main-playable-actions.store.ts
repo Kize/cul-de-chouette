@@ -114,6 +114,11 @@ export const MainPlayableActionsStoreModule: Module<
               root: true,
             });
             break;
+          case RuleEffectEvent.ADD_JARRET:
+            commit("currentGame/addJarret", ruleEffect.playerName, {
+              root: true,
+            });
+            break;
         }
       });
     },

@@ -6,12 +6,6 @@
       <span>Score: {{ getPlayerScore(currentPlayer.name) }}</span>
       <v-divider vertical class="mx-6"></v-divider>
       <span>Tour: {{ turnNumber }}</span>
-
-      <v-spacer></v-spacer>
-
-      <v-chip small color="primary" v-if="currentPlayer.hasGrelottine"
-        >Grelottine
-      </v-chip>
     </v-card-title>
 
     <v-card-text>
