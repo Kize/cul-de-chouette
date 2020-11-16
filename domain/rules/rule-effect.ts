@@ -12,25 +12,33 @@ export enum RuleEffectEvent {
   CHOUETTE = "Chouette",
   VELUTE = "Velute",
   SUITE = "Suite",
-  CHOUETTE_VELUTE_STOLEN = "Chouette velute volée",
   CUL_DE_CHOUETTE = "Cul de chouette",
+  CHOUETTE_VELUTE_WON = "Chouette velute gagnée",
+  CHOUETTE_VELUTE_LOST = "Chouette velute perdue",
+  CHOUETTE_VELUTE_STOLEN = "Chouette velute volée",
   SLOUBI = "Sloubi",
+
   SOUFFLETTE_NO_CHALLENGE = "Soufflette sans défi",
   SOUFFLETTE_WON = "Soufflette gagnée",
   SOUFFLETTE_LOST = "Soufflette perdue",
-  SIROP_BET_WON = "Pari de Sirotage gagné",
-  CHOUETTE_VELUTE_WON = "Chouette velute gagnée",
-  CHOUETTE_VELUTE_LOST = "Chouette velute perdue",
-  GRELOTTINE_CHALLENGE_WON = "Défi de grelottine gagné",
-  GRELOTTINE_CHALLENGE_LOST = "Défi de grelottine perdu",
+
+  SIROP_LOST = "Sirop perdu",
+  SIROP_WON = "Sirop gagné",
   ATTRAPE_OISEAU_WON = "Attrape-oiseau gagné",
   ATTRAPE_OISEAU_LOST = "Attrape-oiseau perdu",
   SIROP_BET_LOST = "Pari de Sirotage perdu",
+  SIROP_BET_WON = "Pari de Sirotage gagné",
   SIROP_BET_WON_BUT_NOT_CLAIMED = "Pari de Sirotage gagné mais pas clamé",
-  SIROP_WON = "Sirop gagné",
-  SIROP_LOST = "Sirop perdu",
-  REMOVE_GRELOTTINE = "Grelottine supprimée",
+
   ADD_GRELOTTINE = "Grelottine ajoutée",
+  REMOVE_GRELOTTINE = "Grelottine supprimée",
+  GRELOTTINE_CHALLENGE_WON = "Défi de grelottine gagné",
+  GRELOTTINE_CHALLENGE_LOST = "Défi de grelottine perdu",
+
+
+  BLEU_ROUGE = "Bleu-rouge",
+  BLEU_ROUGE_BET_WON = "Annone de Bleu-rouge gagnée",
+  ADD_JARRET = "Ajout d'un Jarret"
 }
 
 export enum NotImplementedRuleEffectEvent {
@@ -44,7 +52,6 @@ export enum NotImplementedRuleEffectEvent {
   PASSE_GRELOT = "Passe-grelot",
   RIGODON = "Rigodon",
   CUL_DE_CHOUETTE_DOUBLE = "Cul de chouette doublé",
-  BLEU_ROUGE = "Bleu-rouge",
   PELICAN = "Pélican",
   VERDIER = "Verdier",
   ACHAT = "Achat",

@@ -3,6 +3,8 @@ import { Rule } from "./rules/rule";
 import { DiceRoll } from "./rules/dice-rule";
 import { RuleEffects } from "./rules/rule-effect";
 import { DummyContextBuilder } from "./tests/dummy-game-context-builder";
+import { ChouetteRule } from "./rules/basic-rules/chouette-rule";
+import { NeantRule } from "./rules/basic-rules/neant-rule";
 
 describe("handleDiceRoll", () => {
   it("applies the correct rule", async () => {
@@ -38,5 +40,33 @@ describe("handleDiceRoll", () => {
     expect(validRule.applyRule).toHaveBeenCalledWith(gameContext);
 
     expect(result).toEqual(expectedRuleEffects);
+  });
+});
+
+describe("isDiceRollANeant", () => {
+  it("returns true if the dice roll makes a Neant", () => {
+    const runner = new RuleRunner([new ChouetteRule(), new NeantRule()]);
+
+    const gameContext = DummyContextBuilder.aDiceRollContext()
+      .withDiceRoll([1, 3, 6])
+      .build()
+      .asPlayTurn();
+
+    const isANeant = runner.isDiceRollANeant(gameContext);
+
+    expect(isANeant).toBe(true);
+  });
+
+  it("returns true if the dice roll makes a Chouette", () => {
+    const runner = new RuleRunner([new ChouetteRule(), new NeantRule()]);
+
+    const gameContext = DummyContextBuilder.aDiceRollContext()
+      .withDiceRoll([1, 3, 1])
+      .build()
+      .asPlayTurn();
+
+    const isANeant = runner.isDiceRollANeant(gameContext);
+
+    expect(isANeant).toBe(false);
   });
 });
