@@ -6,6 +6,7 @@ import { ChouetteVeluteResolution } from "../../../domain/rules/basic-rules/chou
 import { RootState } from "@/store/app.state";
 import { AttrapeOiseauResolution } from "../../../domain/rules/level-one/attrape-oiseau-rule";
 import {
+  bleuRougeRuleResolver,
   chouetteVeluteRuleResolver,
   gameRuleRunner,
   grelottineRuleResolver,
@@ -21,12 +22,13 @@ import {
 import {
   ApplyBevueGameContext,
   ChallengeGrelottineGameContext,
-  GameContextEvent,
   DiceRollGameContext,
+  GameContextEvent,
   UnknownGameContext,
 } from "../../../domain/game-context-event";
 import { GrelottineResolution } from "../../../domain/rules/basic-rules/grelottine-rule";
 import { SouffletteResolution } from "../../../domain/rules/level-one/soufflette-rule";
+import { BleuRougeResolution } from "../../../domain/rules/level-three/bleu-rouge-rule";
 
 type MainPlayableState = Record<string, unknown>;
 
@@ -168,6 +170,13 @@ export const MainPlayableActionsStoreModule: Module<
     },
     cancelSoufflette(): void {
       souffletteRuleResolver.reject();
+    },
+
+    resolveBleuRouge(_, bleuRougeResolution: BleuRougeResolution): void {
+      bleuRougeRuleResolver.resolve(bleuRougeResolution);
+    },
+    cancelBleuRouge(): void {
+      bleuRougeRuleResolver.reject();
     },
   },
 };

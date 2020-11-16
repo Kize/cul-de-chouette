@@ -26,6 +26,9 @@ export interface DialogsState {
   souffletteResolverDialog: {
     isVisible: boolean;
   };
+  bleuRougeResolverDialog: {
+    isVisible: boolean;
+  };
 }
 
 export const DialogsStoreModule: Module<DialogsState, RootState> = {
@@ -49,6 +52,9 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
       souffletteResolverDialog: {
         isVisible: false,
       },
+      bleuRougeResolverDialog: {
+        isVisible: false,
+      },
     };
   },
   getters: {},
@@ -67,6 +73,9 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
     },
     setSouffletteResolverIsVisible(state, isVisible): void {
       state.souffletteResolverDialog.isVisible = isVisible;
+    },
+    setBleuRougeResolverIsVisible(state, isVisible): void {
+      state.bleuRougeResolverDialog.isVisible = isVisible;
     },
     setSiropResolverPayload(
       state,
@@ -107,6 +116,12 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
     },
     closeSouffletteResolver({ commit }): void {
       commit("setSouffletteResolverIsVisible", false);
+    },
+    openBleuRougeResolver({ commit }): void {
+      commit("setBleuRougeResolverIsVisible", true);
+    },
+    closeBleuRougeResolver({ commit }): void {
+      commit("setBleuRougeResolverIsVisible", false);
     },
   },
 };

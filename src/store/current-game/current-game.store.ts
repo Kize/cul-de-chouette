@@ -229,6 +229,13 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         commit("rules/levelOne/setIsAttrapeOiseauEnabled", false);
       }
 
+      if (payload.levelOne?.isBleuRougeEnabled) {
+        commit("rules/levelOne/setIsBleuRougeEnabled", true);
+        enabledRules.add(RuleName.BLEU_ROUGE);
+      } else {
+        commit("rules/levelOne/setIsBleuRougeEnabled", false);
+      }
+
       const rulesToEnable = ALL_RULES_ORDERED.filter(({ name }) =>
         enabledRules.has(name)
       ).map(({ rule }) => rule);
