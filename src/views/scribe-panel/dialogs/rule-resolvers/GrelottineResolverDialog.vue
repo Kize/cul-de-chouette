@@ -73,7 +73,7 @@
                     label="Défi"
                     :items="grelottineChallengeBets"
                     v-model="form.grelottinBet"
-                    :rules="selectChallengeRules"
+                    :rules="rulesOfSelectChallengeInput"
                     :hint="
                       form.grelottinBet
                         ? `Montant maximum possible: ${maxGrelottinePossibleAmount}`
@@ -143,11 +143,11 @@ import BevueMenuAction from "@/components/BevueMenuAction.vue";
 import { GrelottineForm, ValidGrelottineForm } from "@/domain/grelottine";
 import { mapGetters, mapState } from "vuex";
 import {
-  inputPositiveIntegerRules,
+  positiveIntegerInputRules,
   inputRuleFunction,
   inputStrictlyPositiveIntegerRules,
-  selectChallengeRules,
-  selectNameRules,
+  rulesOfSelectChallengeInput,
+  rulesOfSelectNameInput,
 } from "@/form-validation/form-validation-rules";
 import { Player } from "../../../../../domain/player";
 import DiceRollInput from "@/components/dice/DiceRollInput.vue";
@@ -184,8 +184,8 @@ const INITIAL_FORM: GrelottineForm = {
   },
 })
 export default class GrelottineResolverDialog extends Vue {
-  readonly selectChallengeRules = selectChallengeRules;
-  readonly inputPositiveIntegerRules = inputPositiveIntegerRules;
+  readonly rulesOfSelectChallengeInput = rulesOfSelectChallengeInput;
+  readonly positiveIntegerInputRules = positiveIntegerInputRules;
 
   readonly players!: Array<Player>;
   readonly rules!: RulesState;
@@ -206,7 +206,7 @@ export default class GrelottineResolverDialog extends Vue {
 
   get selectPlayerRules(): ReadonlyArray<inputRuleFunction> {
     return [
-      ...selectNameRules,
+      ...rulesOfSelectNameInput,
       (): true | string => {
         if (this.form.grelottinPlayer === this.form.challengedPlayer) {
           return "Le grelottin ne peut pas être le joueur défié.";

@@ -48,12 +48,12 @@ describe("applyRule", () => {
     [3, 30, -30],
   ])(
     "registers a soufflette challenge won in %i rolls by the challenged player. Adds %i to the winner and %i points to the looser",
-    async (diceThrowsNumber, winnerScore, looserScore) => {
+    async (numberOfDiceRolls, winnerScore, looserScore) => {
       const resolver = {
         getResolution: jest.fn().mockResolvedValue({
           isChallenge: true,
           challengedPlayer: "Delphin",
-          diceThrowsNumber,
+          numberOfDiceRolls,
           diceRoll: [2, 4, 1],
         } as SouffletteResolution),
       };
@@ -86,7 +86,7 @@ describe("applyRule", () => {
       getResolution: jest.fn().mockResolvedValue({
         isChallenge: true,
         challengedPlayer: "Delphin",
-        diceThrowsNumber: 1,
+        numberOfDiceRolls: 1,
         diceRoll: [5, 4, 2],
       } as SouffletteResolution),
     };
@@ -118,7 +118,7 @@ describe("applyRule", () => {
       getResolution: jest.fn().mockResolvedValue({
         isChallenge: true,
         challengedPlayer: "Delphin",
-        diceThrowsNumber: 3,
+        numberOfDiceRolls: 3,
         diceRoll: [1, 3, 6],
       } as SouffletteResolution),
     };

@@ -44,14 +44,12 @@ function requiredAmountRule(amount?: number): true | string {
     "Le montant est requis et doit être entier."
   );
 }
-
-export const selectNameRules = [requiredPlayerNameRule];
-export const selectLineTypeRules = [requiredLineTypeRule];
-export const requiredAmountInputRules = [requiredAmountRule];
-
 export type inputRuleFunction = (n?: string) => true | string;
 
-export const selectChallengeRules = [
+export const rulesOfSelectNameInput = [requiredPlayerNameRule];
+export const rulesOfSelectLineTypeInput = [requiredLineTypeRule];
+export const rulesOfAmountInput = [requiredAmountRule];
+export const rulesOfSelectChallengeInput = [
   (name?: string): true | string =>
     (name && name.length > 1) || "Le défi est requis",
 ];
@@ -62,7 +60,7 @@ export const inputStrictlyPositiveIntegerRules = [
     "Ce champ doit être un entier positif",
 ];
 
-export const inputPositiveIntegerRules = [
+export const positiveIntegerInputRules = [
   (num?: string): true | string =>
     (Number(num) >= 0 && isInteger(Number(num))) ||
     "Ce champ doit être un entier positif ou nul",

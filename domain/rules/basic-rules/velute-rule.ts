@@ -16,7 +16,7 @@ export class VeluteRule extends DiceRule {
     return [
       {
         event: RuleEffectEvent.VELUTE,
-        playerName: playerName,
+        playerName,
         score,
       },
     ];

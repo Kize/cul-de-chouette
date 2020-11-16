@@ -28,7 +28,7 @@
                   label="Opération"
                   v-model="operation.designation"
                   :items="lineTypes"
-                  :rules="selectLineTypeRules"
+                  :rules="rulesOfSelectLineTypeInput"
                   prepend-icon="mdi-note-text-outline"
                 ></v-select>
               </v-col>
@@ -39,7 +39,7 @@
                   label="Nom du joueur"
                   v-model="operation.playerName"
                   :items="playerNames"
-                  :rules="selectNameRules"
+                  :rules="rulesOfSelectNameInput"
                   prepend-icon="mdi-account"
                 ></v-select>
               </v-col>
@@ -53,7 +53,7 @@
                       step="1"
                       label="Montant"
                       v-model="operation.amount"
-                      :rules="requiredAmountInputRules"
+                      :rules="rulesOfAmountInput"
                       prepend-icon="mdi-dice-multiple"
                     ></v-text-field>
                   </v-col>
@@ -102,9 +102,9 @@ import { mapGetters } from "vuex";
 import MainDialogCard from "@/components/MainDialogCard.vue";
 import { AllHistoryLineTypes, GodModLineType } from "@/domain/history";
 import {
-  requiredAmountInputRules,
-  selectLineTypeRules,
-  selectNameRules,
+  rulesOfAmountInput,
+  rulesOfSelectLineTypeInput,
+  rulesOfSelectNameInput,
 } from "@/form-validation/form-validation-rules";
 import {
   AddOperationLinesActionPayload,
@@ -159,9 +159,9 @@ function lineFormToLineActionPayload(
   },
 })
 export default class PlayersBanner extends Vue {
-  readonly selectNameRules = selectNameRules;
-  readonly selectLineTypeRules = selectLineTypeRules;
-  readonly requiredAmountInputRules = requiredAmountInputRules;
+  readonly rulesOfSelectNameInput = rulesOfSelectNameInput;
+  readonly rulesOfSelectLineTypeInput = rulesOfSelectLineTypeInput;
+  readonly rulesOfAmountInput = rulesOfAmountInput;
 
   showDialog = false;
   isFormValid = true;

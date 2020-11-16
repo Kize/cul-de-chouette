@@ -29,7 +29,7 @@ export class SuiteRule extends DiceRule {
     if (isVelute(diceRoll)) {
       ruleEffects.push({
         event: RuleEffectEvent.VELUTE,
-        playerName: playerName,
+        playerName,
         score: getVeluteValue(diceRoll),
       });
     }

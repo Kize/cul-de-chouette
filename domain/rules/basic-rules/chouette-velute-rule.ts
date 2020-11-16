@@ -30,7 +30,7 @@ export class ChouetteVeluteRule extends DiceRule {
     if (!playerNames.includes(playerName)) {
       effects.push({
         event: RuleEffectEvent.CHOUETTE_VELUTE_STOLEN,
-        playerName: playerName,
+        playerName,
         score: 0,
       });
     }

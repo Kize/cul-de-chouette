@@ -14,7 +14,7 @@ interface NoChallengeSouffletteResolution {
 interface ChallengeSouffletteResolution {
   isChallenge: true;
   challengedPlayer: string;
-  diceThrowsNumber: 1 | 2 | 3;
+  numberOfDiceRolls: 1 | 2 | 3;
   diceRoll: DiceRoll;
 }
 
@@ -47,7 +47,7 @@ export class SouffletteRule extends DiceRule {
     );
 
     if (isChallengeWonByChallengedPlayer) {
-      const challengeScore = (3 - resolution.diceThrowsNumber) * 10 + 30;
+      const challengeScore = (3 - resolution.numberOfDiceRolls) * 10 + 30;
       return [
         {
           event: RuleEffectEvent.SOUFFLETTE_WON,

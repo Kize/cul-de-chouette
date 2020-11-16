@@ -20,10 +20,10 @@
               <v-select
                 label="Joueur défié"
                 v-model="form.challengedPlayer"
-                :rules="selectNameRules"
+                :rules="rulesOfSelectNameInput"
                 clearable
                 outlined
-                :items="filteredPlayerNames"
+                :items="otherPlayerNames"
               ></v-select>
             </v-col>
             <v-col md="4" cols="12" align="center">
@@ -31,7 +31,7 @@
                 Nombre de lancés:
               </span>
               <v-btn-toggle
-                v-model="form.diceThrowsNumber"
+                v-model="form.numberOfDiceRolls"
                 mandatory
                 color="blue accent-4"
                 tile
@@ -59,7 +59,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import MainDialogCard from "@/components/MainDialogCard.vue";
 import { Player } from "../../../../../domain/player";
-import { selectNameRules } from "@/form-validation/form-validation-rules";
+import { rulesOfSelectNameInput } from "@/form-validation/form-validation-rules";
 import { getInitialForm, SouffletteForm } from "@/domain/level-one/soufflette";
 import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
 import BevueMenuAction from "@/components/BevueMenuAction.vue";
@@ -94,9 +94,9 @@ export default class SouffletteResolverDialog extends Vue {
   form: SouffletteForm = getInitialForm();
   isFormValid = true;
 
-  readonly selectNameRules = selectNameRules;
+  readonly rulesOfSelectNameInput = rulesOfSelectNameInput;
 
-  get filteredPlayerNames(): Array<string> {
+  get otherPlayerNames(): Array<string> {
     return this.playerNames.filter((name) => name !== this.currentPlayerName);
   }
 
@@ -123,7 +123,7 @@ export default class SouffletteResolverDialog extends Vue {
       const resolution: SouffletteResolution = {
         isChallenge: true,
         challengedPlayer: this.form.challengedPlayer,
-        diceThrowsNumber: this.form.diceThrowsNumber,
+        numberOfDiceRolls: this.form.numberOfDiceRolls,
         diceRoll: [...this.diceForm],
       };
 
