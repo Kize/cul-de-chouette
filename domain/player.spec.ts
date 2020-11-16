@@ -1,4 +1,4 @@
-import { getNextPlayer, Player } from "@/domain/player";
+import { getNextPlayer, Player } from "./player";
 
 describe("getNextPlayer", () => {
   it("returns the second player when the first one has just played", () => {

@@ -31,7 +31,7 @@
                     v-model="form.playerWhoMakeAttrapeOiseau"
                     clearable
                     outlined
-                    :items="getFilteredPlayerNames()"
+                    :items="otherPlayerNames"
                   ></v-select>
 
                   <p v-else>
@@ -49,7 +49,7 @@
                 <v-col v-for="playerName in playerNames" :key="playerName">
                   <v-select
                     :label="playerName"
-                    :rules="selectNameRules"
+                    :rules="rulesOfSelectNameInput"
                     clearable
                     outlined
                     rounded
@@ -122,7 +122,7 @@ import {
   isPlayerBidClaimable,
   PlayableBid,
 } from "../../../../../domain/rules/level-one/sirotage-rule";
-import { selectNameRules } from "@/form-validation/form-validation-rules";
+import { rulesOfSelectNameInput } from "@/form-validation/form-validation-rules";
 import { mapGetters, mapState } from "vuex";
 import { DialogsState } from "@/store/current-game/dialogs.store";
 import { AttrapeOiseauResolution } from "../../../../../domain/rules/level-one/attrape-oiseau-rule";
@@ -149,6 +149,8 @@ function getInitialForm(): SiropForm {
   },
 })
 export default class SiropResolverDialog extends Vue {
+  readonly rulesOfSelectNameInput = rulesOfSelectNameInput;
+
   currentPlayerName!: string;
   playerNames!: Array<string>;
   turnNumber?: number;
@@ -157,8 +159,6 @@ export default class SiropResolverDialog extends Vue {
 
   form: SiropForm = getInitialForm();
   isFormValid = false;
-
-  readonly selectNameRules = selectNameRules;
 
   get isValidButtonActive(): boolean {
     const areAllPlayerSelectedBidsEnabled = this.form.bids.every((bid) =>
@@ -176,7 +176,7 @@ export default class SiropResolverDialog extends Vue {
     );
   }
 
-  getFilteredPlayerNames(): Array<string> {
+  get otherPlayerNames(): Array<string> {
     return this.playerNames.filter((name) => name !== this.currentPlayerName);
   }
 

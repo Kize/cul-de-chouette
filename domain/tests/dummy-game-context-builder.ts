@@ -4,8 +4,8 @@ import { RuleRunner } from "../rule-runner";
 import { NeantRule } from "../rules/basic-rules/neant-rule";
 
 export class DummyContextBuilder {
-  static aPlayTurnContext(): DummyPlayTurnContextBuilder {
-    return new DummyPlayTurnContextBuilder();
+  static aDiceRollContext(): DummyDiceRollContextBuilder {
+    return new DummyDiceRollContextBuilder();
   }
 
   static aGrelottineContext(): DummyGrelottineContextBuilder {
@@ -17,12 +17,13 @@ export class DummyContextBuilder {
   }
 }
 
-class DummyPlayTurnContextBuilder {
-  private currentPlayerName = "";
+class DummyDiceRollContextBuilder {
+  private playerName = "";
   private diceRoll: DiceRoll = [1, 1, 1];
+  private ruleRunner: RuleRunner = new RuleRunner([new NeantRule()]);
 
-  withCurrentPlayerName(playerName: string): this {
-    this.currentPlayerName = playerName;
+  withPlayerName(playerName: string): this {
+    this.playerName = playerName;
     return this;
   }
 
@@ -31,11 +32,17 @@ class DummyPlayTurnContextBuilder {
     return this;
   }
 
+  withRuleRunner(ruleRunner: RuleRunner): this {
+    this.ruleRunner = ruleRunner;
+    return this;
+  }
+
   build(): GameContextWrapper {
     return new GameContextWrapper({
-      event: GameContextEvent.PLAY_TURN,
-      currentPlayerName: this.currentPlayerName,
+      event: GameContextEvent.DICE_ROLL,
+      playerName: this.playerName,
       diceRoll: this.diceRoll,
+      runner: this.ruleRunner,
     });
   }
 }

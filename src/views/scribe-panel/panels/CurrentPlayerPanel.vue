@@ -28,7 +28,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { Player } from "@/domain/player";
+import { Player } from "../../../../domain/player";
 import MenuAction from "@/components/MenuAction.vue";
 import { mapGetters, mapState } from "vuex";
 import DiceRollInput from "@/components/dice/DiceRollInput.vue";

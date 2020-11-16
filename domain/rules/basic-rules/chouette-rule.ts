@@ -1,6 +1,6 @@
 import { DiceRoll, DiceRule, DieValue } from "../dice-rule";
 import { RuleEffect, RuleEffectEvent, RuleEffects } from "../rule-effect";
-import { PlayTurnGameContext } from "../../game-context-event";
+import { DiceRollGameContext } from "../../game-context-event";
 
 export class ChouetteRule extends DiceRule {
   isApplicableToDiceRoll([dieValue1, dieValue2, dieValue3]: DiceRoll): boolean {
@@ -24,10 +24,10 @@ export class ChouetteRule extends DiceRule {
   }
 
   async applyDiceRule({
-    currentPlayerName,
+    playerName,
     diceRoll,
-  }: PlayTurnGameContext): Promise<RuleEffects> {
-    return [this.getChouetteRuleEffect(currentPlayerName, diceRoll)];
+  }: DiceRollGameContext): Promise<RuleEffects> {
+    return [this.getChouetteRuleEffect(playerName, diceRoll)];
   }
 
   protected getChouetteScore(diceRoll: DiceRoll): number {

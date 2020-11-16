@@ -21,34 +21,3 @@ export interface HistoryLine {
 export interface HistoryLineApply extends HistoryLine {
   playerName: string;
 }
-
-export type HistoryLineAction =
-  | BasicHistoryLineAction
-  | ChouetteVeluteHistoryLineAction
-  | SuiteHistoryLineAction;
-
-export interface BasicHistoryLineAction {
-  designation: RuleEffectEvent;
-  playerName: string;
-  value: number;
-  turnNumber?: number;
-}
-
-export interface ChouetteVeluteHistoryLineAction {
-  designation:
-    | RuleEffectEvent.CHOUETTE_VELUTE_WON
-    | RuleEffectEvent.CHOUETTE_VELUTE_LOST;
-  playerName: string;
-  value: number;
-  shoutingPlayers: Array<string>;
-  turnNumber?: number;
-}
-
-export interface SuiteHistoryLineAction {
-  designation: RuleEffectEvent.SUITE;
-  playerName: string;
-  multiplier: number;
-  loosingPlayerName: string;
-  isVelute: boolean;
-  turnNumber?: number;
-}

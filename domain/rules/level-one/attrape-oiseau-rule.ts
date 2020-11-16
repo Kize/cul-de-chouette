@@ -8,7 +8,7 @@ import {
 import { Resolver } from "../rule-resolver";
 import { DiceRoll, DieValue } from "../dice-rule";
 import { RuleEffect, RuleEffectEvent, RuleEffects } from "../rule-effect";
-import { PlayTurnGameContext } from "../../game-context-event";
+import { DiceRollGameContext } from "../../game-context-event";
 
 export type AttrapeOiseauResolution =
   | { isSirote: false }
@@ -58,9 +58,9 @@ export class AttrapeOiseauRule extends SirotageRule {
   }
 
   async applyDiceRule({
-    currentPlayerName,
+    playerName,
     diceRoll,
-  }: PlayTurnGameContext): Promise<RuleEffects> {
+  }: DiceRollGameContext): Promise<RuleEffects> {
     let initialChouetteRuleEffect: RuleEffect | undefined = undefined;
     const chouetteValue = this.getChouetteValue(diceRoll);
     const resolution = await this.attrapeOiseauResolver.getResolution({
@@ -72,7 +72,7 @@ export class AttrapeOiseauRule extends SirotageRule {
     });
 
     if (!resolution.isSirote) {
-      return [this.getChouetteRuleEffect(currentPlayerName, diceRoll)];
+      return [this.getChouetteRuleEffect(playerName, diceRoll)];
     }
 
     let attrapeOiseauRuleEffect: RuleEffect;
@@ -90,14 +90,14 @@ export class AttrapeOiseauRule extends SirotageRule {
             : RuleEffectEvent.ATTRAPE_OISEAU_LOST,
       };
       initialChouetteRuleEffect = this.getChouetteRuleEffect(
-        currentPlayerName,
+        playerName,
         diceRoll
       );
     } else {
       attrapeOiseauRuleEffect = await this.getSirotageRuleEffect(
         resolution,
         diceRoll,
-        currentPlayerName
+        playerName
       );
     }
 

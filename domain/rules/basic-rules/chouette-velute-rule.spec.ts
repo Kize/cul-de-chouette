@@ -32,8 +32,8 @@ describe("applyRule", () => {
 
     expect(
       await rule.applyRule(
-        DummyContextBuilder.aPlayTurnContext()
-          .withCurrentPlayerName("Alban")
+        DummyContextBuilder.aDiceRollContext()
+          .withPlayerName("Alban")
           .withDiceRoll([2, 2, 4])
           .build()
       )
@@ -57,8 +57,8 @@ describe("applyRule", () => {
 
     expect(
       await rule.applyRule(
-        DummyContextBuilder.aPlayTurnContext()
-          .withCurrentPlayerName("Alban")
+        DummyContextBuilder.aDiceRollContext()
+          .withPlayerName("Alban")
           .withDiceRoll([2, 2, 4])
           .build()
       )
@@ -87,8 +87,8 @@ describe("applyRule", () => {
 
     expect(
       await rule.applyRule(
-        DummyContextBuilder.aPlayTurnContext()
-          .withCurrentPlayerName("Alban")
+        DummyContextBuilder.aDiceRollContext()
+          .withPlayerName("Alban")
           .withDiceRoll([3, 3, 6])
           .build()
       )

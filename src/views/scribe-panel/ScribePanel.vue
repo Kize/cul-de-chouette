@@ -44,8 +44,9 @@
 
     <SuiteResolverDialog></SuiteResolverDialog>
     <ChouetteVeluteResolverDialog></ChouetteVeluteResolverDialog>
-    <SiropResolverDialog></SiropResolverDialog>
     <GrelottineResolverDialog></GrelottineResolverDialog>
+    <SouffletteResolverDialog></SouffletteResolverDialog>
+    <SiropResolverDialog></SiropResolverDialog>
 
     <v-dialog v-model="showEndGameDialog" persistent max-width="1000">
       <EndGameDialogCard
@@ -68,7 +69,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { GameStatus } from "@/store/current-game/current-game.interface";
 import { mapGetters, mapState } from "vuex";
-import { Player } from "@/domain/player";
+import { Player } from "../../../domain/player";
 import PlayersBanner from "@/views/scribe-panel/components/PlayersBanner.vue";
 import CurrentPlayerPanel from "@/views/scribe-panel/panels/CurrentPlayerPanel.vue";
 import MainActionsPanel from "@/views/scribe-panel/panels/MainActionsPanel.vue";
@@ -81,9 +82,11 @@ import SuiteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/Sui
 import ChouetteVeluteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/ChouetteVeluteResolverDialog.vue";
 import SiropResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/SiropResolverDialog.vue";
 import GrelottineResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/GrelottineResolverDialog.vue";
+import SouffletteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/SouffletteResolverDialog.vue";
 
 @Component({
   components: {
+    SouffletteResolverDialog,
     GrelottineResolverDialog,
     SiropResolverDialog,
     SuiteResolverDialog,

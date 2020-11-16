@@ -12,7 +12,7 @@
             <v-select
               label="Joueur ayant perdu la suite"
               v-model="form.loosingPlayerName"
-              :rules="selectNameRules"
+              :rules="rulesOfSelectNameInput"
               clearable
               outlined
               :items="playerNames"
@@ -45,7 +45,7 @@ import { Component, Vue } from "vue-property-decorator";
 import MainDialogCard from "@/components/MainDialogCard.vue";
 import {
   inputStrictlyPositiveIntegerRules,
-  selectNameRules,
+  rulesOfSelectNameInput,
 } from "@/form-validation/form-validation-rules";
 import { VForm } from "@/vuetify.interface";
 import { mapGetters, mapState } from "vuex";
@@ -77,7 +77,7 @@ export default class SuiteResolverDialog extends Vue {
   form: SuiteForm = { ...INITIAL_FORM };
   isFormValid = true;
 
-  readonly selectNameRules = selectNameRules;
+  readonly rulesOfSelectNameInput = rulesOfSelectNameInput;
   readonly inputStrictlyPositiveIntegerRules = inputStrictlyPositiveIntegerRules;
 
   cancel(): void {

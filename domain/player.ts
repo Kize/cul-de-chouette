@@ -1,4 +1,4 @@
-import { HistoryLine } from "@/domain/history";
+import { HistoryLine } from "../src/domain/history";
 
 export interface Player {
   name: string;

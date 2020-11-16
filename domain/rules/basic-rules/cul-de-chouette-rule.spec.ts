@@ -19,8 +19,8 @@ describe("isApplicableToDiceRoll", () => {
 describe("applyRule", () => {
   it("registers a change of score of 60 for a cul de chouette of 2", () => {
     const effects = new CulDeChouetteRule().applyRule(
-      DummyContextBuilder.aPlayTurnContext()
-        .withCurrentPlayerName("Alban")
+      DummyContextBuilder.aDiceRollContext()
+        .withPlayerName("Alban")
         .withDiceRoll([2, 2, 2])
         .build()
     );

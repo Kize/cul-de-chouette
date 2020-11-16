@@ -19,8 +19,8 @@ describe("isApplicableToDiceRoll", () => {
 describe("applyRule", () => {
   it("registers a change of score of 32 for a velute of 4", () => {
     const effects = new VeluteRule().applyRule(
-      DummyContextBuilder.aPlayTurnContext()
-        .withCurrentPlayerName("Alban")
+      DummyContextBuilder.aDiceRollContext()
+        .withPlayerName("Alban")
         .withDiceRoll([3, 4, 1])
         .build()
     );

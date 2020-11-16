@@ -19,8 +19,8 @@ describe("isApplicableToDiceRoll", () => {
 describe("applyRule", () => {
   it("registers a change of score of 25 for a chouette of 5", async () => {
     const effects = await new ChouetteRule().applyRule(
-      DummyContextBuilder.aPlayTurnContext()
-        .withCurrentPlayerName("Alban")
+      DummyContextBuilder.aDiceRollContext()
+        .withPlayerName("Alban")
         .withDiceRoll([5, 5, 2])
         .build()
     );

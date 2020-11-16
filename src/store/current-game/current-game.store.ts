@@ -14,7 +14,7 @@ import {
   computePlayerScore,
   getNextPlayer,
   Player,
-} from "@/domain/player";
+} from "../../../domain/player";
 import { HistoryLineApply } from "@/domain/history";
 import { RootState } from "@/store/app.state";
 import { MainPlayableActionsStoreModule } from "@/store/current-game/main-playable-actions.store";
@@ -192,11 +192,11 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         turnNumber: 1,
       };
       commit("setGame", newGame);
-      dispatch("activeEnabledRules", form);
+      dispatch("configureGameRules", form);
 
       await dispatch("saveGameToLocalStorage");
     },
-    activeEnabledRules({ commit }, payload: RulesState): void {
+    configureGameRules({ commit }, payload: RulesState): void {
       const enabledRules = new Set([
         RuleName.CUL_DE_CHOUETTE,
         RuleName.SUITE,
@@ -210,6 +210,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
 
       if (payload.levelOne?.isSouffletteEnabled) {
         commit("rules/levelOne/setIsSouffletteEnabled", true);
+        enabledRules.add(RuleName.SOUFFLETTE);
       } else {
         commit("rules/levelOne/setIsSouffletteEnabled", false);
       }
@@ -236,7 +237,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     },
     resumeGame({ commit, dispatch }, currentGame: SavedCurrentGame): void {
       commit("setGame", currentGame);
-      dispatch("activeEnabledRules", currentGame.rules);
+      dispatch("configureGameRules", currentGame.rules);
     },
     async checkEndGame({ commit, getters, dispatch }): Promise<boolean> {
       const highestPlayer = getters.highestPlayer;

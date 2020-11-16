@@ -2,12 +2,12 @@ import { DiceRoll } from "./rules/dice-rule";
 import { RuleRunner } from "./rule-runner";
 
 export type UnknownGameContext =
-  | PlayTurnGameContext
+  | DiceRollGameContext
   | ChallengeGrelottineGameContext
   | ApplyBevueGameContext;
 
 export enum GameContextEvent {
-  PLAY_TURN,
+  DICE_ROLL,
   CHALLENGE_GRELOTTINE,
   APPLY_BEVUE,
 }
@@ -15,8 +15,8 @@ export enum GameContextEvent {
 export class GameContextWrapper {
   constructor(private gameContext: UnknownGameContext) {}
 
-  asPlayTurn(): PlayTurnGameContext {
-    if (this.gameContext.event === GameContextEvent.PLAY_TURN) {
+  asPlayTurn(): DiceRollGameContext {
+    if (this.gameContext.event === GameContextEvent.DICE_ROLL) {
       return this.gameContext;
     }
     throw new Error("The given game context should be a PlayTurnGameContext");
@@ -39,10 +39,11 @@ export class GameContextWrapper {
   }
 }
 
-export interface PlayTurnGameContext {
-  event: GameContextEvent.PLAY_TURN;
-  currentPlayerName: string;
+export interface DiceRollGameContext {
+  event: GameContextEvent.DICE_ROLL;
+  playerName: string;
   diceRoll: DiceRoll;
+  runner: RuleRunner;
 }
 
 export interface ChallengeGrelottineGameContext {

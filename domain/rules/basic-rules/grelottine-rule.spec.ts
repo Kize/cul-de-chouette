@@ -20,12 +20,12 @@ describe("isApplicableToGameContext", () => {
     const rule = new GrelottineRule(dummyResolver);
     expect(
       rule.isApplicableToGameContext(
-        DummyContextBuilder.aPlayTurnContext().build().asPlayTurn()
+        DummyContextBuilder.aDiceRollContext().build().asPlayTurn()
       )
     ).toBe(false);
   });
 
-  it("returns true when the given event is  a grelottine", () => {
+  it("returns true when the given event is a grelottine", () => {
     const rule = new GrelottineRule(dummyResolver);
     expect(
       rule.isApplicableToGameContext(
@@ -144,8 +144,8 @@ describe("applyRule", () => {
         .build()
     );
     expect(ruleRunner.handleDiceRoll).toHaveBeenCalledWith(
-      DummyContextBuilder.aPlayTurnContext()
-        .withCurrentPlayerName("Delphin")
+      DummyContextBuilder.aDiceRollContext()
+        .withPlayerName("Delphin")
         .withDiceRoll([3, 3, 3])
         .build()
         .asPlayTurn()

@@ -3,7 +3,7 @@ import { RuleEffects } from "./rule-effect";
 import {
   GameContextEvent,
   GameContextWrapper,
-  PlayTurnGameContext,
+  DiceRollGameContext,
   UnknownGameContext,
 } from "../game-context-event";
 
@@ -14,17 +14,17 @@ export abstract class DiceRule implements Rule {
   abstract isApplicableToDiceRoll(diceRoll: DiceRoll): boolean;
 
   abstract applyDiceRule(
-    context: PlayTurnGameContext
+    context: DiceRollGameContext
   ): RuleEffects | Promise<RuleEffects>;
 
-  isApplicableToGameContext(context: UnknownGameContext): boolean {
-    if (context.event === GameContextEvent.PLAY_TURN) {
-      return this.isApplicableToDiceRoll(context.diceRoll);
+  isApplicableToGameContext(gameContext: UnknownGameContext): boolean {
+    if (gameContext.event === GameContextEvent.DICE_ROLL) {
+      return this.isApplicableToDiceRoll(gameContext.diceRoll);
     }
     return false;
   }
 
-  applyRule(context: GameContextWrapper): RuleEffects | Promise<RuleEffects> {
-    return this.applyDiceRule(context.asPlayTurn());
+  applyRule(gameContextWrapper: GameContextWrapper): RuleEffects | Promise<RuleEffects> {
+    return this.applyDiceRule(gameContextWrapper.asPlayTurn());
   }
 }
