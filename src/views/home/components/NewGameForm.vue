@@ -39,6 +39,22 @@
             ></v-checkbox>
           </v-card-text>
         </v-card>
+
+        <v-card>
+          <v-card-title>
+            Difficulté
+            <v-icon>mdi-star</v-icon>
+            <v-icon>mdi-star</v-icon>
+            <v-icon>mdi-star</v-icon>
+          </v-card-title>
+
+          <v-card-text>
+            <v-checkbox
+              label="Le Bleu-Rouge"
+              v-model="form.levelOne.isBleuRougeEnabled"
+            ></v-checkbox>
+          </v-card-text>
+        </v-card>
       </v-card-text>
     </v-card>
 
@@ -122,9 +138,10 @@ export default class NewGameFormSection extends Vue {
     gameName: `Partie du ${new Date().toLocaleString("FR-fr").split(" à ")[0]}`,
     playerNames: ["", ""],
     levelOne: {
-      isSouffletteEnabled: false,
-      isSiropEnabled: false,
-      isAttrapeOiseauEnabled: false,
+      isSouffletteEnabled: true,
+      isSiropEnabled: true,
+      isAttrapeOiseauEnabled: true,
+      isBleuRougeEnabled: true,
     },
   };
 

@@ -147,6 +147,7 @@ describe("applyRule", () => {
       DummyContextBuilder.aDiceRollContext()
         .withPlayerName("Delphin")
         .withDiceRoll([3, 3, 3])
+        .withRuleRunner(ruleRunner)
         .build()
         .asPlayTurn()
     );

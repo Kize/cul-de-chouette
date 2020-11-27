@@ -16,6 +16,8 @@ import { GrelottineRule } from "../../../domain/rules/basic-rules/grelottine-rul
 import { BevueRule } from "../../../domain/rules/basic-rules/bevue-rule";
 import { SouffletteRule } from "../../../domain/rules/level-one/soufflette-rule";
 import { SouffletteRuleResolver } from "@/store/current-game/resolvers/soufflette-rule-resolver";
+import { BleuRougeRuleResolver } from "@/store/current-game/resolvers/bleu-rouge-rule-resolver";
+import { BleuRougeRule } from "../../../domain/rules/level-three/bleu-rouge-rule";
 
 class GameRuleRunner {
   private ruleRunner = new RuleRunner([]);
@@ -36,10 +38,12 @@ export const chouetteVeluteRuleResolver = new ChouetteVeluteRuleResolver();
 export const siropRuleResolver = new SiropRuleResolver();
 export const grelottineRuleResolver = new GrelottineRuleResolver();
 export const souffletteRuleResolver = new SouffletteRuleResolver();
+export const bleuRougeRuleResolver = new BleuRougeRuleResolver();
 
 export enum RuleName {
   ATTRAPE_OISEAU,
   BEVUE,
+  BLEU_ROUGE,
   CHOUETTE,
   CHOUETTE_VELUTE,
   CUL_DE_CHOUETTE,
@@ -64,6 +68,7 @@ export const ALL_RULES_ORDERED: Array<{ name: RuleName; rule: Rule }> = [
     rule: new ChouetteVeluteRule(chouetteVeluteRuleResolver),
   },
   { name: RuleName.VELUTE, rule: new VeluteRule() },
+  { name: RuleName.BLEU_ROUGE, rule: new BleuRougeRule(bleuRougeRuleResolver) },
   {
     name: RuleName.ATTRAPE_OISEAU,
     rule: new AttrapeOiseauRule(siropRuleResolver),

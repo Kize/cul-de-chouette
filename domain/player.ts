@@ -1,9 +1,10 @@
-import { HistoryLine } from "../src/domain/history";
+import { HistoryLine } from "@/domain/history";
 
 export interface Player {
   name: string;
   history: Array<HistoryLine>;
   hasGrelottine: boolean;
+  hasJarret: boolean;
 }
 
 export function getNextPlayer(

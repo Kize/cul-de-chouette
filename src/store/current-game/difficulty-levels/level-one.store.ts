@@ -6,6 +6,7 @@ export interface LevelOneState {
   isSouffletteEnabled: boolean;
   isSiropEnabled: boolean;
   isAttrapeOiseauEnabled: boolean;
+  isBleuRougeEnabled: boolean;
 }
 
 export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
@@ -15,6 +16,7 @@ export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
       isSouffletteEnabled: false,
       isSiropEnabled: false,
       isAttrapeOiseauEnabled: false,
+      isBleuRougeEnabled: false,
     };
   },
   mutations: {
@@ -26,6 +28,9 @@ export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
     },
     setIsAttrapeOiseauEnabled(state, isEnabled: boolean): void {
       state.isAttrapeOiseauEnabled = isEnabled;
+    },
+    setIsBleuRougeEnabled(state, isEnabled: boolean): void {
+      state.isBleuRougeEnabled = isEnabled;
     },
   },
   actions: {},

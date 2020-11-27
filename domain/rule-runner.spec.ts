@@ -3,6 +3,8 @@ import { Rule } from "./rules/rule";
 import { DiceRoll } from "./rules/dice-rule";
 import { RuleEffects } from "./rules/rule-effect";
 import { DummyContextBuilder } from "./tests/dummy-game-context-builder";
+import { ChouetteRule } from "./rules/basic-rules/chouette-rule";
+import { NeantRule } from "./rules/basic-rules/neant-rule";
 
 describe("handleDiceRoll", () => {
   it("applies the correct rule", async () => {
@@ -38,5 +40,35 @@ describe("handleDiceRoll", () => {
     expect(validRule.applyRule).toHaveBeenCalledWith(gameContext);
 
     expect(result).toEqual(expectedRuleEffects);
+  });
+});
+
+describe("getFirstApplicableRule", () => {
+  it("throws an error when no rules are applicable", () => {
+    const runner = new RuleRunner([new ChouetteRule()]);
+
+    const gameContext = DummyContextBuilder.aDiceRollContext()
+      .withDiceRoll([1, 3, 6])
+      .build()
+      .asPlayTurn();
+
+    const wrapper = () => {
+      runner.getFirstApplicableRule(gameContext);
+    };
+
+    expect(wrapper).toThrow();
+  });
+
+  it("returns a chouetteRule when the dice roll is a chouette", () => {
+    const runner = new RuleRunner([new ChouetteRule()]);
+
+    const gameContext = DummyContextBuilder.aDiceRollContext()
+      .withDiceRoll([1, 3, 3])
+      .build()
+      .asPlayTurn();
+
+    const rule = runner.getFirstApplicableRule(gameContext);
+
+    expect(rule).toBeInstanceOf(ChouetteRule);
   });
 });

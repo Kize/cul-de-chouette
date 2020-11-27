@@ -141,6 +141,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         name: player.name,
         history: player.history,
         hasGrelottine: player.hasGrelottine,
+        hasJarret: player.hasJarret,
       });
     },
     addHistoryLine(state, apply: HistoryLineApply): void {
@@ -168,6 +169,13 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         player.hasGrelottine = false;
       }
     },
+    addJarret(state, playerName: string): void {
+      const player = state.players.find(byName(playerName));
+
+      if (player) {
+        player.hasJarret = true;
+      }
+    },
   },
   actions: {
     async startGame({ commit, dispatch }, form: NewGameForm): Promise<void> {
@@ -187,6 +195,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
           name,
           history: [],
           hasGrelottine: false,
+          hasJarret: false,
         })),
         currentPlayerName: playerNames[0],
         turnNumber: 1,
@@ -227,6 +236,13 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         enabledRules.add(RuleName.ATTRAPE_OISEAU);
       } else {
         commit("rules/levelOne/setIsAttrapeOiseauEnabled", false);
+      }
+
+      if (payload.levelOne?.isBleuRougeEnabled) {
+        commit("rules/levelOne/setIsBleuRougeEnabled", true);
+        enabledRules.add(RuleName.BLEU_ROUGE);
+      } else {
+        commit("rules/levelOne/setIsBleuRougeEnabled", false);
       }
 
       const rulesToEnable = ALL_RULES_ORDERED.filter(({ name }) =>
@@ -343,6 +359,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
           },
         ],
         hasGrelottine: false,
+        hasJarret: false,
       };
 
       commit("addPlayer", { player, previousPlayer: sloubi.previousPlayer });
