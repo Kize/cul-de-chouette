@@ -45,7 +45,7 @@ export class BleuRougeRule extends ChouetteRule {
       });
     }
 
-    const diceRollSum = diceRoll.reduce((sum, dieValue) => sum + dieValue, 0);
+    const diceRollSum = diceRoll[0] + diceRoll[1] + diceRoll[2];
     const winningBid = bids.find((bid) => bid.bet === diceRollSum);
 
     if (!winningBid) {
