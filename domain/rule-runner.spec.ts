@@ -43,30 +43,32 @@ describe("handleDiceRoll", () => {
   });
 });
 
-describe("isDiceRollANeant", () => {
-  it("returns true if the dice roll makes a Neant", () => {
-    const runner = new RuleRunner([new ChouetteRule(), new NeantRule()]);
+describe("getFirstApplicableRule", () => {
+  it("throws an error when no rules are applicable", () => {
+    const runner = new RuleRunner([new ChouetteRule()]);
 
     const gameContext = DummyContextBuilder.aDiceRollContext()
       .withDiceRoll([1, 3, 6])
       .build()
       .asPlayTurn();
 
-    const isANeant = runner.isDiceRollANeant(gameContext);
+    const wrapper = () => {
+      runner.getFirstApplicableRule(gameContext);
+    };
 
-    expect(isANeant).toBe(true);
+    expect(wrapper).toThrow();
   });
 
-  it("returns true if the dice roll makes a Chouette", () => {
-    const runner = new RuleRunner([new ChouetteRule(), new NeantRule()]);
+  it("returns a chouetteRule when the dice roll is a chouette", () => {
+    const runner = new RuleRunner([new ChouetteRule()]);
 
     const gameContext = DummyContextBuilder.aDiceRollContext()
-      .withDiceRoll([1, 3, 1])
+      .withDiceRoll([1, 3, 3])
       .build()
       .asPlayTurn();
 
-    const isANeant = runner.isDiceRollANeant(gameContext);
+    const rule = runner.getFirstApplicableRule(gameContext);
 
-    expect(isANeant).toBe(false);
+    expect(rule).toBeInstanceOf(ChouetteRule);
   });
 });

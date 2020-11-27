@@ -3,6 +3,7 @@ import { DiceRollGameContext } from "../../game-context-event";
 import { RuleEffect, RuleEffectEvent, RuleEffects } from "../rule-effect";
 import { Resolver } from "../rule-resolver";
 import { ChouetteRule } from "../basic-rules/chouette-rule";
+import { NeantRule } from "../basic-rules/neant-rule";
 
 export interface BleuRougeResolution {
   diceRoll: DiceRoll;
@@ -32,7 +33,11 @@ export class BleuRougeRule extends ChouetteRule {
 
     const addJarretRuleEffects: RuleEffects = [];
     const secondRollContext: DiceRollGameContext = { ...context, diceRoll };
-    if (context.runner.isDiceRollANeant(secondRollContext)) {
+    const isANeant =
+      context.runner.getFirstApplicableRule(secondRollContext) instanceof
+      NeantRule;
+
+    if (isANeant) {
       addJarretRuleEffects.push({
         event: RuleEffectEvent.ADD_JARRET,
         playerName: context.playerName,

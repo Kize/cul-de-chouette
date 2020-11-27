@@ -18,15 +18,15 @@ export class RuleRunner {
     return ruleToApply.applyRule(new GameContextWrapper(event));
   }
 
-  isDiceRollANeant(event: UnknownGameContext): boolean {
-    const ruleToApply = this.rules.find((rule) =>
+  getFirstApplicableRule(event: UnknownGameContext): Rule {
+    const rule = this.rules.find((rule) =>
       rule.isApplicableToGameContext(event)
     );
 
-    if (!ruleToApply) {
-      return false;
+    if (!rule) {
+      throw new Error("There should always be at least one applicable rule.");
     }
 
-    return ruleToApply instanceof NeantRule;
+    return rule;
   }
 }

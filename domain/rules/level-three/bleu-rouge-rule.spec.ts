@@ -75,7 +75,7 @@ describe("applyRule", () => {
     });
   });
 
-  it("registers a bleu-rouge bet won by the current player with a cul de chouette", async () => {
+  it("registers a bleu-rouge bet won by the current player with the last dice combination rule effects", async () => {
     const resolver = {
       getResolution: jest.fn().mockResolvedValue({
         diceRoll: [2, 2, 2],
@@ -92,7 +92,9 @@ describe("applyRule", () => {
     const rule = new BleuRougeRule(resolver);
     const runnerMock = {} as RuleRunner;
     runnerMock.handleDiceRoll = jest.fn().mockResolvedValue([aRuleEffect]);
-    runnerMock.isDiceRollANeant = jest.fn().mockResolvedValue(false);
+    runnerMock.getFirstApplicableRule = jest
+      .fn()
+      .mockResolvedValue(new CulDeChouetteRule());
 
     const context = DummyContextBuilder.aDiceRollContext()
       .withPlayerName("Alban")
@@ -124,14 +126,14 @@ describe("applyRule", () => {
             { playerName: "Delphin", bet: 10 },
             { playerName: "Alban", bet: 6 },
           ],
-        } as BleuRougeResolution)
+        })
         .mockResolvedValueOnce({
           diceRoll: [1, 3, 5],
           bids: [
             { playerName: "Delphin", bet: 3 },
             { playerName: "Alban", bet: 4 },
           ],
-        } as BleuRougeResolution),
+        }),
     };
 
     const rule = new BleuRougeRule(resolver);
@@ -192,14 +194,14 @@ describe("applyRule", () => {
             { playerName: "Delphin", bet: 10 },
             { playerName: "Alban", bet: 6 },
           ],
-        } as BleuRougeResolution)
+        })
         .mockResolvedValueOnce({
           diceRoll: [6, 4, 1],
           bids: [
             { playerName: "Delphin", bet: 3 },
             { playerName: "Alban", bet: 11 },
           ],
-        } as BleuRougeResolution),
+        }),
     };
 
     const rule = new BleuRougeRule(resolver);
