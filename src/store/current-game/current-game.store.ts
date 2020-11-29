@@ -72,13 +72,9 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     },
     sloubiScore(state, getters): number {
       const [bestScore, secondBestScore] = state.players
-        .map((player) => ({
-          name: player.name,
-          score: getters.getPlayerScore(player.name),
-        }))
-        .sort((p1, p2) => p2.score - p1.score)
-        .slice(0, 2)
-        .map((p) => p.score);
+        .map((player) => getters.getPlayerScore(player.name))
+        .sort((score1, score2) => score2 - score1)
+        .slice(0, 2);
 
       return Math.trunc(
         ((bestScore - secondBestScore) * state.turnNumber) / 10
