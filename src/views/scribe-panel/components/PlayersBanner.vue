@@ -55,7 +55,7 @@
             </v-chip>
 
             <v-chip
-              v-if="rules.levelOne.isBleuRougeEnabled"
+              v-if="isBleuRougeEnabled"
               :color="player.hasJarret ? 'brown darken-4' : 'dark darken-1'"
               outlined
               :disabled="!player.hasJarret"
@@ -73,18 +73,17 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Player } from "../../../../domain/player";
-import { mapGetters } from "vuex";
-import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
+import { mapGetters, mapState } from "vuex";
 
 @Component({
   computed: {
+    ...mapState("currentGame/rules", ["isBleuRougeEnabled"]),
     ...mapGetters("currentGame", ["isCurrentPlayer", "getPlayerScore"]),
-    ...mapGetters("currentGame/rules", ["rules"]),
   },
 })
 export default class PlayersBanner extends Vue {
   @Prop() players!: Array<Player>;
-  rules!: RulesState;
+  readonly isBleuRougeEnabled!: boolean;
 
   applyBevue(player: Player): void {
     this.$store.dispatch("currentGame/play/applyBevue", player.name);
