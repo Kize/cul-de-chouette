@@ -101,7 +101,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
             bestPlayer.score >= currentPlayer.score
               ? bestPlayer
               : currentPlayer,
-          { name: "", score: -1 }
+          { name: "", score: Number.MIN_SAFE_INTEGER }
         );
     },
   },
