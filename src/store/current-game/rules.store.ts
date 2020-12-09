@@ -2,22 +2,17 @@
 import { Module } from "vuex";
 import { RootState } from "@/store/app.state";
 
-export interface LevelOneState {
+export interface RulesState {
   isSouffletteEnabled: boolean;
   isSiropEnabled: boolean;
   isAttrapeOiseauEnabled: boolean;
   isBleuRougeEnabled: boolean;
 }
 
-export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
+export const RulesStoreModule: Module<RulesState, RootState> = {
   namespaced: true,
-  state(): LevelOneState {
-    return {
-      isSouffletteEnabled: false,
-      isSiropEnabled: false,
-      isAttrapeOiseauEnabled: false,
-      isBleuRougeEnabled: false,
-    };
+  state(): RulesState {
+    return {} as RulesState;
   },
   mutations: {
     setIsSouffletteEnabled(state, isEnabled: boolean): void {
@@ -33,5 +28,4 @@ export const LevelOneStoreModule: Module<LevelOneState, RootState> = {
       state.isBleuRougeEnabled = isEnabled;
     },
   },
-  actions: {},
 };

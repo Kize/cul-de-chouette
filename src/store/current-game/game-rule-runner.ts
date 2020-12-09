@@ -55,6 +55,17 @@ export enum RuleName {
   VELUTE,
 }
 
+export const BASIC_RULE_NAMES: Array<RuleName> = [
+  RuleName.CUL_DE_CHOUETTE,
+  RuleName.SUITE,
+  RuleName.CHOUETTE_VELUTE,
+  RuleName.VELUTE,
+  RuleName.CHOUETTE,
+  RuleName.NEANT,
+  RuleName.GRELOTTINE,
+  RuleName.BEVUE,
+];
+
 export const ALL_RULES_ORDERED: Array<{ name: RuleName; rule: Rule }> = [
   {
     name: RuleName.GRELOTTINE,

@@ -143,9 +143,9 @@ import BevueMenuAction from "@/components/BevueMenuAction.vue";
 import { GrelottineForm, ValidGrelottineForm } from "@/domain/grelottine";
 import { mapGetters, mapState } from "vuex";
 import {
-  positiveIntegerInputRules,
   inputRuleFunction,
   inputStrictlyPositiveIntegerRules,
+  positiveIntegerInputRules,
   rulesOfSelectChallengeInput,
   rulesOfSelectNameInput,
 } from "@/form-validation/form-validation-rules";
@@ -158,7 +158,6 @@ import {
   GrelottineBet,
   GrelottineResolution,
 } from "../../../../../domain/rules/basic-rules/grelottine-rule";
-import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
 import {
   DiceForm,
   getInitialDiceForm,
@@ -174,7 +173,7 @@ const INITIAL_FORM: GrelottineForm = {
   computed: {
     ...mapState("currentGame", ["players", "turnNumber"]),
     ...mapState("currentGame/dialogs", ["grelottineResolverDialog"]),
-    ...mapGetters("currentGame/rules", ["rules"]),
+    ...mapState("currentGame/rules", ["isSiropEnabled"]),
     ...mapGetters("currentGame", [
       "currentPlayer",
       "getPlayerScore",
@@ -188,7 +187,7 @@ export default class GrelottineResolverDialog extends Vue {
   readonly positiveIntegerInputRules = positiveIntegerInputRules;
 
   readonly players!: Array<Player>;
-  readonly rules!: RulesState;
+  readonly isSiropEnabled!: boolean;
   readonly getPlayerScore!: (name: string) => number;
   readonly grelottineResolverDialog!: { isVisible: boolean };
 
@@ -219,8 +218,7 @@ export default class GrelottineResolverDialog extends Vue {
   get grelottineChallengeBets(): Array<SelectItemsType<GrelottineBet>> {
     return Object.values(GrelottineBet).map((bet: GrelottineBet) => {
       const disabled =
-        bet === GrelottineBet.SIROP_GRELOT &&
-        !this.rules.levelOne.isSiropEnabled;
+        bet === GrelottineBet.SIROP_GRELOT && !this.isSiropEnabled;
 
       return {
         text: bet,

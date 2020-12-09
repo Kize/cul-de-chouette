@@ -25,16 +25,16 @@
           <v-card-text>
             <v-checkbox
               label="La soufflette"
-              v-model="form.levelOne.isSouffletteEnabled"
+              v-model="form.rules.isSouffletteEnabled"
             ></v-checkbox>
             <v-checkbox
               label="Le sirop"
-              v-model="form.levelOne.isSiropEnabled"
+              v-model="form.rules.isSiropEnabled"
               @change="changeSiropEnabled"
             ></v-checkbox>
             <v-checkbox
               label="L'attrape-oiseau"
-              v-model="form.levelOne.isAttrapeOiseauEnabled"
+              v-model="form.rules.isAttrapeOiseauEnabled"
               :disabled="isAttrapeOiseauDisabled"
             ></v-checkbox>
           </v-card-text>
@@ -51,7 +51,7 @@
           <v-card-text>
             <v-checkbox
               label="Le Bleu-Rouge"
-              v-model="form.levelOne.isBleuRougeEnabled"
+              v-model="form.rules.isBleuRougeEnabled"
             ></v-checkbox>
           </v-card-text>
         </v-card>
@@ -137,7 +137,7 @@ export default class NewGameFormSection extends Vue {
   form: NewGameForm = {
     gameName: `Partie du ${new Date().toLocaleString("FR-fr").split(" à ")[0]}`,
     playerNames: ["", ""],
-    levelOne: {
+    rules: {
       isSouffletteEnabled: true,
       isSiropEnabled: true,
       isAttrapeOiseauEnabled: true,
@@ -146,7 +146,7 @@ export default class NewGameFormSection extends Vue {
   };
 
   get isAttrapeOiseauDisabled(): boolean {
-    return !this.form.levelOne.isSiropEnabled;
+    return !this.form.rules.isSiropEnabled;
   }
 
   canRemovePlayer(): boolean {
@@ -165,7 +165,7 @@ export default class NewGameFormSection extends Vue {
 
   changeSiropEnabled(newStatus: boolean): void {
     if (!newStatus) {
-      this.form.levelOne.isAttrapeOiseauEnabled = false;
+      this.form.rules.isAttrapeOiseauEnabled = false;
     }
   }
 

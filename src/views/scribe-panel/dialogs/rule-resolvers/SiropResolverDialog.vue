@@ -26,7 +26,7 @@
                 </v-col>
                 <v-col md="8" cols="12">
                   <v-select
-                    v-if="rules.levelOne.isAttrapeOiseauEnabled"
+                    v-if="isAttrapeOiseauEnabled"
                     label="Joueur ayant fait un attrape-oiseau"
                     v-model="form.playerWhoMakeAttrapeOiseau"
                     clearable
@@ -112,7 +112,6 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import MainDialogCard from "@/components/MainDialogCard.vue";
-import { RulesState } from "@/store/current-game/difficulty-levels/rules.store";
 import BevueMenuAction from "@/components/BevueMenuAction.vue";
 import { SiropForm } from "@/domain/level-one/sirop";
 import DieCard from "@/components/dice/DieCard.vue";
@@ -144,18 +143,18 @@ function getInitialForm(): SiropForm {
   computed: {
     ...mapState("currentGame", ["currentPlayerName", "turnNumber"]),
     ...mapState("currentGame/dialogs", ["siropResolverDialog"]),
-    ...mapGetters("currentGame/rules", ["rules"]),
+    ...mapState("currentGame/rules", ["isAttrapeOiseauEnabled"]),
     ...mapGetters("currentGame", ["playerNames"]),
   },
 })
 export default class SiropResolverDialog extends Vue {
   readonly rulesOfSelectNameInput = rulesOfSelectNameInput;
 
-  currentPlayerName!: string;
-  playerNames!: Array<string>;
-  turnNumber?: number;
-  rules!: RulesState;
-  siropResolverDialog!: DialogsState["siropResolverDialog"];
+  readonly currentPlayerName!: string;
+  readonly playerNames!: Array<string>;
+  readonly turnNumber?: number;
+  readonly isAttrapeOiseauEnabled!: boolean;
+  readonly siropResolverDialog!: DialogsState["siropResolverDialog"];
 
   form: SiropForm = getInitialForm();
   isFormValid = false;

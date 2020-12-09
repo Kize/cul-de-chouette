@@ -18,16 +18,13 @@ import {
 import { HistoryLineApply } from "@/domain/history";
 import { RootState } from "@/store/app.state";
 import { MainPlayableActionsStoreModule } from "@/store/current-game/main-playable-actions.store";
-import {
-  RulesState,
-  RulesStoreModule,
-} from "@/store/current-game/difficulty-levels/rules.store";
+import { RulesState, RulesStoreModule } from "@/store/current-game/rules.store";
 import { DialogsStoreModule } from "@/store/current-game/dialogs.store";
 import {
-  ALL_RULES_ORDERED,
+  ALL_RULES_ORDERED, BASIC_RULE_NAMES,
   gameRuleRunner,
   RuleName,
-} from "@/store/current-game/game-rule-runner";
+} from '@/store/current-game/game-rule-runner';
 import { RuleEffectEvent } from "../../../domain/rules/rule-effect";
 
 export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
@@ -75,13 +72,9 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     },
     sloubiScore(state, getters): number {
       const [bestScore, secondBestScore] = state.players
-        .map((player) => ({
-          name: player.name,
-          score: getters.getPlayerScore(player.name),
-        }))
-        .sort((p1, p2) => p2.score - p1.score)
-        .slice(0, 2)
-        .map((p) => p.score);
+        .map((player) => getters.getPlayerScore(player.name))
+        .sort((score1, score2) => score2 - score1)
+        .slice(0, 2);
 
       return Math.trunc(
         ((bestScore - secondBestScore) * state.turnNumber) / 10
@@ -108,7 +101,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
             bestPlayer.score >= currentPlayer.score
               ? bestPlayer
               : currentPlayer,
-          { name: "", score: -1 }
+          { name: "", score: Number.MIN_SAFE_INTEGER }
         );
     },
   },
@@ -178,11 +171,14 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     },
   },
   actions: {
-    async startGame({ commit, dispatch }, form: NewGameForm): Promise<void> {
-      const playerNames = form.playerNames.filter((name) => name.length > 0);
+    async startGame(
+      { commit, dispatch },
+      { gameName, playerNames, rules }: NewGameForm
+    ): Promise<void> {
+      const notEmptyPlayerNames = playerNames.filter((name) => name.length > 0);
 
       const hasOnlyUniqueNames =
-        [...new Set(playerNames)].length === playerNames.length;
+        [...new Set(notEmptyPlayerNames)].length === notEmptyPlayerNames.length;
 
       if (!hasOnlyUniqueNames) {
         throw new Error("Chaque joueur doit avoir un nom unique.");
@@ -190,59 +186,50 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
 
       const newGame: CurrentGameState = {
         status: GameStatus.IN_GAME,
-        name: form.gameName,
-        players: playerNames.map((name) => ({
+        name: gameName,
+        players: notEmptyPlayerNames.map((name) => ({
           name,
           history: [],
           hasGrelottine: false,
           hasJarret: false,
         })),
-        currentPlayerName: playerNames[0],
+        currentPlayerName: notEmptyPlayerNames[0],
         turnNumber: 1,
       };
       commit("setGame", newGame);
-      dispatch("configureGameRules", form);
+      dispatch("configureGameRules", rules);
 
       await dispatch("saveGameToLocalStorage");
     },
     configureGameRules({ commit }, payload: RulesState): void {
-      const enabledRules = new Set([
-        RuleName.CUL_DE_CHOUETTE,
-        RuleName.SUITE,
-        RuleName.CHOUETTE_VELUTE,
-        RuleName.VELUTE,
-        RuleName.CHOUETTE,
-        RuleName.NEANT,
-        RuleName.GRELOTTINE,
-        RuleName.BEVUE,
-      ]);
+      const enabledRules = new Set(BASIC_RULE_NAMES);
 
-      if (payload.levelOne?.isSouffletteEnabled) {
-        commit("rules/levelOne/setIsSouffletteEnabled", true);
+      if (payload?.isSouffletteEnabled) {
+        commit("rules/setIsSouffletteEnabled", true);
         enabledRules.add(RuleName.SOUFFLETTE);
       } else {
-        commit("rules/levelOne/setIsSouffletteEnabled", false);
+        commit("rules/setIsSouffletteEnabled", false);
       }
 
-      if (payload.levelOne?.isSiropEnabled) {
-        commit("rules/levelOne/setIsSiropEnabled", true);
+      if (payload?.isSiropEnabled) {
+        commit("rules/setIsSiropEnabled", true);
         enabledRules.add(RuleName.SIROTAGE);
       } else {
-        commit("rules/levelOne/setIsSiropEnabled", false);
+        commit("rules/setIsSiropEnabled", false);
       }
 
-      if (payload.levelOne?.isAttrapeOiseauEnabled) {
-        commit("rules/levelOne/setIsAttrapeOiseauEnabled", true);
+      if (payload?.isAttrapeOiseauEnabled) {
+        commit("rules/setIsAttrapeOiseauEnabled", true);
         enabledRules.add(RuleName.ATTRAPE_OISEAU);
       } else {
-        commit("rules/levelOne/setIsAttrapeOiseauEnabled", false);
+        commit("rules/setIsAttrapeOiseauEnabled", false);
       }
 
-      if (payload.levelOne?.isBleuRougeEnabled) {
-        commit("rules/levelOne/setIsBleuRougeEnabled", true);
+      if (payload?.isBleuRougeEnabled) {
+        commit("rules/setIsBleuRougeEnabled", true);
         enabledRules.add(RuleName.BLEU_ROUGE);
       } else {
-        commit("rules/levelOne/setIsBleuRougeEnabled", false);
+        commit("rules/setIsBleuRougeEnabled", false);
       }
 
       const rulesToEnable = ALL_RULES_ORDERED.filter(({ name }) =>
@@ -273,7 +260,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       if (!isGameFinished) {
         const nextPlayerName = getNextPlayer(
           state.players,
-          state.currentPlayerName! //eslint-disable-line @typescript-eslint/no-non-null-assertion
+          state.currentPlayerName!
         );
 
         commit("setCurrentPlayerName", nextPlayerName);
