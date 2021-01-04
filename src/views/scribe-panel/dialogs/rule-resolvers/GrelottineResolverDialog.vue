@@ -145,7 +145,6 @@ import { mapGetters, mapState } from "vuex";
 import {
   inputRuleFunction,
   inputStrictlyPositiveIntegerRules,
-  positiveIntegerInputRules,
   rulesOfSelectChallengeInput,
   rulesOfSelectNameInput,
 } from "@/form-validation/form-validation-rules";
@@ -175,7 +174,6 @@ const INITIAL_FORM: GrelottineForm = {
     ...mapState("currentGame/dialogs", ["grelottineResolverDialog"]),
     ...mapState("currentGame/rules", ["isSiropEnabled"]),
     ...mapGetters("currentGame", [
-      "currentPlayer",
       "getPlayerScore",
       "getPlayerScore",
       "playerNames",
@@ -184,7 +182,6 @@ const INITIAL_FORM: GrelottineForm = {
 })
 export default class GrelottineResolverDialog extends Vue {
   readonly rulesOfSelectChallengeInput = rulesOfSelectChallengeInput;
-  readonly positiveIntegerInputRules = positiveIntegerInputRules;
 
   readonly players!: Array<Player>;
   readonly isSiropEnabled!: boolean;

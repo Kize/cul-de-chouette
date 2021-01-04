@@ -1,7 +1,7 @@
 <template>
   <v-dialog :value="suiteResolverDialog.isVisible" persistent max-width="800">
     <MainDialogCard
-      :title="`Sélection du joueur ayant perdu sur la suite de ${currentPlayerName}`"
+      :title="`${suiteResolverDialog.playerName} a réalisé une suite !`"
       :is-confirm-button-enabled="isFormValid"
       @cancel="cancel"
       @confirm="confirm"
@@ -49,6 +49,7 @@ import {
 } from "@/form-validation/form-validation-rules";
 import { VForm } from "@/vuetify.interface";
 import { mapGetters, mapState } from "vuex";
+import { DialogsState } from "@/store/current-game/dialogs.store";
 
 export interface SuiteForm {
   multiplier: number;
@@ -63,16 +64,14 @@ const INITIAL_FORM: SuiteForm = {
 @Component({
   components: { MainDialogCard },
   computed: {
-    ...mapState("currentGame", ["currentPlayerName"]),
     ...mapState("currentGame/dialogs", ["suiteResolverDialog"]),
     ...mapGetters("currentGame", ["playerNames"]),
   },
 })
 export default class SuiteResolverDialog extends Vue {
   showDialog = false;
-  currentPlayerName!: string;
   playerNames!: Array<string>;
-  suiteResolverDialog!: { isVisible: boolean };
+  suiteResolverDialog!: DialogsState["suiteResolverDialog"];
 
   form: SuiteForm = { ...INITIAL_FORM };
   isFormValid = true;

@@ -5,7 +5,7 @@
     max-width="800"
   >
     <MainDialogCard
-      :title="`${currentPlayerName} a fait une Chouette Velute`"
+      :title="`${chouetteVeluteResolverDialog.playerName} a réalisé une Chouette Velute !`"
       confirm-button-label="Confirmer la chouette velute"
       :is-confirm-button-enabled="isFormValid"
       @cancel="cancel"
@@ -36,6 +36,7 @@ import { Component, Vue } from "vue-property-decorator";
 import MainDialogCard from "@/components/MainDialogCard.vue";
 import { VForm } from "@/vuetify.interface";
 import { mapGetters, mapState } from "vuex";
+import { DialogsState } from "@/store/current-game/dialogs.store";
 
 export interface ChouetteVeluteForm {
   playerNames: Array<string>;
@@ -48,15 +49,13 @@ const INITIAL_FORM: ChouetteVeluteForm = {
 @Component({
   components: { MainDialogCard },
   computed: {
-    ...mapState("currentGame", ["currentPlayerName"]),
     ...mapState("currentGame/dialogs", ["chouetteVeluteResolverDialog"]),
     ...mapGetters("currentGame", ["playerNames"]),
   },
 })
 export default class ChouetteVeluteResolverDialog extends Vue {
-  currentPlayerName!: string;
   playerNames!: Array<string>;
-  chouetteVeluteResolverDialog!: { isVisible: boolean };
+  chouetteVeluteResolverDialog!: DialogsState["chouetteVeluteResolverDialog"];
 
   readonly selectPlayersRules = [
     (names: Array<string>): true | string =>
