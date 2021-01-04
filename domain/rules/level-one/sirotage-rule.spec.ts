@@ -5,10 +5,9 @@ import {
   SirotageResolution,
   SirotageRule,
 } from "./sirotage-rule";
-
 import { ChouetteRule } from "../basic-rules/chouette-rule";
 import { RuleResolver } from "../rule-resolver";
-import { RuleEffect, RuleEffectEvent, RuleEffects } from "../rule-effect";
+import { RuleEffect, RuleEffectEvent } from "../rule-effect";
 import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
 
 export function testSirotageRule(
@@ -195,6 +194,7 @@ describe("resolver params", () => {
     expect(resolver.getResolution).toHaveBeenCalledWith<
       [SiropResolutionPayload]
     >({
+      playerName: "Alban",
       playableBids: [
         { type: BidType.BEAU_SIROP, isPlayable: true },
         { type: BidType.COUCHE_SIROP, isPlayable: true },

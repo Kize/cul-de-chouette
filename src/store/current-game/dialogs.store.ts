@@ -18,6 +18,7 @@ export interface DialogsState {
 
   siropResolverDialog: {
     isVisible: boolean;
+    playerName: string;
     chouetteValue?: DieValue;
     playableBids: Array<PlayableBid>;
   };
@@ -45,6 +46,7 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
       },
       siropResolverDialog: {
         isVisible: false,
+        playerName: "",
         chouetteValue: undefined,
         playableBids: [],
       },
@@ -82,8 +84,9 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
     },
     setSiropResolverPayload(
       state,
-      { playableBids, chouetteValue }: SiropResolutionPayload
+      { playerName, playableBids, chouetteValue }: SiropResolutionPayload
     ): void {
+      state.siropResolverDialog.playerName = playerName;
       state.siropResolverDialog.playableBids = playableBids;
       state.siropResolverDialog.chouetteValue = chouetteValue;
     },

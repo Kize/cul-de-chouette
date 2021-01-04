@@ -4,7 +4,7 @@
       <v-card-title class="px-12">
         <span>
           <b class="sirop-title">Sirotage</b> <br />
-          {{ currentPlayerName }} a réalisé une chouette de
+          {{ siropResolverDialog.playerName }} a réalisé une chouette de
           {{ siropResolverDialog.chouetteValue }}
         </span>
 
@@ -141,7 +141,7 @@ function getInitialForm(): SiropForm {
     MainDialogCard,
   },
   computed: {
-    ...mapState("currentGame", ["currentPlayerName", "turnNumber"]),
+    ...mapState("currentGame", ["turnNumber"]),
     ...mapState("currentGame/dialogs", ["siropResolverDialog"]),
     ...mapState("currentGame/rules", ["isAttrapeOiseauEnabled"]),
     ...mapGetters("currentGame", ["playerNames"]),
@@ -150,7 +150,6 @@ function getInitialForm(): SiropForm {
 export default class SiropResolverDialog extends Vue {
   readonly rulesOfSelectNameInput = rulesOfSelectNameInput;
 
-  readonly currentPlayerName!: string;
   readonly playerNames!: Array<string>;
   readonly turnNumber?: number;
   readonly isAttrapeOiseauEnabled!: boolean;
@@ -176,7 +175,9 @@ export default class SiropResolverDialog extends Vue {
   }
 
   get otherPlayerNames(): Array<string> {
-    return this.playerNames.filter((name) => name !== this.currentPlayerName);
+    return this.playerNames.filter(
+      (name) => name !== this.siropResolverDialog.playerName
+    );
   }
 
   get playableBidTypes(): Array<SelectItemsType<BidType>> {

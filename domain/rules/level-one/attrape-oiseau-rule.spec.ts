@@ -133,6 +133,7 @@ describe("resolver params", () => {
     expect(resolver.getResolution).toHaveBeenCalledWith<
       [SiropResolutionPayload]
     >({
+      playerName: "Alban",
       playableBids: [
         { type: BidType.BEAU_SIROP, isPlayable: true },
         { type: BidType.COUCHE_SIROP, isPlayable: true },
