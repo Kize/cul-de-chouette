@@ -6,6 +6,7 @@ import {
   SiropResolutionPayload,
 } from "../../../domain/rules/level-one/sirotage-rule";
 import { DieValue } from "../../../domain/rules/dice-rule";
+import { SouffletteResolutionPayload } from "../../../domain/rules/level-one/soufflette-rule";
 
 export interface DialogsState {
   suiteResolverDialog: {
@@ -25,6 +26,7 @@ export interface DialogsState {
   };
   souffletteResolverDialog: {
     isVisible: boolean;
+    playerName: string;
   };
   bleuRougeResolverDialog: {
     isVisible: boolean;
@@ -51,6 +53,7 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
       },
       souffletteResolverDialog: {
         isVisible: false,
+        playerName: "",
       },
       bleuRougeResolverDialog: {
         isVisible: false,
@@ -84,6 +87,12 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
       state.siropResolverDialog.playableBids = playableBids;
       state.siropResolverDialog.chouetteValue = chouetteValue;
     },
+    setSouffletteResolverPayload(
+      state,
+      { playerName }: SouffletteResolutionPayload
+    ): void {
+      state.souffletteResolverDialog.playerName = playerName;
+    },
   },
   actions: {
     openSuiteResolver({ commit }): void {
@@ -111,8 +120,12 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
     closeGrelottineResolver({ commit }): void {
       commit("setGrelottineResolverIsVisible", false);
     },
-    openSouffletteResolver({ commit }): void {
+    openSouffletteResolver(
+      { commit },
+      payload: SouffletteResolutionPayload
+    ): void {
       commit("setSouffletteResolverIsVisible", true);
+      commit("setSouffletteResolverPayload", payload);
     },
     closeSouffletteResolver({ commit }): void {
       commit("setSouffletteResolverIsVisible", false);

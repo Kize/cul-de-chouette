@@ -21,10 +21,11 @@ import { MainPlayableActionsStoreModule } from "@/store/current-game/main-playab
 import { RulesState, RulesStoreModule } from "@/store/current-game/rules.store";
 import { DialogsStoreModule } from "@/store/current-game/dialogs.store";
 import {
-  ALL_RULES_ORDERED, BASIC_RULE_NAMES,
+  ALL_RULES_ORDERED,
+  BASIC_RULE_NAMES,
   gameRuleRunner,
   RuleName,
-} from '@/store/current-game/game-rule-runner';
+} from "@/store/current-game/game-rule-runner";
 import { RuleEffectEvent } from "../../../domain/rules/rule-effect";
 
 export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
