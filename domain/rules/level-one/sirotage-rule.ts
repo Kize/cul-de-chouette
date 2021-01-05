@@ -11,6 +11,7 @@ export interface PlayableBid {
 }
 
 export interface SiropResolutionPayload {
+  playerName: string;
   playableBids: Array<PlayableBid>;
   chouetteValue: DieValue;
 }
@@ -50,6 +51,7 @@ export class SirotageRule extends ChouetteRule {
   }: DiceRollGameContext): Promise<RuleEffects> {
     const chouetteValue = this.getChouetteValue(diceRoll);
     const resolution = await this.sirotageResolver.getResolution({
+      playerName,
       chouetteValue,
       playableBids: this.getPlayableBids(chouetteValue, SIROTAGE_BID_TYPES),
     });

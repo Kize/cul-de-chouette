@@ -8,8 +8,17 @@ export interface ChouetteVeluteResolution {
   playerNames: Array<string>;
 }
 
+export interface ChouetteVeluteResolutionPayload {
+  playerName: string;
+}
+
 export class ChouetteVeluteRule extends DiceRule {
-  constructor(private readonly resolver: Resolver<ChouetteVeluteResolution>) {
+  constructor(
+    private readonly resolver: Resolver<
+      ChouetteVeluteResolution,
+      ChouetteVeluteResolutionPayload
+    >
+  ) {
     super();
   }
 
@@ -23,7 +32,7 @@ export class ChouetteVeluteRule extends DiceRule {
     diceRoll,
     playerName,
   }: DiceRollGameContext): Promise<RuleEffects> {
-    const { playerNames } = await this.resolver.getResolution();
+    const { playerNames } = await this.resolver.getResolution({ playerName });
 
     const effects: RuleEffects = [];
 

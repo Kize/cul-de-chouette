@@ -5,7 +5,9 @@
     max-width="75%"
   >
     <MainDialogCard
-      :title="'Défi de soufflette lancé par ' + currentPlayerName"
+      :title="
+        'Défi de soufflette lancé par ' + souffletteResolverDialog.playerName
+      "
       :is-confirm-button-enabled="isValidButtonActive"
       @cancel="cancel"
       @confirm="confirm"
@@ -68,6 +70,7 @@ import DiceRollInput from "@/components/dice/DiceRollInput.vue";
 import { DiceForm, isDiceFormValid } from "@/components/dice/dice-form";
 import { mapGetters, mapState } from "vuex";
 import { SouffletteResolution } from "../../../../../domain/rules/level-one/soufflette-rule";
+import { DialogsState } from "@/store/current-game/dialogs.store";
 
 @Component({
   components: {
@@ -78,13 +81,12 @@ import { SouffletteResolution } from "../../../../../domain/rules/level-one/souf
   computed: {
     ...mapState("currentGame/rules", ["rules"]),
     ...mapState("currentGame/dialogs", ["souffletteResolverDialog"]),
-    ...mapState("currentGame", ["players", "currentPlayerName", "rules"]),
+    ...mapState("currentGame", ["players", "rules"]),
     ...mapGetters("currentGame", ["playerNames"]),
   },
 })
 export default class SouffletteResolverDialog extends Vue {
-  souffletteResolverDialog!: { isVisible: boolean };
-  currentPlayerName!: string;
+  souffletteResolverDialog!: DialogsState["souffletteResolverDialog"];
   players!: Array<Player>;
   playerNames!: Array<string>;
   rules!: RulesState;
@@ -97,7 +99,9 @@ export default class SouffletteResolverDialog extends Vue {
   readonly rulesOfSelectNameInput = rulesOfSelectNameInput;
 
   get otherPlayerNames(): Array<string> {
-    return this.playerNames.filter((name) => name !== this.currentPlayerName);
+    return this.playerNames.filter(
+      (name) => name !== this.souffletteResolverDialog.playerName
+    );
   }
 
   get isValidButtonActive(): boolean {

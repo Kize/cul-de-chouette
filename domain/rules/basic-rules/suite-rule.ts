@@ -9,8 +9,14 @@ export interface SuiteResolution {
   multiplier: number;
 }
 
+export interface SuiteResolutionPayload {
+  playerName: string;
+}
+
 export class SuiteRule extends DiceRule {
-  constructor(private readonly resolver: Resolver<SuiteResolution>) {
+  constructor(
+    private readonly resolver: Resolver<SuiteResolution, SuiteResolutionPayload>
+  ) {
     super();
   }
 
@@ -34,7 +40,7 @@ export class SuiteRule extends DiceRule {
       });
     }
 
-    const suiteResolution = await this.resolver.getResolution();
+    const suiteResolution = await this.resolver.getResolution({ playerName });
 
     ruleEffects.push({
       event: RuleEffectEvent.SUITE,

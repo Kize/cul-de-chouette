@@ -18,8 +18,17 @@ interface ChallengeSouffletteResolution {
   diceRoll: DiceRoll;
 }
 
+export interface SouffletteResolutionPayload {
+  playerName: string;
+}
+
 export class SouffletteRule extends DiceRule {
-  constructor(private readonly resolver: Resolver<SouffletteResolution>) {
+  constructor(
+    private readonly resolver: Resolver<
+      SouffletteResolution,
+      SouffletteResolutionPayload
+    >
+  ) {
     super();
   }
 
@@ -30,7 +39,9 @@ export class SouffletteRule extends DiceRule {
   }
 
   async applyDiceRule(context: DiceRollGameContext): Promise<RuleEffects> {
-    const resolution = await this.resolver.getResolution();
+    const resolution = await this.resolver.getResolution({
+      playerName: context.playerName,
+    });
 
     if (!resolution.isChallenge) {
       return [

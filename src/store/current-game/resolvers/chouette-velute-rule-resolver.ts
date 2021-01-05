@@ -1,15 +1,20 @@
 import { RuleResolver } from "../../../../domain/rules/rule-resolver";
 import store from "@/store/app.state";
-import { ChouetteVeluteResolution } from "../../../../domain/rules/basic-rules/chouette-velute-rule";
+import {
+  ChouetteVeluteResolution,
+  ChouetteVeluteResolutionPayload,
+} from "../../../../domain/rules/basic-rules/chouette-velute-rule";
 
 export class ChouetteVeluteRuleResolver extends RuleResolver<
-  ChouetteVeluteResolution
+  ChouetteVeluteResolution,
+  ChouetteVeluteResolutionPayload
 > {
   constructor() {
     super();
   }
-  initResolution(): void {
-    store.dispatch("currentGame/dialogs/openChouetteVeluteResolver");
+
+  initResolution(payload: ChouetteVeluteResolutionPayload): void {
+    store.dispatch("currentGame/dialogs/openChouetteVeluteResolver", payload);
   }
 
   endResolution(): void {

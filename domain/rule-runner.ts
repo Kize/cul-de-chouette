@@ -1,7 +1,6 @@
 import { Rule } from "./rules/rule";
 import { RuleEffects } from "./rules/rule-effect";
 import { GameContextWrapper, UnknownGameContext } from "./game-context-event";
-import { NeantRule } from "./rules/basic-rules/neant-rule";
 
 export class RuleRunner {
   constructor(private readonly rules: Array<Rule>) {}
