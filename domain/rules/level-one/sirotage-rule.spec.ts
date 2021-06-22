@@ -125,7 +125,7 @@ export function testSirotageRule(
       });
 
       expect(ruleEffects).toContainEqual<RuleEffect>({
-        event: RuleEffectEvent.SIROP_BET_WON,
+        event: RuleEffectEvent.SIROP_BET_SKIPPED,
         playerName: "JulesNotBetting",
         score: 0,
       });
