@@ -28,6 +28,7 @@ export enum RuleEffectEvent {
   ATTRAPE_OISEAU_LOST = "Attrape-oiseau perdu",
   SIROP_BET_LOST = "Pari de Sirotage perdu",
   SIROP_BET_WON = "Pari de Sirotage gagné",
+  SIROP_BET_SKIPPED = "Aucun pari sur le Sirotage",
   SIROP_BET_WON_BUT_NOT_CLAIMED = "Pari de Sirotage gagné mais pas clamé",
 
   ADD_GRELOTTINE = "Grelottine ajoutée",
@@ -35,10 +36,9 @@ export enum RuleEffectEvent {
   GRELOTTINE_CHALLENGE_WON = "Défi de grelottine gagné",
   GRELOTTINE_CHALLENGE_LOST = "Défi de grelottine perdu",
 
-
   BLEU_ROUGE = "Bleu-rouge",
   BLEU_ROUGE_BET_WON = "Annone de Bleu-rouge gagnée",
-  ADD_JARRET = "Ajout d'un Jarret"
+  ADD_JARRET = "Ajout d'un Jarret",
 }
 
 export enum NotImplementedRuleEffectEvent {

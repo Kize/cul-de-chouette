@@ -87,7 +87,7 @@ export class SirotageRule extends ChouetteRule {
         : RuleEffectEvent.SIROP_BET_WON_BUT_NOT_CLAIMED;
     } else if (playerBid.playerBid === BidType.COUCHE_SIROP) {
       score = 0;
-      event = RuleEffectEvent.SIROP_BET_WON;
+      event = RuleEffectEvent.SIROP_BET_SKIPPED;
     } else {
       score = -5;
       event = RuleEffectEvent.SIROP_BET_LOST;
