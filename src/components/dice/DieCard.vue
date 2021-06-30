@@ -39,8 +39,8 @@ export default class DieCard extends Vue {
     return this.size === "m";
   }
 
-  get iconSize(): number {
-    return this.size === "m" ? 72 : 136;
+  get iconSize(): string {
+    return this.size === "m" ? "5.45rem" : "9.5rem";
   }
 
   changeDieValue(dieValue: number | undefined): void {
@@ -75,16 +75,17 @@ export default class DieCard extends Vue {
   &.die-m > .v-btn.v-btn.v-size--default.die-face {
     border-width: 2px;
     border-radius: 6px;
-    height: 56px;
-    width: 56px;
+    height: 4rem;
+    width: 4rem;
+    margin-right: 0.5rem;
   }
 
   &.die-xl > .v-btn.v-btn.v-size--default.die-face {
     border-width: 5px;
     border-radius: 10px;
-    height: 100px;
-    width: 100px;
-    margin-right: 10px;
+    height: 7rem;
+    width: 7rem;
+    margin-right: 1rem;
   }
 }
 
