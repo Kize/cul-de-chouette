@@ -181,10 +181,8 @@ export default class SiropResolverDialog extends Vue {
   }
 
   get playableBidTypes(): Array<SelectItemsType<BidType>> {
-    const items: Array<SelectItemsType<
-      BidType
-    >> = this.siropResolverDialog.playableBids.map(
-      (playableBid: PlayableBid) => {
+    const items: Array<SelectItemsType<BidType>> =
+      this.siropResolverDialog.playableBids.map((playableBid: PlayableBid) => {
         let disabled;
         switch (playableBid.type) {
           case BidType.COUCHE_SIROP:
@@ -201,8 +199,7 @@ export default class SiropResolverDialog extends Vue {
           value: playableBid.type,
           disabled,
         };
-      }
-    );
+      });
 
     items.splice(3, 0, { divider: true });
 

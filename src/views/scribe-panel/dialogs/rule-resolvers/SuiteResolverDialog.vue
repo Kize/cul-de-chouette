@@ -77,7 +77,8 @@ export default class SuiteResolverDialog extends Vue {
   isFormValid = true;
 
   readonly rulesOfSelectNameInput = rulesOfSelectNameInput;
-  readonly inputStrictlyPositiveIntegerRules = inputStrictlyPositiveIntegerRules;
+  readonly inputStrictlyPositiveIntegerRules =
+    inputStrictlyPositiveIntegerRules;
 
   cancel(): void {
     this.form = { ...INITIAL_FORM };
