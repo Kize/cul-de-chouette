@@ -9,17 +9,22 @@
       <v-form ref="formRef" v-model="isFormValid">
         <v-row justify="center" dense>
           <v-col md="10" cols="12">
-            <v-select
-              label="Joueur ayant perdu la suite"
+            <v-radio-group
               v-model="form.loosingPlayerName"
+              label="Joueur ayant perdu la suite"
               :rules="rulesOfSelectNameInput"
-              clearable
-              outlined
-              :items="playerNames"
               prepend-icon="mdi-account-outline"
-            ></v-select>
+            >
+              <v-radio
+                v-for="playerName in playerNames"
+                :key="playerName"
+                :label="playerName"
+                :value="playerName"
+              ></v-radio>
+            </v-radio-group>
           </v-col>
         </v-row>
+
         <v-row justify="space-around" dense>
           <v-col md="4" cols="12">
             <v-text-field
