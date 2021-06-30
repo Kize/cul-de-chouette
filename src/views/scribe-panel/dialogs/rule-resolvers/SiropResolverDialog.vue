@@ -1,5 +1,10 @@
 <template>
-  <v-dialog :value="siropResolverDialog.isVisible" persistent max-width="75%">
+  <v-dialog
+    :value="siropResolverDialog.isVisible"
+    persistent
+    fullscreen
+    transition="dialog-bottom-transition"
+  >
     <v-card>
       <v-card-title class="px-12">
         <span>
@@ -17,45 +22,51 @@
 
       <v-card-text>
         <v-form ref="formRef" v-model="isFormValid">
-          <v-card class="sirop-actions-card mb-4" outlined>
-            <v-card-title class="py-2">Actions:</v-card-title>
-            <v-card-text class="pb-0">
-              <v-row dense>
-                <v-col md="3" cols="12">
-                  <v-btn large @click="confirmNotSirote">Aucun sirotage</v-btn>
-                </v-col>
-                <v-col md="8" cols="12">
-                  <v-select
-                    v-if="isAttrapeOiseauEnabled"
-                    label="Joueur ayant fait un attrape-oiseau"
-                    v-model="form.playerWhoMakeAttrapeOiseau"
-                    clearable
-                    outlined
-                    :items="otherPlayerNames"
-                  ></v-select>
+          <v-row justify="space-around">
+            <v-col md="4" cols="12">
+              <v-btn block x-large color="primary" @click="confirmNotSirote">
+                Aucun sirotage
+              </v-btn>
+            </v-col>
 
-                  <p v-else>
-                    L'attrape-oiseau n'est pas activé pour cette partie
-                  </p>
-                </v-col>
-              </v-row>
-            </v-card-text>
-          </v-card>
+            <v-col md="6" cols="12">
+              <v-select
+                v-if="isAttrapeOiseauEnabled"
+                label="Joueur ayant fait un attrape-oiseau"
+                v-model="form.playerWhoMakeAttrapeOiseau"
+                :items="otherPlayerNames"
+                prepend-icon="mdi-hand-okay"
+                clearable
+                outlined
+              ></v-select>
+
+              <p v-else>L'attrape-oiseau n'est pas activé pour cette partie</p>
+            </v-col>
+          </v-row>
 
           <v-card class="mb-4" outlined>
-            <v-card-title class="py-2">Annonces:</v-card-title>
+            <v-card-title class="pt-1 pb-0">Annonces:</v-card-title>
             <v-card-text class="pb-0">
               <v-row dense>
                 <v-col v-for="playerName in playerNames" :key="playerName">
-                  <v-select
+                  <v-radio-group
+                    class="py-0 my-0"
                     :label="playerName"
                     :rules="rulesOfSelectNameInput"
-                    clearable
-                    outlined
-                    rounded
-                    :items="playableBidTypes"
+                    prepend-icon="mdi-account-outline"
                     @change="registerPlayerBet(playerName, $event)"
-                  ></v-select>
+                  >
+                    <v-radio
+                      class="bid-option"
+                      v-for="playableBidType in playableBidTypes"
+                      :key="playableBidType.text"
+                      :label="playableBidType.text"
+                      :value="playableBidType.text"
+                      :disabled="playableBidType.disabled"
+                      off-icon="mdi-bird"
+                      on-icon="mdi-owl"
+                    ></v-radio>
+                  </v-radio-group>
                 </v-col>
               </v-row>
             </v-card-text>
@@ -76,9 +87,9 @@
               <v-row dense>
                 <v-col v-for="bid in form.bids" :key="bid.playerName">
                   <v-checkbox
+                    v-if="canPlayerValidateBid(bid.playerBid)"
                     :label="bid.playerName + ' a crié \'Sirop Gagnant\' !'"
                     v-model="bid.isBidValidated"
-                    :disabled="!canPlayerValidateBid(bid.playerBid)"
                     color="success"
                   >
                   </v-checkbox>
@@ -201,8 +212,6 @@ export default class SiropResolverDialog extends Vue {
         };
       });
 
-    items.splice(3, 0, { divider: true });
-
     return items;
   }
 
@@ -278,5 +287,14 @@ export default class SiropResolverDialog extends Vue {
 .bet-validation-card,
 .sirop-actions-card {
   min-height: 130px;
+}
+
+::v-deep.bid-option label {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+}
+
+::v-deep.bid-option i {
+  font-size: 1.75rem;
 }
 </style>
