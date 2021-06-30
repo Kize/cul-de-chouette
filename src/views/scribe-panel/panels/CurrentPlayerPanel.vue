@@ -13,7 +13,13 @@
     </v-card-text>
 
     <v-card-actions class="d-flex justify-end pb-8 pr-12">
-      <v-btn color="success" :disabled="!isFormValid" @click="basicPlay">
+      <v-btn
+        x-large
+        class="px-6 py-4"
+        color="success"
+        :disabled="!isFormValid"
+        @click="basicPlay"
+      >
         Valider
       </v-btn>
     </v-card-actions>
