@@ -57,7 +57,7 @@
                     @change="registerPlayerBet(playerName, $event)"
                   >
                     <v-radio
-                      class="bid-option"
+                      class="bid-option mb-3"
                       v-for="playableBidType in playableBidTypes"
                       :key="playableBidType.text"
                       :label="playableBidType.text"
@@ -65,6 +65,7 @@
                       :disabled="playableBidType.disabled"
                       off-icon="mdi-bird"
                       on-icon="mdi-owl"
+                      active-class="selected-bet"
                     ></v-radio>
                   </v-radio-group>
                 </v-col>
@@ -289,9 +290,12 @@ export default class SiropResolverDialog extends Vue {
   min-height: 130px;
 }
 
+::v-deep.selected-bet label {
+  color: #1976d2;
+}
+
 ::v-deep.bid-option label {
   font-size: 1.5rem;
-  margin-bottom: 8px;
 }
 
 ::v-deep.bid-option i {

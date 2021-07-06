@@ -91,6 +91,7 @@ export default class DieCard extends Vue {
 
 .v-btn-toggle > .v-btn.v-btn--active.active-die {
   transform: scale(1.2);
+  transition-duration: 100ms;
   z-index: 10;
 
   &.chouette-die {

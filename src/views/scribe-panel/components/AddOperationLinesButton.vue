@@ -204,7 +204,7 @@ export default class PlayersBanner extends Vue {
       operations: this.form.operations.map(lineFormToLineActionPayload),
     };
 
-    this.$store.dispatch("currentGame/addOperations", payload);
+    this.$store.dispatch("currentGame/addGodModOperations", payload);
     this.showDialog = false;
     this.form = getInitialForm();
   }

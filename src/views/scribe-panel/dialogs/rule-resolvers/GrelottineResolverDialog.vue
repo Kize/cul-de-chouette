@@ -177,6 +177,7 @@ const INITIAL_FORM: GrelottineForm = {
       "getPlayerScore",
       "getPlayerScore",
       "playerNames",
+      "hasGrelottine",
     ]),
   },
 })
@@ -186,6 +187,7 @@ export default class GrelottineResolverDialog extends Vue {
   readonly players!: Array<Player>;
   readonly isSiropEnabled!: boolean;
   readonly getPlayerScore!: (name: string) => number;
+  readonly hasGrelottine!: (name: string) => boolean;
   readonly grelottineResolverDialog!: { isVisible: boolean };
 
   diceForm: DiceForm = getInitialDiceForm();
@@ -195,7 +197,9 @@ export default class GrelottineResolverDialog extends Vue {
   get grelottinePlayerNames(): Array<string> {
     return this.players
       .filter(
-        (player) => player.hasGrelottine && this.getPlayerScore(player.name) > 0
+        (player) =>
+          this.hasGrelottine(player.name) &&
+          this.getPlayerScore(player.name) > 0
       )
       .map((player) => player.name);
   }
