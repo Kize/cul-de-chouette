@@ -7,30 +7,37 @@
   >
     <v-card>
       <v-card-title class="px-12">
-        <span>
-          <b class="sirop-title">Sirotage</b> <br />
-          {{ siropResolverDialog.playerName }} a réalisé une chouette de
+        <h2>
+          <v-icon class="sirop-title-icon" color="success"
+            >mdi-bottle-soda-classic-outline</v-icon
+          >
+          <span class="sirop-title">Sirotage</span>
+          - {{ siropResolverDialog.playerName }} a réalisé une chouette de
           {{ siropResolverDialog.chouetteValue }}
-        </span>
+        </h2>
 
         <v-spacer></v-spacer>
+        <v-btn large color="primary px-6 mr-6" @click="confirmNotSirote">
+          Aucun sirotage
+        </v-btn>
         <BevueMenuAction></BevueMenuAction>
-        <v-btn color="grey darken-2" text @click="cancel">
+        <v-btn
+          large
+          color="grey darken-2"
+          outlined
+          class="ml-6"
+          @click="cancel"
+        >
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
 
       <v-card-text>
         <v-form ref="formRef" v-model="isFormValid">
-          <v-row justify="space-around">
-            <v-col md="4" cols="12">
-              <v-btn block x-large color="primary" @click="confirmNotSirote">
-                Aucun sirotage
-              </v-btn>
-            </v-col>
-
-            <v-col md="6" cols="12">
+          <v-row justify="center">
+            <v-col md="6" cols="18">
               <v-select
+                class="attrape-oiseau-select"
                 v-if="isAttrapeOiseauEnabled"
                 label="Joueur ayant fait un attrape-oiseau"
                 v-model="form.playerWhoMakeAttrapeOiseau"
@@ -99,9 +106,12 @@
             </v-card-text>
           </v-card>
 
-          <v-card-actions>
+          <v-card-actions class="pr-6">
             <v-spacer></v-spacer>
-            <v-btn x-large class="px-6" @click="cancel"> Annuler </v-btn>
+            <v-btn x-large class="px-6 mr-3" @click="cancel"> Annuler</v-btn>
+            <v-btn x-large color="primary px-6 mr-3" @click="confirmNotSirote">
+              Aucun sirotage
+            </v-btn>
             <v-btn
               x-large
               class="px-6"
@@ -283,7 +293,13 @@ export default class SiropResolverDialog extends Vue {
 
 <style scoped lang="scss">
 .sirop-title {
-  font-size: 2rem;
+  font-size: 2.2rem;
+}
+
+.sirop-title-icon {
+  font-size: 3.5rem;
+  transform: rotate(45deg);
+  margin-top: -1rem;
 }
 
 .bet-validation-card,
@@ -301,5 +317,10 @@ export default class SiropResolverDialog extends Vue {
 
 ::v-deep.bid-option i {
   font-size: 1.75rem;
+}
+::v-deep.attrape-oiseau-select i.mdi-hand-okay {
+  font-size: 2.5rem;
+  margin-top: -0.5rem;
+  margin-right: 0.5rem;
 }
 </style>
