@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
-      <span>{{ title }}</span>
+      <h2>{{ title }}</h2>
 
       <v-spacer></v-spacer>
 

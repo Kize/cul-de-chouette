@@ -5,91 +5,133 @@
       Ajouter des opérations
     </v-btn>
 
-    <v-dialog v-model="showDialog" persistent max-width="90%">
+    <v-dialog
+      v-model="showDialog"
+      persistent
+      fullscreen
+      transition="dialog-bottom-transition"
+    >
       <MainDialogCard
         title="Ajouter des opérations à des joueurs"
         confirm-button-label="Confirmer les opérations"
-        :is-confirm-button-enabled="isFormValid"
+        :is-confirm-button-enabled="true"
         @cancel="cancel"
         @confirm="confirm"
       >
+        <v-row justify="center" align="center">
+          <v-btn @click="addEmptyOperation" class="mr-8">
+            Ajouter une opération
+          </v-btn>
+
+          <v-checkbox
+            label="Faire avancer le tour de jeu"
+            v-model="form.shouldHandleEndTurn"
+          ></v-checkbox>
+        </v-row>
+
         <v-form ref="formRef" v-model="isFormValid" class="mt-4">
           <v-card
-            color="blue-grey lighten-5"
+            :color="index % 2 === 0 ? 'blue lighten-5' : 'teal lighten-5'"
             v-for="(operation, index) in form.operations"
             :key="index"
             rounded
-            class="py-2 mb-2"
+            class="px-6 py-2 mb-2"
           >
-            <v-row>
-              <v-col md="3" cols="12" class="px-4 py-0 mt-3">
-                <v-select
-                  dense
-                  label="Opération"
-                  v-model="operation.designation"
-                  :items="lineTypes"
-                  :rules="rulesOfSelectLineTypeInput"
-                  prepend-icon="mdi-note-text-outline"
-                ></v-select>
+            <v-row justify="center">
+              <v-col md="1" cols="4" class="ml-auto">
+                <v-checkbox
+                  label="Tour ?"
+                  v-model="operation.shouldDisplayTurnNumber"
+                ></v-checkbox>
               </v-col>
 
-              <v-col md="3" cols="12" class="px-4 py-0 mt-3">
+              <v-col md="2" cols="6">
                 <v-select
-                  dense
                   label="Nom du joueur"
                   v-model="operation.playerName"
                   :items="playerNames"
                   :rules="rulesOfSelectNameInput"
                   prepend-icon="mdi-account"
+                  clearable
                 ></v-select>
               </v-col>
 
-              <v-col md="6" cols="12" class="px-4 py-0">
-                <v-row justify="center" align="center">
-                  <v-col md="4" cols="12" class="py-0">
-                    <v-text-field
-                      dense
-                      type="number"
-                      step="1"
-                      label="Montant"
-                      v-model="operation.amount"
-                      :rules="rulesOfAmountInput"
-                      prepend-icon="mdi-dice-multiple"
-                    ></v-text-field>
-                  </v-col>
+              <v-col md="2" cols="4" class="pt-5 ml-auto">
+                <v-btn
+                  large
+                  text
+                  outlined
+                  @click="updateOperationAmount(operation, -10)"
+                >
+                  <span class="amount-modifiers-label">- 10</span>
+                </v-btn>
+                <v-btn
+                  class="mx-1"
+                  large
+                  text
+                  outlined
+                  @click="updateOperationAmount(operation, -5)"
+                >
+                  <span class="amount-modifiers-label">- 5</span>
+                </v-btn>
+                <v-btn
+                  large
+                  text
+                  outlined
+                  @click="updateOperationAmount(operation, -1)"
+                >
+                  <span class="amount-modifiers-label">- 1</span>
+                </v-btn>
+              </v-col>
+              <v-col md="1" cols="10">
+                <v-text-field
+                  type="number"
+                  step="1"
+                  label="Montant"
+                  v-model="operation.amount"
+                  :rules="rulesOfAmountInput"
+                ></v-text-field>
+              </v-col>
+              <v-col md="2" cols="4" class="pt-5 mr-auto">
+                <v-btn
+                  large
+                  text
+                  outlined
+                  @click="updateOperationAmount(operation, 1)"
+                >
+                  <span class="amount-modifiers-label">+ 1</span>
+                </v-btn>
+                <v-btn
+                  large
+                  text
+                  outlined
+                  class="mx-1"
+                  @click="updateOperationAmount(operation, 5)"
+                >
+                  <span class="amount-modifiers-label">+ 5</span>
+                </v-btn>
+                <v-btn
+                  large
+                  text
+                  outlined
+                  @click="updateOperationAmount(operation, 10)"
+                >
+                  <span class="amount-modifiers-label">+ 10</span>
+                </v-btn>
+              </v-col>
 
-                  <v-col md="3" cols="6" class="py-0">
-                    <v-checkbox
-                      dense
-                      label="Tour ?"
-                      v-model="operation.shouldDisplayTurnNumber"
-                    ></v-checkbox>
-                  </v-col>
-                  <v-col md="4" cols="6" class="py-0">
-                    <v-btn
-                      small
-                      @click="removeLine(index)"
-                      :disabled="form.operations.length === 1"
-                    >
-                      <v-icon class="mr-1">mdi-trash-can-outline</v-icon>
-                      Retirer
-                    </v-btn>
-                  </v-col>
-                </v-row>
+              <v-col md="auto" cols="auto" class="pt-5">
+                <v-btn
+                  large
+                  @click="removeLine(index)"
+                  :disabled="form.operations.length === 1"
+                >
+                  <v-icon class="mr-1">mdi-trash-can-outline</v-icon>
+                  Retirer la line
+                </v-btn>
               </v-col>
             </v-row>
           </v-card>
-
-          <v-row justify="center" align="center">
-            <v-btn @click="addEmptyOperation" class="mr-8">
-              Ajouter une opération
-            </v-btn>
-
-            <v-checkbox
-              label="Faire avancer le tour de jeu"
-              v-model="form.shouldHandleEndTurn"
-            ></v-checkbox>
-          </v-row>
         </v-form>
       </MainDialogCard>
     </v-dialog>
@@ -130,7 +172,12 @@ interface AddOperationLinesForm {
 
 function getInitialForm(): AddOperationLinesForm {
   return {
-    operations: [{ designation: GodModLineType.GOD_MOD }],
+    operations: [
+      { designation: GodModLineType.GOD_MOD, amount: 0 },
+      { designation: GodModLineType.GOD_MOD, amount: 0 },
+      { designation: GodModLineType.GOD_MOD, amount: 0 },
+      { designation: GodModLineType.GOD_MOD, amount: 0 },
+    ],
     shouldHandleEndTurn: false,
   };
 }
@@ -189,6 +236,11 @@ export default class PlayersBanner extends Vue {
     this.form.operations.push({ designation: GodModLineType.GOD_MOD });
   }
 
+  updateOperationAmount(operation: OperationLineForm, modifier: number): void {
+    const actualAmount = operation.amount || 0;
+    operation.amount = actualAmount + modifier;
+  }
+
   removeLine(index: number): void {
     this.form.operations.splice(index, 1);
   }
@@ -201,7 +253,9 @@ export default class PlayersBanner extends Vue {
   confirm(): void {
     const payload: AddOperationLinesActionPayload = {
       shouldHandleEndTurn: this.form.shouldHandleEndTurn,
-      operations: this.form.operations.map(lineFormToLineActionPayload),
+      operations: this.form.operations
+        .filter((line) => line.playerName && line.amount)
+        .map(lineFormToLineActionPayload),
     };
 
     this.$store.dispatch("currentGame/addGodModOperations", payload);
@@ -211,4 +265,9 @@ export default class PlayersBanner extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.amount-modifiers-label {
+  //font-weight: 600;
+  font-size: 1.1rem;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-4 pt-4">
+  <div>
     <v-row class="mx-2">
       <v-col lg="4" md="10" sm="12">
         <h1 class="headline">Gestion des scores - {{ name }}</h1>
