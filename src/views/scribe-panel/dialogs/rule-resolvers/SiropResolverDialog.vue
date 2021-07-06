@@ -101,10 +101,11 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="grey darken-2" text @click="cancel"> Annuler</v-btn>
+            <v-btn x-large class="px-6" @click="cancel"> Annuler </v-btn>
             <v-btn
-              color="green darken-1"
-              text
+              x-large
+              class="px-6"
+              color="success"
               @click="confirmSirote"
               :disabled="!isValidButtonActive"
             >

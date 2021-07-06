@@ -127,7 +127,12 @@
 
         <v-row class="mx-md-12 mx-6" justify="end">
           <v-col cols="6" md="2">
-            <v-btn :disabled="!isValidateButtonEnabled" @click="confirm"
+            <v-btn
+              x-large
+              class="px-6"
+              color="success"
+              :disabled="!isValidateButtonEnabled"
+              @click="confirm"
               >Valider
             </v-btn>
           </v-col>

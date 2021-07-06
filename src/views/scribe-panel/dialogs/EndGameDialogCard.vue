@@ -39,7 +39,7 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="green darken-1" text @click="confirm">
+      <v-btn x-large class="px-6" color="success" @click="confirm">
         Nouvelle partie
       </v-btn>
     </v-card-actions>

@@ -20,9 +20,9 @@
         <v-card-title class="mb-6">
           <v-row no-gutters>
             <v-col cols="auto" class="mr-auto">
-              <h3>
+              <h2>
                 {{ player.name }} | {{ getPlayerScore(player.name) }} points
-              </h3>
+              </h2>
             </v-col>
 
             <v-col cols="auto">
