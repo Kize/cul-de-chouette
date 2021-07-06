@@ -21,15 +21,6 @@
           Aucun sirotage
         </v-btn>
         <BevueMenuAction></BevueMenuAction>
-        <v-btn
-          large
-          color="grey darken-2"
-          outlined
-          class="ml-6"
-          @click="cancel"
-        >
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
       </v-card-title>
 
       <v-card-text>
