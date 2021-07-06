@@ -127,7 +127,12 @@
 
         <v-row class="mx-md-12 mx-6" justify="end">
           <v-col cols="6" md="2">
-            <v-btn :disabled="!isValidateButtonEnabled" @click="confirm"
+            <v-btn
+              x-large
+              class="px-6"
+              color="success"
+              :disabled="!isValidateButtonEnabled"
+              @click="confirm"
               >Valider
             </v-btn>
           </v-col>
@@ -177,6 +182,7 @@ const INITIAL_FORM: GrelottineForm = {
       "getPlayerScore",
       "getPlayerScore",
       "playerNames",
+      "hasGrelottine",
     ]),
   },
 })
@@ -186,6 +192,7 @@ export default class GrelottineResolverDialog extends Vue {
   readonly players!: Array<Player>;
   readonly isSiropEnabled!: boolean;
   readonly getPlayerScore!: (name: string) => number;
+  readonly hasGrelottine!: (name: string) => boolean;
   readonly grelottineResolverDialog!: { isVisible: boolean };
 
   diceForm: DiceForm = getInitialDiceForm();
@@ -195,7 +202,9 @@ export default class GrelottineResolverDialog extends Vue {
   get grelottinePlayerNames(): Array<string> {
     return this.players
       .filter(
-        (player) => player.hasGrelottine && this.getPlayerScore(player.name) > 0
+        (player) =>
+          this.hasGrelottine(player.name) &&
+          this.getPlayerScore(player.name) > 0
       )
       .map((player) => player.name);
   }

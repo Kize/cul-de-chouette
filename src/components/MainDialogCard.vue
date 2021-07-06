@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
-      <span>{{ title }}</span>
+      <h2>{{ title }}</h2>
 
       <v-spacer></v-spacer>
 
@@ -12,12 +12,13 @@
       <slot></slot>
     </v-card-text>
 
-    <v-card-actions>
+    <v-card-actions class="pb-6 pr-6">
       <v-spacer></v-spacer>
-      <v-btn color="grey darken-2" text @click="cancel"> Annuler </v-btn>
+      <v-btn x-large class="px-6 mr-3" @click="cancel"> Annuler</v-btn>
       <v-btn
-        color="green darken-1"
-        text
+        x-large
+        class="px-6"
+        color="success"
         @click="confirm"
         :disabled="!isConfirmButtonEnabled"
       >

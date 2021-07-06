@@ -15,7 +15,7 @@ import {
   getNextPlayer,
   Player,
 } from "../../../domain/player";
-import { HistoryLineApply } from "@/domain/history";
+import { getTurnId, HistoryLine, HistoryLineApply } from "@/domain/history";
 import { RootState } from "@/store/app.state";
 import { MainPlayableActionsStoreModule } from "@/store/current-game/main-playable-actions.store";
 import { RulesState, RulesStoreModule } from "@/store/current-game/rules.store";
@@ -51,11 +51,6 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     playerNames(state): Array<string> {
       return state.players.map((player) => player.name);
     },
-    currentPlayer(state): Player {
-      return state.players.find(
-        (player) => player.name === state.currentPlayerName
-      )!;
-    },
     isCurrentPlayer(state) {
       return (playerName: string): boolean => {
         return playerName === state.currentPlayerName;
@@ -69,6 +64,48 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         }
 
         return computePlayerScore(player);
+      };
+    },
+    hasGrelottine(state) {
+      return (playerName: string): boolean => {
+        const player = state.players.find(byName(playerName));
+        if (!player) {
+          return false;
+        }
+
+        return player.history.reduce(
+          (acc: boolean, historyLine: HistoryLine) => {
+            if (historyLine.designation === RuleEffectEvent.ADD_GRELOTTINE) {
+              return true;
+            }
+            if (historyLine.designation === RuleEffectEvent.REMOVE_GRELOTTINE) {
+              return false;
+            }
+            return acc;
+          },
+          false
+        );
+      };
+    },
+    hasJarret(state) {
+      return (playerName: string): boolean => {
+        const player = state.players.find(byName(playerName));
+        if (!player) {
+          return false;
+        }
+
+        return player.history.reduce(
+          (acc: boolean, historyLine: HistoryLine) => {
+            if (historyLine.designation === RuleEffectEvent.ADD_JARRET) {
+              return true;
+            }
+            if (historyLine.designation === RuleEffectEvent.REMOVE_JARRET) {
+              return false;
+            }
+            return acc;
+          },
+          false
+        );
       };
     },
     sloubiScore(state, getters): number {
@@ -123,6 +160,9 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     incrementTurnNumber(state): void {
       state.turnNumber += 1;
     },
+    decrementTurnNumber(state): void {
+      state.turnNumber -= 1;
+    },
     addPlayer(
       state,
       { player, previousPlayer }: { player: Player; previousPlayer?: string }
@@ -134,8 +174,6 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       state.players.splice(indexToInsert, 0, {
         name: player.name,
         history: player.history,
-        hasGrelottine: player.hasGrelottine,
-        hasJarret: player.hasJarret,
       });
     },
     addHistoryLine(state, apply: HistoryLineApply): void {
@@ -143,32 +181,19 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
 
       if (player) {
         player.history.push({
+          turnId: getTurnId(state.turnNumber, state.currentPlayerName),
           designation: apply.designation,
           amount: apply.amount,
           turnNumber: apply.turnNumber,
         });
       }
     },
-    addGrelottine(state, playerName: string): void {
-      const player = state.players.find(byName(playerName));
-
-      if (player) {
-        player.hasGrelottine = true;
-      }
-    },
-    removeGrelottine(state, playerName: string): void {
-      const player = state.players.find(byName(playerName));
-
-      if (player) {
-        player.hasGrelottine = false;
-      }
-    },
-    addJarret(state, playerName: string): void {
-      const player = state.players.find(byName(playerName));
-
-      if (player) {
-        player.hasJarret = true;
-      }
+    removeHistoryLines({ players }, turnId: string): void {
+      players.forEach((player) => {
+        player.history = player.history.filter(
+          (historyLine: HistoryLine) => historyLine.turnId !== turnId
+        );
+      });
     },
   },
   actions: {
@@ -249,6 +274,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
 
       if (isGameFinished) {
         commit("setGameStatus", GameStatus.FINISHED);
+        await dispatch("saveGameToLocalStorage");
       } else {
         await dispatch("saveGameToLocalStorage");
       }
@@ -298,12 +324,13 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     saveGameToLocalStorage({ state }, storage = localStorage): void {
       storage.setItem("currentGame", JSON.stringify(state));
     },
-    addOperations(
+    addGodModOperations(
       { dispatch, commit, state },
       actionPayload: AddOperationLinesActionPayload
     ): void {
       actionPayload.operations.forEach((operation) => {
         const apply: HistoryLineApply = {
+          turnId: getTurnId(state.turnNumber, state.currentPlayerName),
           designation: operation.designation,
           playerName: operation.playerName,
           amount: operation.amount,
@@ -341,13 +368,12 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         name: sloubi.name,
         history: [
           {
+            turnId: getTurnId(state.turnNumber, state.currentPlayerName),
             designation: RuleEffectEvent.SLOUBI,
             amount: sloubiAmount,
             turnNumber: state.turnNumber,
           },
         ],
-        hasGrelottine: false,
-        hasJarret: false,
       };
 
       commit("addPlayer", { player, previousPlayer: sloubi.previousPlayer });

@@ -15,9 +15,17 @@ export type AllHistoryLineTypes =
 export interface HistoryLine {
   designation: AllHistoryLineTypes;
   amount: number;
+  turnId: string;
   turnNumber?: number;
 }
 
 export interface HistoryLineApply extends HistoryLine {
   playerName: string;
+}
+
+export function getTurnId(
+  turnNumber: number,
+  currentPlayerName: string
+): string {
+  return `${turnNumber}--${currentPlayerName}`;
 }

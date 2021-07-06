@@ -7,6 +7,8 @@
       'cul-die': isCul,
       'chouette-die': !isCul,
       'vertical-die': !isHorizontal,
+      'die-m': isSizeM,
+      'die-xl': !isSizeM,
     }"
   >
     <v-btn
@@ -16,7 +18,7 @@
       :key="dieValue"
       :value="dieValue"
     >
-      <v-icon size="72" class="dice-icon"
+      <v-icon :size="iconSize" class="dice-icon"
         >mdi-dice-{{ dieValue }}-outline
       </v-icon>
     </v-btn>
@@ -31,6 +33,15 @@ export default class DieCard extends Vue {
   @Prop(Number) value!: number;
   @Prop(Boolean) isCul!: number;
   @Prop(Boolean) isHorizontal?: boolean;
+  @Prop({ type: String, default: "m" }) size?: "m" | "xl";
+
+  get isSizeM(): boolean {
+    return this.size === "m";
+  }
+
+  get iconSize(): string {
+    return this.size === "m" ? "5.45rem" : "9.5rem";
+  }
 
   changeDieValue(dieValue: number | undefined): void {
     this.$emit("input", dieValue || 0);
@@ -57,17 +68,30 @@ export default class DieCard extends Vue {
     color: #2962ff;
   }
 
-  & > .v-btn.v-btn.v-size--default.die-face {
+  &.die > .v-btn.v-btn.v-size--default.die-face {
     border-color: #bdbdbd !important;
+  }
+
+  &.die-m > .v-btn.v-btn.v-size--default.die-face {
     border-width: 2px;
     border-radius: 6px;
-    height: 56px;
-    width: 56px;
+    height: 4rem;
+    width: 4rem;
+    margin-right: 0.5rem;
+  }
+
+  &.die-xl > .v-btn.v-btn.v-size--default.die-face {
+    border-width: 5px;
+    border-radius: 10px;
+    height: 7rem;
+    width: 7rem;
+    margin-right: 1rem;
   }
 }
 
 .v-btn-toggle > .v-btn.v-btn--active.active-die {
-  transform: scale(1.25);
+  transform: scale(1.2);
+  transition-duration: 100ms;
   z-index: 10;
 
   &.chouette-die {

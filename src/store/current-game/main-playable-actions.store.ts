@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Module } from "vuex";
 import { SuiteResolution } from "../../../domain/rules/basic-rules/suite-rule";
-import { HistoryLineApply } from "@/domain/history";
+import { getTurnId, HistoryLineApply } from "@/domain/history";
 import { ChouetteVeluteResolution } from "../../../domain/rules/basic-rules/chouette-velute-rule";
 import { RootState } from "@/store/app.state";
 import { AttrapeOiseauResolution } from "../../../domain/rules/level-one/attrape-oiseau-rule";
@@ -15,10 +15,7 @@ import {
   suiteRuleResolver,
 } from "@/store/current-game/game-rule-runner";
 import { DiceRoll } from "../../../domain/rules/dice-rule";
-import {
-  RuleEffectEvent,
-  RuleEffects,
-} from "../../../domain/rules/rule-effect";
+import { RuleEffects } from "../../../domain/rules/rule-effect";
 import {
   ApplyBevueGameContext,
   ChallengeGrelottineGameContext,
@@ -29,6 +26,10 @@ import {
 import { GrelottineResolution } from "../../../domain/rules/basic-rules/grelottine-rule";
 import { SouffletteResolution } from "../../../domain/rules/level-one/soufflette-rule";
 import { BleuRougeResolution } from "../../../domain/rules/level-three/bleu-rouge-rule";
+import {
+  getPreviousPlayer,
+  getPreviousTurnNumberFromPreviousPlayer,
+} from "../../../domain/player";
 
 type MainPlayableState = Record<string, unknown>;
 
@@ -93,6 +94,10 @@ export const MainPlayableActionsStoreModule: Module<
             : undefined;
 
         const apply: HistoryLineApply = {
+          turnId: getTurnId(
+            rootState.currentGame!.turnNumber,
+            rootState.currentGame!.currentPlayerName
+          ),
           playerName: ruleEffect.playerName,
           amount: ruleEffect.score,
           designation: ruleEffect.event,
@@ -102,24 +107,6 @@ export const MainPlayableActionsStoreModule: Module<
         commit("currentGame/addHistoryLine", apply, {
           root: true,
         });
-
-        switch (ruleEffect.event) {
-          case RuleEffectEvent.ADD_GRELOTTINE:
-            commit("currentGame/addGrelottine", ruleEffect.playerName, {
-              root: true,
-            });
-            break;
-          case RuleEffectEvent.REMOVE_GRELOTTINE:
-            commit("currentGame/removeGrelottine", ruleEffect.playerName, {
-              root: true,
-            });
-            break;
-          case RuleEffectEvent.ADD_JARRET:
-            commit("currentGame/addJarret", ruleEffect.playerName, {
-              root: true,
-            });
-            break;
-        }
       });
     },
     async applyBevue({ dispatch }, playerWhoMadeABevue: string): Promise<void> {
@@ -137,6 +124,39 @@ export const MainPlayableActionsStoreModule: Module<
         }
         throw e;
       }
+    },
+    async cancelLastTurn({ rootState, commit, dispatch }): Promise<void> {
+      const { turnNumber, currentPlayerName, players } = rootState.currentGame!;
+
+      if (turnNumber === 1 && currentPlayerName === players[0].name) {
+        return;
+      }
+
+      const previousPlayerName = getPreviousPlayer(players, currentPlayerName);
+      const previousTurnNumber = getPreviousTurnNumberFromPreviousPlayer(
+        players,
+        previousPlayerName,
+        turnNumber
+      );
+
+      commit(
+        "currentGame/removeHistoryLines",
+        getTurnId(previousTurnNumber, previousPlayerName),
+        { root: true }
+      );
+      commit("currentGame/setCurrentPlayerName", previousPlayerName, {
+        root: true,
+      });
+
+      if (previousTurnNumber !== turnNumber) {
+        commit("currentGame/decrementTurnNumber", undefined, {
+          root: true,
+        });
+      }
+
+      await dispatch("currentGame/saveGameToLocalStorage", undefined, {
+        root: true,
+      });
     },
 
     resolveSuite(_, suiteResolution: SuiteResolution): void {

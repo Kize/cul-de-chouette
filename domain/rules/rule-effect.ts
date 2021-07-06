@@ -31,14 +31,15 @@ export enum RuleEffectEvent {
   SIROP_BET_SKIPPED = "Aucun pari sur le Sirotage",
   SIROP_BET_WON_BUT_NOT_CLAIMED = "Pari de Sirotage gagné mais pas clamé",
 
-  ADD_GRELOTTINE = "Grelottine ajoutée",
-  REMOVE_GRELOTTINE = "Grelottine supprimée",
+  ADD_GRELOTTINE = "Ajout d'une Grelottine",
+  REMOVE_GRELOTTINE = "Retrait de la Grelottine",
   GRELOTTINE_CHALLENGE_WON = "Défi de grelottine gagné",
   GRELOTTINE_CHALLENGE_LOST = "Défi de grelottine perdu",
 
   BLEU_ROUGE = "Bleu-rouge",
   BLEU_ROUGE_BET_WON = "Annone de Bleu-rouge gagnée",
   ADD_JARRET = "Ajout d'un Jarret",
+  REMOVE_JARRET = "Retrait du Jarret",
 }
 
 export enum NotImplementedRuleEffectEvent {

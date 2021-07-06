@@ -1,20 +1,19 @@
 <template>
   <div>
-    <v-row>
-      <v-col
-        v-for="(dieNumber, dieIndex) in 3"
-        :key="dieNumber"
-        md="2"
-        cols="4"
+    <div
+      class="die-container"
+      v-for="(dieNumber, dieIndex) in 3"
+      :key="dieNumber"
+    >
+      <DieCard
+        v-model="diceForm[dieIndex]"
+        @input="$emit('input', diceForm)"
+        :is-cul="dieNumber === 3"
+        is-horizontal
+        size="xl"
       >
-        <DieCard
-          v-model="diceForm[dieIndex]"
-          @input="$emit('input', diceForm)"
-          :is-cul="dieNumber === 3"
-        >
-        </DieCard>
-      </v-col>
-    </v-row>
+      </DieCard>
+    </div>
   </div>
 </template>
 
@@ -33,4 +32,8 @@ export default class DiceRollInput extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.die-container {
+  margin-top: 1.5rem;
+}
+</style>

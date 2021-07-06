@@ -9,6 +9,7 @@
       :key="player.name"
     >
       <v-card
+        class="pa-1"
         height="100%"
         :color="
           isCurrentPlayer(player.name)
@@ -16,39 +17,34 @@
             : 'light-blue lighten-5'
         "
       >
-        <v-card-title>
+        <v-card-title class="mb-6">
           <v-row no-gutters>
-            <v-col cols="6">
-              <span>{{ player.name }}</span>
+            <v-col cols="auto" class="mr-auto">
+              <h2>
+                {{ player.name }} | {{ getPlayerScore(player.name) }} points
+              </h2>
             </v-col>
 
-            <v-col cols="6">
-              <span>Score: {{ getPlayerScore(player.name) }}</span>
+            <v-col cols="auto">
+              <v-btn
+                color="red accent-4"
+                dark
+                rounded
+                @click="applyBevue(player)"
+              >
+                <v-icon class="mr-1" small>mdi-alert-circle-outline</v-icon>
+                Bévue
+              </v-btn>
             </v-col>
           </v-row>
         </v-card-title>
 
-        <v-row no-gutters>
-          <v-col class="text-right mx-6">
-            <v-btn
-              color="red accent-4"
-              dark
-              rounded
-              small
-              @click="applyBevue(player)"
-            >
-              <v-icon class="mr-1" small>mdi-alert-circle-outline</v-icon>
-              Bévue
-            </v-btn>
-          </v-col>
-        </v-row>
-
         <v-card-text>
-          <v-row justify="space-between">
+          <v-row justify="space-between" class="mb-1 mx-1">
             <v-chip
-              :color="player.hasGrelottine ? 'red' : 'dark darken-1'"
+              :color="hasGrelottine(player.name) ? 'red' : 'dark darken-1'"
               outlined
-              :disabled="!player.hasGrelottine"
+              :disabled="!hasGrelottine(player.name)"
             >
               <v-icon class="mr-1" small>mdi-bell-outline</v-icon>
               Grelottine
@@ -56,12 +52,14 @@
 
             <v-chip
               v-if="isBleuRougeEnabled"
-              :color="player.hasJarret ? 'brown darken-4' : 'dark darken-1'"
+              :color="
+                hasJarret(player.name) ? 'brown darken-4' : 'dark darken-1'
+              "
               outlined
-              :disabled="!player.hasJarret"
+              :disabled="!hasJarret(player.name)"
             >
               <v-icon class="mr-1" small>mdi-food-drumstick-outline</v-icon>
-              Jarret
+              Lance-bûches
             </v-chip>
           </v-row>
         </v-card-text>
@@ -78,7 +76,12 @@ import { mapGetters, mapState } from "vuex";
 @Component({
   computed: {
     ...mapState("currentGame/rules", ["isBleuRougeEnabled"]),
-    ...mapGetters("currentGame", ["isCurrentPlayer", "getPlayerScore"]),
+    ...mapGetters("currentGame", [
+      "isCurrentPlayer",
+      "getPlayerScore",
+      "hasGrelottine",
+      "hasJarret",
+    ]),
   },
 })
 export default class PlayersBanner extends Vue {

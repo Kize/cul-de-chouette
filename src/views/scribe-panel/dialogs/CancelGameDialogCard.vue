@@ -4,8 +4,8 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="grey darken-2" text @click="cancel"> Retour en jeu </v-btn>
-      <v-btn color="green darken-1" text @click="confirm">
+      <v-btn x-large class="px-6" @click="cancel"> Retour en jeu </v-btn>
+      <v-btn x-large class="px-6" color="success" @click="confirm">
         Nouvelle partie
       </v-btn>
     </v-card-actions>

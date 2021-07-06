@@ -3,18 +3,18 @@
     <v-card-title class="headline">
       <span>{{ currentPlayer.name }}</span>
       <v-divider vertical class="mx-6"></v-divider>
-      <span>Score: {{ getPlayerScore(currentPlayer.name) }}</span>
+      <span>{{ getPlayerScore(currentPlayer.name) }} points</span>
       <v-divider vertical class="mx-6"></v-divider>
       <span>Tour: {{ turnNumber }}</span>
     </v-card-title>
 
     <v-card-text>
-      <DiceRollInput v-model="diceForm"></DiceRollInput>
+      <DiceRollInput v-model="diceForm" @input="basicPlay"></DiceRollInput>
     </v-card-text>
 
     <v-card-actions class="d-flex justify-end pb-8 pr-12">
-      <v-btn color="success" :disabled="!isFormValid" @click="basicPlay">
-        Valider
+      <v-btn x-large class="px-6 py-4" @click="cancelPreviousTurn">
+        Annuler le tour précédent
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -58,11 +58,18 @@ export default class CurrentPlayerPanel extends Vue {
   }
 
   basicPlay(): void {
-    if (isDiceFormValid(this.diceForm)) {
-      const diceRoll: DiceRoll = [...this.diceForm];
-      this.diceForm = getInitialDiceForm();
-      this.$store.dispatch("currentGame/play/playATurn", diceRoll);
-    }
+    // Delay the action to allow the dice animation to run
+    setTimeout(() => {
+      if (isDiceFormValid(this.diceForm)) {
+        const diceRoll: DiceRoll = [...this.diceForm];
+        this.diceForm = getInitialDiceForm();
+        this.$store.dispatch("currentGame/play/playATurn", diceRoll);
+      }
+    }, 200);
+  }
+
+  cancelPreviousTurn(): void {
+    this.$store.dispatch("currentGame/play/cancelLastTurn");
   }
 }
 </script>

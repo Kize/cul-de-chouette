@@ -1,9 +1,7 @@
 <template>
   <v-form ref="formRef" v-model="isFormValid">
-    <h2>Créer une partie</h2>
-
     <v-card color="grey lighten-3" class="my-4" tile>
-      <v-card-title class="headline"> Détails de la partie</v-card-title>
+      <v-card-title class="headline">Créer une partie</v-card-title>
 
       <v-card-text>
         <v-text-field
@@ -12,7 +10,6 @@
           :rules="newGameNameNameRules"
           counter
           outlined
-          shaped
           clearable
         ></v-text-field>
 
@@ -24,15 +21,18 @@
 
           <v-card-text>
             <v-checkbox
+              dense
               label="La soufflette"
               v-model="form.rules.isSouffletteEnabled"
             ></v-checkbox>
             <v-checkbox
+              dense
               label="Le sirop"
               v-model="form.rules.isSiropEnabled"
               @change="changeSiropEnabled"
             ></v-checkbox>
             <v-checkbox
+              dense
               label="L'attrape-oiseau"
               v-model="form.rules.isAttrapeOiseauEnabled"
               :disabled="isAttrapeOiseauDisabled"
@@ -50,6 +50,7 @@
 
           <v-card-text>
             <v-checkbox
+              dense
               label="Le Bleu-Rouge"
               v-model="form.rules.isBleuRougeEnabled"
             ></v-checkbox>
@@ -136,7 +137,7 @@ export default class NewGameFormSection extends Vue {
 
   form: NewGameForm = {
     gameName: `Partie du ${new Date().toLocaleString("FR-fr").split(" à ")[0]}`,
-    playerNames: ["", ""],
+    playerNames: ["", "", ""],
     rules: {
       isSouffletteEnabled: true,
       isSiropEnabled: true,

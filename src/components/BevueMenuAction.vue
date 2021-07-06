@@ -7,7 +7,6 @@
           color="red accent-4"
           dark
           large
-          tile
           v-bind="attrs"
           v-on="on"
         >

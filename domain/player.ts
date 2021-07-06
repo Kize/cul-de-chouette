@@ -3,19 +3,40 @@ import { HistoryLine } from "@/domain/history";
 export interface Player {
   name: string;
   history: Array<HistoryLine>;
-  hasGrelottine: boolean;
-  hasJarret: boolean;
 }
 
 export function getNextPlayer(
   players: Array<Player>,
-  lastPlayerName: string
+  currentPlayerName: string
 ): string {
   const nextPlayer = players.find((player, index) => {
-    return players[index - 1]?.name === lastPlayerName;
+    return players[index - 1]?.name === currentPlayerName;
   });
 
   return nextPlayer ? nextPlayer.name : players[0].name;
+}
+
+export function getPreviousPlayer(
+  players: Array<Player>,
+  currentPlayerName: string
+): string {
+  const previousPlayer = players.find((player, index) => {
+    return players[index + 1]?.name === currentPlayerName;
+  });
+
+  return previousPlayer
+    ? previousPlayer.name
+    : players[players.length - 1].name;
+}
+
+export function getPreviousTurnNumberFromPreviousPlayer(
+  players: Array<Player>,
+  previousPlayerName: string,
+  currentTurnNumber: number
+): number {
+  return previousPlayerName === players[players.length - 1].name
+    ? currentTurnNumber - 1
+    : currentTurnNumber;
 }
 
 export function computePlayerScore(
