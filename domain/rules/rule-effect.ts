@@ -30,6 +30,8 @@ export enum RuleEffectEvent {
   SIROP_BET_WON = "Pari de Sirotage gagné",
   SIROP_BET_SKIPPED = "Aucun pari sur le Sirotage",
   SIROP_BET_WON_BUT_NOT_CLAIMED = "Pari de Sirotage gagné mais pas clamé",
+  ADD_CIVET = "Ajout d'un civet",
+  REMOVE_CIVET = "Retrait du civet",
 
   ADD_GRELOTTINE = "Ajout d'une Grelottine",
   REMOVE_GRELOTTINE = "Retrait de la Grelottine",
