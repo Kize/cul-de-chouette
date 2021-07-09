@@ -87,6 +87,27 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         );
       };
     },
+    hasCivet(state) {
+      return (playerName: string): boolean => {
+        const player = state.players.find(byName(playerName));
+        if (!player) {
+          return false;
+        }
+
+        return player.history.reduce(
+          (acc: boolean, historyLine: HistoryLine) => {
+            if (historyLine.designation === RuleEffectEvent.ADD_CIVET) {
+              return true;
+            }
+            if (historyLine.designation === RuleEffectEvent.REMOVE_CIVET) {
+              return false;
+            }
+            return acc;
+          },
+          false
+        );
+      };
+    },
     hasJarret(state) {
       return (playerName: string): boolean => {
         const player = state.players.find(byName(playerName));

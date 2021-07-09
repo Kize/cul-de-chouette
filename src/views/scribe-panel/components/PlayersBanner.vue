@@ -42,7 +42,8 @@
         <v-card-text>
           <v-row justify="space-between" class="mb-1 mx-1">
             <v-chip
-              :color="hasGrelottine(player.name) ? 'red' : 'dark darken-1'"
+              v-if="hasGrelottine(player.name)"
+              color="red"
               outlined
               :disabled="!hasGrelottine(player.name)"
             >
@@ -51,14 +52,22 @@
             </v-chip>
 
             <v-chip
-              v-if="isBleuRougeEnabled"
-              :color="
-                hasJarret(player.name) ? 'brown darken-4' : 'dark darken-1'
-              "
+              v-if="hasCivet(player.name)"
+              color="teal darken-4"
+              outlined
+              :disabled="!hasCivet(player.name)"
+            >
+              <v-icon class="mr-1" small>mdi-rabbit</v-icon>
+              Civet
+            </v-chip>
+
+            <v-chip
+              v-if="hasJarret(player.name)"
+              color="brown darken-4"
               outlined
               :disabled="!hasJarret(player.name)"
             >
-              <v-icon class="mr-1" small>mdi-food-drumstick-outline</v-icon>
+              <v-icon class="mr-1" small>mdi-arm-flex-outline</v-icon>
               Lance-bûches
             </v-chip>
           </v-row>
@@ -80,6 +89,7 @@ import { mapGetters, mapState } from "vuex";
       "isCurrentPlayer",
       "getPlayerScore",
       "hasGrelottine",
+      "hasCivet",
       "hasJarret",
     ]),
   },
