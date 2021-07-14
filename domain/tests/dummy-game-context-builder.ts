@@ -15,6 +15,10 @@ export class DummyContextBuilder {
   static aBevueContext(): DummyBevueContextBuilder {
     return new DummyBevueContextBuilder();
   }
+
+  static aCivetContext(): DummyCivetContextBuilder {
+    return new DummyCivetContextBuilder();
+  }
 }
 
 class DummyDiceRollContextBuilder {
@@ -75,6 +79,22 @@ class DummyBevueContextBuilder {
     return new GameContextWrapper({
       event: GameContextEvent.APPLY_BEVUE,
       playerWhoMadeABevue: this.playerWhoMadeABevue,
+    });
+  }
+}
+
+class DummyCivetContextBuilder {
+  private ruleRunner: RuleRunner = new RuleRunner([new NeantRule()]);
+
+  withRuleRunner(ruleRunner: RuleRunner): this {
+    this.ruleRunner = ruleRunner;
+    return this;
+  }
+
+  build(): GameContextWrapper {
+    return new GameContextWrapper({
+      event: GameContextEvent.CIVET_BET,
+      runner: this.ruleRunner,
     });
   }
 }

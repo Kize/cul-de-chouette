@@ -130,25 +130,25 @@ export class SirotageRule extends ChouetteRule {
           score: getCulDeChouetteScore(diceRoll),
         },
       ];
-    } else {
-      const lostSirotageRuleEffects: Array<RuleEffect> = [
-        {
-          event: RuleEffectEvent.SIROP_LOST,
-          playerName: currentPlayerName,
-          score: -this.getChouetteScore(diceRoll),
-        },
-      ];
-
-      if (chouetteValue === 6) {
-        lostSirotageRuleEffects.push({
-          event: RuleEffectEvent.ADD_CIVET,
-          playerName: currentPlayerName,
-          score: 0,
-        });
-      }
-
-      return lostSirotageRuleEffects;
     }
+
+    const lostSirotageRuleEffects: Array<RuleEffect> = [
+      {
+        event: RuleEffectEvent.SIROP_LOST,
+        playerName: currentPlayerName,
+        score: -this.getChouetteScore(diceRoll),
+      },
+    ];
+
+    if (chouetteValue === 6) {
+      lostSirotageRuleEffects.push({
+        event: RuleEffectEvent.ADD_CIVET,
+        playerName: currentPlayerName,
+        score: 0,
+      });
+    }
+
+    return lostSirotageRuleEffects;
   }
 }
 

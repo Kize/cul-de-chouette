@@ -20,7 +20,7 @@ describe("isApplicableToGameContext", () => {
     const rule = new GrelottineRule(dummyResolver);
     expect(
       rule.isApplicableToGameContext(
-        DummyContextBuilder.aDiceRollContext().build().asPlayTurn()
+        DummyContextBuilder.aDiceRollContext().build().asDiceRoll()
       )
     ).toBe(false);
   });
@@ -137,19 +137,19 @@ describe("applyRule", () => {
       playerName: "Delphin",
       score: 70,
     };
-    ruleRunner.handleDiceRoll = jest.fn().mockResolvedValue([aRuleEffect]);
+    ruleRunner.handleGameEvent = jest.fn().mockResolvedValue([aRuleEffect]);
     const ruleEffects = await rule.applyRule(
       DummyContextBuilder.aGrelottineContext()
         .withRuleRunner(ruleRunner)
         .build()
     );
-    expect(ruleRunner.handleDiceRoll).toHaveBeenCalledWith(
+    expect(ruleRunner.handleGameEvent).toHaveBeenCalledWith(
       DummyContextBuilder.aDiceRollContext()
         .withPlayerName("Delphin")
         .withDiceRoll([3, 3, 3])
         .withRuleRunner(ruleRunner)
         .build()
-        .asPlayTurn()
+        .asDiceRoll()
     );
     expect(ruleEffects).toContainEqual<RuleEffect>(aRuleEffect);
   });

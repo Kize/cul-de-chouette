@@ -61,8 +61,9 @@ export class AttrapeOiseauRule extends SirotageRule {
     playerName,
     diceRoll,
   }: DiceRollGameContext): Promise<RuleEffects> {
-    let initialChouetteRuleEffect: RuleEffect | undefined = undefined;
+    let initialChouetteRuleEffect: RuleEffect | undefined;
     const chouetteValue = this.getChouetteValue(diceRoll);
+
     const resolution = await this.attrapeOiseauResolver.getResolution({
       playerName,
       chouetteValue,

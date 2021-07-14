@@ -84,7 +84,7 @@ export const MainPlayableActionsStoreModule: Module<
     ): Promise<void> {
       const ruleEffects: RuleEffects = await gameRuleRunner
         .getRunner()
-        .handleDiceRoll(gameContext);
+        .handleGameEvent(gameContext);
 
       ruleEffects.forEach((ruleEffect) => {
         const gameTurnNumber = rootState.currentGame!.turnNumber;

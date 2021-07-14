@@ -11,8 +11,8 @@ export class CulDeChouetteRule extends DiceRule {
     const score = getCulDeChouetteScore(context.diceRoll);
     return [
       {
-        playerName: context.playerName,
         event: RuleEffectEvent.CUL_DE_CHOUETTE,
+        playerName: context.playerName,
         score,
       },
     ];

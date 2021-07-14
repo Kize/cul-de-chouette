@@ -14,7 +14,7 @@ describe("isApplicableToGameContext", () => {
     const context = DummyContextBuilder.aDiceRollContext()
       .withDiceRoll([4, 2, 1])
       .build()
-      .asPlayTurn();
+      .asDiceRoll();
 
     expect(rule.isApplicableToGameContext(context)).toBe(true);
   });
@@ -131,7 +131,7 @@ describe("applyRule", () => {
 
     const rule = new SouffletteRule(resolver);
     const runnerMock = {} as RuleRunner;
-    runnerMock.handleDiceRoll = jest.fn().mockResolvedValue([aRuleEffect]);
+    runnerMock.handleGameEvent = jest.fn().mockResolvedValue([aRuleEffect]);
 
     const context = DummyContextBuilder.aDiceRollContext()
       .withPlayerName("Alban")
@@ -147,7 +147,7 @@ describe("applyRule", () => {
       diceRoll: [1, 3, 6],
       runner: runnerMock,
     };
-    expect(runnerMock.handleDiceRoll).toHaveBeenCalledWith(expectedContext);
+    expect(runnerMock.handleGameEvent).toHaveBeenCalledWith(expectedContext);
 
     expect(ruleEffects).toContainEqual<RuleEffect>({
       event: RuleEffectEvent.SOUFFLETTE_WON,

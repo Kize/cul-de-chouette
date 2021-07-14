@@ -5,7 +5,7 @@ import { GameContextWrapper, UnknownGameContext } from "./game-context-event";
 export class RuleRunner {
   constructor(private readonly rules: Array<Rule>) {}
 
-  async handleDiceRoll(event: UnknownGameContext): Promise<RuleEffects> {
+  async handleGameEvent(event: UnknownGameContext): Promise<RuleEffects> {
     const ruleToApply = this.rules.find((rule) =>
       rule.isApplicableToGameContext(event)
     );

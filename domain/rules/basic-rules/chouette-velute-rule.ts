@@ -53,7 +53,7 @@ export class ChouetteVeluteRule extends DiceRule {
 
     playerNames.forEach((playerName) => {
       effects.push({
-        event: event,
+        event,
         score,
         playerName,
       });

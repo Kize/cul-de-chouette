@@ -26,13 +26,13 @@ describe("handleDiceRoll", () => {
     const gameContext = DummyContextBuilder.aDiceRollContext()
       .withDiceRoll(diceRoll)
       .build();
-    const result = await runner.handleDiceRoll(gameContext.asPlayTurn());
+    const result = await runner.handleGameEvent(gameContext.asDiceRoll());
 
     expect(invalidRule.isApplicableToGameContext).toHaveBeenCalledWith(
-      gameContext.asPlayTurn()
+      gameContext.asDiceRoll()
     );
     expect(validRule.isApplicableToGameContext).toHaveBeenCalledWith(
-      gameContext.asPlayTurn()
+      gameContext.asDiceRoll()
     );
 
     expect(invalidRule.applyRule).not.toHaveBeenCalled();
@@ -50,7 +50,7 @@ describe("getFirstApplicableRule", () => {
     const gameContext = DummyContextBuilder.aDiceRollContext()
       .withDiceRoll([1, 3, 6])
       .build()
-      .asPlayTurn();
+      .asDiceRoll();
 
     const wrapper = () => {
       runner.getFirstApplicableRule(gameContext);
@@ -65,7 +65,7 @@ describe("getFirstApplicableRule", () => {
     const gameContext = DummyContextBuilder.aDiceRollContext()
       .withDiceRoll([1, 3, 3])
       .build()
-      .asPlayTurn();
+      .asDiceRoll();
 
     const rule = runner.getFirstApplicableRule(gameContext);
 

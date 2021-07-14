@@ -4,18 +4,20 @@ import { RuleRunner } from "./rule-runner";
 export type UnknownGameContext =
   | DiceRollGameContext
   | ChallengeGrelottineGameContext
-  | ApplyBevueGameContext;
+  | ApplyBevueGameContext
+  | CivetGameContext;
 
 export enum GameContextEvent {
   DICE_ROLL,
   CHALLENGE_GRELOTTINE,
   APPLY_BEVUE,
+  CIVET_BET,
 }
 
 export class GameContextWrapper {
   constructor(private gameContext: UnknownGameContext) {}
 
-  asPlayTurn(): DiceRollGameContext {
+  asDiceRoll(): DiceRollGameContext {
     if (this.gameContext.event === GameContextEvent.DICE_ROLL) {
       return this.gameContext;
     }
@@ -35,7 +37,16 @@ export class GameContextWrapper {
     if (this.gameContext.event === GameContextEvent.APPLY_BEVUE) {
       return this.gameContext;
     }
-    throw new Error("The given game context should be a ApplyBevueGameContext");
+    throw new Error(
+      "The given game context should be an ApplyBevueGameContext"
+    );
+  }
+
+  asCivet(): CivetGameContext {
+    if (this.gameContext.event === GameContextEvent.CIVET_BET) {
+      return this.gameContext;
+    }
+    throw new Error("The given game context should be a Civet");
   }
 }
 
@@ -48,6 +59,11 @@ export interface DiceRollGameContext {
 
 export interface ChallengeGrelottineGameContext {
   event: GameContextEvent.CHALLENGE_GRELOTTINE;
+  runner: RuleRunner;
+}
+
+export interface CivetGameContext {
+  event: GameContextEvent.CIVET_BET;
   runner: RuleRunner;
 }
 

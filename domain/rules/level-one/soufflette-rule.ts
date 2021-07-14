@@ -79,12 +79,11 @@ export class SouffletteRule extends DiceRule {
       diceRoll: resolution.diceRoll,
     };
 
-    const lastDiceRollRuleEffects = await context.runner.handleDiceRoll(
+    const lastDiceRollRuleEffects = await context.runner.handleGameEvent(
       challengedPlayerContext
     );
 
     return [
-      ...lastDiceRollRuleEffects,
       {
         event: RuleEffectEvent.SOUFFLETTE_WON,
         playerName: context.playerName,
@@ -95,6 +94,7 @@ export class SouffletteRule extends DiceRule {
         playerName: resolution.challengedPlayer,
         score: -30,
       },
+      ...lastDiceRollRuleEffects,
     ];
   }
 }

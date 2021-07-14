@@ -49,7 +49,7 @@ export class BleuRougeRule extends ChouetteRule {
     const winningBid = bids.find((bid) => bid.bet === diceRollSum);
 
     if (!winningBid) {
-      return [...addJarretRuleEffects, initialBleuRougeRulEffect];
+      return [initialBleuRougeRulEffect, ...addJarretRuleEffects];
     }
 
     const bleuRougeBidRuleEffect: RuleEffect = {
@@ -63,9 +63,8 @@ export class BleuRougeRule extends ChouetteRule {
       playerName: winningBid.playerName,
       diceRoll,
     };
-    const winningBidCombinationRuleEffects = await context.runner.handleDiceRoll(
-      winningBetGameContext
-    );
+    const winningBidCombinationRuleEffects =
+      await context.runner.handleGameEvent(winningBetGameContext);
 
     const finalRuleEffects = [
       initialBleuRougeRulEffect,
