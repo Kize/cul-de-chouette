@@ -267,7 +267,6 @@ export default class PlayersBanner extends Vue {
 
 <style scoped lang="scss">
 .amount-modifiers-label {
-  //font-weight: 600;
   font-size: 1.1rem;
 }
 </style>

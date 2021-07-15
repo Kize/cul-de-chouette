@@ -8,6 +8,7 @@ import { AttrapeOiseauResolution } from "../../../domain/rules/level-one/attrape
 import {
   bleuRougeRuleResolver,
   chouetteVeluteRuleResolver,
+  civetRuleResolver,
   gameRuleRunner,
   grelottineRuleResolver,
   siropRuleResolver,
@@ -19,7 +20,6 @@ import { RuleEffects } from "../../../domain/rules/rule-effect";
 import {
   ApplyBevueGameContext,
   ChallengeGrelottineGameContext,
-  DiceRollGameContext,
   GameContextEvent,
   UnknownGameContext,
 } from "../../../domain/game-context-event";
@@ -30,8 +30,20 @@ import {
   getPreviousPlayer,
   getPreviousTurnNumberFromPreviousPlayer,
 } from "../../../domain/player";
+import { CivetResolution } from "../../../domain/rules/level-one/civet-rule";
 
 type MainPlayableState = Record<string, unknown>;
+
+export type PlayATurnPayload = PlayADiceRollPayload | PlayACivetPayload;
+
+export interface PlayADiceRollPayload {
+  event: GameContextEvent.DICE_ROLL;
+  diceRoll: DiceRoll;
+}
+
+export interface PlayACivetPayload {
+  event: GameContextEvent.CIVET_BET;
+}
 
 export const MainPlayableActionsStoreModule: Module<
   MainPlayableState,
@@ -41,14 +53,24 @@ export const MainPlayableActionsStoreModule: Module<
   actions: {
     async playATurn(
       { dispatch, rootState },
-      diceRoll: DiceRoll
+      payload: PlayATurnPayload
     ): Promise<void> {
-      const gameContext: DiceRollGameContext = {
-        event: GameContextEvent.DICE_ROLL,
-        playerName: rootState.currentGame!.currentPlayerName,
-        diceRoll,
-        runner: gameRuleRunner.getRunner(),
-      };
+      let gameContext: UnknownGameContext;
+
+      if (payload.event === GameContextEvent.DICE_ROLL) {
+        gameContext = {
+          event: GameContextEvent.DICE_ROLL,
+          playerName: rootState.currentGame!.currentPlayerName,
+          diceRoll: payload.diceRoll,
+          runner: gameRuleRunner.getRunner(),
+        };
+      } else {
+        gameContext = {
+          event: payload.event,
+          runner: gameRuleRunner.getRunner(),
+          playerName: rootState.currentGame!.currentPlayerName,
+        };
+      }
 
       try {
         await dispatch("handleGameEvent", gameContext);
@@ -195,6 +217,13 @@ export const MainPlayableActionsStoreModule: Module<
     },
     cancelSoufflette(): void {
       souffletteRuleResolver.reject();
+    },
+
+    resolveCivet(_, civetResolution: CivetResolution): void {
+      civetRuleResolver.resolve(civetResolution);
+    },
+    cancelCivet(): void {
+      civetRuleResolver.reject();
     },
 
     resolveBleuRouge(_, bleuRougeResolution: BleuRougeResolution): void {

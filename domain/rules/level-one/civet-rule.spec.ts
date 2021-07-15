@@ -1,6 +1,11 @@
 import { Resolver } from "../rule-resolver";
 import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
-import { CivetBet, CivetResolution, CivetRule } from "./civet-rule";
+import {
+  CivetBet,
+  CivetResolution,
+  CivetResolutionPayload,
+  CivetRule,
+} from "./civet-rule";
 import { RuleEffect, RuleEffectEvent } from "../rule-effect";
 import { VeluteRule } from "../basic-rules/velute-rule";
 import { RuleRunner } from "../../rule-runner";
@@ -10,7 +15,7 @@ import {
 } from "../level-three/bleu-rouge-rule";
 
 describe("isApplicableToGameContext", () => {
-  let dummyResolver: Resolver<CivetResolution>;
+  let dummyResolver: Resolver<CivetResolution, CivetResolutionPayload>;
   beforeEach(() => {
     dummyResolver = {
       getResolution: jest.fn(),
@@ -38,9 +43,8 @@ describe("isApplicableToGameContext", () => {
 
 describe("applyRule", () => {
   it("removes the civet for the player", async () => {
-    const resolver: Resolver<CivetResolution> = {
+    const resolver: Resolver<CivetResolution, CivetResolutionPayload> = {
       getResolution: jest.fn().mockResolvedValue({
-        playerName: "Alban",
         betAmount: 1,
         playerBet: CivetBet.VELUTE,
         diceRoll: [3, 3, 3],
@@ -49,7 +53,7 @@ describe("applyRule", () => {
 
     const rule = new CivetRule(resolver);
     const ruleEffects = await rule.applyRule(
-      DummyContextBuilder.aCivetContext().build()
+      DummyContextBuilder.aCivetContext().withPlayerName("Alban").build()
     );
 
     expect(ruleEffects).toContainEqual<RuleEffect>({
@@ -60,9 +64,8 @@ describe("applyRule", () => {
   });
 
   it("handles a lost civet bet", async () => {
-    const resolver: Resolver<CivetResolution> = {
+    const resolver: Resolver<CivetResolution, CivetResolutionPayload> = {
       getResolution: jest.fn().mockResolvedValue({
-        playerName: "Alban",
         betAmount: 42,
         playerBet: CivetBet.VELUTE,
         diceRoll: [3, 3, 3],
@@ -71,7 +74,7 @@ describe("applyRule", () => {
 
     const rule = new CivetRule(resolver);
     const ruleEffects = await rule.applyRule(
-      DummyContextBuilder.aCivetContext().build()
+      DummyContextBuilder.aCivetContext().withPlayerName("Alban").build()
     );
 
     expect(ruleEffects).toContainEqual<RuleEffect>({
@@ -82,9 +85,8 @@ describe("applyRule", () => {
   });
 
   it("handles a won civet bet", async () => {
-    const resolver: Resolver<CivetResolution> = {
+    const resolver: Resolver<CivetResolution, CivetResolutionPayload> = {
       getResolution: jest.fn().mockResolvedValue({
-        playerName: "Alban",
         betAmount: 102,
         playerBet: CivetBet.VELUTE,
         diceRoll: [2, 3, 5],
@@ -94,6 +96,7 @@ describe("applyRule", () => {
     const rule = new CivetRule(resolver);
     const ruleEffects = await rule.applyRule(
       DummyContextBuilder.aCivetContext()
+        .withPlayerName("Alban")
         .withRuleRunner(new RuleRunner([new VeluteRule()]))
         .build()
     );
@@ -106,9 +109,8 @@ describe("applyRule", () => {
   });
 
   it("applies the dice roll rule effets to the player", async () => {
-    const resolver: Resolver<CivetResolution> = {
+    const resolver: Resolver<CivetResolution, CivetResolutionPayload> = {
       getResolution: jest.fn().mockResolvedValue({
-        playerName: "Alban",
         betAmount: 102,
         playerBet: CivetBet.VELUTE,
         diceRoll: [2, 3, 5],
@@ -118,6 +120,7 @@ describe("applyRule", () => {
     const rule = new CivetRule(resolver);
     const ruleEffects = await rule.applyRule(
       DummyContextBuilder.aCivetContext()
+        .withPlayerName("Alban")
         .withRuleRunner(new RuleRunner([new VeluteRule()]))
         .build()
     );
@@ -130,9 +133,8 @@ describe("applyRule", () => {
   });
 
   it("handle a lost civet bet when betting on a velute, and resulting into a bleu-rouge with a velute", async () => {
-    const civetResolver: Resolver<CivetResolution> = {
+    const civetResolver: Resolver<CivetResolution, CivetResolutionPayload> = {
       getResolution: jest.fn().mockResolvedValue({
-        playerName: "Alban",
         betAmount: 102,
         playerBet: CivetBet.VELUTE,
         diceRoll: [3, 4, 3],
@@ -149,6 +151,7 @@ describe("applyRule", () => {
     const rule = new CivetRule(civetResolver);
     const ruleEffects = await rule.applyRule(
       DummyContextBuilder.aCivetContext()
+        .withPlayerName("Alban")
         .withRuleRunner(
           new RuleRunner([
             new BleuRougeRule(bleuRougeResolver),

@@ -32,6 +32,7 @@ export interface NewGameForm {
     isSouffletteEnabled: boolean;
     isSiropEnabled: boolean;
     isAttrapeOiseauEnabled: boolean;
+    isCivetEnabled: boolean;
     isBleuRougeEnabled: boolean;
   };
 }

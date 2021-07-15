@@ -28,4 +28,6 @@ export class RuleRunner {
 
     return rule;
   }
+
+  // TODO: add a method to test if a given rule is enabled
 }

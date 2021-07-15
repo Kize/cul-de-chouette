@@ -272,6 +272,13 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         commit("rules/setIsAttrapeOiseauEnabled", false);
       }
 
+      if (payload?.isCivetEnabled) {
+        commit("rules/setIsCivetEnabled", true);
+        enabledRules.add(RuleName.CIVET);
+      } else {
+        commit("rules/setIsAttrapeOiseauEnabled", false);
+      }
+
       if (payload?.isBleuRougeEnabled) {
         commit("rules/setIsBleuRougeEnabled", true);
         enabledRules.add(RuleName.BLEU_ROUGE);

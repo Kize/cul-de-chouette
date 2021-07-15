@@ -6,7 +6,7 @@
   >
     <MainDialogCard
       title="Un bleu-rouge !"
-      :is-confirm-button-enabled="isValidButtonActive"
+      :is-confirm-button-enabled="isResolutionReady"
       @cancel="cancel"
       @confirm="confirm"
     >
@@ -96,7 +96,7 @@ export default class BleuRougeResolverDialog extends Vue {
     });
   }
 
-  get isValidButtonActive(): boolean {
+  get isResolutionReady(): boolean {
     return this.isFormValid && isDiceFormValid(this.diceForm);
   }
 
@@ -141,9 +141,4 @@ export default class BleuRougeResolverDialog extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-.button-toggle-label {
-  position: absolute;
-  margin-top: -1.7rem;
-}
-</style>
+<style scoped lang="scss"></style>

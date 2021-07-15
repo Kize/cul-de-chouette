@@ -84,7 +84,13 @@ class DummyBevueContextBuilder {
 }
 
 class DummyCivetContextBuilder {
+  private playerName = "";
   private ruleRunner: RuleRunner = new RuleRunner([new NeantRule()]);
+
+  withPlayerName(playerName: string): this {
+    this.playerName = playerName;
+    return this;
+  }
 
   withRuleRunner(ruleRunner: RuleRunner): this {
     this.ruleRunner = ruleRunner;
@@ -95,6 +101,7 @@ class DummyCivetContextBuilder {
     return new GameContextWrapper({
       event: GameContextEvent.CIVET_BET,
       runner: this.ruleRunner,
+      playerName: this.playerName,
     });
   }
 }

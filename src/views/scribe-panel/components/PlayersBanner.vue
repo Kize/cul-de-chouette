@@ -52,20 +52,21 @@
             </v-chip>
 
             <v-chip
-              v-if="hasCivet(player.name)"
+              v-if="isCivetEnabled && hasCivet(player.name)"
               color="teal darken-4"
               outlined
-              :disabled="!hasCivet(player.name)"
+              @click="startCivet(player.name)"
+              :disabled="!isCurrentPlayer(player.name)"
             >
               <v-icon class="mr-1" small>mdi-rabbit</v-icon>
               Civet
             </v-chip>
 
             <v-chip
-              v-if="hasJarret(player.name)"
+              v-if="isBleuRougeEnabled && hasJarret(player.name)"
               color="brown darken-4"
               outlined
-              :disabled="!hasJarret(player.name)"
+              :disabled="!isCurrentPlayer(player.name)"
             >
               <v-icon class="mr-1" small>mdi-arm-flex-outline</v-icon>
               Lance-bûches
@@ -78,13 +79,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import { Player } from "../../../../domain/player";
 import { mapGetters, mapState } from "vuex";
 
 @Component({
   computed: {
-    ...mapState("currentGame/rules", ["isBleuRougeEnabled"]),
+    ...mapState("currentGame/rules", ["isCivetEnabled", "isBleuRougeEnabled"]),
     ...mapGetters("currentGame", [
       "isCurrentPlayer",
       "getPlayerScore",
@@ -97,9 +98,15 @@ import { mapGetters, mapState } from "vuex";
 export default class PlayersBanner extends Vue {
   @Prop() players!: Array<Player>;
   readonly isBleuRougeEnabled!: boolean;
+  readonly isCivetEnabled!: boolean;
 
   applyBevue(player: Player): void {
     this.$store.dispatch("currentGame/play/applyBevue", player.name);
+  }
+
+  @Emit()
+  startCivet(playerName: string): string {
+    return playerName;
   }
 }
 </script>

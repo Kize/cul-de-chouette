@@ -32,6 +32,7 @@ import {
   isDiceFormValid,
 } from "@/components/dice/dice-form";
 import { DiceRoll } from "../../../../domain/rules/dice-rule";
+import { GameContextEvent } from "../../../../domain/game-context-event";
 
 @Component({
   components: {
@@ -63,7 +64,11 @@ export default class CurrentPlayerPanel extends Vue {
       if (isDiceFormValid(this.diceForm)) {
         const diceRoll: DiceRoll = [...this.diceForm];
         this.diceForm = getInitialDiceForm();
-        this.$store.dispatch("currentGame/play/playATurn", diceRoll);
+
+        this.$store.dispatch("currentGame/play/playATurn", {
+          event: GameContextEvent.DICE_ROLL,
+          diceRoll,
+        });
       }
     }, 200);
   }

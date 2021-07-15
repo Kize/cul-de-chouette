@@ -77,7 +77,7 @@ describe("applyRule", () => {
       )
     ).toEqual<RuleEffects>([
       {
-        event: RuleEffectEvent.VELUTE,
+        event: RuleEffectEvent.SUITE_VELUTE,
         playerName: "Alban",
         score: 18,
       },

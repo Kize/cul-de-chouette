@@ -65,6 +65,7 @@ export interface ChallengeGrelottineGameContext {
 export interface CivetGameContext {
   event: GameContextEvent.CIVET_BET;
   runner: RuleRunner;
+  playerName: string;
 }
 
 export interface ApplyBevueGameContext {

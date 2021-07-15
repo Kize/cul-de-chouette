@@ -9,19 +9,18 @@ import { Resolver } from "../rule-resolver";
 import { DiceRoll } from "../dice-rule";
 
 export interface CivetResolution {
-  playerName: string;
   diceRoll: DiceRoll;
   betAmount: number;
   playerBet: CivetBet;
 }
 
 export enum CivetBet {
-  CHOUETTE = "chouette",
-  VELUTE = "velute",
-  CHOUETTE_VELUTE = "chouette velute",
-  CUL_DE_CHOUETTE = "cul de chouette",
-  SUITE = "suite",
-  SOUFFLETTE = "soufflette",
+  CHOUETTE = "Chouette",
+  VELUTE = "Velute",
+  CHOUETTE_VELUTE = "Chouette-Velute",
+  CUL_DE_CHOUETTE = "Cul de chouette",
+  SUITE = "Suite",
+  SOUFFLETTE = "Soufflette",
   BLEU_ROUGE = "Bleu-Rouge",
   SIROP_GRELOT = "Sirop-Grelot",
   // ARTICHETTE = "Artichette",
@@ -29,18 +28,24 @@ export enum CivetBet {
   // FLAN = "Flan",
 }
 
+export interface CivetResolutionPayload {
+  playerName: string;
+}
+
 export class CivetRule implements Rule {
-  constructor(private readonly resolver: Resolver<CivetResolution>) {}
+  constructor(
+    private readonly resolver: Resolver<CivetResolution, CivetResolutionPayload>
+  ) {}
 
   isApplicableToGameContext(context: UnknownGameContext): boolean {
     return context.event === GameContextEvent.CIVET_BET;
   }
 
   async applyRule(context: GameContextWrapper): Promise<RuleEffects> {
-    const { diceRoll, playerName, playerBet, betAmount } =
-      await this.resolver.getResolution();
+    const { runner, playerName } = context.asCivet();
 
-    const runner = context.asCivet().runner;
+    const { diceRoll, playerBet, betAmount } =
+      await this.resolver.getResolution({ playerName });
 
     const diceRollRuleEffects = await runner.handleGameEvent({
       event: GameContextEvent.DICE_ROLL,
