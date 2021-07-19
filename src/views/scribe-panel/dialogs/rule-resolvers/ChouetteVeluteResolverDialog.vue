@@ -12,7 +12,7 @@
       @confirm="confirm"
     >
       <v-form ref="formRef" v-model="isFormValid">
-        <p>Sélectionner les joueurs ayant disputer la Chouette Velute:</p>
+        <p>Sélectionne les joueurs ayant disputés la Chouette Velute:</p>
         <ul class="player-names-list">
           <li v-for="(playerName, index) in playerNames" :key="index">
             <v-checkbox
