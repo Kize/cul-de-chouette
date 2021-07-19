@@ -61,8 +61,9 @@ export class AttrapeOiseauRule extends SirotageRule {
     playerName,
     diceRoll,
   }: DiceRollGameContext): Promise<RuleEffects> {
-    let initialChouetteRuleEffect: RuleEffect | undefined = undefined;
+    let initialChouetteRuleEffect: RuleEffect | undefined;
     const chouetteValue = this.getChouetteValue(diceRoll);
+
     const resolution = await this.attrapeOiseauResolver.getResolution({
       playerName,
       chouetteValue,
@@ -76,26 +77,35 @@ export class AttrapeOiseauRule extends SirotageRule {
       return [this.getChouetteRuleEffect(playerName, diceRoll)];
     }
 
-    let attrapeOiseauRuleEffect: RuleEffect;
+    let attrapeOiseauRuleEffects: Array<RuleEffect>;
     if (resolution.playerWhoMakeAttrapeOiseau) {
-      const sirotageRuleEffect = await this.getSirotageRuleEffect(
+      const sirotageRuleEffects = await this.getSirotageRuleEffects(
         resolution,
         diceRoll,
         resolution.playerWhoMakeAttrapeOiseau
       );
-      attrapeOiseauRuleEffect = {
-        ...sirotageRuleEffect,
-        event:
-          sirotageRuleEffect.event === RuleEffectEvent.SIROP_WON
-            ? RuleEffectEvent.ATTRAPE_OISEAU_WON
-            : RuleEffectEvent.ATTRAPE_OISEAU_LOST,
-      };
+      attrapeOiseauRuleEffects = sirotageRuleEffects.map((ruleEffect) => {
+        if (
+          ruleEffect.event === RuleEffectEvent.SIROP_WON ||
+          ruleEffect.event === RuleEffectEvent.SIROP_LOST
+        ) {
+          return {
+            ...ruleEffect,
+            event:
+              ruleEffect.event === RuleEffectEvent.SIROP_WON
+                ? RuleEffectEvent.ATTRAPE_OISEAU_WON
+                : RuleEffectEvent.ATTRAPE_OISEAU_LOST,
+          };
+        }
+
+        return ruleEffect;
+      });
       initialChouetteRuleEffect = this.getChouetteRuleEffect(
         playerName,
         diceRoll
       );
     } else {
-      attrapeOiseauRuleEffect = await this.getSirotageRuleEffect(
+      attrapeOiseauRuleEffects = await this.getSirotageRuleEffects(
         resolution,
         diceRoll,
         playerName
@@ -103,7 +113,7 @@ export class AttrapeOiseauRule extends SirotageRule {
     }
 
     return [
-      attrapeOiseauRuleEffect,
+      ...attrapeOiseauRuleEffects,
       ...(initialChouetteRuleEffect ? [initialChouetteRuleEffect] : []),
       ...this.getBidRuleEffects(resolution, diceRoll),
     ];

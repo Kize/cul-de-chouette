@@ -9,6 +9,7 @@ import { DieValue } from "../../../domain/rules/dice-rule";
 import { SouffletteResolutionPayload } from "../../../domain/rules/level-one/soufflette-rule";
 import { SuiteResolutionPayload } from "../../../domain/rules/basic-rules/suite-rule";
 import { ChouetteVeluteResolutionPayload } from "../../../domain/rules/basic-rules/chouette-velute-rule";
+import { CivetResolutionPayload } from "../../../domain/rules/level-one/civet-rule";
 
 export interface DialogsState {
   suiteResolverDialog: {
@@ -30,6 +31,10 @@ export interface DialogsState {
     isVisible: boolean;
   };
   souffletteResolverDialog: {
+    isVisible: boolean;
+    playerName: string;
+  };
+  civetResolverDialog: {
     isVisible: boolean;
     playerName: string;
   };
@@ -63,6 +68,10 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
         isVisible: false,
         playerName: "",
       },
+      civetResolverDialog: {
+        isVisible: false,
+        playerName: "",
+      },
       bleuRougeResolverDialog: {
         isVisible: false,
       },
@@ -85,6 +94,9 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
     setSouffletteResolverIsVisible(state, isVisible): void {
       state.souffletteResolverDialog.isVisible = isVisible;
     },
+    setCivetResolverIsVisible(state, isVisible): void {
+      state.civetResolverDialog.isVisible = isVisible;
+    },
     setBleuRougeResolverIsVisible(state, isVisible): void {
       state.bleuRougeResolverDialog.isVisible = isVisible;
     },
@@ -101,6 +113,12 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
       { playerName }: SouffletteResolutionPayload
     ): void {
       state.souffletteResolverDialog.playerName = playerName;
+    },
+    setCivetResolverPayload(
+      state,
+      { playerName }: CivetResolutionPayload
+    ): void {
+      state.civetResolverDialog.playerName = playerName;
     },
     setSuiteResolverPayload(
       state,
@@ -123,6 +141,7 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
     closeSuiteResolver({ commit }): void {
       commit("setSuiteResolverIsVisible", false);
     },
+
     openChouetteVeluteResolver(
       { commit },
       payload: ChouetteVeluteResolutionPayload
@@ -133,6 +152,7 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
     closeChouetteVeluteResolver({ commit }): void {
       commit("setChouetteVeluteResolverIsVisible", false);
     },
+
     openSiropResolver({ commit }, payload: SiropResolutionPayload): void {
       commit("setSiropResolverIsVisible", true);
       commit("setSiropResolverPayload", payload);
@@ -140,12 +160,14 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
     closeSiropResolver({ commit }): void {
       commit("setSiropResolverIsVisible", false);
     },
+
     openGrelottineResolver({ commit }): void {
       commit("setGrelottineResolverIsVisible", true);
     },
     closeGrelottineResolver({ commit }): void {
       commit("setGrelottineResolverIsVisible", false);
     },
+
     openSouffletteResolver(
       { commit },
       payload: SouffletteResolutionPayload
@@ -156,6 +178,15 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
     closeSouffletteResolver({ commit }): void {
       commit("setSouffletteResolverIsVisible", false);
     },
+
+    openCivetResolver({ commit }, payload: CivetResolutionPayload): void {
+      commit("setCivetResolverIsVisible", true);
+      commit("setCivetResolverPayload", payload);
+    },
+    closeCivetResolver({ commit }): void {
+      commit("setCivetResolverIsVisible", false);
+    },
+
     openBleuRougeResolver({ commit }): void {
       commit("setBleuRougeResolverIsVisible", true);
     },

@@ -27,7 +27,7 @@ export class GrelottineRule implements Rule {
     const resolution = await this.resolver.getResolution();
 
     const runner = context.asChallengeGrelottine().runner;
-    const lastCombinationRuleEffects = await runner.handleDiceRoll({
+    const lastCombinationRuleEffects = await runner.handleGameEvent({
       event: GameContextEvent.DICE_ROLL,
       playerName: resolution.challengedPlayer,
       diceRoll: resolution.diceRoll,

@@ -55,16 +55,18 @@ export class SirotageRule extends ChouetteRule {
       chouetteValue,
       playableBids: this.getPlayableBids(chouetteValue, SIROTAGE_BID_TYPES),
     });
+
     if (!resolution.isSirote) {
       return [this.getChouetteRuleEffect(playerName, diceRoll)];
     }
-    const sirotageRuleEffect = this.getSirotageRuleEffect(
+
+    const sirotageRuleEffects = this.getSirotageRuleEffects(
       resolution,
       diceRoll,
       playerName
     );
     const bidRuleEffects = this.getBidRuleEffects(resolution, diceRoll);
-    return [sirotageRuleEffect, ...bidRuleEffects];
+    return [...sirotageRuleEffects, ...bidRuleEffects];
   }
 
   protected mapPlayerBidToRuleEffect(
@@ -113,26 +115,40 @@ export class SirotageRule extends ChouetteRule {
     );
   }
 
-  protected getSirotageRuleEffect(
+  protected getSirotageRuleEffects(
     resolution: ActiveSirotageResolution,
     diceRoll: DiceRoll,
     currentPlayerName: string
-  ): RuleEffect {
+  ): Array<RuleEffect> {
     const chouetteValue = this.getChouetteValue(diceRoll);
     const isSirotageWon = resolution.lastDieValue === chouetteValue;
     if (isSirotageWon) {
-      return {
-        event: RuleEffectEvent.SIROP_WON,
-        playerName: currentPlayerName,
-        score: getCulDeChouetteScore(diceRoll),
-      };
-    } else {
-      return {
+      return [
+        {
+          event: RuleEffectEvent.SIROP_WON,
+          playerName: currentPlayerName,
+          score: getCulDeChouetteScore(diceRoll),
+        },
+      ];
+    }
+
+    const lostSirotageRuleEffects: Array<RuleEffect> = [
+      {
         event: RuleEffectEvent.SIROP_LOST,
         playerName: currentPlayerName,
         score: -this.getChouetteScore(diceRoll),
-      };
+      },
+    ];
+
+    if (chouetteValue === 6) {
+      lostSirotageRuleEffects.push({
+        event: RuleEffectEvent.ADD_CIVET,
+        playerName: currentPlayerName,
+        score: 0,
+      });
     }
+
+    return lostSirotageRuleEffects;
   }
 }
 

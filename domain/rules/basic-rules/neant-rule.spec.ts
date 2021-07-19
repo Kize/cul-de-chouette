@@ -6,16 +6,14 @@ describe("isApplicableToDiceRoll", () => {
   it("returns always true", function () {
     const rule = new NeantRule();
 
-    expect(rule.isApplicableToDiceRoll([1, 1, 1])).toBe(true);
+    expect(rule.isApplicableToDiceRoll()).toBe(true);
   });
 });
 
 describe("applyRule", () => {
   it("applies a grelottine to the current player", () => {
     const effects = new NeantRule().applyRule(
-      DummyContextBuilder.aDiceRollContext()
-        .withPlayerName("Alban")
-        .build()
+      DummyContextBuilder.aDiceRollContext().withPlayerName("Alban").build()
     );
 
     expect(effects).toContainEqual<RuleEffect>({

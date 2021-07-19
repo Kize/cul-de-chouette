@@ -37,6 +37,12 @@
               v-model="form.rules.isAttrapeOiseauEnabled"
               :disabled="isAttrapeOiseauDisabled"
             ></v-checkbox>
+            <v-checkbox
+              dense
+              label="Le civet"
+              v-model="form.rules.isCivetEnabled"
+              :disabled="isAttrapeOiseauDisabled"
+            ></v-checkbox>
           </v-card-text>
         </v-card>
 
@@ -142,6 +148,7 @@ export default class NewGameFormSection extends Vue {
       isSouffletteEnabled: true,
       isSiropEnabled: true,
       isAttrapeOiseauEnabled: true,
+      isCivetEnabled: true,
       isBleuRougeEnabled: true,
     },
   };
@@ -167,6 +174,7 @@ export default class NewGameFormSection extends Vue {
   changeSiropEnabled(newStatus: boolean): void {
     if (!newStatus) {
       this.form.rules.isAttrapeOiseauEnabled = false;
+      this.form.rules.isCivetEnabled = false;
     }
   }
 

@@ -26,7 +26,10 @@
       </v-col>
     </v-row>
 
-    <PlayersBanner :players="players"></PlayersBanner>
+    <PlayersBanner
+      :players="players"
+      @start-civet="playCivet($event)"
+    ></PlayersBanner>
 
     <v-row>
       <v-col lg="6" md="12" sm="12">
@@ -47,6 +50,7 @@
     <GrelottineResolverDialog></GrelottineResolverDialog>
     <SouffletteResolverDialog></SouffletteResolverDialog>
     <SiropResolverDialog></SiropResolverDialog>
+    <CivetResolverDialog></CivetResolverDialog>
     <BleuRougeResolverDialog></BleuRougeResolverDialog>
 
     <v-dialog v-model="showEndGameDialog" persistent max-width="1000">
@@ -84,12 +88,15 @@ import ChouetteVeluteResolverDialog from "@/views/scribe-panel/dialogs/rule-reso
 import SiropResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/SiropResolverDialog.vue";
 import GrelottineResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/GrelottineResolverDialog.vue";
 import SouffletteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/SouffletteResolverDialog.vue";
+import CivetResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/CivetResolverDialog.vue";
 import BleuRougeResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/BleuRougeResolverDialog.vue";
+import { GameContextEvent } from "../../../domain/game-context-event";
 
 @Component({
   components: {
     BleuRougeResolverDialog,
     SouffletteResolverDialog,
+    CivetResolverDialog,
     GrelottineResolverDialog,
     SiropResolverDialog,
     SuiteResolverDialog,
@@ -109,17 +116,21 @@ import BleuRougeResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers
       "status",
       "players",
     ]),
+    ...mapState("currentGame/rules", ["isCivetEnabled"]),
 
     ...mapGetters("currentGame", [
       "getPlayerScore",
       "playerNames",
       "scoreboard",
+      "hasCivet",
     ]),
   },
 })
 export default class ScribePanel extends Vue {
   players!: Array<Player>;
   currentPlayerName!: string;
+  hasCivet!: (playerName: string) => boolean;
+  readonly isCivetEnabled!: boolean;
   readonly currentGameHistoryRoutePath = ROUTES.CURRENT_GAME_HISTORY.path;
 
   showEndGameDialog = false;
@@ -141,6 +152,26 @@ export default class ScribePanel extends Vue {
     return this.players.filter(
       (player) => player.name === this.currentPlayerName
     )[0];
+  }
+
+  playCivet(playerName: string): void {
+    if (!this.isCivetEnabled) {
+      console.error(
+        "La règle du civet n'est pas active, cette action est impossible."
+      );
+      return;
+    }
+
+    if (!this.hasCivet(playerName)) {
+      console.error(
+        `${playerName} n'a pas de civet, cette action est impossible.`
+      );
+      return;
+    }
+
+    this.$store.dispatch("currentGame/play/playATurn", {
+      event: GameContextEvent.CIVET_BET,
+    });
   }
 
   endGame(): void {

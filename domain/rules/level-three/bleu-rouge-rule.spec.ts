@@ -13,7 +13,7 @@ describe("isApplicableToGameContext", () => {
     const context = DummyContextBuilder.aDiceRollContext()
       .withDiceRoll([3, 4, 3])
       .build()
-      .asPlayTurn();
+      .asDiceRoll();
 
     expect(rule.isApplicableToGameContext(context)).toBe(true);
   });
@@ -91,7 +91,7 @@ describe("applyRule", () => {
 
     const rule = new BleuRougeRule(resolver);
     const runnerMock = {} as RuleRunner;
-    runnerMock.handleDiceRoll = jest.fn().mockResolvedValue([aRuleEffect]);
+    runnerMock.handleGameEvent = jest.fn().mockResolvedValue([aRuleEffect]);
     runnerMock.getFirstApplicableRule = jest
       .fn()
       .mockResolvedValue(new CulDeChouetteRule());

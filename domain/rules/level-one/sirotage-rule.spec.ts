@@ -40,9 +40,9 @@ export function testSirotageRule(
         .withDiceRoll([2, 3, 2])
         .build();
 
-      expect(await sirotageRule.applyRule(gameContext)).toContainEqual<
-        RuleEffect
-      >({
+      expect(
+        await sirotageRule.applyRule(gameContext)
+      ).toContainEqual<RuleEffect>({
         event: RuleEffectEvent.SIROP_LOST,
         playerName: "Alban",
         score: -4,
@@ -61,9 +61,9 @@ export function testSirotageRule(
         .withDiceRoll([2, 3, 2])
         .build();
 
-      expect(await sirotageRule.applyRule(gameContext)).toContainEqual<
-        RuleEffect
-      >({
+      expect(
+        await sirotageRule.applyRule(gameContext)
+      ).toContainEqual<RuleEffect>({
         event: RuleEffectEvent.SIROP_WON,
         playerName: "Alban",
         score: 60,
@@ -166,6 +166,26 @@ export function testSirotageRule(
       expect(ruleEffects).toContainEqual<RuleEffect>({
         event: RuleEffectEvent.SIROP_BET_WON_BUT_NOT_CLAIMED,
         playerName: "DelphinTooSlow",
+        score: 0,
+      });
+    });
+
+    it("adds a civet to the player when a sirop of 6 is lost", async () => {
+      const sirotageRule = getSirotageRuleForResolution({
+        isSirote: true,
+        lastDieValue: 3,
+        bids: [],
+      });
+
+      const gameContext = DummyContextBuilder.aDiceRollContext()
+        .withPlayerName("Alban")
+        .withDiceRoll([6, 6, 5])
+        .build();
+
+      const ruleEffects = await sirotageRule.applyRule(gameContext);
+      expect(ruleEffects).toContainEqual<RuleEffect>({
+        event: RuleEffectEvent.ADD_CIVET,
+        playerName: "Alban",
         score: 0,
       });
     });

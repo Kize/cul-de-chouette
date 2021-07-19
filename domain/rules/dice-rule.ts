@@ -24,7 +24,9 @@ export abstract class DiceRule implements Rule {
     return false;
   }
 
-  applyRule(gameContextWrapper: GameContextWrapper): RuleEffects | Promise<RuleEffects> {
-    return this.applyDiceRule(gameContextWrapper.asPlayTurn());
+  applyRule(
+    gameContextWrapper: GameContextWrapper
+  ): RuleEffects | Promise<RuleEffects> {
+    return this.applyDiceRule(gameContextWrapper.asDiceRoll());
   }
 }

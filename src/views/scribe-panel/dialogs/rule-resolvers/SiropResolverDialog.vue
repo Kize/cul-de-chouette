@@ -8,9 +8,9 @@
     <v-card>
       <v-card-title class="px-12">
         <h2>
-          <v-icon class="sirop-title-icon" color="success"
-            >mdi-bottle-soda-classic-outline</v-icon
-          >
+          <v-icon class="sirop-title-icon" color="success">
+            mdi-bottle-soda-classic-outline
+          </v-icon>
           <span class="sirop-title">Sirotage</span>
           - {{ siropResolverDialog.playerName }} a réalisé une chouette de
           {{ siropResolverDialog.chouetteValue }}
@@ -309,6 +309,7 @@ export default class SiropResolverDialog extends Vue {
 ::v-deep.bid-option i {
   font-size: 1.75rem;
 }
+
 ::v-deep.attrape-oiseau-select i.mdi-hand-okay {
   font-size: 2.5rem;
   margin-top: -0.5rem;

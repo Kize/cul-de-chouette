@@ -87,6 +87,27 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         );
       };
     },
+    hasCivet(state) {
+      return (playerName: string): boolean => {
+        const player = state.players.find(byName(playerName));
+        if (!player) {
+          return false;
+        }
+
+        return player.history.reduce(
+          (acc: boolean, historyLine: HistoryLine) => {
+            if (historyLine.designation === RuleEffectEvent.ADD_CIVET) {
+              return true;
+            }
+            if (historyLine.designation === RuleEffectEvent.REMOVE_CIVET) {
+              return false;
+            }
+            return acc;
+          },
+          false
+        );
+      };
+    },
     hasJarret(state) {
       return (playerName: string): boolean => {
         const player = state.players.find(byName(playerName));
@@ -247,6 +268,13 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       if (payload?.isAttrapeOiseauEnabled) {
         commit("rules/setIsAttrapeOiseauEnabled", true);
         enabledRules.add(RuleName.ATTRAPE_OISEAU);
+      } else {
+        commit("rules/setIsAttrapeOiseauEnabled", false);
+      }
+
+      if (payload?.isCivetEnabled) {
+        commit("rules/setIsCivetEnabled", true);
+        enabledRules.add(RuleName.CIVET);
       } else {
         commit("rules/setIsAttrapeOiseauEnabled", false);
       }

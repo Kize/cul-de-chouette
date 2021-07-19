@@ -42,7 +42,8 @@
         <v-card-text>
           <v-row justify="space-between" class="mb-1 mx-1">
             <v-chip
-              :color="hasGrelottine(player.name) ? 'red' : 'dark darken-1'"
+              v-if="hasGrelottine(player.name)"
+              color="red"
               outlined
               :disabled="!hasGrelottine(player.name)"
             >
@@ -51,14 +52,23 @@
             </v-chip>
 
             <v-chip
-              v-if="isBleuRougeEnabled"
-              :color="
-                hasJarret(player.name) ? 'brown darken-4' : 'dark darken-1'
-              "
+              v-if="isCivetEnabled && hasCivet(player.name)"
+              color="teal darken-4"
               outlined
-              :disabled="!hasJarret(player.name)"
+              @click="startCivet(player.name)"
+              :disabled="!isCurrentPlayer(player.name)"
             >
-              <v-icon class="mr-1" small>mdi-food-drumstick-outline</v-icon>
+              <v-icon class="mr-1" small>mdi-rabbit</v-icon>
+              Civet
+            </v-chip>
+
+            <v-chip
+              v-if="isBleuRougeEnabled && hasJarret(player.name)"
+              color="brown darken-4"
+              outlined
+              :disabled="!isCurrentPlayer(player.name)"
+            >
+              <v-icon class="mr-1" small>mdi-arm-flex-outline</v-icon>
               Lance-bûches
             </v-chip>
           </v-row>
@@ -69,17 +79,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Emit, Prop, Vue } from "vue-property-decorator";
 import { Player } from "../../../../domain/player";
 import { mapGetters, mapState } from "vuex";
 
 @Component({
   computed: {
-    ...mapState("currentGame/rules", ["isBleuRougeEnabled"]),
+    ...mapState("currentGame/rules", ["isCivetEnabled", "isBleuRougeEnabled"]),
     ...mapGetters("currentGame", [
       "isCurrentPlayer",
       "getPlayerScore",
       "hasGrelottine",
+      "hasCivet",
       "hasJarret",
     ]),
   },
@@ -87,9 +98,15 @@ import { mapGetters, mapState } from "vuex";
 export default class PlayersBanner extends Vue {
   @Prop() players!: Array<Player>;
   readonly isBleuRougeEnabled!: boolean;
+  readonly isCivetEnabled!: boolean;
 
   applyBevue(player: Player): void {
     this.$store.dispatch("currentGame/play/applyBevue", player.name);
+  }
+
+  @Emit()
+  startCivet(playerName: string): string {
+    return playerName;
   }
 }
 </script>

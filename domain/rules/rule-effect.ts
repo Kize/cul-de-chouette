@@ -12,6 +12,7 @@ export enum RuleEffectEvent {
   CHOUETTE = "Chouette",
   VELUTE = "Velute",
   SUITE = "Suite",
+  SUITE_VELUTE = "Suite Velute (1,2,3)",
   CUL_DE_CHOUETTE = "Cul de chouette",
   CHOUETTE_VELUTE_WON = "Chouette velute gagnée",
   CHOUETTE_VELUTE_LOST = "Chouette velute perdue",
@@ -30,6 +31,10 @@ export enum RuleEffectEvent {
   SIROP_BET_WON = "Pari de Sirotage gagné",
   SIROP_BET_SKIPPED = "Aucun pari sur le Sirotage",
   SIROP_BET_WON_BUT_NOT_CLAIMED = "Pari de Sirotage gagné mais pas clamé",
+  ADD_CIVET = "Ajout d'un civet",
+  REMOVE_CIVET = "Retrait du civet",
+  CIVET_WON = "Défi de civet réussi",
+  CIVET_LOST = "Défi de civet perdu",
 
   ADD_GRELOTTINE = "Ajout d'une Grelottine",
   REMOVE_GRELOTTINE = "Retrait de la Grelottine",
