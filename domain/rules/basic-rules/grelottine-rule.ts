@@ -34,12 +34,9 @@ export class GrelottineRule implements Rule {
       runner,
     });
 
-    const isGrelottineWon = lastCombinationRuleEffects.some(
-      (lastCombinationRuleEffect) =>
-        grelottineBetToRuleEffectsToCheck[resolution.grelottinBet].has(
-          lastCombinationRuleEffect.event
-        )
-    );
+    const isGrelottineWon = grelottineBetToRuleEffectsToCheck[
+      resolution.grelottinBet
+    ].has(lastCombinationRuleEffects[0].event);
 
     const getLoserScore = () => -resolution.gambledAmount;
     const getWinnerScore = () => resolution.gambledAmount;
@@ -85,9 +82,13 @@ const grelottineBetToRuleEffectsToCheck: Record<
   [GrelottineBet.CHOUETTE_VELUTE]: new Set([
     RuleEffectEvent.CHOUETTE_VELUTE_WON,
     RuleEffectEvent.CHOUETTE_VELUTE_LOST,
+    RuleEffectEvent.CHOUETTE_VELUTE_STOLEN,
   ]),
   [GrelottineBet.CUL_DE_CHOUETTE]: new Set([RuleEffectEvent.CUL_DE_CHOUETTE]),
-  [GrelottineBet.VELUTE]: new Set([RuleEffectEvent.VELUTE]),
+  [GrelottineBet.VELUTE]: new Set([
+    RuleEffectEvent.VELUTE,
+    RuleEffectEvent.SUITE_VELUTE,
+  ]),
   [GrelottineBet.SIROP_GRELOT]: new Set([RuleEffectEvent.SIROP_WON]),
 };
 

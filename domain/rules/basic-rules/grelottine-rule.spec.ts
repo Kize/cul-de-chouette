@@ -8,6 +8,11 @@ import { RuleEffect, RuleEffectEvent } from "../rule-effect";
 import { Resolver } from "../rule-resolver";
 import { RuleRunner } from "../../rule-runner";
 import { ChouetteRule } from "./chouette-rule";
+import {
+  BleuRougeResolution,
+  BleuRougeRule,
+} from "../level-three/bleu-rouge-rule";
+import { VeluteRule } from "./velute-rule";
 
 describe("isApplicableToGameContext", () => {
   let dummyResolver: Resolver<GrelottineResolution>;
@@ -152,5 +157,43 @@ describe("applyRule", () => {
         .asDiceRoll()
     );
     expect(ruleEffects).toContainEqual<RuleEffect>(aRuleEffect);
+  });
+
+  it("handles a lost grelottine bet betting on a velute, and resulting into a bleu-rouge with a velute", async () => {
+    const grelottineResolver: Resolver<GrelottineResolution> = {
+      getResolution: jest.fn().mockResolvedValue({
+        grelottinPlayer: "Alban",
+        challengedPlayer: "Delphin",
+        grelottinBet: GrelottineBet.VELUTE,
+        diceRoll: [3, 3, 4],
+        gambledAmount: 12,
+      } as GrelottineResolution),
+    };
+
+    const bleuRougeResolver: Resolver<BleuRougeResolution> = {
+      getResolution: jest.fn().mockResolvedValue({
+        diceRoll: [2, 3, 5],
+        bids: [{ playerName: "Alban", bet: 10 }],
+      } as BleuRougeResolution),
+    };
+
+    const rule = new GrelottineRule(grelottineResolver);
+
+    const ruleEffects = await rule.applyRule(
+      DummyContextBuilder.aGrelottineContext()
+        .withRuleRunner(
+          new RuleRunner([
+            new BleuRougeRule(bleuRougeResolver),
+            new VeluteRule(),
+          ])
+        )
+        .build()
+    );
+
+    expect(ruleEffects).toContainEqual<RuleEffect>({
+      event: RuleEffectEvent.GRELOTTINE_CHALLENGE_WON,
+      playerName: "Alban",
+      score: 12,
+    });
   });
 });
