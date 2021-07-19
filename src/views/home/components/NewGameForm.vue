@@ -174,6 +174,7 @@ export default class NewGameFormSection extends Vue {
   changeSiropEnabled(newStatus: boolean): void {
     if (!newStatus) {
       this.form.rules.isAttrapeOiseauEnabled = false;
+      this.form.rules.isCivetEnabled = false;
     }
   }
 
