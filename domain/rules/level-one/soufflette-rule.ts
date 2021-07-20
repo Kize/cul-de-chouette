@@ -2,6 +2,7 @@ import { DiceRoll, DiceRule } from "../dice-rule";
 import { RuleEffectEvent, RuleEffects } from "../rule-effect";
 import { DiceRollGameContext } from "../../game-context-event";
 import { Resolver } from "../rule-resolver";
+import { Rules } from "../rule";
 
 export type SouffletteResolution =
   | NoChallengeSouffletteResolution
@@ -23,6 +24,8 @@ export interface SouffletteResolutionPayload {
 }
 
 export class SouffletteRule extends DiceRule {
+  name = Rules.SOUFFLETTE;
+
   constructor(
     private readonly resolver: Resolver<
       SouffletteResolution,

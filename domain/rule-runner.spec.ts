@@ -1,14 +1,14 @@
 import { RuleRunner } from "./rule-runner";
-import { Rule } from "./rules/rule";
+import { Rule, Rules } from "./rules/rule";
 import { DiceRoll } from "./rules/dice-rule";
 import { RuleEffects } from "./rules/rule-effect";
 import { DummyContextBuilder } from "./tests/dummy-game-context-builder";
 import { ChouetteRule } from "./rules/basic-rules/chouette-rule";
-import { NeantRule } from "./rules/basic-rules/neant-rule";
 
 describe("handleDiceRoll", () => {
   it("applies the correct rule", async () => {
     const invalidRule: Rule = {
+      name: Rules.NEANT,
       isApplicableToGameContext: jest.fn().mockReturnValue(false),
       applyRule: jest.fn(),
     };
@@ -16,6 +16,7 @@ describe("handleDiceRoll", () => {
     const expectedRuleEffects: RuleEffects = [];
 
     const validRule: Rule = {
+      name: Rules.NEANT,
       isApplicableToGameContext: jest.fn().mockReturnValue(true),
       applyRule: jest.fn().mockReturnValue(expectedRuleEffects),
     };
@@ -70,5 +71,19 @@ describe("getFirstApplicableRule", () => {
     const rule = runner.getFirstApplicableRule(gameContext);
 
     expect(rule).toBeInstanceOf(ChouetteRule);
+  });
+});
+
+describe("isRuleEnabled", () => {
+  it("returns false when the rule is not enabled", () => {
+    const runner = new RuleRunner([]);
+
+    expect(runner.isRuleEnabled(Rules.CHOUETTE)).toBe(false);
+  });
+
+  it("returns true when the rule is enabled", () => {
+    const runner = new RuleRunner([new ChouetteRule()]);
+
+    expect(runner.isRuleEnabled(Rules.CHOUETTE)).toBe(true);
   });
 });

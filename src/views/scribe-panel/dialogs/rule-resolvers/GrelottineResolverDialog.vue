@@ -85,7 +85,6 @@
                     @change="setAmountToMax"
                   ></v-select>
                 </v-col>
-                <v-spacer></v-spacer>
                 <v-col md="6" cols="12">
                   <v-text-field
                     label="Montant du défi"
@@ -102,7 +101,21 @@
                   >
                   </v-text-field>
                 </v-col>
-                <v-spacer></v-spacer>
+              </v-row>
+
+              <v-row>
+                <v-col md="6" offset-md="6" cols="12">
+                  <v-btn
+                    class="float-right mr-4"
+                    large
+                    color="success"
+                    v-if="isCivetEnabled && hasCivet(form.challengedPlayer)"
+                    :disabled="!isFormValid"
+                    @click="resolveCivet"
+                  >
+                    Utilisation du civet !
+                  </v-btn>
+                </v-col>
               </v-row>
             </v-card>
           </v-col>
@@ -177,12 +190,13 @@ const INITIAL_FORM: GrelottineForm = {
   computed: {
     ...mapState("currentGame", ["players", "turnNumber"]),
     ...mapState("currentGame/dialogs", ["grelottineResolverDialog"]),
-    ...mapState("currentGame/rules", ["isSiropEnabled"]),
+    ...mapState("currentGame/rules", ["isSiropEnabled", "isCivetEnabled"]),
     ...mapGetters("currentGame", [
       "getPlayerScore",
       "getPlayerScore",
       "playerNames",
       "hasGrelottine",
+      "hasCivet",
     ]),
   },
 })
@@ -293,6 +307,24 @@ export default class GrelottineResolverDialog extends Vue {
       challengedPlayer: this.form.challengedPlayer,
       grelottinPlayer: this.form.grelottinPlayer,
       diceRoll,
+    };
+
+    this.diceForm = getInitialDiceForm();
+    (this.$refs.formRef as VForm).reset();
+
+    this.$store.dispatch("currentGame/play/resolveGrelottine", resolution);
+  }
+
+  resolveCivet(): void {
+    if (!this.isFormComplete(this.form)) {
+      return;
+    }
+
+    const resolution: GrelottineResolution = {
+      gambledAmount: this.form.gambledAmount,
+      grelottinBet: this.form.grelottinBet,
+      challengedPlayer: this.form.challengedPlayer,
+      grelottinPlayer: this.form.grelottinPlayer,
     };
 
     this.diceForm = getInitialDiceForm();

@@ -1,6 +1,7 @@
-import { Rule } from "../rule";
+import { Rule, Rules } from "../rule";
 import { RuleEffectEvent, RuleEffects } from "../rule-effect";
 import {
+  CivetGameContext,
   GameContextEvent,
   GameContextWrapper,
   UnknownGameContext,
@@ -13,10 +14,12 @@ export interface GrelottineResolution {
   challengedPlayer: string;
   grelottinBet: GrelottineBet;
   gambledAmount: number;
-  diceRoll: DiceRoll;
+  diceRoll?: DiceRoll;
 }
 
 export class GrelottineRule implements Rule {
+  name = Rules.GRELOTTINE;
+
   constructor(private readonly resolver: Resolver<GrelottineResolution>) {}
 
   isApplicableToGameContext(context: UnknownGameContext): boolean {
@@ -24,30 +27,53 @@ export class GrelottineRule implements Rule {
   }
 
   async applyRule(context: GameContextWrapper): Promise<RuleEffects> {
-    const resolution = await this.resolver.getResolution();
-
+    const {
+      challengedPlayer,
+      diceRoll,
+      gambledAmount,
+      grelottinBet,
+      grelottinPlayer,
+    } = await this.resolver.getResolution();
     const runner = context.asChallengeGrelottine().runner;
-    const lastCombinationRuleEffects = await runner.handleGameEvent({
-      event: GameContextEvent.DICE_ROLL,
-      playerName: resolution.challengedPlayer,
-      diceRoll: resolution.diceRoll,
-      runner,
-    });
 
-    const isGrelottineWon = lastCombinationRuleEffects.some(
-      (lastCombinationRuleEffect) =>
-        grelottineBetToRuleEffectsToCheck[resolution.grelottinBet].has(
-          lastCombinationRuleEffect.event
-        )
+    let lastCombinationRuleEffects: RuleEffects;
+
+    if (!diceRoll) {
+      if (!runner.isRuleEnabled(Rules.CIVET)) {
+        throw new Error(
+          "The civet rule must be enabled to validate a grelottine without a Dice Roll"
+        );
+      }
+
+      const civetGameContext: CivetGameContext = {
+        event: GameContextEvent.CIVET_BET,
+        runner,
+        playerName: challengedPlayer,
+      };
+
+      lastCombinationRuleEffects = await runner.handleGameEvent(
+        civetGameContext
+      );
+    } else {
+      lastCombinationRuleEffects = await runner.handleGameEvent({
+        event: GameContextEvent.DICE_ROLL,
+        playerName: challengedPlayer,
+        diceRoll,
+        runner,
+      });
+    }
+
+    const isGrelottineWon = grelottineBetToRuleEffectsToCheck[grelottinBet].has(
+      lastCombinationRuleEffects[0].event
     );
 
-    const getLoserScore = () => -resolution.gambledAmount;
-    const getWinnerScore = () => resolution.gambledAmount;
+    const getLoserScore = () => -gambledAmount;
+    const getWinnerScore = () => gambledAmount;
 
     return [
       {
         event: RuleEffectEvent.REMOVE_GRELOTTINE,
-        playerName: resolution.grelottinPlayer,
+        playerName: grelottinPlayer,
         score: 0,
       },
       ...lastCombinationRuleEffects,
@@ -55,14 +81,14 @@ export class GrelottineRule implements Rule {
         event: isGrelottineWon
           ? RuleEffectEvent.GRELOTTINE_CHALLENGE_LOST
           : RuleEffectEvent.GRELOTTINE_CHALLENGE_WON,
-        playerName: resolution.grelottinPlayer,
+        playerName: grelottinPlayer,
         score: isGrelottineWon ? getLoserScore() : getWinnerScore(),
       },
       {
         event: isGrelottineWon
           ? RuleEffectEvent.GRELOTTINE_CHALLENGE_WON
           : RuleEffectEvent.GRELOTTINE_CHALLENGE_LOST,
-        playerName: resolution.challengedPlayer,
+        playerName: challengedPlayer,
         score: isGrelottineWon ? getWinnerScore() : getLoserScore(),
       },
     ];
@@ -85,9 +111,13 @@ const grelottineBetToRuleEffectsToCheck: Record<
   [GrelottineBet.CHOUETTE_VELUTE]: new Set([
     RuleEffectEvent.CHOUETTE_VELUTE_WON,
     RuleEffectEvent.CHOUETTE_VELUTE_LOST,
+    RuleEffectEvent.CHOUETTE_VELUTE_STOLEN,
   ]),
   [GrelottineBet.CUL_DE_CHOUETTE]: new Set([RuleEffectEvent.CUL_DE_CHOUETTE]),
-  [GrelottineBet.VELUTE]: new Set([RuleEffectEvent.VELUTE]),
+  [GrelottineBet.VELUTE]: new Set([
+    RuleEffectEvent.VELUTE,
+    RuleEffectEvent.SUITE_VELUTE,
+  ]),
   [GrelottineBet.SIROP_GRELOT]: new Set([RuleEffectEvent.SIROP_WON]),
 };
 
@@ -111,6 +141,9 @@ export function getMaxGrelottinePossibleAmount(
       break;
     case GrelottineBet.SIROP_GRELOT:
       percentage = 0.03;
+      break;
+    default:
+      percentage = 0;
       break;
   }
   return Math.ceil(lowestScore * percentage);

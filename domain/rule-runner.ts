@@ -1,4 +1,4 @@
-import { Rule } from "./rules/rule";
+import { Rule, Rules } from "./rules/rule";
 import { RuleEffects } from "./rules/rule-effect";
 import { GameContextWrapper, UnknownGameContext } from "./game-context-event";
 
@@ -29,5 +29,9 @@ export class RuleRunner {
     return rule;
   }
 
-  // TODO: add a method to test if a given rule is enabled
+  isRuleEnabled(ruleName: Rules): boolean {
+    const rule = this.rules.find((rule) => rule.name === ruleName);
+
+    return !!rule;
+  }
 }

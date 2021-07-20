@@ -1,9 +1,9 @@
-import { Rule } from "./rule";
+import { Rule, Rules } from "./rule";
 import { RuleEffects } from "./rule-effect";
 import {
+  DiceRollGameContext,
   GameContextEvent,
   GameContextWrapper,
-  DiceRollGameContext,
   UnknownGameContext,
 } from "../game-context-event";
 
@@ -11,6 +11,8 @@ export type DieValue = 1 | 2 | 3 | 4 | 5 | 6;
 export type DiceRoll = [DieValue, DieValue, DieValue];
 
 export abstract class DiceRule implements Rule {
+  abstract name: Rules;
+
   abstract isApplicableToDiceRoll(diceRoll: DiceRoll): boolean;
 
   abstract applyDiceRule(

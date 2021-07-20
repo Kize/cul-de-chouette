@@ -1,4 +1,4 @@
-import { Rule } from "../rule";
+import { Rule, Rules } from "../rule";
 import {
   GameContextEvent,
   GameContextWrapper,
@@ -7,6 +7,8 @@ import {
 import { RuleEffectEvent, RuleEffects } from "../rule-effect";
 
 export class BevueRule implements Rule {
+  name = Rules.BEVUE;
+
   isApplicableToGameContext(context: UnknownGameContext): boolean {
     return context.event === GameContextEvent.APPLY_BEVUE;
   }

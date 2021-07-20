@@ -1,6 +1,8 @@
 import { SuiteRule } from "./suite-rule";
 import { RuleEffectEvent, RuleEffects } from "../rule-effect";
 import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
+import { VeluteRule } from "./velute-rule";
+import { RuleRunner } from "../../rule-runner";
 
 describe("isApplicableToDiceRoll", () => {
   let rule: SuiteRule;
@@ -73,6 +75,7 @@ describe("applyRule", () => {
         DummyContextBuilder.aDiceRollContext()
           .withDiceRoll([1, 2, 3])
           .withPlayerName("Alban")
+          .withRuleRunner(new RuleRunner([new VeluteRule()]))
           .build()
       )
     ).toEqual<RuleEffects>([
