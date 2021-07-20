@@ -1,8 +1,11 @@
 import { DiceRoll, DiceRule, DieValue } from "../dice-rule";
 import { RuleEffect, RuleEffectEvent, RuleEffects } from "../rule-effect";
 import { DiceRollGameContext } from "../../game-context-event";
+import { Rules } from "../rule";
 
 export class ChouetteRule extends DiceRule {
+  name = Rules.CHOUETTE;
+
   isApplicableToDiceRoll([dieValue1, dieValue2, dieValue3]: DiceRoll): boolean {
     return (
       dieValue1 === dieValue2 ||

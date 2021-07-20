@@ -4,6 +4,8 @@ import { getCulDeChouetteScore } from "../basic-rules/cul-de-chouette-rule";
 import { DiceRoll, DieValue } from "../dice-rule";
 import { RuleEffect, RuleEffectEvent, RuleEffects } from "../rule-effect";
 import { DiceRollGameContext } from "../../game-context-event";
+import { RuleRunner } from "../../rule-runner";
+import { Rules } from "../rule";
 
 export interface PlayableBid {
   type: BidType;
@@ -48,6 +50,7 @@ export class SirotageRule extends ChouetteRule {
   async applyDiceRule({
     playerName,
     diceRoll,
+    runner,
   }: DiceRollGameContext): Promise<RuleEffects> {
     const chouetteValue = this.getChouetteValue(diceRoll);
     const resolution = await this.sirotageResolver.getResolution({
@@ -61,9 +64,10 @@ export class SirotageRule extends ChouetteRule {
     }
 
     const sirotageRuleEffects = this.getSirotageRuleEffects(
-      resolution,
+      playerName,
       diceRoll,
-      playerName
+      resolution,
+      runner
     );
     const bidRuleEffects = this.getBidRuleEffects(resolution, diceRoll);
     return [...sirotageRuleEffects, ...bidRuleEffects];
@@ -116,9 +120,10 @@ export class SirotageRule extends ChouetteRule {
   }
 
   protected getSirotageRuleEffects(
-    resolution: ActiveSirotageResolution,
+    currentPlayerName: string,
     diceRoll: DiceRoll,
-    currentPlayerName: string
+    resolution: ActiveSirotageResolution,
+    runner: RuleRunner
   ): Array<RuleEffect> {
     const chouetteValue = this.getChouetteValue(diceRoll);
     const isSirotageWon = resolution.lastDieValue === chouetteValue;
@@ -140,7 +145,7 @@ export class SirotageRule extends ChouetteRule {
       },
     ];
 
-    if (chouetteValue === 6) {
+    if (chouetteValue === 6 && runner.isRuleEnabled(Rules.CIVET)) {
       lostSirotageRuleEffects.push({
         event: RuleEffectEvent.ADD_CIVET,
         playerName: currentPlayerName,

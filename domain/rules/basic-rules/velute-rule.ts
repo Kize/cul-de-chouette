@@ -1,16 +1,16 @@
 import { DiceRoll, DiceRule } from "../dice-rule";
 import { RuleEffectEvent, RuleEffects } from "../rule-effect";
 import { DiceRollGameContext } from "../../game-context-event";
+import { Rules } from "../rule";
 
 export class VeluteRule extends DiceRule {
+  name = Rules.VELUTE;
+
   isApplicableToDiceRoll(diceRoll: DiceRoll): boolean {
     return isVelute(diceRoll);
   }
 
-  applyDiceRule({
-    playerName,
-    diceRoll,
-  }: DiceRollGameContext): RuleEffects {
+  applyDiceRule({ playerName, diceRoll }: DiceRollGameContext): RuleEffects {
     const score = getVeluteValue(diceRoll);
 
     return [

@@ -1,4 +1,4 @@
-import { Rule } from "../rule";
+import { Rule, Rules } from "../rule";
 import { RuleEffectEvent, RuleEffects } from "../rule-effect";
 import {
   GameContextEvent,
@@ -33,6 +33,8 @@ export interface CivetResolutionPayload {
 }
 
 export class CivetRule implements Rule {
+  name = Rules.CIVET;
+
   constructor(
     private readonly resolver: Resolver<CivetResolution, CivetResolutionPayload>
   ) {}
@@ -54,13 +56,11 @@ export class CivetRule implements Rule {
       runner,
     });
 
+    const civetRuleEffects: RuleEffects = [];
+
     const isCivetWon = civetBetToRuleEffectsToCheck[playerBet].has(
       diceRollRuleEffects[0].event
     );
-    const civetRuleEffects: RuleEffects = [
-      { event: RuleEffectEvent.REMOVE_CIVET, playerName, score: 0 },
-    ];
-
     if (isCivetWon) {
       civetRuleEffects.push({
         event: RuleEffectEvent.CIVET_WON,
@@ -75,7 +75,13 @@ export class CivetRule implements Rule {
       });
     }
 
-    return [...civetRuleEffects, ...diceRollRuleEffects];
+    civetRuleEffects.push({
+      event: RuleEffectEvent.REMOVE_CIVET,
+      playerName,
+      score: 0,
+    });
+
+    return [...diceRollRuleEffects, ...civetRuleEffects];
   }
 }
 

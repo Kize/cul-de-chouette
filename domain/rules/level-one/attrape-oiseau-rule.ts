@@ -9,6 +9,7 @@ import { Resolver } from "../rule-resolver";
 import { DiceRoll, DieValue } from "../dice-rule";
 import { RuleEffect, RuleEffectEvent, RuleEffects } from "../rule-effect";
 import { DiceRollGameContext } from "../../game-context-event";
+import { Rules } from "../rule";
 
 export type AttrapeOiseauResolution =
   | { isSirote: false }
@@ -32,6 +33,8 @@ const ATTRAPE_OISEAU_BID_TYPES = [
 ];
 
 export class AttrapeOiseauRule extends SirotageRule {
+  name = Rules.ATTRAPE_OISEAU;
+
   constructor(
     private attrapeOiseauResolver: Resolver<
       AttrapeOiseauResolution,
@@ -60,6 +63,7 @@ export class AttrapeOiseauRule extends SirotageRule {
   async applyDiceRule({
     playerName,
     diceRoll,
+    runner,
   }: DiceRollGameContext): Promise<RuleEffects> {
     let initialChouetteRuleEffect: RuleEffect | undefined;
     const chouetteValue = this.getChouetteValue(diceRoll);
@@ -80,9 +84,10 @@ export class AttrapeOiseauRule extends SirotageRule {
     let attrapeOiseauRuleEffects: Array<RuleEffect>;
     if (resolution.playerWhoMakeAttrapeOiseau) {
       const sirotageRuleEffects = await this.getSirotageRuleEffects(
-        resolution,
+        resolution.playerWhoMakeAttrapeOiseau,
         diceRoll,
-        resolution.playerWhoMakeAttrapeOiseau
+        resolution,
+        runner
       );
       attrapeOiseauRuleEffects = sirotageRuleEffects.map((ruleEffect) => {
         if (
@@ -106,9 +111,10 @@ export class AttrapeOiseauRule extends SirotageRule {
       );
     } else {
       attrapeOiseauRuleEffects = await this.getSirotageRuleEffects(
-        resolution,
+        playerName,
         diceRoll,
-        playerName
+        resolution,
+        runner
       );
     }
 

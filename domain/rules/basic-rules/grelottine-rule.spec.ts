@@ -13,6 +13,12 @@ import {
   BleuRougeRule,
 } from "../level-three/bleu-rouge-rule";
 import { VeluteRule } from "./velute-rule";
+import {
+  CivetBet,
+  CivetResolution,
+  CivetResolutionPayload,
+  CivetRule,
+} from "../level-one/civet-rule";
 
 describe("isApplicableToGameContext", () => {
   let dummyResolver: Resolver<GrelottineResolution>;
@@ -21,6 +27,7 @@ describe("isApplicableToGameContext", () => {
       getResolution: jest.fn(),
     };
   });
+
   it("returns false when the given event is not a grelottine", () => {
     const rule = new GrelottineRule(dummyResolver);
     expect(
@@ -124,7 +131,7 @@ describe("applyRule", () => {
     });
   });
 
-  it("it applies the dice roll rule effects to the challenged player", async () => {
+  it("applies the dice roll rule effects to the challenged player", async () => {
     const resolver = {
       getResolution: jest.fn().mockResolvedValue({
         grelottinPlayer: "Alban",
@@ -193,6 +200,47 @@ describe("applyRule", () => {
     expect(ruleEffects).toContainEqual<RuleEffect>({
       event: RuleEffectEvent.GRELOTTINE_CHALLENGE_WON,
       playerName: "Alban",
+      score: 12,
+    });
+  });
+
+  it("handles a civet bet during a grelottine challenge", async () => {
+    const grelottineResolver: Resolver<GrelottineResolution> = {
+      getResolution: jest.fn().mockResolvedValue({
+        grelottinPlayer: "Alban",
+        challengedPlayer: "Delphin",
+        grelottinBet: GrelottineBet.VELUTE,
+        gambledAmount: 12,
+      } as GrelottineResolution),
+    };
+
+    const civetResolver: Resolver<CivetResolution, CivetResolutionPayload> = {
+      getResolution: jest.fn().mockResolvedValue({
+        playerBet: CivetBet.VELUTE,
+        betAmount: 42,
+        diceRoll: [2, 3, 5],
+      } as CivetResolution),
+    };
+
+    const rule = new GrelottineRule(grelottineResolver);
+
+    const ruleEffects = await rule.applyRule(
+      DummyContextBuilder.aGrelottineContext()
+        .withRuleRunner(
+          new RuleRunner([new CivetRule(civetResolver), new VeluteRule()])
+        )
+        .build()
+    );
+
+    expect(ruleEffects).toContainEqual<RuleEffect>({
+      event: RuleEffectEvent.CIVET_WON,
+      playerName: "Delphin",
+      score: 42,
+    });
+
+    expect(ruleEffects).toContainEqual<RuleEffect>({
+      event: RuleEffectEvent.GRELOTTINE_CHALLENGE_WON,
+      playerName: "Delphin",
       score: 12,
     });
   });

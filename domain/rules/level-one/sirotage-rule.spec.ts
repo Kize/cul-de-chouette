@@ -6,9 +6,15 @@ import {
   SirotageRule,
 } from "./sirotage-rule";
 import { ChouetteRule } from "../basic-rules/chouette-rule";
-import { RuleResolver } from "../rule-resolver";
+import { Resolver, RuleResolver } from "../rule-resolver";
 import { RuleEffect, RuleEffectEvent } from "../rule-effect";
 import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
+import {
+  CivetResolution,
+  CivetResolutionPayload,
+  CivetRule,
+} from "./civet-rule";
+import { RuleRunner } from "../../rule-runner";
 
 export function testSirotageRule(
   getSirotageRuleForResolution: (resolution: SirotageResolution) => SirotageRule
@@ -180,6 +186,13 @@ export function testSirotageRule(
       const gameContext = DummyContextBuilder.aDiceRollContext()
         .withPlayerName("Alban")
         .withDiceRoll([6, 6, 5])
+        .withRuleRunner(
+          new RuleRunner([
+            new CivetRule(
+              {} as Resolver<CivetResolution, CivetResolutionPayload>
+            ),
+          ])
+        )
         .build();
 
       const ruleEffects = await sirotageRule.applyRule(gameContext);

@@ -3,6 +3,7 @@ import { Resolver } from "../rule-resolver";
 import { DiceRoll, DiceRule } from "../dice-rule";
 import { RuleEffectEvent, RuleEffects } from "../rule-effect";
 import { DiceRollGameContext } from "../../game-context-event";
+import { Rules } from "../rule";
 
 export interface ChouetteVeluteResolution {
   playerNames: Array<string>;
@@ -13,6 +14,8 @@ export interface ChouetteVeluteResolutionPayload {
 }
 
 export class ChouetteVeluteRule extends DiceRule {
+  name = Rules.CHOUETTE_VELUTE;
+
   constructor(
     private readonly resolver: Resolver<
       ChouetteVeluteResolution,

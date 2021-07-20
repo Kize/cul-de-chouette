@@ -17,21 +17,21 @@
             <v-card-title class="py-2">Annonce:</v-card-title>
             <v-card-text class="pb-0">
               <v-row>
-                <v-col>
-                  <AmountInput
-                    v-model="form.betAmount"
-                    :min="1"
-                    :max="102"
-                  ></AmountInput>
-                </v-col>
-
-                <v-col>
+                <v-col md="3" cols="12" class="mx-md-auto">
                   <v-select
                     label="Combinaison"
                     v-model="form.playerBet"
                     :items="civetBets"
                     :rules="rulesOfSelectChallengeInput"
                   ></v-select>
+                </v-col>
+
+                <v-col md="6" cols="12">
+                  <AmountInput
+                    v-model="form.betAmount"
+                    :min="1"
+                    :max="102"
+                  ></AmountInput>
                 </v-col>
               </v-row>
             </v-card-text>
