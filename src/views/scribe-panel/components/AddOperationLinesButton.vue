@@ -37,15 +37,15 @@
             rounded
             class="px-6 py-2 mb-2"
           >
-            <v-row justify="center">
-              <v-col md="1" cols="4" class="ml-auto">
+            <v-row justify="space-between">
+              <v-col md="1" cols="4">
                 <v-checkbox
                   label="Tour ?"
                   v-model="operation.shouldDisplayTurnNumber"
                 ></v-checkbox>
               </v-col>
 
-              <v-col md="2" cols="6">
+              <v-col md="2" cols="8">
                 <v-select
                   label="Nom du joueur"
                   v-model="operation.playerName"
@@ -56,71 +56,15 @@
                 ></v-select>
               </v-col>
 
-              <v-col md="2" cols="4" class="pt-5 ml-auto">
-                <v-btn
-                  large
-                  text
-                  outlined
-                  @click="updateOperationAmount(operation, -10)"
-                >
-                  <span class="amount-modifiers-label">- 10</span>
-                </v-btn>
-                <v-btn
-                  class="mx-1"
-                  large
-                  text
-                  outlined
-                  @click="updateOperationAmount(operation, -5)"
-                >
-                  <span class="amount-modifiers-label">- 5</span>
-                </v-btn>
-                <v-btn
-                  large
-                  text
-                  outlined
-                  @click="updateOperationAmount(operation, -1)"
-                >
-                  <span class="amount-modifiers-label">- 1</span>
-                </v-btn>
-              </v-col>
-              <v-col md="1" cols="10">
-                <v-text-field
-                  type="number"
-                  step="1"
-                  label="Montant"
+              <v-col md="auto" cols="12">
+                <AmountInput
+                  :min="-343"
+                  :max="343"
                   v-model="operation.amount"
-                  :rules="rulesOfAmountInput"
-                ></v-text-field>
-              </v-col>
-              <v-col md="2" cols="4" class="pt-5 mr-auto">
-                <v-btn
-                  large
-                  text
-                  outlined
-                  @click="updateOperationAmount(operation, 1)"
-                >
-                  <span class="amount-modifiers-label">+ 1</span>
-                </v-btn>
-                <v-btn
-                  large
-                  text
-                  outlined
-                  class="mx-1"
-                  @click="updateOperationAmount(operation, 5)"
-                >
-                  <span class="amount-modifiers-label">+ 5</span>
-                </v-btn>
-                <v-btn
-                  large
-                  text
-                  outlined
-                  @click="updateOperationAmount(operation, 10)"
-                >
-                  <span class="amount-modifiers-label">+ 10</span>
-                </v-btn>
+                ></AmountInput>
               </v-col>
 
-              <v-col md="auto" cols="auto" class="pt-5">
+              <v-col md="auto" cols="12" class="pt-5">
                 <v-btn
                   large
                   @click="removeLine(index)"
@@ -141,7 +85,8 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters } from "vuex";
-import MainDialogCard from "@/components/MainDialogCard.vue";
+import AmountInput from "../../../components/AmountInput.vue";
+import MainDialogCard from "../../../components/MainDialogCard.vue";
 import { AllHistoryLineTypes, GodModLineType } from "@/domain/history";
 import {
   rulesOfAmountInput,
@@ -199,6 +144,7 @@ function lineFormToLineActionPayload(
 
 @Component({
   components: {
+    AmountInput,
     MainDialogCard,
   },
   computed: {
@@ -234,11 +180,6 @@ export default class PlayersBanner extends Vue {
 
   addEmptyOperation(): void {
     this.form.operations.push({ designation: GodModLineType.GOD_MOD });
-  }
-
-  updateOperationAmount(operation: OperationLineForm, modifier: number): void {
-    const actualAmount = operation.amount || 0;
-    operation.amount = actualAmount + modifier;
   }
 
   removeLine(index: number): void {
