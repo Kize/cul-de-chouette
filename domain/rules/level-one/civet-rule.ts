@@ -90,7 +90,11 @@ const civetBetToRuleEffectsToCheck: Record<CivetBet, Set<RuleEffectEvent>> = {
     RuleEffectEvent.SUITE,
     RuleEffectEvent.SUITE_VELUTE,
   ]),
-  [CivetBet.CHOUETTE]: new Set([RuleEffectEvent.CHOUETTE]),
+  [CivetBet.CHOUETTE]: new Set([
+    RuleEffectEvent.CHOUETTE,
+    RuleEffectEvent.ATTRAPE_OISEAU_WON,
+    RuleEffectEvent.ATTRAPE_OISEAU_LOST,
+  ]),
   [CivetBet.CHOUETTE_VELUTE]: new Set([
     RuleEffectEvent.CHOUETTE_VELUTE_WON,
     RuleEffectEvent.CHOUETTE_VELUTE_LOST,
