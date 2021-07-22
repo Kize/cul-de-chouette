@@ -30,6 +30,23 @@ export const newPlayerNameRules = [
   },
 ];
 
+export const selectPlayersRules = [
+  (value?: Array<string> | null): boolean | string => {
+    if (value === undefined || value === null) {
+      return false;
+    }
+
+    if (value.length < 2) {
+      return "2 joueurs sont requis au minimum.";
+    }
+
+    if (value.length > 8) {
+      return "Ne fonctionne qu'avec 8 joueurs au maximum pour le moment";
+    }
+    return true;
+  },
+];
+
 function requiredPlayerNameRule(name?: string): true | string {
   return (name && name.length > 1) || "Le joueur est requis";
 }
@@ -44,6 +61,7 @@ function requiredAmountRule(amount?: number): true | string {
     "Le montant est requis et doit être entier."
   );
 }
+
 export type inputRuleFunction = (n?: string) => true | string;
 
 export const rulesOfSelectNameInput = [requiredPlayerNameRule];

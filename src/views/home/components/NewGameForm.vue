@@ -82,6 +82,7 @@
                   hint="Attention: l'ordre des joueurs est important !"
                   v-model="form.playerNames"
                   :items="savedPlayerNames"
+                  :rules="selectPlayersRules"
                   cache-items
                   persistent-hint
                   multiple
@@ -115,7 +116,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { ROUTES } from "@/router";
 import {
   newGameNameNameRules,
-  newPlayerNameRules,
+  selectPlayersRules,
 } from "@/form-validation/form-validation-rules";
 import { NewGameForm } from "@/store/current-game/current-game.interface";
 
@@ -123,8 +124,8 @@ const PLAYER_NAMES_LOCAL_STORAGE_KEY = "playerNames";
 
 @Component({})
 export default class NewGameFormSection extends Vue {
-  readonly newPlayerNameRules = newPlayerNameRules;
   readonly newGameNameNameRules = newGameNameNameRules;
+  readonly selectPlayersRules = selectPlayersRules;
 
   get savedPlayerNames(): Array<string> {
     return JSON.parse(

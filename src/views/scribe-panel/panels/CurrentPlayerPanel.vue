@@ -1,11 +1,13 @@
 <template>
   <v-card outlined elevation="4" color="indigo lighten-5">
     <v-card-title class="headline">
+      <span>Tour: {{ turnNumber }}</span>
+      <v-divider vertical class="mx-6"></v-divider>
       <span>{{ currentPlayer.name }}</span>
       <v-divider vertical class="mx-6"></v-divider>
-      <span>{{ getPlayerScore(currentPlayer.name) }} points</span>
-      <v-divider vertical class="mx-6"></v-divider>
-      <span>Tour: {{ turnNumber }}</span>
+      <span class="text-decoration-underline">
+        {{ getPlayerScore(currentPlayer.name) }} points
+      </span>
     </v-card-title>
 
     <v-card-text>
