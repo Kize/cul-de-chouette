@@ -44,9 +44,7 @@
                   ></v-list-item-subtitle>
                 </v-list-item-content>
 
-                <v-list-item-action
-                  v-text="line.turnNumber"
-                ></v-list-item-action>
+                <v-list-item-action v-text="line.eventId"></v-list-item-action>
               </v-list-item>
             </v-list>
           </v-card-text>

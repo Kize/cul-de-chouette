@@ -15,7 +15,7 @@ import {
   getNextPlayer,
   Player,
 } from "../../../domain/player";
-import { getTurnId, HistoryLine, HistoryLineApply } from "@/domain/history";
+import { getNewEventId, HistoryLine, HistoryLineApply } from "@/domain/history";
 import { RootState } from "@/store/app.state";
 import { MainPlayableActionsStoreModule } from "@/store/current-game/main-playable-actions.store";
 import { RulesState, RulesStoreModule } from "@/store/current-game/rules.store";
@@ -39,6 +39,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     return {
       status: GameStatus.CREATION,
       name: "",
+      events: [],
       players: [],
       currentPlayerName: "",
       turnNumber: 1,
@@ -168,6 +169,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     setGame(state, newGame: CurrentGameState): void {
       state.status = newGame.status;
       state.name = newGame.name;
+      state.events = newGame.events;
       state.players = newGame.players;
       state.currentPlayerName = newGame.currentPlayerName;
       state.turnNumber = newGame.turnNumber;
@@ -197,22 +199,23 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         history: player.history,
       });
     },
+    addEvent(state, eventId: string): void {
+      state.events.push(eventId);
+    },
+    removeEvent(state, eventId: string): void {
+      state.events = state.events.filter((event) => event !== eventId);
+    },
     addHistoryLine(state, apply: HistoryLineApply): void {
       const player = state.players.find(byName(apply.playerName));
 
       if (player) {
-        player.history.push({
-          turnId: getTurnId(state.turnNumber, state.currentPlayerName),
-          designation: apply.designation,
-          amount: apply.amount,
-          turnNumber: apply.turnNumber,
-        });
+        player.history.push({ ...apply });
       }
     },
-    removeHistoryLines({ players }, turnId: string): void {
+    removeHistoryLines({ players }, eventId: string): void {
       players.forEach((player) => {
         player.history = player.history.filter(
-          (historyLine: HistoryLine) => historyLine.turnId !== turnId
+          (historyLine: HistoryLine) => historyLine.eventId !== eventId
         );
       });
     },
@@ -234,6 +237,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       const newGame: CurrentGameState = {
         status: GameStatus.IN_GAME,
         name: gameName,
+        events: [],
         players: notEmptyPlayerNames.map((name) => ({
           name,
           history: [],
@@ -342,6 +346,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       const nextGame: CurrentGameState = {
         status: GameStatus.CREATION,
         name: "",
+        events: [],
         players: [],
         currentPlayerName: "",
         turnNumber: 1,
@@ -356,15 +361,15 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       { dispatch, commit, state },
       actionPayload: AddOperationLinesActionPayload
     ): void {
+      const eventId = getNewEventId();
+      commit("addEvent", eventId);
+
       actionPayload.operations.forEach((operation) => {
         const apply: HistoryLineApply = {
-          turnId: getTurnId(state.turnNumber, state.currentPlayerName),
+          eventId,
           designation: operation.designation,
           playerName: operation.playerName,
           amount: operation.amount,
-          turnNumber: operation.shouldDisplayTurnNumber
-            ? state.turnNumber
-            : undefined,
         };
 
         commit("addHistoryLine", apply);
@@ -380,8 +385,8 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       { state, commit, dispatch, getters },
       sloubi: SloubiActionPayload
     ): Promise<void> {
-      if (state.players.length > 5) {
-        throw new Error("Le jeu n'autorise que 6 joueurs dans une partie.");
+      if (state.players.length > 7) {
+        throw new Error("Le jeu n'autorise que 8 joueurs dans une partie.");
       }
 
       if (state.players.map((player) => player.name).includes(sloubi.name)) {
@@ -396,10 +401,9 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         name: sloubi.name,
         history: [
           {
-            turnId: getTurnId(state.turnNumber, state.currentPlayerName),
+            eventId: `Sloubi de ${sloubi.name}`,
             designation: RuleEffectEvent.SLOUBI,
             amount: sloubiAmount,
-            turnNumber: state.turnNumber,
           },
         ],
       };

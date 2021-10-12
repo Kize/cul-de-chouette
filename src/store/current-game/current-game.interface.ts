@@ -11,6 +11,7 @@ export enum GameStatus {
 export interface CurrentGameState {
   name: string;
   status: GameStatus;
+  events: Array<string>;
   players: Array<Player>;
   currentPlayerName: string;
   turnNumber: number;

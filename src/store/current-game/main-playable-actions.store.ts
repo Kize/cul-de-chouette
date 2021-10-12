@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Module } from "vuex";
 import { SuiteResolution } from "../../../domain/rules/basic-rules/suite-rule";
-import { getTurnId, HistoryLineApply } from "@/domain/history";
+import { getNewEventId, HistoryLineApply } from "@/domain/history";
 import { ChouetteVeluteResolution } from "../../../domain/rules/basic-rules/chouette-velute-rule";
 import { RootState } from "@/store/app.state";
 import { AttrapeOiseauResolution } from "../../../domain/rules/level-one/attrape-oiseau-rule";
@@ -108,22 +108,15 @@ export const MainPlayableActionsStoreModule: Module<
         .getRunner()
         .handleGameEvent(gameContext);
 
-      ruleEffects.forEach((ruleEffect) => {
-        const gameTurnNumber = rootState.currentGame!.turnNumber;
-        const playerTurnNumber =
-          rootState.currentGame!.currentPlayerName === ruleEffect.playerName
-            ? gameTurnNumber
-            : undefined;
+      const eventId = getNewEventId();
+      commit("currentGame/addEvent", eventId, { root: true });
 
+      ruleEffects.forEach((ruleEffect) => {
         const apply: HistoryLineApply = {
-          turnId: getTurnId(
-            rootState.currentGame!.turnNumber,
-            rootState.currentGame!.currentPlayerName
-          ),
+          eventId,
           playerName: ruleEffect.playerName,
           amount: ruleEffect.score,
           designation: ruleEffect.event,
-          turnNumber: playerTurnNumber,
         };
 
         commit("currentGame/addHistoryLine", apply, {
@@ -147,29 +140,34 @@ export const MainPlayableActionsStoreModule: Module<
         throw e;
       }
     },
+    // TODO: works, but should not change currentPlayer on cancelBevue !
+    /* Change data model  to something that can detect turn events from other ones.
+       The current player should be determined with ruleEffects, 2 solutions:
+        - add a ruleEffect each time someone plays
+        - tag the ruleEffect he has with his combination (might be tricky, because SuiteRule or ChouetteVeluteRule might not generate one for the current player)
+     */
     async cancelLastTurn({ rootState, commit, dispatch }): Promise<void> {
-      const { turnNumber, currentPlayerName, players } = rootState.currentGame!;
+      const { events, turnNumber, currentPlayerName, players } =
+        rootState.currentGame!;
 
-      if (turnNumber === 1 && currentPlayerName === players[0].name) {
+      if (events.length === 0) {
         return;
       }
 
+      const eventToCancel = events[events.length - 1];
+      commit("currentGame/removeEvent", eventToCancel, { root: true });
+      commit("currentGame/removeHistoryLines", eventToCancel, { root: true });
+
       const previousPlayerName = getPreviousPlayer(players, currentPlayerName);
+      commit("currentGame/setCurrentPlayerName", previousPlayerName, {
+        root: true,
+      });
+
       const previousTurnNumber = getPreviousTurnNumberFromPreviousPlayer(
         players,
         previousPlayerName,
         turnNumber
       );
-
-      commit(
-        "currentGame/removeHistoryLines",
-        getTurnId(previousTurnNumber, previousPlayerName),
-        { root: true }
-      );
-      commit("currentGame/setCurrentPlayerName", previousPlayerName, {
-        root: true,
-      });
-
       if (previousTurnNumber !== turnNumber) {
         commit("currentGame/decrementTurnNumber", undefined, {
           root: true,
