@@ -19,6 +19,11 @@ import {
   CivetResolutionPayload,
   CivetRule,
 } from "../level-one/civet-rule";
+import {
+  AttrapeOiseauResolution,
+  AttrapeOiseauRule,
+} from "../level-one/attrape-oiseau-rule";
+import { SiropResolutionPayload } from "../level-one/sirotage-rule";
 
 describe("isApplicableToGameContext", () => {
   let dummyResolver: Resolver<GrelottineResolution>;
@@ -166,7 +171,7 @@ describe("applyRule", () => {
     expect(ruleEffects).toContainEqual<RuleEffect>(aRuleEffect);
   });
 
-  it("handles a lost grelottine bet betting on a velute, and resulting into a bleu-rouge with a velute", async () => {
+  it("handles a won grelottine bet for the grelottin, betting on a velute, and resulting into a bleu-rouge with a velute", async () => {
     const grelottineResolver: Resolver<GrelottineResolution> = {
       getResolution: jest.fn().mockResolvedValue({
         grelottinPlayer: "Alban",
@@ -201,6 +206,60 @@ describe("applyRule", () => {
       event: RuleEffectEvent.GRELOTTINE_CHALLENGE_WON,
       playerName: "Alban",
       score: 12,
+    });
+
+    expect(ruleEffects).toContainEqual<RuleEffect>({
+      event: RuleEffectEvent.GRELOTTINE_CHALLENGE_LOST,
+      playerName: "Delphin",
+      score: -12,
+    });
+  });
+
+  it("handles a lost grelottine for the grelottin, betting on a chouette, and resulting into an attrape-oiseau", async () => {
+    const grelottineResolver: Resolver<GrelottineResolution> = {
+      getResolution: jest.fn().mockResolvedValue({
+        grelottinPlayer: "Alban",
+        challengedPlayer: "Delphin",
+        grelottinBet: GrelottineBet.CHOUETTE,
+        diceRoll: [3, 3, 5],
+        gambledAmount: 12,
+      } as GrelottineResolution),
+    };
+    const rule = new GrelottineRule(grelottineResolver);
+
+    const attrapeOiseauResolver: Resolver<
+      AttrapeOiseauResolution,
+      SiropResolutionPayload
+    > = {
+      getResolution: jest.fn().mockResolvedValue({
+        bids: [],
+        isSirote: true,
+        playerWhoMakeAttrapeOiseau: "Alban",
+        lastDieValue: 5,
+      } as AttrapeOiseauResolution),
+    };
+
+    const ruleEffects = await rule.applyRule(
+      DummyContextBuilder.aGrelottineContext()
+        .withRuleRunner(
+          new RuleRunner([
+            new AttrapeOiseauRule(attrapeOiseauResolver),
+            new ChouetteRule(),
+          ])
+        )
+        .build()
+    );
+
+    expect(ruleEffects).toContainEqual<RuleEffect>({
+      event: RuleEffectEvent.GRELOTTINE_CHALLENGE_WON,
+      playerName: "Delphin",
+      score: 12,
+    });
+
+    expect(ruleEffects).toContainEqual<RuleEffect>({
+      event: RuleEffectEvent.GRELOTTINE_CHALLENGE_LOST,
+      playerName: "Alban",
+      score: -12,
     });
   });
 

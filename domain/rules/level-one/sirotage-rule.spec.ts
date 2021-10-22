@@ -1,6 +1,4 @@
 import {
-  BidType,
-  SiropBid,
   SiropResolutionPayload,
   SirotageResolution,
   SirotageRule,
@@ -15,6 +13,7 @@ import {
   CivetRule,
 } from "./civet-rule";
 import { RuleRunner } from "../../rule-runner";
+import { BidType, SiropBid } from "./sirotage-rule.types";
 
 export function testSirotageRule(
   getSirotageRuleForResolution: (resolution: SirotageResolution) => SirotageRule

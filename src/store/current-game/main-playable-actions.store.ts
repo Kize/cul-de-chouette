@@ -101,7 +101,7 @@ export const MainPlayableActionsStoreModule: Module<
     },
 
     async handleGameEvent(
-      { commit, rootState },
+      { commit },
       gameContext: UnknownGameContext
     ): Promise<void> {
       const ruleEffects: RuleEffects = await gameRuleRunner

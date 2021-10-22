@@ -1,7 +1,5 @@
 import {
   ActiveSirotageResolution,
-  BidType,
-  SiropBid,
   SiropResolutionPayload,
   SirotageRule,
 } from "./sirotage-rule";
@@ -10,6 +8,7 @@ import { DiceRoll, DieValue } from "../dice-rule";
 import { RuleEffect, RuleEffectEvent, RuleEffects } from "../rule-effect";
 import { DiceRollGameContext } from "../../game-context-event";
 import { Rules } from "../rule";
+import { BidType, SiropBid } from "./sirotage-rule.types";
 
 export type AttrapeOiseauResolution =
   | { isSirote: false }
@@ -83,7 +82,7 @@ export class AttrapeOiseauRule extends SirotageRule {
 
     let attrapeOiseauRuleEffects: Array<RuleEffect>;
     if (resolution.playerWhoMakeAttrapeOiseau) {
-      const sirotageRuleEffects = await this.getSirotageRuleEffects(
+      const sirotageRuleEffects = this.getSirotageRuleEffects(
         resolution.playerWhoMakeAttrapeOiseau,
         diceRoll,
         resolution,
@@ -105,12 +104,13 @@ export class AttrapeOiseauRule extends SirotageRule {
 
         return ruleEffect;
       });
+
       initialChouetteRuleEffect = this.getChouetteRuleEffect(
         playerName,
         diceRoll
       );
     } else {
-      attrapeOiseauRuleEffects = await this.getSirotageRuleEffects(
+      attrapeOiseauRuleEffects = this.getSirotageRuleEffects(
         playerName,
         diceRoll,
         resolution,
@@ -119,8 +119,8 @@ export class AttrapeOiseauRule extends SirotageRule {
     }
 
     return [
-      ...attrapeOiseauRuleEffects,
       ...(initialChouetteRuleEffect ? [initialChouetteRuleEffect] : []),
+      ...attrapeOiseauRuleEffects,
       ...this.getBidRuleEffects(resolution, diceRoll),
     ];
   }
