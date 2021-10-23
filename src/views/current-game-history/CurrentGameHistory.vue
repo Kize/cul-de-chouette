@@ -44,11 +44,14 @@
           <tr v-for="historyLine in historyView" :key="historyLine.eventId">
             <td
               class="history-cell"
-              v-for="playerLines in historyLine.playerHistories"
-              :key="playerLines"
+              v-for="(playerLines, playerIndex) in historyLine.playerHistories"
+              :key="playerIndex"
             >
               <table class="line-table">
-                <tr v-for="playerLine in playerLines" :key="playerLine">
+                <tr
+                  v-for="(playerLine, lineIndex) in playerLines"
+                  :key="lineIndex"
+                >
                   <td class="pr-4">{{ playerLine.designation }}</td>
                   <td class="pl-4 text-right">
                     <span class="line-amount">
@@ -105,6 +108,8 @@ export default class CurrentGameHistory extends Vue {
 }
 
 .history-table {
+  //border: thin solid rgba(0, 0, 0, 0.12);
+
   .line-table {
     width: 100%;
   }
@@ -118,8 +123,11 @@ export default class CurrentGameHistory extends Vue {
 
     &:not(:last-child) {
       border-right: 1px solid grey;
-      //border-bottom: none !important;
     }
+  }
+
+  tr:last-child td.history-cell {
+    border-bottom: thin solid rgba(0, 0, 0, 0.12);
   }
 
   th.history-cell {
