@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <span>
     <v-menu offset-y>
       <template v-slot:activator="{ on, attrs }">
         <v-btn
@@ -34,7 +34,7 @@
         </v-btn>
       </template>
     </v-snackbar>
-  </div>
+  </span>
 </template>
 
 <script lang="ts">

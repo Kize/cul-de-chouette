@@ -13,12 +13,6 @@
     <v-card-text>
       <DiceRollInput v-model="diceForm" @input="basicPlay"></DiceRollInput>
     </v-card-text>
-
-    <v-card-actions class="d-flex justify-end pb-8 pr-12">
-      <v-btn x-large class="px-6 py-4" @click="cancelPreviousTurn">
-        Annuler le tour précédent
-      </v-btn>
-    </v-card-actions>
   </v-card>
 </template>
 
@@ -74,10 +68,6 @@ export default class CurrentPlayerPanel extends Vue {
         });
       }
     }, 200);
-  }
-
-  cancelPreviousTurn(): void {
-    this.$store.dispatch("currentGame/play/cancelLastTurn");
   }
 }
 </script>

@@ -141,7 +141,7 @@ export const MainPlayableActionsStoreModule: Module<
       return eventId;
     },
 
-    async cancelLastTurn({ rootState, commit, dispatch }): Promise<void> {
+    async cancelLastEvent({ rootState, commit, dispatch }): Promise<void> {
       const { events } = rootState.currentGame!;
 
       if (events.length === 0) {
