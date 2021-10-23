@@ -46,7 +46,6 @@ export interface OperationLineActionPayload {
   playerName: string;
   designation: AllHistoryLineTypes;
   amount: number;
-  shouldDisplayTurnNumber: boolean;
 }
 
 export interface AddOperationLinesActionPayload {

@@ -51,10 +51,6 @@ function requiredPlayerNameRule(name?: string): true | string {
   return (name && name.length > 1) || "Le joueur est requis";
 }
 
-function requiredLineTypeRule(name?: string): true | string {
-  return (name && name.length > 1) || "Le type d'opération est requis";
-}
-
 function requiredAmountRule(amount?: number): true | string {
   return (
     (amount !== undefined && amount !== null && isInteger(amount)) ||
@@ -65,7 +61,6 @@ function requiredAmountRule(amount?: number): true | string {
 export type inputRuleFunction = (n?: string) => true | string;
 
 export const rulesOfSelectNameInput = [requiredPlayerNameRule];
-export const rulesOfSelectLineTypeInput = [requiredLineTypeRule];
 export const rulesOfAmountInput = [requiredAmountRule];
 export const rulesOfSelectChallengeInput = [
   (name?: string): true | string =>
@@ -76,10 +71,4 @@ export const inputStrictlyPositiveIntegerRules = [
   (num?: string): true | string =>
     (Number(num) >= 1 && isInteger(Number(num))) ||
     "Ce champ doit être un entier positif",
-];
-
-export const positiveIntegerInputRules = [
-  (num?: string): true | string =>
-    (Number(num) >= 0 && isInteger(Number(num))) ||
-    "Ce champ doit être un entier positif ou nul",
 ];

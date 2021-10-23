@@ -1,6 +1,6 @@
 <template>
   <span>
-    <v-btn @click="showDialog = true">
+    <v-btn @click="openDialog">
       <v-icon class="mr-2">mdi-text-box-plus</v-icon>
       Ajouter des opérations
     </v-btn>
@@ -15,43 +15,40 @@
         title="Ajouter des opérations à des joueurs"
         confirm-button-label="Confirmer les opérations"
         :is-confirm-button-enabled="true"
-        @cancel="cancel"
+        @cancel="closeDialog"
         @confirm="confirm"
       >
         <v-row justify="center" align="center">
-          <v-btn @click="addEmptyOperation" class="mr-8">
-            Ajouter une opération
-          </v-btn>
-
           <v-checkbox
             label="Faire avancer le tour de jeu"
-            v-model="form.shouldHandleEndTurn"
+            v-model="shouldHandleEndTurn"
           ></v-checkbox>
         </v-row>
 
-        <v-form ref="formRef" v-model="isFormValid" class="mt-4">
+        <v-form ref="formRef" class="mt-4">
           <v-card
             :color="index % 2 === 0 ? 'blue lighten-5' : 'teal lighten-5'"
-            v-for="(operation, index) in form.operations"
+            v-for="(operation, index) in lineOperations"
             :key="index"
             rounded
-            class="px-6 py-2 mb-2"
+            class="mx-lg-12 mx-6 py-2 mb-8"
           >
-            <v-row justify="space-between">
-              <v-col md="1" cols="4">
-                <v-checkbox
-                  label="Tour ?"
-                  v-model="operation.shouldDisplayTurnNumber"
-                ></v-checkbox>
-              </v-col>
-
-              <v-col md="2" cols="8">
+            <v-row justify="space-around">
+              <v-col md="auto" cols="12">
                 <v-select
                   label="Nom du joueur"
                   v-model="operation.playerName"
                   :items="playerNames"
-                  :rules="rulesOfSelectNameInput"
                   prepend-icon="mdi-account"
+                ></v-select>
+              </v-col>
+
+              <v-col md="3" cols="12">
+                <v-select
+                  v-model="operation.options"
+                  :items="optionItems"
+                  label="Options"
+                  multiple
                   clearable
                 ></v-select>
               </v-col>
@@ -62,17 +59,6 @@
                   :max="343"
                   v-model="operation.amount"
                 ></AmountInput>
-              </v-col>
-
-              <v-col md="auto" cols="12" class="pt-5">
-                <v-btn
-                  large
-                  @click="removeLine(index)"
-                  :disabled="form.operations.length === 1"
-                >
-                  <v-icon class="mr-1">mdi-trash-can-outline</v-icon>
-                  Retirer la line
-                </v-btn>
               </v-col>
             </v-row>
           </v-card>
@@ -88,58 +74,18 @@ import { mapGetters } from "vuex";
 import AmountInput from "../../../components/AmountInput.vue";
 import MainDialogCard from "../../../components/MainDialogCard.vue";
 import { AllHistoryLineTypes, GodModLineType } from "@/domain/history";
-import {
-  rulesOfAmountInput,
-  rulesOfSelectLineTypeInput,
-  rulesOfSelectNameInput,
-} from "@/form-validation/form-validation-rules";
+import { rulesOfAmountInput } from "@/form-validation/form-validation-rules";
 import {
   AddOperationLinesActionPayload,
   OperationLineActionPayload,
 } from "@/store/current-game/current-game.interface";
-import { sortStrings } from "@/domain/sort";
-import {
-  NotImplementedRuleEffectEvent,
-  RuleEffectEvent,
-} from "../../../../domain/rules/rule-effect";
+import { RuleEffectEvent } from "../../../../domain/rules/rule-effect";
 
 interface OperationLineForm {
-  playerName?: string;
-  designation?: AllHistoryLineTypes;
-  amount?: number;
-  shouldDisplayTurnNumber?: boolean;
-}
-
-interface AddOperationLinesForm {
-  operations: Array<OperationLineForm>;
-  shouldHandleEndTurn: boolean;
-}
-
-function getInitialForm(): AddOperationLinesForm {
-  return {
-    operations: [
-      { designation: GodModLineType.GOD_MOD, amount: 0 },
-      { designation: GodModLineType.GOD_MOD, amount: 0 },
-      { designation: GodModLineType.GOD_MOD, amount: 0 },
-      { designation: GodModLineType.GOD_MOD, amount: 0 },
-    ],
-    shouldHandleEndTurn: false,
-  };
-}
-
-function lineFormToLineActionPayload(
-  line: OperationLineForm
-): OperationLineActionPayload {
-  if (!line.playerName || !line.designation || line.amount === undefined) {
-    throw new Error("Le formulaire n'aurait pas dû être validé !");
-  }
-
-  return {
-    playerName: line.playerName,
-    designation: line.designation,
-    amount: Number(line.amount),
-    shouldDisplayTurnNumber: line.shouldDisplayTurnNumber || false,
-  };
+  playerName: string;
+  designation: AllHistoryLineTypes;
+  amount: number;
+  options: Array<RuleEffectEvent>;
 }
 
 @Component({
@@ -152,56 +98,77 @@ function lineFormToLineActionPayload(
   },
 })
 export default class PlayersBanner extends Vue {
-  readonly rulesOfSelectNameInput = rulesOfSelectNameInput;
-  readonly rulesOfSelectLineTypeInput = rulesOfSelectLineTypeInput;
   readonly rulesOfAmountInput = rulesOfAmountInput;
+  readonly playerNames!: Array<string>;
+  readonly optionItems = [
+    RuleEffectEvent.ADD_GRELOTTINE,
+    RuleEffectEvent.REMOVE_GRELOTTINE,
+    RuleEffectEvent.ADD_CIVET,
+    RuleEffectEvent.REMOVE_CIVET,
+    RuleEffectEvent.ADD_JARRET,
+    RuleEffectEvent.REMOVE_JARRET,
+  ];
 
   showDialog = false;
-  isFormValid = true;
 
-  form: AddOperationLinesForm = getInitialForm();
+  shouldHandleEndTurn = false;
+  lineOperations: Array<OperationLineForm> = [];
 
-  get lineTypes(): Array<string> {
-    const implementedLineTypes = Object.values(RuleEffectEvent);
-    const notImplementedLineTypes = Object.values(
-      NotImplementedRuleEffectEvent
-    );
-    const godModLineTypes = Object.values(GodModLineType);
+  openDialog(): void {
+    this.showDialog = true;
 
-    implementedLineTypes.sort(sortStrings);
-    notImplementedLineTypes.sort(sortStrings);
-
-    return [
-      ...godModLineTypes,
-      ...implementedLineTypes,
-      ...notImplementedLineTypes,
-    ];
+    this.shouldHandleEndTurn = false;
+    this.lineOperations = this.getNewLineOperations();
   }
 
-  addEmptyOperation(): void {
-    this.form.operations.push({ designation: GodModLineType.GOD_MOD });
-  }
-
-  removeLine(index: number): void {
-    this.form.operations.splice(index, 1);
-  }
-
-  cancel(): void {
+  closeDialog(): void {
     this.showDialog = false;
-    this.form = getInitialForm();
   }
 
   confirm(): void {
     const payload: AddOperationLinesActionPayload = {
-      shouldHandleEndTurn: this.form.shouldHandleEndTurn,
-      operations: this.form.operations
-        .filter((line) => line.playerName && line.amount)
-        .map(lineFormToLineActionPayload),
+      shouldHandleEndTurn: this.shouldHandleEndTurn,
+      operations: this.lineOperations.reduce<Array<OperationLineActionPayload>>(
+        (operations, currentLine) => {
+          const mainLineActionPayload: Array<OperationLineActionPayload> = [];
+          if (currentLine.amount) {
+            mainLineActionPayload.push({
+              playerName: currentLine.playerName,
+              designation: currentLine.designation,
+              amount: currentLine.amount,
+            });
+          }
+
+          const optionActionPayloads =
+            currentLine.options.map<OperationLineActionPayload>(
+              (optionDesignation) => ({
+                playerName: currentLine.playerName,
+                designation: optionDesignation,
+                amount: 0,
+              })
+            );
+
+          return [
+            ...operations,
+            ...mainLineActionPayload,
+            ...optionActionPayloads,
+          ];
+        },
+        []
+      ),
     };
 
     this.$store.dispatch("currentGame/addGodModOperations", payload);
-    this.showDialog = false;
-    this.form = getInitialForm();
+    this.closeDialog();
+  }
+
+  private getNewLineOperations(): Array<OperationLineForm> {
+    return this.playerNames.map<OperationLineForm>((playerName) => ({
+      designation: GodModLineType.GOD_MOD,
+      playerName,
+      amount: 0,
+      options: [],
+    }));
   }
 }
 </script>
