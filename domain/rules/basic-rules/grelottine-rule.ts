@@ -107,13 +107,20 @@ const grelottineBetToRuleEffectsToCheck: Record<
   GrelottineBet,
   Set<RuleEffectEvent>
 > = {
-  [GrelottineBet.CHOUETTE]: new Set([RuleEffectEvent.CHOUETTE]),
+  [GrelottineBet.CHOUETTE]: new Set([
+    RuleEffectEvent.CHOUETTE,
+    RuleEffectEvent.ATTRAPE_OISEAU_LOST,
+    RuleEffectEvent.ATTRAPE_OISEAU_WON,
+  ]),
   [GrelottineBet.CHOUETTE_VELUTE]: new Set([
     RuleEffectEvent.CHOUETTE_VELUTE_WON,
     RuleEffectEvent.CHOUETTE_VELUTE_LOST,
     RuleEffectEvent.CHOUETTE_VELUTE_STOLEN,
   ]),
-  [GrelottineBet.CUL_DE_CHOUETTE]: new Set([RuleEffectEvent.CUL_DE_CHOUETTE]),
+  [GrelottineBet.CUL_DE_CHOUETTE]: new Set([
+    RuleEffectEvent.CUL_DE_CHOUETTE,
+    RuleEffectEvent.SIROP_WON,
+  ]),
   [GrelottineBet.VELUTE]: new Set([
     RuleEffectEvent.VELUTE,
     RuleEffectEvent.SUITE_VELUTE,

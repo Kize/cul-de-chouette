@@ -11,9 +11,8 @@ export enum GameStatus {
 export interface CurrentGameState {
   name: string;
   status: GameStatus;
+  events: Array<string>;
   players: Array<Player>;
-  currentPlayerName: string;
-  turnNumber: number;
 }
 
 export type Scoreboard = ReadonlyArray<{
@@ -47,7 +46,6 @@ export interface OperationLineActionPayload {
   playerName: string;
   designation: AllHistoryLineTypes;
   amount: number;
-  shouldDisplayTurnNumber: boolean;
 }
 
 export interface AddOperationLinesActionPayload {

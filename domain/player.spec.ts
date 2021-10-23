@@ -1,27 +1,68 @@
-import { getNextPlayer, Player } from "./player";
+import { getCurrentPlayerName, Player } from "./player";
+import { GameLineType } from "../src/domain/history";
 
-describe("getNextPlayer", () => {
-  it("returns the second player when the first one has just played", () => {
+describe("getCurrentPlayerName", () => {
+  it("returns the first player when no one has played", () => {
     const players: Array<Player> = [
-      { name: "player 1", history: [] },
-      { name: "player 2", history: [] },
-      { name: "player 3", history: [] },
+      { name: "Alban", history: [] },
+      { name: "Delphin", history: [] },
+      { name: "Luc", history: [] },
     ];
+    const currentPlayerName = getCurrentPlayerName(players);
 
-    const nextPlayerName = getNextPlayer(players, "player 1");
-
-    expect(nextPlayerName).toBe("player 2");
+    expect(currentPlayerName).toBe("Alban");
   });
 
-  it("returns the first player when the last one has just played", () => {
+  it("returns the first player when the last player has played", () => {
     const players: Array<Player> = [
-      { name: "player 1", history: [] },
-      { name: "player 2", history: [] },
-      { name: "player 3", history: [] },
+      {
+        name: "Alban",
+        history: [
+          { eventId: "", designation: GameLineType.PLAY_TURN, amount: 0 },
+        ],
+      },
+      {
+        name: "Delphin",
+        history: [
+          { eventId: "", designation: GameLineType.PLAY_TURN, amount: 0 },
+        ],
+      },
+      {
+        name: "Luc",
+        history: [
+          { eventId: "", designation: GameLineType.PLAY_TURN, amount: 0 },
+        ],
+      },
     ];
+    const currentPlayerName = getCurrentPlayerName(players);
 
-    const nextPlayerName = getNextPlayer(players, "player 3");
+    expect(currentPlayerName).toBe("Alban");
+  });
 
-    expect(nextPlayerName).toBe("player 1");
+  it("returns the second player when the first player has played its second turn", () => {
+    const players: Array<Player> = [
+      {
+        name: "Alban",
+        history: [
+          { eventId: "", designation: GameLineType.PLAY_TURN, amount: 0 },
+          { eventId: "", designation: GameLineType.PLAY_TURN, amount: 0 },
+        ],
+      },
+      {
+        name: "Delphin",
+        history: [
+          { eventId: "", designation: GameLineType.PLAY_TURN, amount: 0 },
+        ],
+      },
+      {
+        name: "Luc",
+        history: [
+          { eventId: "", designation: GameLineType.PLAY_TURN, amount: 0 },
+        ],
+      },
+    ];
+    const currentPlayerName = getCurrentPlayerName(players);
+
+    expect(currentPlayerName).toBe("Delphin");
   });
 });

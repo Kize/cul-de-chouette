@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Module } from "vuex";
 import { SuiteResolution } from "../../../domain/rules/basic-rules/suite-rule";
-import { getTurnId, HistoryLineApply } from "@/domain/history";
+import { getNewEventId, HistoryLineApply } from "@/domain/history";
 import { ChouetteVeluteResolution } from "../../../domain/rules/basic-rules/chouette-velute-rule";
 import { RootState } from "@/store/app.state";
 import { AttrapeOiseauResolution } from "../../../domain/rules/level-one/attrape-oiseau-rule";
@@ -26,10 +26,6 @@ import {
 import { GrelottineResolution } from "../../../domain/rules/basic-rules/grelottine-rule";
 import { SouffletteResolution } from "../../../domain/rules/level-one/soufflette-rule";
 import { BleuRougeResolution } from "../../../domain/rules/level-three/bleu-rouge-rule";
-import {
-  getPreviousPlayer,
-  getPreviousTurnNumberFromPreviousPlayer,
-} from "../../../domain/player";
 import { CivetResolution } from "../../../domain/rules/level-one/civet-rule";
 
 type MainPlayableState = Record<string, unknown>;
@@ -51,30 +47,14 @@ export const MainPlayableActionsStoreModule: Module<
 > = {
   namespaced: true,
   actions: {
-    async playATurn(
-      { dispatch, rootState },
-      payload: PlayATurnPayload
-    ): Promise<void> {
-      let gameContext: UnknownGameContext;
-
-      if (payload.event === GameContextEvent.DICE_ROLL) {
-        gameContext = {
-          event: GameContextEvent.DICE_ROLL,
-          playerName: rootState.currentGame!.currentPlayerName,
-          diceRoll: payload.diceRoll,
-          runner: gameRuleRunner.getRunner(),
-        };
-      } else {
-        gameContext = {
-          event: payload.event,
-          runner: gameRuleRunner.getRunner(),
-          playerName: rootState.currentGame!.currentPlayerName,
-        };
-      }
-
+    async applyBevue({ dispatch }, playerWhoMadeABevue: string): Promise<void> {
+      const bevueContext: ApplyBevueGameContext = {
+        event: GameContextEvent.APPLY_BEVUE,
+        playerWhoMadeABevue,
+      };
       try {
-        await dispatch("handleGameEvent", gameContext);
-        dispatch("currentGame/handleEndTurn", undefined, { root: true });
+        await dispatch("handleGameEvent", bevueContext);
+        await dispatch("currentGame/checkEndGame", null, { root: true });
       } catch (e) {
         const isCancelAResolution = !e;
         if (isCancelAResolution) {
@@ -83,6 +63,7 @@ export const MainPlayableActionsStoreModule: Module<
         throw e;
       }
     },
+
     async startGrelottineChallenge({ dispatch }): Promise<void> {
       const grelottineContext: ChallengeGrelottineGameContext = {
         event: GameContextEvent.CHALLENGE_GRELOTTINE,
@@ -100,45 +81,30 @@ export const MainPlayableActionsStoreModule: Module<
       }
     },
 
-    async handleGameEvent(
-      { commit, rootState },
-      gameContext: UnknownGameContext
+    async playATurn(
+      { dispatch, rootGetters },
+      payload: PlayATurnPayload
     ): Promise<void> {
-      const ruleEffects: RuleEffects = await gameRuleRunner
-        .getRunner()
-        .handleGameEvent(gameContext);
+      let gameContext: UnknownGameContext;
 
-      ruleEffects.forEach((ruleEffect) => {
-        const gameTurnNumber = rootState.currentGame!.turnNumber;
-        const playerTurnNumber =
-          rootState.currentGame!.currentPlayerName === ruleEffect.playerName
-            ? gameTurnNumber
-            : undefined;
-
-        const apply: HistoryLineApply = {
-          turnId: getTurnId(
-            rootState.currentGame!.turnNumber,
-            rootState.currentGame!.currentPlayerName
-          ),
-          playerName: ruleEffect.playerName,
-          amount: ruleEffect.score,
-          designation: ruleEffect.event,
-          turnNumber: playerTurnNumber,
+      if (payload.event === GameContextEvent.DICE_ROLL) {
+        gameContext = {
+          event: GameContextEvent.DICE_ROLL,
+          playerName: rootGetters["currentGame/currentPlayerName"],
+          diceRoll: payload.diceRoll,
+          runner: gameRuleRunner.getRunner(),
         };
+      } else {
+        gameContext = {
+          event: payload.event,
+          runner: gameRuleRunner.getRunner(),
+          playerName: rootGetters["currentGame/currentPlayerName"],
+        };
+      }
 
-        commit("currentGame/addHistoryLine", apply, {
-          root: true,
-        });
-      });
-    },
-    async applyBevue({ dispatch }, playerWhoMadeABevue: string): Promise<void> {
-      const bevueContext: ApplyBevueGameContext = {
-        event: GameContextEvent.APPLY_BEVUE,
-        playerWhoMadeABevue,
-      };
       try {
-        await dispatch("handleGameEvent", bevueContext);
-        await dispatch("currentGame/checkEndGame", null, { root: true });
+        const eventId = await dispatch("handleGameEvent", gameContext);
+        dispatch("currentGame/handleEndTurn", eventId, { root: true });
       } catch (e) {
         const isCancelAResolution = !e;
         if (isCancelAResolution) {
@@ -147,40 +113,51 @@ export const MainPlayableActionsStoreModule: Module<
         throw e;
       }
     },
-    async cancelLastTurn({ rootState, commit, dispatch }): Promise<void> {
-      const { turnNumber, currentPlayerName, players } = rootState.currentGame!;
 
-      if (turnNumber === 1 && currentPlayerName === players[0].name) {
+    async handleGameEvent(
+      { commit },
+      gameContext: UnknownGameContext
+    ): Promise<string> {
+      const ruleEffects: RuleEffects = await gameRuleRunner
+        .getRunner()
+        .handleGameEvent(gameContext);
+
+      const eventId = getNewEventId();
+      commit("currentGame/addEvent", eventId, { root: true });
+
+      ruleEffects.forEach((ruleEffect) => {
+        const apply: HistoryLineApply = {
+          eventId,
+          playerName: ruleEffect.playerName,
+          amount: ruleEffect.score,
+          designation: ruleEffect.event,
+        };
+
+        commit("currentGame/addHistoryLine", apply, {
+          root: true,
+        });
+      });
+
+      return eventId;
+    },
+
+    async cancelLastEvent({ rootState, commit, dispatch }): Promise<void> {
+      const { events } = rootState.currentGame!;
+
+      if (events.length === 0) {
         return;
       }
 
-      const previousPlayerName = getPreviousPlayer(players, currentPlayerName);
-      const previousTurnNumber = getPreviousTurnNumberFromPreviousPlayer(
-        players,
-        previousPlayerName,
-        turnNumber
-      );
-
-      commit(
-        "currentGame/removeHistoryLines",
-        getTurnId(previousTurnNumber, previousPlayerName),
-        { root: true }
-      );
-      commit("currentGame/setCurrentPlayerName", previousPlayerName, {
-        root: true,
-      });
-
-      if (previousTurnNumber !== turnNumber) {
-        commit("currentGame/decrementTurnNumber", undefined, {
-          root: true,
-        });
-      }
+      const eventToCancel = events[events.length - 1];
+      commit("currentGame/removeEvent", eventToCancel, { root: true });
+      commit("currentGame/removeHistoryLines", eventToCancel, { root: true });
 
       await dispatch("currentGame/saveGameToLocalStorage", undefined, {
         root: true,
       });
     },
 
+    /* RESOLVERS actions*/
     resolveSuite(_, suiteResolution: SuiteResolution): void {
       suiteRuleResolver.resolve(suiteResolution);
     },

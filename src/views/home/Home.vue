@@ -1,10 +1,8 @@
 <template>
-  <v-row justify="center">
-    <v-col md="8" cols="12" class="px-6">
-      <Intro />
-      <NewGameForm />
-    </v-col>
-  </v-row>
+  <div>
+    <Intro />
+    <NewGameForm />
+  </div>
 </template>
 
 <script lang="ts">

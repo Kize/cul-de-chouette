@@ -13,6 +13,11 @@ import {
   BleuRougeResolution,
   BleuRougeRule,
 } from "../level-three/bleu-rouge-rule";
+import {
+  AttrapeOiseauResolution,
+  AttrapeOiseauRule,
+} from "./attrape-oiseau-rule";
+import { SiropResolutionPayload } from "./sirotage-rule";
 
 describe("isApplicableToGameContext", () => {
   let dummyResolver: Resolver<CivetResolution, CivetResolutionPayload>;
@@ -165,6 +170,44 @@ describe("applyRule", () => {
       event: RuleEffectEvent.CIVET_LOST,
       playerName: "Alban",
       score: -102,
+    });
+  });
+
+  it("handle a won civet bet when betting on a chouette, and resulting into an attrape-oiseau by someone else", async () => {
+    const civetResolver: Resolver<CivetResolution, CivetResolutionPayload> = {
+      getResolution: jest.fn().mockResolvedValue({
+        betAmount: 102,
+        playerBet: CivetBet.CHOUETTE,
+        diceRoll: [3, 5, 3],
+      } as CivetResolution),
+    };
+
+    const attrapeOiseauResolver: Resolver<
+      AttrapeOiseauResolution,
+      SiropResolutionPayload
+    > = {
+      getResolution: jest.fn().mockResolvedValue({
+        isSirote: true,
+        playerWhoMakeAttrapeOiseau: "Delphin",
+        lastDieValue: 5,
+        bids: [],
+      } as AttrapeOiseauResolution),
+    };
+
+    const rule = new CivetRule(civetResolver);
+    const ruleEffects = await rule.applyRule(
+      DummyContextBuilder.aCivetContext()
+        .withPlayerName("Alban")
+        .withRuleRunner(
+          new RuleRunner([new AttrapeOiseauRule(attrapeOiseauResolver)])
+        )
+        .build()
+    );
+
+    expect(ruleEffects).toContainEqual<RuleEffect>({
+      event: RuleEffectEvent.CIVET_WON,
+      playerName: "Alban",
+      score: 102,
     });
   });
 });

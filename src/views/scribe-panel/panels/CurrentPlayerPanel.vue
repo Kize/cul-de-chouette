@@ -1,22 +1,18 @@
 <template>
   <v-card outlined elevation="4" color="indigo lighten-5">
     <v-card-title class="headline">
+      <span>Tour: {{ turnNumber }}</span>
+      <v-divider vertical class="mx-6"></v-divider>
       <span>{{ currentPlayer.name }}</span>
       <v-divider vertical class="mx-6"></v-divider>
-      <span>{{ getPlayerScore(currentPlayer.name) }} points</span>
-      <v-divider vertical class="mx-6"></v-divider>
-      <span>Tour: {{ turnNumber }}</span>
+      <span class="text-decoration-underline">
+        {{ getPlayerScore(currentPlayer.name) }} points
+      </span>
     </v-card-title>
 
     <v-card-text>
       <DiceRollInput v-model="diceForm" @input="basicPlay"></DiceRollInput>
     </v-card-text>
-
-    <v-card-actions class="d-flex justify-end pb-8 pr-12">
-      <v-btn x-large class="px-6 py-4" @click="cancelPreviousTurn">
-        Annuler le tour précédent
-      </v-btn>
-    </v-card-actions>
   </v-card>
 </template>
 
@@ -40,9 +36,10 @@ import { GameContextEvent } from "../../../../domain/game-context-event";
     MenuAction,
   },
   computed: {
-    ...mapState("currentGame", ["players", "turnNumber"]),
+    ...mapState("currentGame", ["players"]),
     ...mapGetters("currentGame/rules", ["rules"]),
     ...mapGetters("currentGame", [
+      "turnNumber",
       "isCurrentPlayer",
       "playerNames",
       "getPlayerScore",
@@ -71,10 +68,6 @@ export default class CurrentPlayerPanel extends Vue {
         });
       }
     }, 200);
-  }
-
-  cancelPreviousTurn(): void {
-    this.$store.dispatch("currentGame/play/cancelLastTurn");
   }
 }
 </script>

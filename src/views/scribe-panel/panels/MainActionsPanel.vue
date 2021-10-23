@@ -1,38 +1,39 @@
 <template>
   <div>
     <v-card outlined elevation="4" color="indigo lighten-5">
-      <v-card-text class="d-flex align-center">
-        <v-row>
-          <v-col>
-            <BevueMenuAction></BevueMenuAction>
-          </v-col>
+      <v-card-text>
+        <v-row class="px-8 py-4">
+          <v-btn
+            color="primary"
+            tile
+            outlined
+            x-large
+            @click="showSloubiDialog = true"
+          >
+            <v-icon class="mr-4">mdi-account-cowboy-hat</v-icon>
+            Chante-Sloubi !
+          </v-btn>
 
-          <v-col>
-            <v-btn
-              class="ma-2"
-              color="primary"
-              tile
-              outlined
-              large
-              @click="showSloubiDialog = true"
-            >
-              <v-icon class="mr-2">mdi-account-cowboy-hat</v-icon>
-              Chante-Sloubi !
-            </v-btn>
-          </v-col>
+          <v-btn
+            class="ml-4"
+            color="yellow accent-4"
+            x-large
+            @click="openGrelottine"
+          >
+            <v-icon class="mr-4">mdi-bell-alert-outline</v-icon>
+            Défi Grelottine !
+          </v-btn>
+        </v-row>
 
-          <v-col>
-            <v-btn
-              class="ma-2"
-              color="yellow accent-4"
-              tile
-              large
-              @click="openGrelottine"
-            >
-              <v-icon class="mr-2">mdi-bell-alert-outline</v-icon>
-              Défi Grelottine !
-            </v-btn>
-          </v-col>
+        <v-row class="px-8 py-4">
+          <AddOperationLinesButton></AddOperationLinesButton>
+        </v-row>
+
+        <v-row class="px-8 py-4">
+          <v-btn x-large outlined color="blue-grey" @click="removeLastEvent">
+            <v-icon class="mr-4">mdi-undo</v-icon>
+            Annuler la dernière action
+          </v-btn>
         </v-row>
       </v-card-text>
     </v-card>
@@ -73,12 +74,14 @@ import { Player } from "../../../../domain/player";
 import { mapGetters } from "vuex";
 import SloubiDialogCard from "@/views/scribe-panel/dialogs/SloubiDialogCard.vue";
 import GrelottineDialogCard from "@/views/scribe-panel/dialogs/rule-resolvers/GrelottineResolverDialog.vue";
+import AddOperationLinesButton from "@/views/scribe-panel/components/AddOperationLinesButton.vue";
 
 @Component({
   components: {
     BevueMenuAction,
     SloubiDialogCard,
     GrelottineDialogCard,
+    AddOperationLinesButton,
   },
   computed: {
     ...mapGetters("currentGame", ["playerNames", "sloubiScore"]),
@@ -106,6 +109,10 @@ export default class MainActionsPanel extends Vue {
       this.errorSnackBar.text = error.message;
       this.errorSnackBar.display = true;
     }
+  }
+
+  removeLastEvent(): void {
+    this.$store.dispatch("currentGame/play/cancelLastEvent");
   }
 }
 </script>

@@ -130,15 +130,15 @@ import BevueMenuAction from "@/components/BevueMenuAction.vue";
 import { SiropForm } from "@/domain/level-one/sirop";
 import DieCard from "@/components/dice/DieCard.vue";
 import { SelectItemsType, SelectItemValue, VForm } from "@/vuetify.interface";
-import {
-  BidType,
-  isPlayerBidClaimable,
-  PlayableBid,
-} from "../../../../../domain/rules/level-one/sirotage-rule";
+import { isPlayerBidClaimable } from "../../../../../domain/rules/level-one/sirotage-rule";
 import { rulesOfSelectNameInput } from "@/form-validation/form-validation-rules";
 import { mapGetters, mapState } from "vuex";
 import { DialogsState } from "@/store/current-game/dialogs.store";
 import { AttrapeOiseauResolution } from "../../../../../domain/rules/level-one/attrape-oiseau-rule";
+import {
+  BidType,
+  PlayableBid,
+} from "../../../../../domain/rules/level-one/sirotage-rule.types";
 
 function getInitialForm(): SiropForm {
   return {
@@ -155,10 +155,9 @@ function getInitialForm(): SiropForm {
     MainDialogCard,
   },
   computed: {
-    ...mapState("currentGame", ["turnNumber"]),
     ...mapState("currentGame/dialogs", ["siropResolverDialog"]),
     ...mapState("currentGame/rules", ["isAttrapeOiseauEnabled"]),
-    ...mapGetters("currentGame", ["playerNames"]),
+    ...mapGetters("currentGame", ["playerNames", "turnNumber"]),
   },
 })
 export default class SiropResolverDialog extends Vue {

@@ -8,9 +8,6 @@
         <RulesButton></RulesButton>
       </v-col>
       <v-col>
-        <AddOperationLinesButton></AddOperationLinesButton>
-      </v-col>
-      <v-col>
         <router-link :to="currentGameHistoryRoutePath">
           <v-btn tile>
             <v-icon class="mr-2" small>mdi-table-large</v-icon>
@@ -79,7 +76,6 @@ import PlayersBanner from "@/views/scribe-panel/components/PlayersBanner.vue";
 import CurrentPlayerPanel from "@/views/scribe-panel/panels/CurrentPlayerPanel.vue";
 import MainActionsPanel from "@/views/scribe-panel/panels/MainActionsPanel.vue";
 import { ROUTES } from "@/router";
-import AddOperationLinesButton from "@/views/scribe-panel/components/AddOperationLinesButton.vue";
 import EndGameDialogCard from "@/views/scribe-panel/dialogs/EndGameDialogCard.vue";
 import CancelGameDialogCard from "@/views/scribe-panel/dialogs/CancelGameDialogCard.vue";
 import RulesButton from "@/components/RulesButton.vue";
@@ -104,21 +100,16 @@ import { GameContextEvent } from "../../../domain/game-context-event";
     RulesButton,
     CancelGameDialogCard,
     EndGameDialogCard,
-    AddOperationLinesButton,
     CurrentPlayerPanel,
     MainActionsPanel,
     PlayersBanner,
   },
   computed: {
-    ...mapState("currentGame", [
-      "currentPlayerName",
-      "name",
-      "status",
-      "players",
-    ]),
+    ...mapState("currentGame", ["name", "status", "players"]),
     ...mapState("currentGame/rules", ["isCivetEnabled"]),
 
     ...mapGetters("currentGame", [
+      "currentPlayerName",
       "getPlayerScore",
       "playerNames",
       "scoreboard",

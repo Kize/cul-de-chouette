@@ -1,42 +1,8 @@
-import { HistoryLine } from "@/domain/history";
+import { GameLineType, HistoryLine } from "@/domain/history";
 
 export interface Player {
   name: string;
   history: Array<HistoryLine>;
-}
-
-export function getNextPlayer(
-  players: Array<Player>,
-  currentPlayerName: string
-): string {
-  const nextPlayer = players.find((player, index) => {
-    return players[index - 1]?.name === currentPlayerName;
-  });
-
-  return nextPlayer ? nextPlayer.name : players[0].name;
-}
-
-export function getPreviousPlayer(
-  players: Array<Player>,
-  currentPlayerName: string
-): string {
-  const previousPlayer = players.find((player, index) => {
-    return players[index + 1]?.name === currentPlayerName;
-  });
-
-  return previousPlayer
-    ? previousPlayer.name
-    : players[players.length - 1].name;
-}
-
-export function getPreviousTurnNumberFromPreviousPlayer(
-  players: Array<Player>,
-  previousPlayerName: string,
-  currentTurnNumber: number
-): number {
-  return previousPlayerName === players[players.length - 1].name
-    ? currentTurnNumber - 1
-    : currentTurnNumber;
 }
 
 export function computePlayerScore(
@@ -57,4 +23,43 @@ export function byName(name: string): (p: Player) => boolean {
   return (player: Player) => {
     return player.name === name;
   };
+}
+
+export function getCurrentPlayerName(players: Array<Player>): string {
+  const currentPlayer = players
+    .map(toPlayerWithNumberOfTurnsPlayed)
+    .find((player, index, array) => {
+      if (index === 0) {
+        return false;
+      }
+
+      return player.numberOfTurnsPlayed < array[index - 1].numberOfTurnsPlayed;
+    });
+
+  if (currentPlayer) {
+    return currentPlayer.name;
+  }
+  return players[0].name;
+}
+
+export function toPlayerWithNumberOfTurnsPlayed(
+  player: Player
+): PlayerWithNumberOfTurnsPlayed {
+  return {
+    name: player.name,
+    numberOfTurnsPlayed: player.history.reduce(
+      (numberOfTurnsPlayed, historyLine) => {
+        if (historyLine.designation === GameLineType.PLAY_TURN) {
+          return ++numberOfTurnsPlayed;
+        }
+        return numberOfTurnsPlayed;
+      },
+      0
+    ),
+  };
+}
+
+interface PlayerWithNumberOfTurnsPlayed {
+  name: string;
+  numberOfTurnsPlayed: number;
 }

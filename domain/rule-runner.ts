@@ -6,15 +6,9 @@ export class RuleRunner {
   constructor(private readonly rules: Array<Rule>) {}
 
   async handleGameEvent(event: UnknownGameContext): Promise<RuleEffects> {
-    const ruleToApply = this.rules.find((rule) =>
-      rule.isApplicableToGameContext(event)
+    return this.getFirstApplicableRule(event).applyRule(
+      new GameContextWrapper(event)
     );
-
-    if (!ruleToApply) {
-      throw new Error("No rule to apply :/");
-    }
-
-    return ruleToApply.applyRule(new GameContextWrapper(event));
   }
 
   getFirstApplicableRule(event: UnknownGameContext): Rule {

@@ -18,18 +18,22 @@
         "
       >
         <v-card-title class="mb-6">
-          <v-row no-gutters>
+          <v-row no-gutters class="player-banner--title">
+            <v-col cols="5" class="pr-4">
+              <h2>{{ player.name }}</h2>
+            </v-col>
+
             <v-col cols="auto" class="mr-auto">
-              <h2>
-                {{ player.name }} | {{ getPlayerScore(player.name) }} points
-              </h2>
+              <span class="player-score">
+                {{ getPlayerScore(player.name) }} points
+              </span>
             </v-col>
 
             <v-col cols="auto">
               <v-btn
                 color="red accent-4"
+                small
                 dark
-                rounded
                 @click="applyBevue(player)"
               >
                 <v-icon class="mr-1" small>mdi-alert-circle-outline</v-icon>
@@ -111,4 +115,18 @@ export default class PlayersBanner extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.player-banner--title {
+  font-size: 1.15rem;
+
+  h2 {
+    font-weight: 500;
+  }
+
+  .player-score {
+    font-size: 1.35rem;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+}
+</style>

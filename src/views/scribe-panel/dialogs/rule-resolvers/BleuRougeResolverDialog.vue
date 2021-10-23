@@ -63,10 +63,9 @@ import { BleuRougeForm, getInitialForm } from "@/domain/level-one/bleu-rouge";
     MainDialogCard,
   },
   computed: {
-    ...mapState("currentGame/rules", ["rules"]),
     ...mapState("currentGame/dialogs", ["bleuRougeResolverDialog"]),
-    ...mapState("currentGame", ["players", "currentPlayerName", "rules"]),
-    ...mapGetters("currentGame", ["playerNames"]),
+    ...mapState("currentGame", ["players"]),
+    ...mapGetters("currentGame", ["playerNames", "currentPlayerName"]),
   },
 })
 export default class BleuRougeResolverDialog extends Vue {

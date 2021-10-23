@@ -12,10 +12,16 @@ import {
 import {
   byName,
   computePlayerScore,
-  getNextPlayer,
+  getCurrentPlayerName,
   Player,
+  toPlayerWithNumberOfTurnsPlayed,
 } from "../../../domain/player";
-import { getTurnId, HistoryLine, HistoryLineApply } from "@/domain/history";
+import {
+  GameLineType,
+  getNewEventId,
+  HistoryLine,
+  HistoryLineApply,
+} from "@/domain/history";
 import { RootState } from "@/store/app.state";
 import { MainPlayableActionsStoreModule } from "@/store/current-game/main-playable-actions.store";
 import { RulesState, RulesStoreModule } from "@/store/current-game/rules.store";
@@ -27,6 +33,10 @@ import {
   RuleName,
 } from "@/store/current-game/game-rule-runner";
 import { RuleEffectEvent } from "../../../domain/rules/rule-effect";
+import {
+  getHistoryView,
+  HistoryView,
+} from "@/views/current-game-history/history-view";
 
 export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
   namespaced: true,
@@ -39,9 +49,8 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     return {
       status: GameStatus.CREATION,
       name: "",
+      events: [],
       players: [],
-      currentPlayerName: "",
-      turnNumber: 1,
     };
   },
   getters: {
@@ -51,9 +60,25 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     playerNames(state): Array<string> {
       return state.players.map((player) => player.name);
     },
-    isCurrentPlayer(state) {
+    currentPlayerName(state): string {
+      return getCurrentPlayerName(state.players);
+    },
+    turnNumber(state, getters): number {
+      const firstPlayer = state.players[0];
+      const numberOfTurnsPlayed =
+        toPlayerWithNumberOfTurnsPlayed(firstPlayer).numberOfTurnsPlayed;
+
+      const currentPlayerName = getters.currentPlayerName;
+
+      if (currentPlayerName === firstPlayer.name) {
+        return numberOfTurnsPlayed + 1;
+      }
+
+      return numberOfTurnsPlayed;
+    },
+    isCurrentPlayer(state, getters) {
       return (playerName: string): boolean => {
-        return playerName === state.currentPlayerName;
+        return playerName === getters.currentPlayerName;
       };
     },
     getPlayerScore(state) {
@@ -136,7 +161,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         .slice(0, 2);
 
       return Math.trunc(
-        ((bestScore - secondBestScore) * state.turnNumber) / 10
+        ((bestScore - secondBestScore) * getters.turnNumber) / 10
       );
     },
     scoreboard(state, getters): Scoreboard {
@@ -163,26 +188,19 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
           { name: "", score: Number.MIN_SAFE_INTEGER }
         );
     },
+    historyView(state): HistoryView {
+      return getHistoryView(state.events, state.players);
+    },
   },
   mutations: {
     setGame(state, newGame: CurrentGameState): void {
       state.status = newGame.status;
       state.name = newGame.name;
+      state.events = newGame.events;
       state.players = newGame.players;
-      state.currentPlayerName = newGame.currentPlayerName;
-      state.turnNumber = newGame.turnNumber;
     },
     setGameStatus(state, status: GameStatus): void {
       state.status = status;
-    },
-    setCurrentPlayerName(state, name: string): void {
-      state.currentPlayerName = name;
-    },
-    incrementTurnNumber(state): void {
-      state.turnNumber += 1;
-    },
-    decrementTurnNumber(state): void {
-      state.turnNumber -= 1;
     },
     addPlayer(
       state,
@@ -197,22 +215,23 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         history: player.history,
       });
     },
+    addEvent(state, eventId: string): void {
+      state.events.push(eventId);
+    },
+    removeEvent(state, eventId: string): void {
+      state.events = state.events.filter((event) => event !== eventId);
+    },
     addHistoryLine(state, apply: HistoryLineApply): void {
       const player = state.players.find(byName(apply.playerName));
 
       if (player) {
-        player.history.push({
-          turnId: getTurnId(state.turnNumber, state.currentPlayerName),
-          designation: apply.designation,
-          amount: apply.amount,
-          turnNumber: apply.turnNumber,
-        });
+        player.history.push({ ...apply });
       }
     },
-    removeHistoryLines({ players }, turnId: string): void {
+    removeHistoryLines({ players }, eventId: string): void {
       players.forEach((player) => {
         player.history = player.history.filter(
-          (historyLine: HistoryLine) => historyLine.turnId !== turnId
+          (historyLine: HistoryLine) => historyLine.eventId !== eventId
         );
       });
     },
@@ -234,14 +253,13 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       const newGame: CurrentGameState = {
         status: GameStatus.IN_GAME,
         name: gameName,
+        events: [],
         players: notEmptyPlayerNames.map((name) => ({
           name,
           history: [],
           hasGrelottine: false,
           hasJarret: false,
         })),
-        currentPlayerName: notEmptyPlayerNames[0],
-        turnNumber: 1,
       };
       commit("setGame", newGame);
       dispatch("configureGameRules", rules);
@@ -309,21 +327,21 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
 
       return isGameFinished;
     },
-    async handleEndTurn({ state, commit, dispatch }): Promise<void> {
+    async handleEndTurn(
+      { commit, dispatch, getters },
+      eventId: string
+    ): Promise<void> {
       const isGameFinished = await dispatch("checkEndGame");
 
       if (!isGameFinished) {
-        const nextPlayerName = getNextPlayer(
-          state.players,
-          state.currentPlayerName!
-        );
+        const playTurnHistoryLine: HistoryLineApply = {
+          eventId,
+          amount: 0,
+          playerName: getters.currentPlayerName,
+          designation: GameLineType.PLAY_TURN,
+        };
 
-        commit("setCurrentPlayerName", nextPlayerName);
-
-        if (nextPlayerName === state.players[0].name) {
-          commit("incrementTurnNumber");
-        }
-
+        commit("addHistoryLine", playTurnHistoryLine);
         await dispatch("saveGameToLocalStorage");
       }
     },
@@ -342,9 +360,8 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       const nextGame: CurrentGameState = {
         status: GameStatus.CREATION,
         name: "",
+        events: [],
         players: [],
-        currentPlayerName: "",
-        turnNumber: 1,
       };
       storage.setItem("currentGame", JSON.stringify(nextGame));
       commit("setGame", nextGame);
@@ -353,25 +370,25 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       storage.setItem("currentGame", JSON.stringify(state));
     },
     addGodModOperations(
-      { dispatch, commit, state },
+      { dispatch, commit },
       actionPayload: AddOperationLinesActionPayload
     ): void {
+      const eventId = getNewEventId();
+      commit("addEvent", eventId);
+
       actionPayload.operations.forEach((operation) => {
         const apply: HistoryLineApply = {
-          turnId: getTurnId(state.turnNumber, state.currentPlayerName),
+          eventId,
           designation: operation.designation,
           playerName: operation.playerName,
           amount: operation.amount,
-          turnNumber: operation.shouldDisplayTurnNumber
-            ? state.turnNumber
-            : undefined,
         };
 
         commit("addHistoryLine", apply);
       });
 
       if (actionPayload.shouldHandleEndTurn) {
-        dispatch("handleEndTurn");
+        dispatch("handleEndTurn", eventId);
       } else {
         dispatch("checkEndGame");
       }
@@ -380,8 +397,8 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       { state, commit, dispatch, getters },
       sloubi: SloubiActionPayload
     ): Promise<void> {
-      if (state.players.length > 5) {
-        throw new Error("Le jeu n'autorise que 6 joueurs dans une partie.");
+      if (state.players.length > 7) {
+        throw new Error("Le jeu n'autorise que 8 joueurs dans une partie.");
       }
 
       if (state.players.map((player) => player.name).includes(sloubi.name)) {
@@ -396,10 +413,9 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         name: sloubi.name,
         history: [
           {
-            turnId: getTurnId(state.turnNumber, state.currentPlayerName),
+            eventId: `Sloubi de ${sloubi.name}`,
             designation: RuleEffectEvent.SLOUBI,
             amount: sloubiAmount,
-            turnNumber: state.turnNumber,
           },
         ],
       };

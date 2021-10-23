@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Module } from "vuex";
 import { RootState } from "@/store/app.state";
-import {
-  PlayableBid,
-  SiropResolutionPayload,
-} from "../../../domain/rules/level-one/sirotage-rule";
+import { SiropResolutionPayload } from "../../../domain/rules/level-one/sirotage-rule";
 import { DieValue } from "../../../domain/rules/dice-rule";
 import { SouffletteResolutionPayload } from "../../../domain/rules/level-one/soufflette-rule";
 import { SuiteResolutionPayload } from "../../../domain/rules/basic-rules/suite-rule";
 import { ChouetteVeluteResolutionPayload } from "../../../domain/rules/basic-rules/chouette-velute-rule";
 import { CivetResolutionPayload } from "../../../domain/rules/level-one/civet-rule";
+import { PlayableBid } from "../../../domain/rules/level-one/sirotage-rule.types";
 
 export interface DialogsState {
   suiteResolverDialog: {
