@@ -26,8 +26,9 @@
         </v-row>
 
         <v-row class="px-8 py-4">
-          <v-btn x-large class="px-6 py-4" @click="cancelPreviousTurn">
-            Annuler l'action précédente
+          <v-btn x-large outlined color="blue-grey" @click="removeLastEvent">
+            <v-icon class="mr-4">mdi-undo</v-icon>
+            Annuler la dernière action
           </v-btn>
         </v-row>
       </v-card-text>
@@ -104,7 +105,7 @@ export default class MainActionsPanel extends Vue {
     }
   }
 
-  cancelPreviousTurn(): void {
+  removeLastEvent(): void {
     this.$store.dispatch("currentGame/play/cancelLastEvent");
   }
 }

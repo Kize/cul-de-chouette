@@ -33,6 +33,10 @@ import {
   RuleName,
 } from "@/store/current-game/game-rule-runner";
 import { RuleEffectEvent } from "../../../domain/rules/rule-effect";
+import {
+  getHistoryView,
+  HistoryView,
+} from "@/views/current-game-history/history-view";
 
 export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
   namespaced: true,
@@ -183,6 +187,9 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
               : currentPlayer,
           { name: "", score: Number.MIN_SAFE_INTEGER }
         );
+    },
+    historyView(state): HistoryView {
+      return getHistoryView(state.events, state.players);
     },
   },
   mutations: {
