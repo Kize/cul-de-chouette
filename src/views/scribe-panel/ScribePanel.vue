@@ -110,15 +110,11 @@ import { GameContextEvent } from "../../../domain/game-context-event";
     PlayersBanner,
   },
   computed: {
-    ...mapState("currentGame", [
-      "currentPlayerName",
-      "name",
-      "status",
-      "players",
-    ]),
+    ...mapState("currentGame", ["name", "status", "players"]),
     ...mapState("currentGame/rules", ["isCivetEnabled"]),
 
     ...mapGetters("currentGame", [
+      "currentPlayerName",
       "getPlayerScore",
       "playerNames",
       "scoreboard",

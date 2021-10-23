@@ -12,10 +12,16 @@ import {
 import {
   byName,
   computePlayerScore,
-  getNextPlayer,
+  getCurrentPlayerName,
   Player,
+  toPlayerWithNumberOfTurnsPlayed,
 } from "../../../domain/player";
-import { getNewEventId, HistoryLine, HistoryLineApply } from "@/domain/history";
+import {
+  GameLineType,
+  getNewEventId,
+  HistoryLine,
+  HistoryLineApply,
+} from "@/domain/history";
 import { RootState } from "@/store/app.state";
 import { MainPlayableActionsStoreModule } from "@/store/current-game/main-playable-actions.store";
 import { RulesState, RulesStoreModule } from "@/store/current-game/rules.store";
@@ -41,8 +47,6 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       name: "",
       events: [],
       players: [],
-      currentPlayerName: "",
-      turnNumber: 1,
     };
   },
   getters: {
@@ -52,9 +56,25 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     playerNames(state): Array<string> {
       return state.players.map((player) => player.name);
     },
-    isCurrentPlayer(state) {
+    currentPlayerName(state): string {
+      return getCurrentPlayerName(state.players);
+    },
+    turnNumber(state, getters): number {
+      const firstPlayer = state.players[0];
+      const numberOfTurnsPlayed =
+        toPlayerWithNumberOfTurnsPlayed(firstPlayer).numberOfTurnsPlayed;
+
+      const currentPlayerName = getters.currentPlayerName;
+
+      if (currentPlayerName === firstPlayer.name) {
+        return numberOfTurnsPlayed + 1;
+      }
+
+      return numberOfTurnsPlayed;
+    },
+    isCurrentPlayer(state, getters) {
       return (playerName: string): boolean => {
-        return playerName === state.currentPlayerName;
+        return playerName === getters.currentPlayerName;
       };
     },
     getPlayerScore(state) {
@@ -137,7 +157,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         .slice(0, 2);
 
       return Math.trunc(
-        ((bestScore - secondBestScore) * state.turnNumber) / 10
+        ((bestScore - secondBestScore) * getters.turnNumber) / 10
       );
     },
     scoreboard(state, getters): Scoreboard {
@@ -171,20 +191,9 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       state.name = newGame.name;
       state.events = newGame.events;
       state.players = newGame.players;
-      state.currentPlayerName = newGame.currentPlayerName;
-      state.turnNumber = newGame.turnNumber;
     },
     setGameStatus(state, status: GameStatus): void {
       state.status = status;
-    },
-    setCurrentPlayerName(state, name: string): void {
-      state.currentPlayerName = name;
-    },
-    incrementTurnNumber(state): void {
-      state.turnNumber += 1;
-    },
-    decrementTurnNumber(state): void {
-      state.turnNumber -= 1;
     },
     addPlayer(
       state,
@@ -244,8 +253,6 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
           hasGrelottine: false,
           hasJarret: false,
         })),
-        currentPlayerName: notEmptyPlayerNames[0],
-        turnNumber: 1,
       };
       commit("setGame", newGame);
       dispatch("configureGameRules", rules);
@@ -313,21 +320,21 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
 
       return isGameFinished;
     },
-    async handleEndTurn({ state, commit, dispatch }): Promise<void> {
+    async handleEndTurn(
+      { commit, dispatch, getters },
+      eventId: string
+    ): Promise<void> {
       const isGameFinished = await dispatch("checkEndGame");
 
       if (!isGameFinished) {
-        const nextPlayerName = getNextPlayer(
-          state.players,
-          state.currentPlayerName!
-        );
+        const playTurnHistoryLine: HistoryLineApply = {
+          eventId,
+          amount: 0,
+          playerName: getters.currentPlayerName,
+          designation: GameLineType.PLAY_TURN,
+        };
 
-        commit("setCurrentPlayerName", nextPlayerName);
-
-        if (nextPlayerName === state.players[0].name) {
-          commit("incrementTurnNumber");
-        }
-
+        commit("addHistoryLine", playTurnHistoryLine);
         await dispatch("saveGameToLocalStorage");
       }
     },
@@ -348,8 +355,6 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         name: "",
         events: [],
         players: [],
-        currentPlayerName: "",
-        turnNumber: 1,
       };
       storage.setItem("currentGame", JSON.stringify(nextGame));
       commit("setGame", nextGame);
@@ -358,7 +363,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       storage.setItem("currentGame", JSON.stringify(state));
     },
     addGodModOperations(
-      { dispatch, commit, state },
+      { dispatch, commit },
       actionPayload: AddOperationLinesActionPayload
     ): void {
       const eventId = getNewEventId();
@@ -376,7 +381,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       });
 
       if (actionPayload.shouldHandleEndTurn) {
-        dispatch("handleEndTurn");
+        dispatch("handleEndTurn", eventId);
       } else {
         dispatch("checkEndGame");
       }

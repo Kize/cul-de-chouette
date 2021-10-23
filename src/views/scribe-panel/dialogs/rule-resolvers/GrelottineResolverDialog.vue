@@ -188,10 +188,11 @@ const INITIAL_FORM: GrelottineForm = {
 @Component({
   components: { DiceRollInput, BevueMenuAction },
   computed: {
-    ...mapState("currentGame", ["players", "turnNumber"]),
+    ...mapState("currentGame", ["players"]),
     ...mapState("currentGame/dialogs", ["grelottineResolverDialog"]),
     ...mapState("currentGame/rules", ["isSiropEnabled", "isCivetEnabled"]),
     ...mapGetters("currentGame", [
+      "turnNumber",
       "getPlayerScore",
       "getPlayerScore",
       "playerNames",

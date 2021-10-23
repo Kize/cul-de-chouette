@@ -26,10 +26,6 @@ import {
 import { GrelottineResolution } from "../../../domain/rules/basic-rules/grelottine-rule";
 import { SouffletteResolution } from "../../../domain/rules/level-one/soufflette-rule";
 import { BleuRougeResolution } from "../../../domain/rules/level-three/bleu-rouge-rule";
-import {
-  getPreviousPlayer,
-  getPreviousTurnNumberFromPreviousPlayer,
-} from "../../../domain/player";
 import { CivetResolution } from "../../../domain/rules/level-one/civet-rule";
 
 type MainPlayableState = Record<string, unknown>;
@@ -51,30 +47,14 @@ export const MainPlayableActionsStoreModule: Module<
 > = {
   namespaced: true,
   actions: {
-    async playATurn(
-      { dispatch, rootState },
-      payload: PlayATurnPayload
-    ): Promise<void> {
-      let gameContext: UnknownGameContext;
-
-      if (payload.event === GameContextEvent.DICE_ROLL) {
-        gameContext = {
-          event: GameContextEvent.DICE_ROLL,
-          playerName: rootState.currentGame!.currentPlayerName,
-          diceRoll: payload.diceRoll,
-          runner: gameRuleRunner.getRunner(),
-        };
-      } else {
-        gameContext = {
-          event: payload.event,
-          runner: gameRuleRunner.getRunner(),
-          playerName: rootState.currentGame!.currentPlayerName,
-        };
-      }
-
+    async applyBevue({ dispatch }, playerWhoMadeABevue: string): Promise<void> {
+      const bevueContext: ApplyBevueGameContext = {
+        event: GameContextEvent.APPLY_BEVUE,
+        playerWhoMadeABevue,
+      };
       try {
-        await dispatch("handleGameEvent", gameContext);
-        dispatch("currentGame/handleEndTurn", undefined, { root: true });
+        await dispatch("handleGameEvent", bevueContext);
+        await dispatch("currentGame/checkEndGame", null, { root: true });
       } catch (e) {
         const isCancelAResolution = !e;
         if (isCancelAResolution) {
@@ -83,6 +63,7 @@ export const MainPlayableActionsStoreModule: Module<
         throw e;
       }
     },
+
     async startGrelottineChallenge({ dispatch }): Promise<void> {
       const grelottineContext: ChallengeGrelottineGameContext = {
         event: GameContextEvent.CHALLENGE_GRELOTTINE,
@@ -100,10 +81,43 @@ export const MainPlayableActionsStoreModule: Module<
       }
     },
 
+    async playATurn(
+      { dispatch, rootGetters },
+      payload: PlayATurnPayload
+    ): Promise<void> {
+      let gameContext: UnknownGameContext;
+
+      if (payload.event === GameContextEvent.DICE_ROLL) {
+        gameContext = {
+          event: GameContextEvent.DICE_ROLL,
+          playerName: rootGetters["currentGame/currentPlayerName"],
+          diceRoll: payload.diceRoll,
+          runner: gameRuleRunner.getRunner(),
+        };
+      } else {
+        gameContext = {
+          event: payload.event,
+          runner: gameRuleRunner.getRunner(),
+          playerName: rootGetters["currentGame/currentPlayerName"],
+        };
+      }
+
+      try {
+        const eventId = await dispatch("handleGameEvent", gameContext);
+        dispatch("currentGame/handleEndTurn", eventId, { root: true });
+      } catch (e) {
+        const isCancelAResolution = !e;
+        if (isCancelAResolution) {
+          return;
+        }
+        throw e;
+      }
+    },
+
     async handleGameEvent(
       { commit },
       gameContext: UnknownGameContext
-    ): Promise<void> {
+    ): Promise<string> {
       const ruleEffects: RuleEffects = await gameRuleRunner
         .getRunner()
         .handleGameEvent(gameContext);
@@ -123,32 +137,12 @@ export const MainPlayableActionsStoreModule: Module<
           root: true,
         });
       });
+
+      return eventId;
     },
-    async applyBevue({ dispatch }, playerWhoMadeABevue: string): Promise<void> {
-      const bevueContext: ApplyBevueGameContext = {
-        event: GameContextEvent.APPLY_BEVUE,
-        playerWhoMadeABevue,
-      };
-      try {
-        await dispatch("handleGameEvent", bevueContext);
-        await dispatch("currentGame/checkEndGame", null, { root: true });
-      } catch (e) {
-        const isCancelAResolution = !e;
-        if (isCancelAResolution) {
-          return;
-        }
-        throw e;
-      }
-    },
-    // TODO: works, but should not change currentPlayer on cancelBevue !
-    /* Change data model  to something that can detect turn events from other ones.
-       The current player should be determined with ruleEffects, 2 solutions:
-        - add a ruleEffect each time someone plays
-        - tag the ruleEffect he has with his combination (might be tricky, because SuiteRule or ChouetteVeluteRule might not generate one for the current player)
-     */
+
     async cancelLastTurn({ rootState, commit, dispatch }): Promise<void> {
-      const { events, turnNumber, currentPlayerName, players } =
-        rootState.currentGame!;
+      const { events } = rootState.currentGame!;
 
       if (events.length === 0) {
         return;
@@ -158,27 +152,12 @@ export const MainPlayableActionsStoreModule: Module<
       commit("currentGame/removeEvent", eventToCancel, { root: true });
       commit("currentGame/removeHistoryLines", eventToCancel, { root: true });
 
-      const previousPlayerName = getPreviousPlayer(players, currentPlayerName);
-      commit("currentGame/setCurrentPlayerName", previousPlayerName, {
-        root: true,
-      });
-
-      const previousTurnNumber = getPreviousTurnNumberFromPreviousPlayer(
-        players,
-        previousPlayerName,
-        turnNumber
-      );
-      if (previousTurnNumber !== turnNumber) {
-        commit("currentGame/decrementTurnNumber", undefined, {
-          root: true,
-        });
-      }
-
       await dispatch("currentGame/saveGameToLocalStorage", undefined, {
         root: true,
       });
     },
 
+    /* RESOLVERS actions*/
     resolveSuite(_, suiteResolution: SuiteResolution): void {
       suiteRuleResolver.resolve(suiteResolution);
     },

@@ -155,10 +155,9 @@ function getInitialForm(): SiropForm {
     MainDialogCard,
   },
   computed: {
-    ...mapState("currentGame", ["turnNumber"]),
     ...mapState("currentGame/dialogs", ["siropResolverDialog"]),
     ...mapState("currentGame/rules", ["isAttrapeOiseauEnabled"]),
-    ...mapGetters("currentGame", ["playerNames"]),
+    ...mapGetters("currentGame", ["playerNames", "turnNumber"]),
   },
 })
 export default class SiropResolverDialog extends Vue {

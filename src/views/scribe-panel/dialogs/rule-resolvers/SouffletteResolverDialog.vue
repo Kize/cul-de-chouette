@@ -79,9 +79,8 @@ import { DialogsState } from "@/store/current-game/dialogs.store";
     MainDialogCard,
   },
   computed: {
-    ...mapState("currentGame/rules", ["rules"]),
     ...mapState("currentGame/dialogs", ["souffletteResolverDialog"]),
-    ...mapState("currentGame", ["players", "rules"]),
+    ...mapState("currentGame", ["players"]),
     ...mapGetters("currentGame", ["playerNames"]),
   },
 })

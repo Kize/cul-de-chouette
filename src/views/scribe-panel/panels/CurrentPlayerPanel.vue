@@ -42,9 +42,10 @@ import { GameContextEvent } from "../../../../domain/game-context-event";
     MenuAction,
   },
   computed: {
-    ...mapState("currentGame", ["players", "turnNumber"]),
+    ...mapState("currentGame", ["players"]),
     ...mapGetters("currentGame/rules", ["rules"]),
     ...mapGetters("currentGame", [
+      "turnNumber",
       "isCurrentPlayer",
       "playerNames",
       "getPlayerScore",

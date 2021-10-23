@@ -8,10 +8,15 @@ export enum GodModLineType {
   GOD_MOD = "Ligne custom",
 }
 
+export enum GameLineType {
+  PLAY_TURN = "A joué son tour de jeu",
+}
+
 export type AllHistoryLineTypes =
   | RuleEffectEvent
   | NotImplementedRuleEffectEvent
-  | GodModLineType;
+  | GodModLineType
+  | GameLineType;
 
 export interface HistoryLine {
   eventId: string;

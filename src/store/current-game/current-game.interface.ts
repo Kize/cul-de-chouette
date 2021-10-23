@@ -13,8 +13,6 @@ export interface CurrentGameState {
   status: GameStatus;
   events: Array<string>;
   players: Array<Player>;
-  currentPlayerName: string;
-  turnNumber: number;
 }
 
 export type Scoreboard = ReadonlyArray<{
