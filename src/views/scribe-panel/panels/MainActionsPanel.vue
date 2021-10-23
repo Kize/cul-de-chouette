@@ -26,6 +26,10 @@
         </v-row>
 
         <v-row class="px-8 py-4">
+          <AddOperationLinesButton></AddOperationLinesButton>
+        </v-row>
+
+        <v-row class="px-8 py-4">
           <v-btn x-large outlined color="blue-grey" @click="removeLastEvent">
             <v-icon class="mr-4">mdi-undo</v-icon>
             Annuler la dernière action
@@ -70,12 +74,14 @@ import { Player } from "../../../../domain/player";
 import { mapGetters } from "vuex";
 import SloubiDialogCard from "@/views/scribe-panel/dialogs/SloubiDialogCard.vue";
 import GrelottineDialogCard from "@/views/scribe-panel/dialogs/rule-resolvers/GrelottineResolverDialog.vue";
+import AddOperationLinesButton from "@/views/scribe-panel/components/AddOperationLinesButton.vue";
 
 @Component({
   components: {
     BevueMenuAction,
     SloubiDialogCard,
     GrelottineDialogCard,
+    AddOperationLinesButton,
   },
   computed: {
     ...mapGetters("currentGame", ["playerNames", "sloubiScore"]),

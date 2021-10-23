@@ -1,6 +1,6 @@
 <template>
   <span>
-    <v-btn @click="openDialog">
+    <v-btn x-large color="success" @click="openDialog">
       <v-icon class="mr-2">mdi-text-box-plus</v-icon>
       Ajouter des opérations
     </v-btn>
