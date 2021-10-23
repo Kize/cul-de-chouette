@@ -1,6 +1,6 @@
 <template>
-  <span>
-    <v-btn x-large color="success" @click="openDialog">
+  <div style="width: 100%">
+    <v-btn x-large block color="success" @click="openDialog">
       <v-icon class="mr-2">mdi-text-box-plus</v-icon>
       Ajouter des opérations
     </v-btn>
@@ -65,7 +65,7 @@
         </v-form>
       </MainDialogCard>
     </v-dialog>
-  </span>
+  </div>
 </template>
 
 <script lang="ts">

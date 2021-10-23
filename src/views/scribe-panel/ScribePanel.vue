@@ -30,15 +30,15 @@
 
     <v-row>
       <v-col lg="6" md="12" sm="12">
-        <CurrentPlayerPanel
-          :currentPlayer="getCurrentPlayer()"
-        ></CurrentPlayerPanel>
-      </v-col>
-
-      <v-col lg="6" md="12" sm="12">
         <MainActionsPanel
           :currentPlayer="getCurrentPlayer()"
         ></MainActionsPanel>
+      </v-col>
+
+      <v-col lg="6" md="12" sm="12">
+        <CurrentPlayerPanel
+          :currentPlayer="getCurrentPlayer()"
+        ></CurrentPlayerPanel>
       </v-col>
     </v-row>
 

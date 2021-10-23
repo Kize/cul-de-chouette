@@ -1,27 +1,24 @@
 <template>
-  <div>
-    <v-card outlined elevation="4" color="indigo lighten-5">
+  <div style="height: 100%">
+    <v-card outlined elevation="4" color="indigo lighten-5" min-height="100%">
       <v-card-text>
+        <v-row class="px-8 py-4">
+          <v-btn color="yellow accent-4" x-large block @click="openGrelottine">
+            <v-icon class="mr-4">mdi-bell-alert-outline</v-icon>
+            Défi Grelottine !
+          </v-btn>
+        </v-row>
+
         <v-row class="px-8 py-4">
           <v-btn
             color="primary"
             tile
-            outlined
             x-large
+            block
             @click="showSloubiDialog = true"
           >
             <v-icon class="mr-4">mdi-account-cowboy-hat</v-icon>
             Chante-Sloubi !
-          </v-btn>
-
-          <v-btn
-            class="ml-4"
-            color="yellow accent-4"
-            x-large
-            @click="openGrelottine"
-          >
-            <v-icon class="mr-4">mdi-bell-alert-outline</v-icon>
-            Défi Grelottine !
           </v-btn>
         </v-row>
 
@@ -30,7 +27,13 @@
         </v-row>
 
         <v-row class="px-8 py-4">
-          <v-btn x-large outlined color="blue-grey" @click="removeLastEvent">
+          <v-btn
+            x-large
+            outlined
+            block
+            color="blue-grey"
+            @click="removeLastEvent"
+          >
             <v-icon class="mr-4">mdi-undo</v-icon>
             Annuler la dernière action
           </v-btn>
