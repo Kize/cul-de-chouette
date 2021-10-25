@@ -7,18 +7,18 @@ import { CulDeChouetteRule } from "../../../domain/rules/basic-rules/cul-de-chou
 import { SuiteRule } from "../../../domain/rules/basic-rules/suite-rule";
 import { ChouetteVeluteRule } from "../../../domain/rules/basic-rules/chouette-velute-rule";
 import { VeluteRule } from "../../../domain/rules/basic-rules/velute-rule";
-import { AttrapeOiseauRule } from "../../../domain/rules/level-one/attrape-oiseau-rule";
-import { SirotageRule } from "../../../domain/rules/level-one/sirotage-rule";
+import { AttrapeOiseauRule } from "../../../domain/rules/level-1/attrape-oiseau-rule";
+import { SirotageRule } from "../../../domain/rules/level-1/sirotage-rule";
 import { ChouetteRule } from "../../../domain/rules/basic-rules/chouette-rule";
 import { NeantRule } from "../../../domain/rules/basic-rules/neant-rule";
 import { GrelottineRuleResolver } from "./resolvers/grelottine-rule-resolver";
 import { GrelottineRule } from "../../../domain/rules/basic-rules/grelottine-rule";
 import { BevueRule } from "../../../domain/rules/basic-rules/bevue-rule";
-import { SouffletteRule } from "../../../domain/rules/level-one/soufflette-rule";
+import { SouffletteRule } from "../../../domain/rules/level-1/soufflette-rule";
 import { SouffletteRuleResolver } from "./resolvers/soufflette-rule-resolver";
 import { BleuRougeRuleResolver } from "./resolvers/bleu-rouge-rule-resolver";
-import { BleuRougeRule } from "../../../domain/rules/level-three/bleu-rouge-rule";
-import { CivetRule } from "../../../domain/rules/level-one/civet-rule";
+import { BleuRougeRule } from "../../../domain/rules/level-3/bleu-rouge-rule";
+import { CivetRule } from "../../../domain/rules/level-1/civet-rule";
 import { CivetRuleResolver } from "./resolvers/civet-rule-resolver";
 
 class GameRuleRunner {

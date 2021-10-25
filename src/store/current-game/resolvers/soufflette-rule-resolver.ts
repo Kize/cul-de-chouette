@@ -3,7 +3,7 @@ import store from "@/store/app.state";
 import {
   SouffletteResolution,
   SouffletteResolutionPayload,
-} from "../../../../domain/rules/level-one/soufflette-rule";
+} from "../../../../domain/rules/level-1/soufflette-rule";
 
 export class SouffletteRuleResolver extends RuleResolver<
   SouffletteResolution,

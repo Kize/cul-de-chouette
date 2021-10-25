@@ -1,4 +1,4 @@
-import { BleuRougeBid } from "../../../domain/rules/level-three/bleu-rouge-rule";
+import { BleuRougeBid } from "../../../domain/rules/level-3/bleu-rouge-rule";
 
 export interface BleuRougeForm {
   bids: Array<BleuRougeBid>;

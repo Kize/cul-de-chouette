@@ -69,7 +69,7 @@ import { VForm } from "@/vuetify.interface";
 import DiceRollInput from "@/components/dice/DiceRollInput.vue";
 import { DiceForm, isDiceFormValid } from "@/components/dice/dice-form";
 import { mapGetters, mapState } from "vuex";
-import { SouffletteResolution } from "../../../../../domain/rules/level-one/soufflette-rule";
+import { SouffletteResolution } from "../../../../../domain/rules/level-1/soufflette-rule";
 import { DialogsState } from "@/store/current-game/dialogs.store";
 
 @Component({

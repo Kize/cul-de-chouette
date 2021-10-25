@@ -130,15 +130,15 @@ import BevueMenuAction from "@/components/BevueMenuAction.vue";
 import { SiropForm } from "@/domain/level-one/sirop";
 import DieCard from "@/components/dice/DieCard.vue";
 import { SelectItemsType, SelectItemValue, VForm } from "@/vuetify.interface";
-import { isPlayerBidClaimable } from "../../../../../domain/rules/level-one/sirotage-rule";
+import { isPlayerBidClaimable } from "../../../../../domain/rules/level-1/sirotage-rule";
 import { rulesOfSelectNameInput } from "@/form-validation/form-validation-rules";
 import { mapGetters, mapState } from "vuex";
 import { DialogsState } from "@/store/current-game/dialogs.store";
-import { AttrapeOiseauResolution } from "../../../../../domain/rules/level-one/attrape-oiseau-rule";
+import { AttrapeOiseauResolution } from "../../../../../domain/rules/level-1/attrape-oiseau-rule";
 import {
   BidType,
   PlayableBid,
-} from "../../../../../domain/rules/level-one/sirotage-rule.types";
+} from "../../../../../domain/rules/level-1/sirotage-rule.types";
 
 function getInitialForm(): SiropForm {
   return {

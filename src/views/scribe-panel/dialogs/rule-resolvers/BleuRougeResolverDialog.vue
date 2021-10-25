@@ -53,7 +53,7 @@ import { mapGetters, mapState } from "vuex";
 import {
   BleuRougeBetValue,
   BleuRougeResolution,
-} from "../../../../../domain/rules/level-three/bleu-rouge-rule";
+} from "../../../../../domain/rules/level-3/bleu-rouge-rule";
 import { BleuRougeForm, getInitialForm } from "@/domain/level-one/bleu-rouge";
 
 @Component({

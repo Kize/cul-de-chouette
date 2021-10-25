@@ -9,10 +9,7 @@ import {
 import { RuleEffect, RuleEffectEvent } from "../rule-effect";
 import { VeluteRule } from "../basic-rules/velute-rule";
 import { RuleRunner } from "../../rule-runner";
-import {
-  BleuRougeResolution,
-  BleuRougeRule,
-} from "../level-three/bleu-rouge-rule";
+import { BleuRougeResolution, BleuRougeRule } from "../level-3/bleu-rouge-rule";
 import {
   AttrapeOiseauResolution,
   AttrapeOiseauRule,
