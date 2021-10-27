@@ -49,6 +49,7 @@
     <SiropResolverDialog></SiropResolverDialog>
     <CivetResolverDialog></CivetResolverDialog>
     <BleuRougeResolverDialog></BleuRougeResolverDialog>
+    <ArtichetteResolverDialog></ArtichetteResolverDialog>
 
     <v-dialog v-model="showEndGameDialog" persistent max-width="1000">
       <EndGameDialogCard
@@ -71,11 +72,10 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { GameStatus } from "@/store/current-game/current-game.interface";
 import { mapGetters, mapState } from "vuex";
-import { Player } from "../../../domain/player";
+import { ROUTES } from "@/router";
 import PlayersBanner from "@/views/scribe-panel/components/PlayersBanner.vue";
 import CurrentPlayerPanel from "@/views/scribe-panel/panels/CurrentPlayerPanel.vue";
 import MainActionsPanel from "@/views/scribe-panel/panels/MainActionsPanel.vue";
-import { ROUTES } from "@/router";
 import EndGameDialogCard from "@/views/scribe-panel/dialogs/EndGameDialogCard.vue";
 import CancelGameDialogCard from "@/views/scribe-panel/dialogs/CancelGameDialogCard.vue";
 import RulesButton from "@/components/RulesButton.vue";
@@ -86,10 +86,13 @@ import GrelottineResolverDialog from "@/views/scribe-panel/dialogs/rule-resolver
 import SouffletteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/SouffletteResolverDialog.vue";
 import CivetResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/CivetResolverDialog.vue";
 import BleuRougeResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/BleuRougeResolverDialog.vue";
+import ArtichetteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/ArtichetteResolverDialog.vue";
+import { Player } from "../../../domain/player";
 import { GameContextEvent } from "../../../domain/game-context-event";
 
 @Component({
   components: {
+    ArtichetteResolverDialog,
     BleuRougeResolverDialog,
     SouffletteResolverDialog,
     CivetResolverDialog,

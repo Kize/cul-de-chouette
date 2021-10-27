@@ -8,22 +8,19 @@ import { RuleEffect, RuleEffectEvent } from "../rule-effect";
 import { Resolver } from "../rule-resolver";
 import { RuleRunner } from "../../rule-runner";
 import { ChouetteRule } from "./chouette-rule";
-import {
-  BleuRougeResolution,
-  BleuRougeRule,
-} from "../level-three/bleu-rouge-rule";
+import { BleuRougeResolution, BleuRougeRule } from "../level-3/bleu-rouge-rule";
 import { VeluteRule } from "./velute-rule";
 import {
   CivetBet,
   CivetResolution,
   CivetResolutionPayload,
   CivetRule,
-} from "../level-one/civet-rule";
+} from "../level-1/civet-rule";
 import {
   AttrapeOiseauResolution,
   AttrapeOiseauRule,
-} from "../level-one/attrape-oiseau-rule";
-import { SiropResolutionPayload } from "../level-one/sirotage-rule";
+} from "../level-1/attrape-oiseau-rule";
+import { SiropResolutionPayload } from "../level-1/sirotage-rule";
 
 describe("isApplicableToGameContext", () => {
   let dummyResolver: Resolver<GrelottineResolution>;

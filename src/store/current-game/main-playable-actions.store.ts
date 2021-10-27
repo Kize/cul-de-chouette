@@ -4,8 +4,9 @@ import { SuiteResolution } from "../../../domain/rules/basic-rules/suite-rule";
 import { getNewEventId, HistoryLineApply } from "@/domain/history";
 import { ChouetteVeluteResolution } from "../../../domain/rules/basic-rules/chouette-velute-rule";
 import { RootState } from "@/store/app.state";
-import { AttrapeOiseauResolution } from "../../../domain/rules/level-one/attrape-oiseau-rule";
+import { AttrapeOiseauResolution } from "../../../domain/rules/level-1/attrape-oiseau-rule";
 import {
+  artichetteRuleResolver,
   bleuRougeRuleResolver,
   chouetteVeluteRuleResolver,
   civetRuleResolver,
@@ -24,9 +25,10 @@ import {
   UnknownGameContext,
 } from "../../../domain/game-context-event";
 import { GrelottineResolution } from "../../../domain/rules/basic-rules/grelottine-rule";
-import { SouffletteResolution } from "../../../domain/rules/level-one/soufflette-rule";
-import { BleuRougeResolution } from "../../../domain/rules/level-three/bleu-rouge-rule";
-import { CivetResolution } from "../../../domain/rules/level-one/civet-rule";
+import { SouffletteResolution } from "../../../domain/rules/level-1/soufflette-rule";
+import { BleuRougeResolution } from "../../../domain/rules/level-3/bleu-rouge-rule";
+import { CivetResolution } from "../../../domain/rules/level-1/civet-rule";
+import { ArtichetteResolution } from "../../../domain/rules/level-2/artichette-rule";
 
 type MainPlayableState = Record<string, unknown>;
 
@@ -208,6 +210,13 @@ export const MainPlayableActionsStoreModule: Module<
     },
     cancelBleuRouge(): void {
       bleuRougeRuleResolver.reject();
+    },
+
+    resolveArtichette(_, bleuRougeResolution: ArtichetteResolution): void {
+      artichetteRuleResolver.resolve(bleuRougeResolution);
+    },
+    cancelArtichette(): void {
+      artichetteRuleResolver.reject();
     },
   },
 };

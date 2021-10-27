@@ -29,6 +29,8 @@ export interface ActiveSirotageResolution {
 }
 
 export class SirotageRule extends ChouetteRule {
+  name = Rules.SIROP;
+
   constructor(
     private readonly sirotageResolver: Resolver<
       SirotageResolution,

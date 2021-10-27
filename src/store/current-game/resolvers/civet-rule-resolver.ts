@@ -3,7 +3,7 @@ import store from "@/store/app.state";
 import {
   CivetResolution,
   CivetResolutionPayload,
-} from "../../../../domain/rules/level-one/civet-rule";
+} from "../../../../domain/rules/level-1/civet-rule";
 
 export class CivetRuleResolver extends RuleResolver<
   CivetResolution,

@@ -66,7 +66,7 @@ import AmountInput from "../../../../components/AmountInput.vue";
 import {
   CivetBet,
   CivetResolution,
-} from "../../../../../domain/rules/level-one/civet-rule";
+} from "../../../../../domain/rules/level-1/civet-rule";
 
 @Component({
   components: {

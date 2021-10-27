@@ -1,4 +1,4 @@
-import { CivetBet } from "../../../domain/rules/level-one/civet-rule";
+import { CivetBet } from "../../../domain/rules/level-1/civet-rule";
 
 export interface CivetForm {
   playerName?: string;

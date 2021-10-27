@@ -33,6 +33,7 @@ export interface NewGameForm {
     isAttrapeOiseauEnabled: boolean;
     isCivetEnabled: boolean;
     isBleuRougeEnabled: boolean;
+    isArtichetteEnabled: boolean;
   };
 }
 

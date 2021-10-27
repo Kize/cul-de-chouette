@@ -48,7 +48,23 @@
               </v-card-text>
             </v-card>
 
-            <v-card>
+            <v-card class="mb-2">
+              <v-card-title>
+                Difficulté
+                <v-icon>mdi-star</v-icon>
+                <v-icon>mdi-star</v-icon>
+              </v-card-title>
+
+              <v-card-text>
+                <v-checkbox
+                  dense
+                  label="L'Artichette"
+                  v-model="form.rules.isArtichetteEnabled"
+                ></v-checkbox>
+              </v-card-text>
+            </v-card>
+
+            <v-card class="mb-2">
               <v-card-title>
                 Difficulté
                 <v-icon>mdi-star</v-icon>
@@ -144,6 +160,7 @@ export default class NewGameFormSection extends Vue {
       isAttrapeOiseauEnabled: true,
       isCivetEnabled: true,
       isBleuRougeEnabled: true,
+      isArtichetteEnabled: true,
     },
   };
 

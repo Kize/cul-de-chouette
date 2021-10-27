@@ -19,6 +19,8 @@ export enum RuleEffectEvent {
   CHOUETTE_VELUTE_STOLEN = "Chouette velute volée",
   SLOUBI = "Sloubi",
 
+  ARTICHETTE = "Artichette",
+
   SOUFFLETTE_NO_CHALLENGE = "Soufflette sans défi",
   SOUFFLETTE_WON = "Soufflette gagnée",
   SOUFFLETTE_LOST = "Soufflette perdue",
@@ -31,6 +33,7 @@ export enum RuleEffectEvent {
   SIROP_BET_WON = "Pari de Sirotage gagné",
   SIROP_BET_SKIPPED = "Aucun pari sur le Sirotage",
   SIROP_BET_WON_BUT_NOT_CLAIMED = "Pari de Sirotage gagné mais pas clamé",
+
   ADD_CIVET = "Ajout d'un civet",
   REMOVE_CIVET = "Retrait du civet",
   CIVET_WON = "Défi de civet réussi",
@@ -49,9 +52,7 @@ export enum RuleEffectEvent {
 
 export enum NotImplementedRuleEffectEvent {
   POULETTE = "La poulette",
-  CIVET = "Le civet",
   GRAINES = "Graines",
-  ARTICHETTE = "Artichette",
   CONTRE_SIROP = "Contre-sirop",
   SIROP_JEANNOT = "Sirop-Jeannot",
   CIVET_DOUBLE = "Civet doublé",
