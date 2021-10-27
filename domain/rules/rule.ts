@@ -21,6 +21,7 @@ export enum Rules {
   CIVET = "Civet",
   SIROP = "Sirop",
   ATTRAPE_OISEAU = "Attrape-oiseau",
+  ARTICHETTE = "Artichette",
   BLEU_ROUGE = "Bleu-Rouge",
   SOUFFLETTE = "Soufflette",
 }

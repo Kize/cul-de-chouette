@@ -7,6 +7,7 @@ export interface RulesState {
   isSiropEnabled: boolean;
   isAttrapeOiseauEnabled: boolean;
   isCivetEnabled: boolean;
+  isArtichetteEnabled: boolean;
   isBleuRougeEnabled: boolean;
 }
 
@@ -30,6 +31,9 @@ export const RulesStoreModule: Module<RulesState, RootState> = {
     },
     setIsBleuRougeEnabled(state, isEnabled: boolean): void {
       state.isBleuRougeEnabled = isEnabled;
+    },
+    setIsArtichetteEnabled(state, isEnabled: boolean): void {
+      state.isArtichetteEnabled = isEnabled;
     },
   },
 };

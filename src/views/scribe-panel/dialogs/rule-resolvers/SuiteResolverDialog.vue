@@ -74,7 +74,6 @@ const INITIAL_FORM: SuiteForm = {
   },
 })
 export default class SuiteResolverDialog extends Vue {
-  showDialog = false;
   playerNames!: Array<string>;
   suiteResolverDialog!: DialogsState["suiteResolverDialog"];
 

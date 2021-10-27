@@ -30,13 +30,13 @@ import {
   ALL_RULES_ORDERED,
   BASIC_RULE_NAMES,
   gameRuleRunner,
-  RuleName,
 } from "@/store/current-game/game-rule-runner";
 import { RuleEffectEvent } from "../../../domain/rules/rule-effect";
 import {
   getHistoryView,
   HistoryView,
 } from "@/views/current-game-history/history-view";
+import { Rules } from "../../../domain/rules/rule";
 
 export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
   namespaced: true,
@@ -271,35 +271,42 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
 
       if (payload?.isSouffletteEnabled) {
         commit("rules/setIsSouffletteEnabled", true);
-        enabledRules.add(RuleName.SOUFFLETTE);
+        enabledRules.add(Rules.SOUFFLETTE);
       } else {
         commit("rules/setIsSouffletteEnabled", false);
       }
 
       if (payload?.isSiropEnabled) {
         commit("rules/setIsSiropEnabled", true);
-        enabledRules.add(RuleName.SIROTAGE);
+        enabledRules.add(Rules.SIROP);
       } else {
         commit("rules/setIsSiropEnabled", false);
       }
 
       if (payload?.isAttrapeOiseauEnabled) {
         commit("rules/setIsAttrapeOiseauEnabled", true);
-        enabledRules.add(RuleName.ATTRAPE_OISEAU);
+        enabledRules.add(Rules.ATTRAPE_OISEAU);
       } else {
         commit("rules/setIsAttrapeOiseauEnabled", false);
       }
 
       if (payload?.isCivetEnabled) {
         commit("rules/setIsCivetEnabled", true);
-        enabledRules.add(RuleName.CIVET);
+        enabledRules.add(Rules.CIVET);
       } else {
         commit("rules/setIsAttrapeOiseauEnabled", false);
       }
 
+      if (payload?.isArtichetteEnabled) {
+        commit("rules/setIsArtichetteEnabled", true);
+        enabledRules.add(Rules.ARTICHETTE);
+      } else {
+        commit("rules/setIsArtichetteEnabled", false);
+      }
+
       if (payload?.isBleuRougeEnabled) {
         commit("rules/setIsBleuRougeEnabled", true);
-        enabledRules.add(RuleName.BLEU_ROUGE);
+        enabledRules.add(Rules.BLEU_ROUGE);
       } else {
         commit("rules/setIsBleuRougeEnabled", false);
       }

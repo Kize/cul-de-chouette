@@ -4,6 +4,7 @@ import { RuleEffect, RuleEffectEvent, RuleEffects } from "../rule-effect";
 import { Resolver } from "../rule-resolver";
 import { ChouetteRule } from "../basic-rules/chouette-rule";
 import { NeantRule } from "../basic-rules/neant-rule";
+import { Rules } from "../rule";
 
 export interface BleuRougeResolution {
   diceRoll: DiceRoll;
@@ -11,6 +12,8 @@ export interface BleuRougeResolution {
 }
 
 export class BleuRougeRule extends ChouetteRule {
+  name = Rules.BLEU_ROUGE;
+
   constructor(private readonly resolver: Resolver<BleuRougeResolution>) {
     super();
   }
