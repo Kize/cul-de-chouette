@@ -104,15 +104,15 @@ export default class SuiteResolverDialog extends Vue {
 
 <style scoped lang="scss">
 ::v-deep.player-item {
-  padding: 1em 0;
+  padding: 0.75em 0;
 
   i {
-    font-size: 3em;
+    font-size: 2.25em;
   }
 
   label {
-    margin-left: 1em;
-    font-size: 2em;
+    margin-left: 0.5em;
+    font-size: 1.25em;
   }
 }
 </style>

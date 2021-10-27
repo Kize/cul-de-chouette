@@ -8,6 +8,7 @@ import { SuiteResolutionPayload } from "../../../domain/rules/basic-rules/suite-
 import { ChouetteVeluteResolutionPayload } from "../../../domain/rules/basic-rules/chouette-velute-rule";
 import { CivetResolutionPayload } from "../../../domain/rules/level-1/civet-rule";
 import { PlayableBid } from "../../../domain/rules/level-1/sirotage-rule.types";
+import { ArtichetteResolutionPayload } from "../../../domain/rules/level-2/artichette-rule";
 
 export interface DialogsState {
   suiteResolverDialog: {
@@ -41,6 +42,7 @@ export interface DialogsState {
   };
   artichetteResolverDialog: {
     isVisible: boolean;
+    playerName: string;
   };
 }
 
@@ -78,6 +80,7 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
       },
       artichetteResolverDialog: {
         isVisible: false,
+        playerName: "",
       },
     };
   },
@@ -138,6 +141,12 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
       { playerName }: ChouetteVeluteResolutionPayload
     ): void {
       state.chouetteVeluteResolverDialog.playerName = playerName;
+    },
+    setArtichetteResolverPayload(
+      state,
+      { playerName }: ArtichetteResolutionPayload
+    ): void {
+      state.artichetteResolverDialog.playerName = playerName;
     },
   },
   actions: {
@@ -201,7 +210,11 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
       commit("setBleuRougeResolverIsVisible", false);
     },
 
-    openArtichetteResolver({ commit }): void {
+    openArtichetteResolver(
+      { commit },
+      payload: ArtichetteResolutionPayload
+    ): void {
+      commit("setArtichetteResolverPayload", payload);
       commit("setArtichetteResolverIsVisible", true);
     },
     closeArtichetteResolver({ commit }): void {
