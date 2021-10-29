@@ -8,10 +8,19 @@ export interface ArtichetteResolution {
   isRaitournelleClaimed: boolean;
 }
 
+export interface ArtichetteResolutionPayload {
+  playerName: string;
+}
+
 export class ArtichetteRule extends DiceRule {
   name = Rules.ARTICHETTE;
 
-  constructor(private readonly resolver: Resolver<ArtichetteResolution>) {
+  constructor(
+    private readonly resolver: Resolver<
+      ArtichetteResolution,
+      ArtichetteResolutionPayload
+    >
+  ) {
     super();
   }
 
@@ -22,7 +31,9 @@ export class ArtichetteRule extends DiceRule {
   }
 
   async applyDiceRule(context: DiceRollGameContext): Promise<RuleEffects> {
-    const { isRaitournelleClaimed } = await this.resolver.getResolution();
+    const { isRaitournelleClaimed } = await this.resolver.getResolution({
+      playerName: context.playerName,
+    });
 
     return [
       {

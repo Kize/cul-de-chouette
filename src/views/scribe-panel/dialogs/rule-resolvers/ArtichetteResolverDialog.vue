@@ -7,7 +7,7 @@
     <v-card>
       <v-card-title>
         <h2>
-          {{ artichetteResolverDialog.isVisible }} a réalisé une Artichette!
+          {{ artichetteResolverDialog.playerName }} a réalisé une Artichette!
         </h2>
 
         <v-spacer></v-spacer>

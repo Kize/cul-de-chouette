@@ -16,6 +16,7 @@
               prepend-icon="mdi-account-outline"
             >
               <v-radio
+                class="player-item"
                 v-for="playerName in playerNames"
                 :key="playerName"
                 :label="playerName"
@@ -101,4 +102,17 @@ export default class SuiteResolverDialog extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+::v-deep.player-item {
+  padding: 0.75em 0;
+
+  i {
+    font-size: 2.25em;
+  }
+
+  label {
+    margin-left: 0.5em;
+    font-size: 1.25em;
+  }
+}
+</style>
