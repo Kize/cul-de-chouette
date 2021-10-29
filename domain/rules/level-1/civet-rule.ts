@@ -23,7 +23,7 @@ export enum CivetBet {
   SOUFFLETTE = "Soufflette",
   BLEU_ROUGE = "Bleu-Rouge",
   SIROP_GRELOT = "Sirop-Grelot",
-  // ARTICHETTE = "Artichette",
+  ARTICHETTE = "Artichette",
   // PELICAN = "Pélican",
   // FLAN = "Flan",
 }
@@ -112,4 +112,5 @@ const civetBetToRuleEffectsToCheck: Record<CivetBet, Set<RuleEffectEvent>> = {
     RuleEffectEvent.SOUFFLETTE_LOST,
   ]),
   [CivetBet.BLEU_ROUGE]: new Set([RuleEffectEvent.BLEU_ROUGE]),
+  [CivetBet.ARTICHETTE]: new Set([RuleEffectEvent.ARTICHETTE]),
 };
