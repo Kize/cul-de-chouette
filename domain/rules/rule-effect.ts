@@ -44,6 +44,9 @@ export enum RuleEffectEvent {
   GRELOTTINE_CHALLENGE_WON = "Défi de grelottine gagné",
   GRELOTTINE_CHALLENGE_LOST = "Défi de grelottine perdu",
 
+  VERDIER_WON = "Pari du Verdier gagné",
+  VERDIER_LOST = "Pari du Verdier perdu",
+
   BLEU_ROUGE = "Bleu-rouge",
   BLEU_ROUGE_BET_WON = "Annone de Bleu-rouge gagnée",
   ADD_JARRET = "Ajout d'un Jarret",
