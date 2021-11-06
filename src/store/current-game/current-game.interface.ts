@@ -27,14 +27,7 @@ export interface SavedCurrentGame extends CurrentGameState {
 export interface NewGameForm {
   gameName: string;
   playerNames: Array<string>;
-  rules: {
-    isSouffletteEnabled: boolean;
-    isSiropEnabled: boolean;
-    isAttrapeOiseauEnabled: boolean;
-    isCivetEnabled: boolean;
-    isBleuRougeEnabled: boolean;
-    isArtichetteEnabled: boolean;
-  };
+  rules: RulesState;
 }
 
 export interface SloubiActionPayload {

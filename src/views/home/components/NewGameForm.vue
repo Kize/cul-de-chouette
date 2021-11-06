@@ -75,6 +75,11 @@
               <v-card-text>
                 <v-checkbox
                   dense
+                  label="Le Verdier"
+                  v-model="form.rules.isVerdierEnabled"
+                ></v-checkbox>
+                <v-checkbox
+                  dense
                   label="Le Bleu-Rouge"
                   v-model="form.rules.isBleuRougeEnabled"
                 ></v-checkbox>

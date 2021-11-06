@@ -22,6 +22,7 @@ import { CivetRule } from "../../../domain/rules/level-1/civet-rule";
 import { CivetRuleResolver } from "./resolvers/civet-rule-resolver";
 import { ArtichetteRule } from "../../../domain/rules/level-2/artichette-rule";
 import { ArtichetteRuleResolver } from "@/store/current-game/resolvers/artichette-rule-resolver";
+import { VerdierRule } from "../../../domain/rules/level-3/verdier-rule";
 
 class GameRuleRunner {
   private ruleRunner = new RuleRunner([]);
@@ -45,6 +46,7 @@ export const souffletteRuleResolver = new SouffletteRuleResolver();
 export const civetRuleResolver = new CivetRuleResolver();
 export const bleuRougeRuleResolver = new BleuRougeRuleResolver();
 export const artichetteRuleResolver = new ArtichetteRuleResolver();
+export const verdierRuleResolver = new VerdierRuleResolver(); // TODO: create this and continue!
 
 export const BASIC_RULE_NAMES: Array<Rules> = [
   Rules.CUL_DE_CHOUETTE,
@@ -64,6 +66,7 @@ export const ALL_RULES_ORDERED: Array<{ name: Rules; rule: Rule }> = [
     rule: new GrelottineRule(grelottineRuleResolver),
   },
   { name: Rules.CIVET, rule: new CivetRule(civetRuleResolver) },
+  { name: Rules.VERDIER, rule: new VerdierRule(verdierRuleResolver) },
   { name: Rules.CUL_DE_CHOUETTE, rule: new CulDeChouetteRule() },
   { name: Rules.SUITE, rule: new SuiteRule(suiteRuleResolver) },
   {
