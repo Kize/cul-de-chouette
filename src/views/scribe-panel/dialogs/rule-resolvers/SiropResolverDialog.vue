@@ -151,7 +151,6 @@ function getInitialForm(): SiropForm {
   components: {
     DieCard,
     BevueMenuAction,
-    PlayATurnWithDice: () => import("@/components/dice/DiceRollInput.vue"),
     MainDialogCard,
   },
   computed: {

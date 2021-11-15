@@ -166,6 +166,7 @@ export default class NewGameFormSection extends Vue {
       isCivetEnabled: true,
       isBleuRougeEnabled: true,
       isArtichetteEnabled: true,
+      isVerdierEnabled: true,
     },
   };
 

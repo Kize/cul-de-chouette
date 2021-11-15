@@ -80,7 +80,7 @@ import {
     ...mapGetters("currentGame", ["playerNames"]),
   },
 })
-export default class BleuRougeResolverDialog extends Vue {
+export default class CivetResolverDialog extends Vue {
   readonly rulesOfSelectChallengeInput = rulesOfSelectChallengeInput;
 
   civetResolverDialog!: { isVisible: boolean; playerName: string };
