@@ -61,7 +61,7 @@ import {
   isDiceFormValid,
 } from "../../../../components/dice/dice-form";
 import { mapGetters, mapState } from "vuex";
-import { CivetForm, getInitialForm } from "../../../../domain/level-one/civet";
+import { CivetForm, getInitialForm } from "../../../../domain/level-1/civet";
 import AmountInput from "../../../../components/AmountInput.vue";
 import {
   CivetBet,

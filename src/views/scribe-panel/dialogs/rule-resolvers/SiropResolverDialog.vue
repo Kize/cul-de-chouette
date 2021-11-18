@@ -127,7 +127,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import MainDialogCard from "@/components/MainDialogCard.vue";
 import BevueMenuAction from "@/components/BevueMenuAction.vue";
-import { SiropForm } from "@/domain/level-one/sirop";
+import { SiropForm } from "@/domain/level-1/sirop";
 import DieCard from "@/components/dice/DieCard.vue";
 import { SelectItemsType, SelectItemValue, VForm } from "@/vuetify.interface";
 import { isPlayerBidClaimable } from "../../../../../domain/rules/level-1/sirotage-rule";

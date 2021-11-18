@@ -54,7 +54,7 @@ import {
   BleuRougeBetValue,
   BleuRougeResolution,
 } from "../../../../../domain/rules/level-3/bleu-rouge-rule";
-import { BleuRougeForm, getInitialForm } from "@/domain/level-one/bleu-rouge";
+import { BleuRougeForm, getInitialForm } from "@/domain/level-3/bleu-rouge";
 
 @Component({
   components: {

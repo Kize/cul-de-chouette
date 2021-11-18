@@ -62,7 +62,7 @@ import { Component, Vue } from "vue-property-decorator";
 import MainDialogCard from "@/components/MainDialogCard.vue";
 import { Player } from "../../../../../domain/player";
 import { rulesOfSelectNameInput } from "@/form-validation/form-validation-rules";
-import { getInitialForm, SouffletteForm } from "@/domain/level-one/soufflette";
+import { getInitialForm, SouffletteForm } from "@/domain/level-1/soufflette";
 import { RulesState } from "@/store/current-game/rules.store";
 import BevueMenuAction from "@/components/BevueMenuAction.vue";
 import { VForm } from "@/vuetify.interface";
