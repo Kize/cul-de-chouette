@@ -6,7 +6,7 @@
     max-width="75%"
   >
     <MainDialogCard
-      :title="`Annonces sur un verdier !`"
+      :title="`${verdierResolverDialog.playerName} a fait '${verdierResolverDialog.diceValues[0]} et ${verdierResolverDialog.diceValues[1]}', impliquant un Verdier !`"
       :is-confirm-button-enabled="isFormValid"
       @cancel="cancel"
       @confirm="confirm"
@@ -32,7 +32,23 @@
         <v-card outlined>
           <v-card-title class="py-2">Le lancé du cul:</v-card-title>
           <v-card-text class="pb-0">
-            <v-row justify="center" dense>
+            <v-row justify="center" class="my-4">
+              <DieCard
+                v-model="verdierResolverDialog.diceValues[0]"
+                is-horizontal
+                disabled
+              ></DieCard>
+            </v-row>
+
+            <v-row justify="center" class="my-4">
+              <DieCard
+                v-model="verdierResolverDialog.diceValues[1]"
+                is-horizontal
+                disabled
+              ></DieCard>
+            </v-row>
+
+            <v-row justify="center" class="my-4">
               <DieCard v-model="form.lastDieValue" is-horizontal></DieCard>
             </v-row>
           </v-card-text>

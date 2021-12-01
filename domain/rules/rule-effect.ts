@@ -63,7 +63,6 @@ export enum NotImplementedRuleEffectEvent {
   RIGODON = "Rigodon",
   CUL_DE_CHOUETTE_DOUBLE = "Cul de chouette doublé",
   PELICAN = "Pélican",
-  VERDIER = "Verdier",
   ACHAT = "Achat",
   DOUBLE_ACHAT = "Double Achat",
   JARRET = "Jarret",

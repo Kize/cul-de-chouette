@@ -19,6 +19,7 @@
         color="green lighten-1"
         rounded
         outlined
+        v-if="isVerdierEnabled"
         :disabled="!isVerdierApplicable"
         @click="startVerdier"
       >
@@ -54,7 +55,7 @@ import { StartVerdierPayload } from "@/store/current-game/main-playable-actions.
   },
   computed: {
     ...mapState("currentGame", ["players"]),
-    ...mapGetters("currentGame/rules", ["rules"]),
+    ...mapState("currentGame/rules", ["isVerdierEnabled"]),
     ...mapGetters("currentGame", [
       "turnNumber",
       "isCurrentPlayer",
@@ -65,6 +66,8 @@ import { StartVerdierPayload } from "@/store/current-game/main-playable-actions.
 })
 export default class CurrentPlayerPanel extends Vue {
   @Prop() currentPlayer!: Player;
+
+  readonly isVerdierEnabled!: boolean;
 
   diceForm: DiceForm = getInitialDiceForm();
 

@@ -17,6 +17,7 @@
       v-for="dieValue in 6"
       :key="dieValue"
       :value="dieValue"
+      :disabled="disabled"
     >
       <v-icon :size="iconSize" class="dice-icon"
         >mdi-dice-{{ dieValue }}-outline
@@ -34,6 +35,7 @@ export default class DieCard extends Vue {
   @Prop(Boolean) isCul!: number;
   @Prop(Boolean) isHorizontal?: boolean;
   @Prop({ type: String, default: "m" }) size?: "m" | "xl";
+  @Prop({ type: Boolean, default: false }) disabled?: boolean;
 
   get isSizeM(): boolean {
     return this.size === "m";
