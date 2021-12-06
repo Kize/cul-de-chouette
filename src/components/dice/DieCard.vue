@@ -19,8 +19,8 @@
       :value="dieValue"
       :disabled="disabled"
     >
-      <v-icon :size="iconSize" class="dice-icon"
-        >mdi-dice-{{ dieValue }}-outline
+      <v-icon :size="iconSize" class="dice-icon">
+        mdi-dice-{{ dieValue }}-outline
       </v-icon>
     </v-btn>
   </v-btn-toggle>

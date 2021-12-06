@@ -8,6 +8,7 @@ import { RuleEffect, RuleEffectEvent, RuleEffects } from "../rule-effect";
 import { DiceRoll, DieValue } from "../dice-rule";
 import { Resolver } from "../rule-resolver";
 import { isVelute } from "../basic-rules/velute-rule";
+import { DiceForm } from "@/components/dice/dice-form";
 
 export interface VerdierResolution {
   bettingPlayerNames: Array<string>;
@@ -72,4 +73,16 @@ export class VerdierRule implements Rule {
       }),
     ];
   }
+}
+
+export function isVerdierApplicable(diceForm: DiceForm): boolean {
+  const numberOfValidDieValue = diceForm.reduce((acc: number, dieFormValue) => {
+    if (dieFormValue === 2 || dieFormValue === 4 || dieFormValue === 6) {
+      return acc + 1;
+    }
+
+    return acc;
+  }, 0);
+
+  return numberOfValidDieValue > 1;
 }

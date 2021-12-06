@@ -34,18 +34,19 @@
 </template>
 
 <script lang="ts">
+import { mapGetters, mapState } from "vuex";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { Player } from "../../../../domain/player";
+import { isVerdierApplicable } from "../../../../domain/rules/level-3/verdier-rule";
+import { DiceRoll, DieValue } from "../../../../domain/rules/dice-rule";
+import { GameContextEvent } from "../../../../domain/game-context-event";
 import MenuAction from "@/components/MenuAction.vue";
-import { mapGetters, mapState } from "vuex";
 import DiceRollInput from "@/components/dice/DiceRollInput.vue";
 import {
   DiceForm,
   getInitialDiceForm,
   isDiceFormValid,
 } from "@/components/dice/dice-form";
-import { DiceRoll, DieValue } from "../../../../domain/rules/dice-rule";
-import { GameContextEvent } from "../../../../domain/game-context-event";
 import { StartVerdierPayload } from "@/store/current-game/main-playable-actions.store";
 
 @Component({
@@ -76,18 +77,7 @@ export default class CurrentPlayerPanel extends Vue {
   }
 
   get isVerdierApplicable(): boolean {
-    const numberOfValidDieValue = this.diceForm.reduce(
-      (acc: number, dieFormValue) => {
-        if (dieFormValue === 2 || dieFormValue === 4 || dieFormValue === 6) {
-          return acc + 1;
-        }
-
-        return acc;
-      },
-      0
-    );
-
-    return numberOfValidDieValue > 1;
+    return isVerdierApplicable(this.diceForm);
   }
 
   basicPlay(): void {

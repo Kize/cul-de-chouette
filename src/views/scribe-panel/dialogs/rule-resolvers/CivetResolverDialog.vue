@@ -39,7 +39,22 @@
         </v-form>
 
         <v-card outlined>
-          <v-card-title class="py-2">Jet de dés:</v-card-title>
+          <v-card-title class="py-2 headline">
+            <span>Jet de dés:</span>
+
+            <v-divider vertical class="mx-6"></v-divider>
+
+            <v-btn
+              color="green lighten-1"
+              rounded
+              outlined
+              v-if="isVerdierEnabled"
+              :disabled="!isVerdierApplicable"
+              @click="startVerdier"
+            >
+              <b>Verdier</b>
+            </v-btn>
+          </v-card-title>
           <v-card-text class="pb-0">
             <DiceRollInput v-model="diceForm"></DiceRollInput>
           </v-card-text>
@@ -51,22 +66,24 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import MainDialogCard from "../../../../components/MainDialogCard.vue";
-import { rulesOfSelectChallengeInput } from "../../../../form-validation/form-validation-rules";
-import BevueMenuAction from "../../../../components/BevueMenuAction.vue";
+import { mapGetters, mapState } from "vuex";
 import { VForm } from "../../../../vuetify.interface";
+import { DieValue } from "../../../../../domain/rules/dice-rule";
+import {
+  CivetBet,
+  CivetResolution,
+} from "../../../../../domain/rules/level-1/civet-rule";
+import { CivetForm, getInitialForm } from "../../../../domain/level-1/civet";
+import { isVerdierApplicable } from "../../../../../domain/rules/level-3/verdier-rule";
+import { rulesOfSelectChallengeInput } from "../../../../form-validation/form-validation-rules";
+import MainDialogCard from "../../../../components/MainDialogCard.vue";
+import BevueMenuAction from "../../../../components/BevueMenuAction.vue";
 import DiceRollInput from "../../../../components/dice/DiceRollInput.vue";
 import {
   DiceForm,
   isDiceFormValid,
 } from "../../../../components/dice/dice-form";
-import { mapGetters, mapState } from "vuex";
-import { CivetForm, getInitialForm } from "../../../../domain/level-1/civet";
 import AmountInput from "../../../../components/AmountInput.vue";
-import {
-  CivetBet,
-  CivetResolution,
-} from "../../../../../domain/rules/level-1/civet-rule";
 
 @Component({
   components: {
@@ -77,14 +94,16 @@ import {
   },
   computed: {
     ...mapState("currentGame/dialogs", ["civetResolverDialog"]),
+    ...mapState("currentGame/rules", ["isVerdierEnabled"]),
     ...mapGetters("currentGame", ["playerNames"]),
   },
 })
 export default class CivetResolverDialog extends Vue {
   readonly rulesOfSelectChallengeInput = rulesOfSelectChallengeInput;
 
-  civetResolverDialog!: { isVisible: boolean; playerName: string };
-  playerNames!: Array<string>;
+  readonly isVerdierEnabled!: boolean;
+  readonly civetResolverDialog!: { isVisible: boolean; playerName: string };
+  readonly playerNames!: Array<string>;
 
   diceForm: DiceForm = [0, 0, 0];
   form: CivetForm = getInitialForm();
@@ -98,6 +117,10 @@ export default class CivetResolverDialog extends Vue {
     return this.isFormValid && isDiceFormValid(this.diceForm);
   }
 
+  get isVerdierApplicable(): boolean {
+    return isVerdierApplicable(this.diceForm) && this.isFormValid;
+  }
+
   cancel(): void {
     this.resetForms();
 
@@ -107,7 +130,23 @@ export default class CivetResolverDialog extends Vue {
   confirm(): void {
     if (this.isFormValid && isDiceFormValid(this.diceForm)) {
       const resolution: CivetResolution = {
+        isVerdier: false,
         diceRoll: [...this.diceForm],
+        playerBet: this.form.playerBet!,
+        betAmount: this.form.betAmount,
+      };
+      this.resetForms();
+      this.$store.dispatch("currentGame/play/resolveCivet", resolution);
+    }
+  }
+
+  startVerdier(): void {
+    if (this.isVerdierApplicable) {
+      const resolution: CivetResolution = {
+        isVerdier: true,
+        diceValues: this.diceForm.filter(
+          (dieValue) => dieValue === 2 || dieValue === 4 || dieValue === 6
+        ) as unknown as [DieValue, DieValue],
         playerBet: this.form.playerBet!,
         betAmount: this.form.betAmount,
       };
