@@ -24,4 +24,5 @@ export enum Rules {
   ARTICHETTE = "Artichette",
   BLEU_ROUGE = "Bleu-Rouge",
   SOUFFLETTE = "Soufflette",
+  VERDIER = "Verdier",
 }

@@ -15,8 +15,9 @@ import {
   siropRuleResolver,
   souffletteRuleResolver,
   suiteRuleResolver,
+  verdierRuleResolver,
 } from "@/store/current-game/game-rule-runner";
-import { DiceRoll } from "../../../domain/rules/dice-rule";
+import { DiceRoll, DieValue } from "../../../domain/rules/dice-rule";
 import { RuleEffects } from "../../../domain/rules/rule-effect";
 import {
   ApplyBevueGameContext,
@@ -29,10 +30,14 @@ import { SouffletteResolution } from "../../../domain/rules/level-1/soufflette-r
 import { BleuRougeResolution } from "../../../domain/rules/level-3/bleu-rouge-rule";
 import { CivetResolution } from "../../../domain/rules/level-1/civet-rule";
 import { ArtichetteResolution } from "../../../domain/rules/level-2/artichette-rule";
+import { VerdierResolution } from "../../../domain/rules/level-3/verdier-rule";
 
 type MainPlayableState = Record<string, unknown>;
 
-export type PlayATurnPayload = PlayADiceRollPayload | PlayACivetPayload;
+export type PlayATurnPayload =
+  | PlayADiceRollPayload
+  | PlayACivetPayload
+  | StartVerdierPayload;
 
 export interface PlayADiceRollPayload {
   event: GameContextEvent.DICE_ROLL;
@@ -41,6 +46,11 @@ export interface PlayADiceRollPayload {
 
 export interface PlayACivetPayload {
   event: GameContextEvent.CIVET_BET;
+}
+
+export interface StartVerdierPayload {
+  event: GameContextEvent.VERDIER;
+  diceValues: [DieValue, DieValue];
 }
 
 export const MainPlayableActionsStoreModule: Module<
@@ -89,19 +99,30 @@ export const MainPlayableActionsStoreModule: Module<
     ): Promise<void> {
       let gameContext: UnknownGameContext;
 
-      if (payload.event === GameContextEvent.DICE_ROLL) {
-        gameContext = {
-          event: GameContextEvent.DICE_ROLL,
-          playerName: rootGetters["currentGame/currentPlayerName"],
-          diceRoll: payload.diceRoll,
-          runner: gameRuleRunner.getRunner(),
-        };
-      } else {
-        gameContext = {
-          event: payload.event,
-          runner: gameRuleRunner.getRunner(),
-          playerName: rootGetters["currentGame/currentPlayerName"],
-        };
+      switch (payload.event) {
+        case GameContextEvent.DICE_ROLL:
+          gameContext = {
+            event: GameContextEvent.DICE_ROLL,
+            playerName: rootGetters["currentGame/currentPlayerName"],
+            diceRoll: payload.diceRoll,
+            runner: gameRuleRunner.getRunner(),
+          };
+          break;
+        case GameContextEvent.CIVET_BET:
+          gameContext = {
+            event: payload.event,
+            runner: gameRuleRunner.getRunner(),
+            playerName: rootGetters["currentGame/currentPlayerName"],
+          };
+          break;
+        case GameContextEvent.VERDIER:
+          gameContext = {
+            event: payload.event,
+            diceValues: payload.diceValues,
+            playerName: rootGetters["currentGame/currentPlayerName"],
+            runner: gameRuleRunner.getRunner(),
+          };
+          break;
       }
 
       try {
@@ -217,6 +238,13 @@ export const MainPlayableActionsStoreModule: Module<
     },
     cancelArtichette(): void {
       artichetteRuleResolver.reject();
+    },
+
+    resolveVerdier(_, verdierResolution: VerdierResolution): void {
+      verdierRuleResolver.resolve(verdierResolution);
+    },
+    cancelVerdier(): void {
+      verdierRuleResolver.reject();
     },
   },
 };

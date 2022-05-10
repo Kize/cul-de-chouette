@@ -15,6 +15,11 @@ import {
   AttrapeOiseauRule,
 } from "./attrape-oiseau-rule";
 import { SiropResolutionPayload } from "./sirotage-rule";
+import {
+  VerdierResolution,
+  VerdierResolutionPayload,
+  VerdierRule,
+} from "../level-3/verdier-rule";
 
 describe("isApplicableToGameContext", () => {
   let dummyResolver: Resolver<CivetResolution, CivetResolutionPayload>;
@@ -47,6 +52,7 @@ describe("applyRule", () => {
   it("removes the civet for the player", async () => {
     const resolver: Resolver<CivetResolution, CivetResolutionPayload> = {
       getResolution: jest.fn().mockResolvedValue({
+        isVerdier: false,
         betAmount: 1,
         playerBet: CivetBet.VELUTE,
         diceRoll: [3, 3, 3],
@@ -68,6 +74,7 @@ describe("applyRule", () => {
   it("handles a lost civet bet", async () => {
     const resolver: Resolver<CivetResolution, CivetResolutionPayload> = {
       getResolution: jest.fn().mockResolvedValue({
+        isVerdier: false,
         betAmount: 42,
         playerBet: CivetBet.VELUTE,
         diceRoll: [3, 3, 3],
@@ -89,6 +96,7 @@ describe("applyRule", () => {
   it("handles a won civet bet", async () => {
     const resolver: Resolver<CivetResolution, CivetResolutionPayload> = {
       getResolution: jest.fn().mockResolvedValue({
+        isVerdier: false,
         betAmount: 102,
         playerBet: CivetBet.VELUTE,
         diceRoll: [2, 3, 5],
@@ -110,9 +118,10 @@ describe("applyRule", () => {
     });
   });
 
-  it("applies the dice roll rule effets to the player", async () => {
+  it("applies the dice roll rule effects to the player", async () => {
     const resolver: Resolver<CivetResolution, CivetResolutionPayload> = {
       getResolution: jest.fn().mockResolvedValue({
+        isVerdier: false,
         betAmount: 102,
         playerBet: CivetBet.VELUTE,
         diceRoll: [2, 3, 5],
@@ -134,9 +143,10 @@ describe("applyRule", () => {
     });
   });
 
-  it("handle a lost civet bet when betting on a velute, and resulting into a bleu-rouge with a velute", async () => {
+  it("handles a lost civet bet when betting on a velute, and resulting into a bleu-rouge with a velute", async () => {
     const civetResolver: Resolver<CivetResolution, CivetResolutionPayload> = {
       getResolution: jest.fn().mockResolvedValue({
+        isVerdier: false,
         betAmount: 102,
         playerBet: CivetBet.VELUTE,
         diceRoll: [3, 4, 3],
@@ -170,9 +180,10 @@ describe("applyRule", () => {
     });
   });
 
-  it("handle a won civet bet when betting on a chouette, and resulting into an attrape-oiseau by someone else", async () => {
+  it("handles a won civet bet when betting on a chouette, and resulting into an attrape-oiseau by someone else", async () => {
     const civetResolver: Resolver<CivetResolution, CivetResolutionPayload> = {
       getResolution: jest.fn().mockResolvedValue({
+        isVerdier: false,
         betAmount: 102,
         playerBet: CivetBet.CHOUETTE,
         diceRoll: [3, 5, 3],
@@ -205,6 +216,49 @@ describe("applyRule", () => {
       event: RuleEffectEvent.CIVET_WON,
       playerName: "Alban",
       score: 102,
+    });
+  });
+
+  it("handles a verdier call during a civet bet, where the bet is lost", async () => {
+    const civetResolver: Resolver<CivetResolution, CivetResolutionPayload> = {
+      getResolution: jest.fn().mockResolvedValue({
+        isVerdier: true,
+        betAmount: 102,
+        playerBet: CivetBet.CHOUETTE,
+        diceValues: [2, 4],
+      } as CivetResolution),
+    };
+
+    const verdierResolver: Resolver<
+      VerdierResolution,
+      VerdierResolutionPayload
+    > = {
+      getResolution: jest.fn().mockResolvedValue({
+        bettingPlayerNames: ["Alban"],
+        lastDieValue: 6,
+      } as VerdierResolution),
+    };
+
+    const rule = new CivetRule(civetResolver);
+    const ruleEffects = await rule.applyRule(
+      DummyContextBuilder.aCivetContext()
+        .withPlayerName("Alban")
+        .withRuleRunner(
+          new RuleRunner([new VerdierRule(verdierResolver), new VeluteRule()])
+        )
+        .build()
+    );
+
+    expect(ruleEffects).toContainEqual<RuleEffect>({
+      event: RuleEffectEvent.CIVET_LOST,
+      playerName: "Alban",
+      score: -102,
+    });
+
+    expect(ruleEffects).toContainEqual<RuleEffect>({
+      event: RuleEffectEvent.VERDIER_WON,
+      playerName: "Alban",
+      score: 25,
     });
   });
 });

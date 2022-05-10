@@ -50,6 +50,7 @@
     <CivetResolverDialog></CivetResolverDialog>
     <BleuRougeResolverDialog></BleuRougeResolverDialog>
     <ArtichetteResolverDialog></ArtichetteResolverDialog>
+    <VerdierResolverDialog></VerdierResolverDialog>
 
     <v-dialog v-model="showEndGameDialog" persistent max-width="1000">
       <EndGameDialogCard
@@ -73,12 +74,14 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import { GameStatus } from "@/store/current-game/current-game.interface";
 import { mapGetters, mapState } from "vuex";
 import { ROUTES } from "@/router";
+import { Player } from "../../../domain/player";
+import { GameContextEvent } from "../../../domain/game-context-event";
+import RulesButton from "@/components/RulesButton.vue";
 import PlayersBanner from "@/views/scribe-panel/components/PlayersBanner.vue";
 import CurrentPlayerPanel from "@/views/scribe-panel/panels/CurrentPlayerPanel.vue";
 import MainActionsPanel from "@/views/scribe-panel/panels/MainActionsPanel.vue";
 import EndGameDialogCard from "@/views/scribe-panel/dialogs/EndGameDialogCard.vue";
 import CancelGameDialogCard from "@/views/scribe-panel/dialogs/CancelGameDialogCard.vue";
-import RulesButton from "@/components/RulesButton.vue";
 import SuiteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/SuiteResolverDialog.vue";
 import ChouetteVeluteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/ChouetteVeluteResolverDialog.vue";
 import SiropResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/SiropResolverDialog.vue";
@@ -87,11 +90,11 @@ import SouffletteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolver
 import CivetResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/CivetResolverDialog.vue";
 import BleuRougeResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/BleuRougeResolverDialog.vue";
 import ArtichetteResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/ArtichetteResolverDialog.vue";
-import { Player } from "../../../domain/player";
-import { GameContextEvent } from "../../../domain/game-context-event";
+import VerdierResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/VerdierResolverDialog.vue";
 
 @Component({
   components: {
+    VerdierResolverDialog,
     ArtichetteResolverDialog,
     BleuRougeResolverDialog,
     SouffletteResolverDialog,

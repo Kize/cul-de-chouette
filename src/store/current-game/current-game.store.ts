@@ -304,6 +304,13 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         commit("rules/setIsArtichetteEnabled", false);
       }
 
+      if (payload?.isVerdierEnabled) {
+        commit("rules/setIsVerdierEnabled", true);
+        enabledRules.add(Rules.VERDIER);
+      } else {
+        commit("rules/setIsVerdierEnabled", false);
+      }
+
       if (payload?.isBleuRougeEnabled) {
         commit("rules/setIsBleuRougeEnabled", true);
         enabledRules.add(Rules.BLEU_ROUGE);

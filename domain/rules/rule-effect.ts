@@ -44,6 +44,9 @@ export enum RuleEffectEvent {
   GRELOTTINE_CHALLENGE_WON = "Défi de grelottine gagné",
   GRELOTTINE_CHALLENGE_LOST = "Défi de grelottine perdu",
 
+  VERDIER_WON = "Pari du Verdier gagné",
+  VERDIER_LOST = "Pari du Verdier perdu",
+
   BLEU_ROUGE = "Bleu-rouge",
   BLEU_ROUGE_BET_WON = "Annone de Bleu-rouge gagnée",
   ADD_JARRET = "Ajout d'un Jarret",
@@ -60,7 +63,6 @@ export enum NotImplementedRuleEffectEvent {
   RIGODON = "Rigodon",
   CUL_DE_CHOUETTE_DOUBLE = "Cul de chouette doublé",
   PELICAN = "Pélican",
-  VERDIER = "Verdier",
   ACHAT = "Achat",
   DOUBLE_ACHAT = "Double Achat",
   JARRET = "Jarret",

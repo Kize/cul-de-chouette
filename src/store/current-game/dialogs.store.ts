@@ -9,6 +9,7 @@ import { ChouetteVeluteResolutionPayload } from "../../../domain/rules/basic-rul
 import { CivetResolutionPayload } from "../../../domain/rules/level-1/civet-rule";
 import { PlayableBid } from "../../../domain/rules/level-1/sirotage-rule.types";
 import { ArtichetteResolutionPayload } from "../../../domain/rules/level-2/artichette-rule";
+import { VerdierResolutionPayload } from "../../../domain/rules/level-3/verdier-rule";
 
 export interface DialogsState {
   suiteResolverDialog: {
@@ -43,6 +44,11 @@ export interface DialogsState {
   artichetteResolverDialog: {
     isVisible: boolean;
     playerName: string;
+  };
+  verdierResolverDialog: {
+    isVisible: boolean;
+    playerName: string;
+    diceValues: [DieValue, DieValue];
   };
 }
 
@@ -82,6 +88,11 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
         isVisible: false,
         playerName: "",
       },
+      verdierResolverDialog: {
+        isVisible: false,
+        playerName: "",
+        diceValues: [1, 1],
+      },
     };
   },
   getters: {},
@@ -109,6 +120,9 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
     },
     setArtichetteResolverIsVisible(state, isVisible): void {
       state.artichetteResolverDialog.isVisible = isVisible;
+    },
+    setVerdierResolverIsVisible(state, isVisible): void {
+      state.verdierResolverDialog.isVisible = isVisible;
     },
     setSiropResolverPayload(
       state,
@@ -147,6 +161,13 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
       { playerName }: ArtichetteResolutionPayload
     ): void {
       state.artichetteResolverDialog.playerName = playerName;
+    },
+    setVerdierResolverPayload(
+      state,
+      { playerName, diceValues }: VerdierResolutionPayload
+    ): void {
+      state.verdierResolverDialog.playerName = playerName;
+      state.verdierResolverDialog.diceValues = diceValues;
     },
   },
   actions: {
@@ -219,6 +240,14 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
     },
     closeArtichetteResolver({ commit }): void {
       commit("setArtichetteResolverIsVisible", false);
+    },
+
+    openVerdierResolver({ commit }, payload: VerdierResolutionPayload): void {
+      commit("setVerdierResolverPayload", payload);
+      commit("setVerdierResolverIsVisible", true);
+    },
+    closeVerdierResolver({ commit }): void {
+      commit("setVerdierResolverIsVisible", false);
     },
   },
 };

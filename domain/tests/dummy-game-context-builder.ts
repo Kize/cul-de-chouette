@@ -1,5 +1,9 @@
-import { DiceRoll } from "../rules/dice-rule";
-import { GameContextEvent, GameContextWrapper } from "../game-context-event";
+import { DiceRoll, DieValue } from "../rules/dice-rule";
+import {
+  GameContextEvent,
+  GameContextWrapper,
+  UnknownGameContext,
+} from "../game-context-event";
 import { RuleRunner } from "../rule-runner";
 import { NeantRule } from "../rules/basic-rules/neant-rule";
 
@@ -18,6 +22,10 @@ export class DummyContextBuilder {
 
   static aCivetContext(): DummyCivetContextBuilder {
     return new DummyCivetContextBuilder();
+  }
+
+  static aVerdierContext(): DummyVerdierContextBuilder {
+    return new DummyVerdierContextBuilder();
   }
 }
 
@@ -102,6 +110,36 @@ class DummyCivetContextBuilder {
       event: GameContextEvent.CIVET_BET,
       runner: this.ruleRunner,
       playerName: this.playerName,
+    });
+  }
+}
+
+class DummyVerdierContextBuilder {
+  private playerName = "";
+  private ruleRunner: RuleRunner = new RuleRunner([new NeantRule()]);
+  private diceValues: [DieValue, DieValue] = [1, 1];
+
+  withPlayerName(playerName: string): this {
+    this.playerName = playerName;
+    return this;
+  }
+
+  withRuleRunner(ruleRunner: RuleRunner): this {
+    this.ruleRunner = ruleRunner;
+    return this;
+  }
+
+  withDiceValues(diceValues: [DieValue, DieValue]): this {
+    this.diceValues = diceValues;
+    return this;
+  }
+
+  build(): GameContextWrapper {
+    return new GameContextWrapper({
+      event: GameContextEvent.VERDIER,
+      playerName: this.playerName,
+      runner: this.ruleRunner,
+      diceValues: this.diceValues,
     });
   }
 }

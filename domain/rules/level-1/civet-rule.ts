@@ -6,12 +6,22 @@ import {
   UnknownGameContext,
 } from "../../game-context-event";
 import { Resolver } from "../rule-resolver";
-import { DiceRoll } from "../dice-rule";
+import { DiceRoll, DieValue } from "../dice-rule";
 
-export interface CivetResolution {
-  diceRoll: DiceRoll;
+export type CivetResolution = DiceRollCivetResolution | VerdierCivetResolution;
+
+export interface DiceRollCivetResolution {
+  isVerdier: false;
   betAmount: number;
   playerBet: CivetBet;
+  diceRoll: DiceRoll;
+}
+
+export interface VerdierCivetResolution {
+  isVerdier: true;
+  betAmount: number;
+  playerBet: CivetBet;
+  diceValues: [DieValue, DieValue];
 }
 
 export enum CivetBet {
@@ -23,7 +33,7 @@ export enum CivetBet {
   SOUFFLETTE = "Soufflette",
   BLEU_ROUGE = "Bleu-Rouge",
   SIROP_GRELOT = "Sirop-Grelot",
-  // ARTICHETTE = "Artichette",
+  ARTICHETTE = "Artichette",
   // PELICAN = "Pélican",
   // FLAN = "Flan",
 }
@@ -46,32 +56,44 @@ export class CivetRule implements Rule {
   async applyRule(context: GameContextWrapper): Promise<RuleEffects> {
     const { runner, playerName } = context.asCivet();
 
-    const { diceRoll, playerBet, betAmount } =
-      await this.resolver.getResolution({ playerName });
-
-    const diceRollRuleEffects = await runner.handleGameEvent({
-      event: GameContextEvent.DICE_ROLL,
-      diceRoll,
+    const civetResolution = await this.resolver.getResolution({
       playerName,
-      runner,
     });
+
+    let diceRollRuleEffects: RuleEffects;
+
+    if (!civetResolution.isVerdier) {
+      diceRollRuleEffects = await runner.handleGameEvent({
+        event: GameContextEvent.DICE_ROLL,
+        diceRoll: civetResolution.diceRoll,
+        playerName,
+        runner,
+      });
+    } else {
+      diceRollRuleEffects = await runner.handleGameEvent({
+        event: GameContextEvent.VERDIER,
+        diceValues: civetResolution.diceValues,
+        playerName,
+        runner,
+      });
+    }
 
     const civetRuleEffects: RuleEffects = [];
 
-    const isCivetWon = civetBetToRuleEffectsToCheck[playerBet].has(
-      diceRollRuleEffects[0].event
-    );
+    const isCivetWon = civetBetToRuleEffectsToCheck[
+      civetResolution.playerBet
+    ].has(diceRollRuleEffects[0].event);
     if (isCivetWon) {
       civetRuleEffects.push({
         event: RuleEffectEvent.CIVET_WON,
         playerName,
-        score: betAmount,
+        score: civetResolution.betAmount,
       });
     } else {
       civetRuleEffects.push({
         event: RuleEffectEvent.CIVET_LOST,
         playerName,
-        score: -betAmount,
+        score: -civetResolution.betAmount,
       });
     }
 
@@ -112,4 +134,5 @@ const civetBetToRuleEffectsToCheck: Record<CivetBet, Set<RuleEffectEvent>> = {
     RuleEffectEvent.SOUFFLETTE_LOST,
   ]),
   [CivetBet.BLEU_ROUGE]: new Set([RuleEffectEvent.BLEU_ROUGE]),
+  [CivetBet.ARTICHETTE]: new Set([RuleEffectEvent.ARTICHETTE]),
 };
