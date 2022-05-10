@@ -139,9 +139,10 @@ import {
   newGameNameNameRules,
   selectPlayersRules,
 } from "@/form-validation/form-validation-rules";
-import { NewGameForm } from "@/store/current-game/current-game.interface";
-
-const PLAYER_NAMES_LOCAL_STORAGE_KEY = "playerNames";
+import {
+  NewGameForm,
+  PLAYER_NAMES_LOCAL_STORAGE_KEY,
+} from "@/store/current-game/current-game.interface";
 
 @Component({})
 export default class NewGameFormSection extends Vue {
@@ -184,22 +185,16 @@ export default class NewGameFormSection extends Vue {
   async createGame(): Promise<void> {
     try {
       await this.$store.dispatch("currentGame/startGame", this.form);
-      this.saveCurrentPlayerNames(this.form.playerNames);
+
+      this.$store.dispatch(
+        "currentGame/saveCurrentPlayerNames",
+        this.form.playerNames
+      );
 
       await this.$router.push(ROUTES.SCRIBE_PANEL.path);
     } catch (error) {
       window.alert(error.message);
     }
-  }
-
-  saveCurrentPlayerNames(newPlayers: Array<string>): void {
-    const newPlayerNames = new Set([...newPlayers, ...this.savedPlayerNames]);
-    const sortedPlayers = [...newPlayerNames].sort();
-
-    window.localStorage.setItem(
-      PLAYER_NAMES_LOCAL_STORAGE_KEY,
-      JSON.stringify(sortedPlayers)
-    );
   }
 }
 </script>

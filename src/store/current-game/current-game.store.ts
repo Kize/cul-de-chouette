@@ -5,6 +5,7 @@ import {
   CurrentGameState,
   GameStatus,
   NewGameForm,
+  PLAYER_NAMES_LOCAL_STORAGE_KEY,
   SavedCurrentGame,
   Scoreboard,
   SloubiActionPayload,
@@ -435,8 +436,22 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       };
 
       commit("addPlayer", { player, previousPlayer: sloubi.previousPlayer });
+      dispatch("saveCurrentPlayerNames", [sloubi.name]);
 
       await dispatch("saveGameToLocalStorage");
+    },
+    saveCurrentPlayerNames(_, newPlayers: Array<string>): void {
+      const existingPlayers: Array<string> = JSON.parse(
+        window.localStorage.getItem(PLAYER_NAMES_LOCAL_STORAGE_KEY) || "[]"
+      );
+
+      const newPlayerNames = new Set([...newPlayers, ...existingPlayers]);
+      const sortedPlayers = [...newPlayerNames].sort();
+
+      window.localStorage.setItem(
+        PLAYER_NAMES_LOCAL_STORAGE_KEY,
+        JSON.stringify(sortedPlayers)
+      );
     },
   },
 };
