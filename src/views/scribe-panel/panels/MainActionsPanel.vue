@@ -3,6 +3,12 @@
     <v-card outlined elevation="4" color="indigo lighten-5" min-height="100%">
       <v-card-text>
         <v-row class="px-8 py-4">
+          <v-alert dense elevation="4" shaped text type="info">
+            {{ message }}
+          </v-alert>
+        </v-row>
+
+        <v-row class="px-8 py-4">
           <v-btn color="yellow accent-4" x-large block @click="openGrelottine">
             <v-icon class="mr-4">mdi-bell-alert-outline</v-icon>
             Défi Grelottine !
@@ -78,6 +84,7 @@ import { mapGetters } from "vuex";
 import SloubiDialogCard from "@/views/scribe-panel/dialogs/SloubiDialogCard.vue";
 import GrelottineDialogCard from "@/views/scribe-panel/dialogs/rule-resolvers/GrelottineResolverDialog.vue";
 import AddOperationLinesButton from "@/views/scribe-panel/components/AddOperationLinesButton.vue";
+import { HistoryLine } from "@/domain/history";
 
 @Component({
   components: {
@@ -87,11 +94,16 @@ import AddOperationLinesButton from "@/views/scribe-panel/components/AddOperatio
     AddOperationLinesButton,
   },
   computed: {
-    ...mapGetters("currentGame", ["playerNames", "sloubiScore"]),
+    ...mapGetters("currentGame", [
+      "playerNames",
+      "sloubiScore",
+      "lastEventLines",
+    ]),
   },
 })
 export default class MainActionsPanel extends Vue {
   @Prop() currentPlayer!: Player;
+  lastEventLines!: Array<HistoryLine>;
 
   showSloubiDialog = false;
 
@@ -99,6 +111,10 @@ export default class MainActionsPanel extends Vue {
     text: "",
     display: false,
   };
+
+  get message(): string | undefined {
+    return JSON.stringify(this.lastEventLines);
+  }
 
   openGrelottine(): void {
     this.$store.dispatch("currentGame/play/startGrelottineChallenge");

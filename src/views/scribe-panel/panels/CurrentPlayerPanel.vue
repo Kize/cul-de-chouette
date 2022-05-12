@@ -47,7 +47,7 @@ import {
   getInitialDiceForm,
   isDiceFormValid,
 } from "@/components/dice/dice-form";
-import { StartVerdierPayload } from "@/store/current-game/main-playable-actions.store";
+import { StartVerdierPayload } from "@/store/current-game/play-a-turn-payload";
 
 @Component({
   components: {

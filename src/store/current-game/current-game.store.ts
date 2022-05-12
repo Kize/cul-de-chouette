@@ -197,6 +197,16 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     historyView(state): HistoryView {
       return getHistoryView(state.events, state.players);
     },
+    lastEventLines(state): Array<HistoryLine> {
+      const event = state.events.slice(-1)[0];
+
+      return state.players.reduce((lines: Array<HistoryLine>, player) => {
+        return [
+          ...lines,
+          ...player.history.filter((line) => line.eventId === event),
+        ];
+      }, []);
+    },
   },
   mutations: {
     setGame(state, newGame: CurrentGameState): void {
