@@ -46,3 +46,5 @@ export interface AddOperationLinesActionPayload {
   operations: Array<OperationLineActionPayload>;
   shouldHandleEndTurn: boolean;
 }
+
+export const PLAYER_NAMES_LOCAL_STORAGE_KEY = "playerNames";

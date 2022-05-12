@@ -5,6 +5,7 @@ import {
   CurrentGameState,
   GameStatus,
   NewGameForm,
+  PLAYER_NAMES_LOCAL_STORAGE_KEY,
   SavedCurrentGame,
   Scoreboard,
   SloubiActionPayload,
@@ -60,6 +61,11 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     playerNames(state): Array<string> {
       return state.players.map((player) => player.name);
     },
+    getPlayer(state) {
+      return (playerName: string): Player | undefined => {
+        return state.players.find(byName(playerName));
+      };
+    },
     currentPlayerName(state): string {
       return getCurrentPlayerName(state.players);
     },
@@ -81,9 +87,9 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         return playerName === getters.currentPlayerName;
       };
     },
-    getPlayerScore(state) {
+    getPlayerScore(state, getters) {
       return (playerName: string): number => {
-        const player = state.players.find(byName(playerName));
+        const player = getters.getPlayer(playerName);
         if (!player) {
           return 0;
         }
@@ -91,9 +97,9 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         return computePlayerScore(player);
       };
     },
-    hasGrelottine(state) {
+    hasGrelottine(state, getters) {
       return (playerName: string): boolean => {
-        const player = state.players.find(byName(playerName));
+        const player = getters.getPlayer(playerName);
         if (!player) {
           return false;
         }
@@ -112,9 +118,9 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         );
       };
     },
-    hasCivet(state) {
+    hasCivet(state, getters) {
       return (playerName: string): boolean => {
-        const player = state.players.find(byName(playerName));
+        const player = getters.getPlayer(playerName);
         if (!player) {
           return false;
         }
@@ -133,9 +139,9 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         );
       };
     },
-    hasJarret(state) {
+    hasJarret(state, getters) {
       return (playerName: string): boolean => {
-        const player = state.players.find(byName(playerName));
+        const player = getters.getPlayer(playerName);
         if (!player) {
           return false;
         }
@@ -411,32 +417,62 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       { state, commit, dispatch, getters },
       sloubi: SloubiActionPayload
     ): Promise<void> {
+      const eventId = `Sloubi de ${sloubi.name}`;
+
       if (state.players.length > 7) {
         throw new Error("Le jeu n'autorise que 8 joueurs dans une partie.");
       }
-
       if (state.players.map((player) => player.name).includes(sloubi.name)) {
         throw new Error("Le nom de ce joueur est déjà pris.");
       }
 
       const sloubiAmount = sloubi.isSloubiCompleted
-        ? Math.trunc(getters["sloubiScore"] * 1.5)
-        : getters["sloubiScore"];
+        ? Math.trunc(getters.sloubiScore * 1.5)
+        : getters.sloubiScore;
+
+      const playTurnNumber = toPlayerWithNumberOfTurnsPlayed(
+        getters.getPlayer(sloubi.previousPlayer)
+      ).numberOfTurnsPlayed;
+
+      // eslint-disable-next-line prefer-spread
+      const playTurnHistory = Array.apply(
+        null,
+        Array(playTurnNumber)
+      ).map<HistoryLine>(() => ({
+        designation: GameLineType.PLAY_TURN,
+        amount: 0,
+        eventId,
+      }));
 
       const player: Player = {
         name: sloubi.name,
         history: [
           {
-            eventId: `Sloubi de ${sloubi.name}`,
+            eventId,
             designation: RuleEffectEvent.SLOUBI,
             amount: sloubiAmount,
           },
+          ...playTurnHistory,
         ],
       };
 
       commit("addPlayer", { player, previousPlayer: sloubi.previousPlayer });
+      dispatch("saveCurrentPlayerNames", [sloubi.name]);
 
       await dispatch("saveGameToLocalStorage");
+    },
+    saveCurrentPlayerNames(_, newPlayers: Array<string>): void {
+      const existingPlayers: Array<string> = JSON.parse(
+        window.localStorage.getItem(PLAYER_NAMES_LOCAL_STORAGE_KEY) || "[]"
+      );
+
+      const newPlayerNames = new Set([...newPlayers, ...existingPlayers]);
+      const sortedPlayers = [...newPlayerNames].sort();
+
+      window.localStorage.setItem(
+        PLAYER_NAMES_LOCAL_STORAGE_KEY,
+        JSON.stringify(sortedPlayers)
+      );
     },
   },
 };

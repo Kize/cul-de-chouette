@@ -9,15 +9,16 @@
     <v-form ref="formRef" v-model="isFormValid">
       <v-row>
         <v-col md="5" cols="12">
-          <v-text-field
+          <v-combobox
             label="Nom du nouveau joueur"
             v-model="form.name"
-            clearable
-            outlined
-            rounded
+            :items="savedPlayerNames"
             :rules="newPlayerNameRules"
+            cache-items
+            outlined
+            clearable
             prepend-inner-icon="mdi-account-plus-outline"
-          ></v-text-field>
+          ></v-combobox>
         </v-col>
         <v-spacer></v-spacer>
         <v-col md="3" cols="12">
@@ -63,7 +64,10 @@
 
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
-import { SloubiActionPayload } from "@/store/current-game/current-game.interface";
+import {
+  PLAYER_NAMES_LOCAL_STORAGE_KEY,
+  SloubiActionPayload,
+} from "@/store/current-game/current-game.interface";
 import MainDialogCard from "@/components/MainDialogCard.vue";
 import { newPlayerNameRules } from "@/form-validation/form-validation-rules";
 import { VForm } from "@/vuetify.interface";
@@ -83,6 +87,20 @@ export default class SloubiDialogCard extends Vue {
 
   form: SloubiActionPayload = { ...INITIAL_FORM };
   isFormValid = true;
+
+  get savedPlayerNames(): Array<string> {
+    const allNames: Array<string> = JSON.parse(
+      window.localStorage.getItem(PLAYER_NAMES_LOCAL_STORAGE_KEY) || "[]"
+    );
+
+    return allNames.filter((name) => {
+      const isAlreadyPlaying = this.playerNames.some(
+        (existingPlayer) => existingPlayer === name
+      );
+
+      return !isAlreadyPlaying;
+    });
+  }
 
   isSloubiScoreValid(): boolean {
     return this.sloubiScore <= 228;
