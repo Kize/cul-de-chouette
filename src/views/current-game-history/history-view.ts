@@ -19,7 +19,11 @@ export function getHistoryView(
       eventId,
       playerHistories: players.map((player) => {
         return player.history
-          .filter((line) => line.eventId === eventId)
+          .filter(
+            (line) =>
+              line.eventId === eventId &&
+              line.designation !== GameLineType.PLAY_TURN
+          )
           .map<CurrentHistoryLine>((line) => {
             return {
               amount: line.amount,
