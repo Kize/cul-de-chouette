@@ -9,40 +9,57 @@
         </v-row>
 
         <v-row class="px-8 py-4">
-          <v-btn color="yellow accent-4" x-large block @click="openGrelottine">
-            <v-icon class="mr-4">mdi-bell-alert-outline</v-icon>
-            Défi Grelottine !
-          </v-btn>
-        </v-row>
+          <v-col cols="12" md="6" class="main-actions__button-container">
+            <v-btn
+              x-large
+              outlined
+              block
+              color="blue-grey"
+              @click="removeLastEvent"
+            >
+              <v-icon class="mr-4">mdi-undo</v-icon>
+              Annuler la dernière action
+            </v-btn>
+          </v-col>
 
-        <v-row class="px-8 py-4">
-          <v-btn
-            color="primary"
-            tile
-            x-large
-            block
-            @click="showSloubiDialog = true"
-          >
-            <v-icon class="mr-4">mdi-account-cowboy-hat</v-icon>
-            Chante-Sloubi !
-          </v-btn>
-        </v-row>
+          <v-col cols="12" md="6" class="main-actions__button-container">
+            <v-btn
+              x-large
+              tile
+              block
+              color="yellow accent-4"
+              @click="openGrelottine"
+            >
+              <v-icon class="mr-4">mdi-bell-alert-outline</v-icon>
+              Défi Grelottine !
+            </v-btn>
+          </v-col>
 
-        <v-row class="px-8 py-4">
-          <AddOperationLinesButton></AddOperationLinesButton>
-        </v-row>
+          <v-col cols="12" md="6" class="main-actions__button-container">
+            <v-btn
+              x-large
+              tile
+              block
+              color="primary"
+              @click="showSloubiDialog = true"
+            >
+              <v-icon class="mr-4">mdi-account-cowboy-hat</v-icon>
+              Chante-Sloubi !
+            </v-btn>
+          </v-col>
 
-        <v-row class="px-8 py-4">
-          <v-btn
-            x-large
-            outlined
-            block
-            color="blue-grey"
-            @click="removeLastEvent"
-          >
-            <v-icon class="mr-4">mdi-undo</v-icon>
-            Annuler la dernière action
-          </v-btn>
+          <v-col cols="12" md="6" class="main-actions__button-container">
+            <v-btn
+              x-large
+              block
+              tile
+              color="success"
+              @click="openOperationLinesDialog"
+            >
+              <v-icon class="mr-2">mdi-text-box-plus</v-icon>
+              Ajouter des opérations
+            </v-btn>
+          </v-col>
         </v-row>
       </v-card-text>
     </v-card>
@@ -72,6 +89,8 @@
         </v-btn>
       </template>
     </v-snackbar>
+
+    <AddOperationLinesDialog></AddOperationLinesDialog>
   </div>
 </template>
 
@@ -83,15 +102,16 @@ import { Player } from "../../../../domain/player";
 import { mapGetters } from "vuex";
 import SloubiDialogCard from "@/views/scribe-panel/dialogs/SloubiDialogCard.vue";
 import GrelottineDialogCard from "@/views/scribe-panel/dialogs/rule-resolvers/GrelottineResolverDialog.vue";
-import AddOperationLinesButton from "@/views/scribe-panel/components/AddOperationLinesButton.vue";
-import { HistoryLine } from "@/domain/history";
+import AddOperationLinesDialog from "@/views/scribe-panel/components/AddOperationLinesDialog.vue";
+import { GameLineType, HistoryLineApply } from "@/domain/history";
+import { RuleEffectEvent } from "../../../../domain/rules/rule-effect";
 
 @Component({
   components: {
     BevueMenuAction,
     SloubiDialogCard,
     GrelottineDialogCard,
-    AddOperationLinesButton,
+    AddOperationLinesDialog,
   },
   computed: {
     ...mapGetters("currentGame", [
@@ -103,7 +123,7 @@ import { HistoryLine } from "@/domain/history";
 })
 export default class MainActionsPanel extends Vue {
   @Prop() currentPlayer!: Player;
-  lastEventLines!: Array<HistoryLine>;
+  lastEventLines!: Array<HistoryLineApply>;
 
   showSloubiDialog = false;
 
@@ -113,7 +133,10 @@ export default class MainActionsPanel extends Vue {
   };
 
   get message(): string | undefined {
-    return JSON.stringify(this.lastEventLines);
+    return this.lastEventLines
+      .filter((line) => line.designation !== GameLineType.PLAY_TURN)
+      .map<string>(historyLineToMessage)
+      .join(" / ");
   }
 
   openGrelottine(): void {
@@ -130,10 +153,58 @@ export default class MainActionsPanel extends Vue {
     }
   }
 
+  openOperationLinesDialog(): void {
+    this.$store.commit(
+      "currentGame/dialogs/setAddOperationLinesDialogIsVisible",
+      true
+    );
+  }
+
   removeLastEvent(): void {
     this.$store.dispatch("currentGame/play/cancelLastEvent");
   }
 }
+
+function historyLineToMessage(line: HistoryLineApply): string {
+  switch (line.designation) {
+    case RuleEffectEvent.CUL_DE_CHOUETTE:
+      return `${line.playerName} a réalisé un ${line.designation} pour ${line.amount}`;
+    case RuleEffectEvent.CHOUETTE:
+    case RuleEffectEvent.SUITE_VELUTE:
+      return `${line.playerName} a réalisé une ${line.designation} pour ${line.amount}`;
+
+    case RuleEffectEvent.SUITE:
+      return `${line.playerName} a perdu une ${line.designation} pour ${line.amount}`;
+    case RuleEffectEvent.CHOUETTE_VELUTE_WON:
+      return `${line.playerName} a gagné une Chouette velute pour ${line.amount}`;
+    case RuleEffectEvent.CHOUETTE_VELUTE_LOST:
+      return `${line.playerName} a perdu une Chouette velute pour ${line.amount}`;
+    case RuleEffectEvent.CHOUETTE_VELUTE_STOLEN:
+      return `La Chouette velute a été volée à ${line.playerName}`;
+
+    case RuleEffectEvent.SIROP_BET_LOST:
+      return `${line.playerName} a perdu un pari de Sirotage pour ${line.amount}`;
+    case RuleEffectEvent.SIROP_BET_WON:
+      return `${line.playerName} a gagné un pari de Sirotage pour ${line.amount}`;
+    case RuleEffectEvent.SIROP_BET_SKIPPED:
+      return `${line.playerName} n'a pas parié`;
+    case RuleEffectEvent.SIROP_BET_WON_BUT_NOT_CLAIMED:
+      return `${line.playerName} n'a pas annoncé "Sirop Gagnant!"`;
+
+    case RuleEffectEvent.BEVUE:
+      return `${line.playerName} a pris une Bévue`;
+    default:
+      return `${JSON.stringify(line)}`;
+  }
+}
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.main-actions__button-container {
+  height: 10rem;
+
+  .v-btn:not(.v-btn--round).v-size--x-large {
+    height: 9rem;
+  }
+}
+</style>

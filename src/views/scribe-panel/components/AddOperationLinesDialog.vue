@@ -1,80 +1,72 @@
 <template>
-  <div style="width: 100%">
-    <v-btn x-large block color="success" @click="openDialog">
-      <v-icon class="mr-2">mdi-text-box-plus</v-icon>
-      Ajouter des opérations
-    </v-btn>
-
-    <v-dialog
-      v-model="showDialog"
-      persistent
-      fullscreen
-      transition="dialog-bottom-transition"
+  <v-dialog
+    v-model="addOperationLinesDialog.isVisible"
+    persistent
+    fullscreen
+    transition="dialog-bottom-transition"
+  >
+    <MainDialogCard
+      title="Ajouter des opérations à des joueurs"
+      confirm-button-label="Confirmer les opérations"
+      :is-confirm-button-enabled="true"
+      @cancel="closeDialog"
+      @confirm="confirm"
     >
-      <MainDialogCard
-        title="Ajouter des opérations à des joueurs"
-        confirm-button-label="Confirmer les opérations"
-        :is-confirm-button-enabled="true"
-        @cancel="closeDialog"
-        @confirm="confirm"
-      >
-        <v-row justify="center" align="center">
-          <v-checkbox
-            label="Faire avancer le tour de jeu"
-            v-model="shouldHandleEndTurn"
-          ></v-checkbox>
-        </v-row>
+      <v-row justify="center" align="center">
+        <v-checkbox
+          label="Faire avancer le tour de jeu"
+          v-model="shouldHandleEndTurn"
+        ></v-checkbox>
+      </v-row>
 
-        <v-form ref="formRef" class="mt-4">
-          <v-card
-            :color="index % 2 === 0 ? 'blue lighten-5' : 'teal lighten-5'"
-            v-for="(operation, index) in lineOperations"
-            :key="index"
-            rounded
-            class="mx-lg-12 mx-6 py-2 mb-8"
-          >
-            <v-row justify="space-around">
-              <v-col md="auto" cols="12">
-                <v-select
-                  label="Nom du joueur"
-                  v-model="operation.playerName"
-                  :items="playerNames"
-                  prepend-icon="mdi-account"
-                ></v-select>
-              </v-col>
+      <v-form ref="formRef" class="mt-4">
+        <v-card
+          :color="index % 2 === 0 ? 'blue lighten-5' : 'teal lighten-5'"
+          v-for="(operation, index) in lineOperations"
+          :key="index"
+          rounded
+          class="mx-lg-12 mx-6 py-2 mb-8"
+        >
+          <v-row justify="space-around">
+            <v-col md="auto" cols="12">
+              <v-select
+                label="Nom du joueur"
+                v-model="operation.playerName"
+                :items="playerNames"
+                prepend-icon="mdi-account"
+              ></v-select>
+            </v-col>
 
-              <v-col md="3" cols="12">
-                <v-select
-                  v-model="operation.options"
-                  :items="optionItems"
-                  label="Options"
-                  multiple
-                  clearable
-                ></v-select>
-              </v-col>
+            <v-col md="3" cols="12">
+              <v-select
+                v-model="operation.options"
+                :items="optionItems"
+                label="Options"
+                multiple
+                clearable
+              ></v-select>
+            </v-col>
 
-              <v-col md="auto" cols="12">
-                <AmountInput
-                  :min="-343"
-                  :max="343"
-                  v-model="operation.amount"
-                ></AmountInput>
-              </v-col>
-            </v-row>
-          </v-card>
-        </v-form>
-      </MainDialogCard>
-    </v-dialog>
-  </div>
+            <v-col md="auto" cols="12">
+              <AmountInput
+                :min="-343"
+                :max="343"
+                v-model="operation.amount"
+              ></AmountInput>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-form>
+    </MainDialogCard>
+  </v-dialog>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import { mapGetters } from "vuex";
+import { Component, Vue, Watch } from "vue-property-decorator";
+import { mapGetters, mapState } from "vuex";
 import AmountInput from "../../../components/AmountInput.vue";
 import MainDialogCard from "../../../components/MainDialogCard.vue";
 import { AllHistoryLineTypes, GodModLineType } from "@/domain/history";
-import { rulesOfAmountInput } from "@/form-validation/form-validation-rules";
 import {
   AddOperationLinesActionPayload,
   OperationLineActionPayload,
@@ -94,11 +86,11 @@ interface OperationLineForm {
     MainDialogCard,
   },
   computed: {
+    ...mapState("currentGame/dialogs", ["addOperationLinesDialog"]),
     ...mapGetters("currentGame", ["playerNames"]),
   },
 })
-export default class PlayersBanner extends Vue {
-  readonly rulesOfAmountInput = rulesOfAmountInput;
+export default class AddOperationLinesDialog extends Vue {
   readonly playerNames!: Array<string>;
   readonly optionItems = [
     RuleEffectEvent.ADD_GRELOTTINE,
@@ -109,20 +101,22 @@ export default class PlayersBanner extends Vue {
     RuleEffectEvent.REMOVE_JARRET,
   ];
 
-  showDialog = false;
+  addOperationLinesDialog!: { isVisible: boolean };
 
   shouldHandleEndTurn = false;
   lineOperations: Array<OperationLineForm> = [];
 
-  openDialog(): void {
-    this.showDialog = true;
-
+  @Watch("addOperationLinesDialog.isVisible")
+  updateIsVisible(): void {
     this.shouldHandleEndTurn = false;
     this.lineOperations = this.getNewLineOperations();
   }
 
   closeDialog(): void {
-    this.showDialog = false;
+    this.$store.commit(
+      "currentGame/dialogs/setAddOperationLinesDialogIsVisible",
+      false
+    );
   }
 
   confirm(): void {

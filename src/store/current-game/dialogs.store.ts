@@ -12,6 +12,9 @@ import { ArtichetteResolutionPayload } from "../../../domain/rules/level-2/artic
 import { VerdierResolutionPayload } from "../../../domain/rules/level-3/verdier-rule";
 
 export interface DialogsState {
+  addOperationLinesDialog: {
+    isVisible: boolean;
+  };
   suiteResolverDialog: {
     isVisible: boolean;
     playerName: string;
@@ -56,6 +59,9 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
   namespaced: true,
   state(): DialogsState {
     return {
+      addOperationLinesDialog: {
+        isVisible: false,
+      },
       suiteResolverDialog: {
         isVisible: false,
         playerName: "",
@@ -97,6 +103,9 @@ export const DialogsStoreModule: Module<DialogsState, RootState> = {
   },
   getters: {},
   mutations: {
+    setAddOperationLinesDialogIsVisible(state, isVisible): void {
+      state.addOperationLinesDialog.isVisible = isVisible;
+    },
     setSuiteResolverIsVisible(state, isVisible): void {
       state.suiteResolverDialog.isVisible = isVisible;
     },
