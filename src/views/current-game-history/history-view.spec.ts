@@ -8,10 +8,10 @@ describe("getHistoryView", () => {
       {
         name: "Alban",
         history: [
-          { eventId: "42", amount: 0, designation: RuleEffectEvent.BEVUE },
+          { eventId: "42", amount: -5, designation: RuleEffectEvent.BEVUE },
           {
             eventId: "12",
-            amount: -25,
+            amount: -5,
             designation: RuleEffectEvent.SIROP_BET_LOST,
           },
         ],
@@ -26,7 +26,7 @@ describe("getHistoryView", () => {
           },
           {
             eventId: "12",
-            amount: -25,
+            amount: -5,
             designation: RuleEffectEvent.SIROP_BET_LOST,
           },
         ],
@@ -50,14 +50,15 @@ describe("getHistoryView", () => {
 
     const historyView = getHistoryView(["42", "27", "12"], players);
 
-    expect(historyView).toEqual([
+    expect(historyView).toEqual<ReturnType<typeof getHistoryView>>([
       {
         eventId: "42",
         playerHistories: [
           [
             {
-              amount: 0,
-              designation: "Bévue",
+              amount: -5,
+              designation: RuleEffectEvent.BEVUE,
+              currentTotal: -5,
             },
           ],
           [],
@@ -71,7 +72,8 @@ describe("getHistoryView", () => {
           [
             {
               amount: 90,
-              designation: "Cul de chouette",
+              designation: RuleEffectEvent.CUL_DE_CHOUETTE,
+              currentTotal: 90,
             },
           ],
           [],
@@ -82,24 +84,28 @@ describe("getHistoryView", () => {
         playerHistories: [
           [
             {
-              amount: -25,
-              designation: "Pari de Sirotage perdu",
+              amount: -5,
+              designation: RuleEffectEvent.SIROP_BET_LOST,
+              currentTotal: -10,
             },
           ],
           [
             {
-              amount: -25,
-              designation: "Pari de Sirotage perdu",
+              amount: -5,
+              designation: RuleEffectEvent.SIROP_BET_LOST,
+              currentTotal: 85,
             },
           ],
           [
             {
               amount: 100,
-              designation: "Sirotage gagné",
+              designation: RuleEffectEvent.SIROP_WON,
+              currentTotal: 100,
             },
             {
               amount: 25,
-              designation: "Pari de Sirotage gagné",
+              designation: RuleEffectEvent.SIROP_BET_WON,
+              currentTotal: 125,
             },
           ],
         ],

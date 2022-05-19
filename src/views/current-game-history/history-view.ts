@@ -1,9 +1,11 @@
 import { GameLineType, HistoryLine } from "@/domain/history";
-import { Player } from "../../../domain/player";
+import { computePlayerScore, Player } from "../../../domain/player";
 
 export type HistoryView = Array<CurrentGameHistoryLine>;
 
-type CurrentHistoryLine = Omit<HistoryLine, "eventId">;
+type CurrentHistoryLine = Omit<HistoryLine, "eventId"> & {
+  currentTotal: number;
+};
 
 export interface CurrentGameHistoryLine {
   eventId: string;
@@ -18,18 +20,25 @@ export function getHistoryView(
     return {
       eventId,
       playerHistories: players.map((player) => {
-        return player.history
-          .filter(
-            (line) =>
-              line.eventId === eventId &&
-              line.designation !== GameLineType.PLAY_TURN
-          )
-          .map<CurrentHistoryLine>((line) => {
-            return {
-              amount: line.amount,
-              designation: line.designation,
-            };
-          });
+        return player.history.reduce(
+          (history: Array<CurrentHistoryLine>, line, index) => {
+            if (
+              line.eventId !== eventId ||
+              line.designation === GameLineType.PLAY_TURN
+            ) {
+              return history;
+            }
+            return [
+              ...history,
+              {
+                amount: line.amount,
+                designation: line.designation,
+                currentTotal: computePlayerScore(player, index),
+              },
+            ];
+          },
+          []
+        );
       }),
     };
   });
