@@ -165,13 +165,30 @@ export default class MainActionsPanel extends Vue {
   }
 }
 
-function historyLineToMessage(line: HistoryLineApply): string {
+export function historyLineToMessage(line: HistoryLineApply): string {
   switch (line.designation) {
+    case RuleEffectEvent.NEANT:
+      return `${line.playerName} a fait un Néant. Il obtient une Grelottine.`;
+    case RuleEffectEvent.BEVUE:
+      return `${line.playerName} a pris une Bévue`;
+    case RuleEffectEvent.SLOUBI:
+      return `${line.playerName} a fait un Sloubi pour ${line.amount}`;
+
     case RuleEffectEvent.CUL_DE_CHOUETTE:
-      return `${line.playerName} a réalisé un ${line.designation} pour ${line.amount}`;
-    case RuleEffectEvent.CHOUETTE:
+    case RuleEffectEvent.BLEU_ROUGE:
+      return `${line.playerName} a fait un ${line.designation} pour ${line.amount}`;
+    case RuleEffectEvent.VELUTE:
     case RuleEffectEvent.SUITE_VELUTE:
-      return `${line.playerName} a réalisé une ${line.designation} pour ${line.amount}`;
+    case RuleEffectEvent.CHOUETTE:
+    case RuleEffectEvent.ARTICHETTE:
+      return `${line.playerName} a fait une ${line.designation} pour ${line.amount}`;
+
+    case RuleEffectEvent.SOUFFLETTE_NO_CHALLENGE:
+      return `${line.playerName} a fait une Soufflette`;
+    case RuleEffectEvent.SOUFFLETTE_WON:
+      return `${line.playerName} a gagné une Soufflette pour ${line.amount}`;
+    case RuleEffectEvent.SOUFFLETTE_LOST:
+      return `${line.playerName} a perdu une Soufflette pour ${line.amount}`;
 
     case RuleEffectEvent.SUITE:
       return `${line.playerName} a perdu une ${line.designation} pour ${line.amount}`;
@@ -182,6 +199,14 @@ function historyLineToMessage(line: HistoryLineApply): string {
     case RuleEffectEvent.CHOUETTE_VELUTE_STOLEN:
       return `La Chouette velute a été volée à ${line.playerName}`;
 
+    case RuleEffectEvent.SIROP_LOST:
+      return `${line.playerName} a perdu un Sirotage pour ${line.amount}`;
+    case RuleEffectEvent.SIROP_WON:
+      return `${line.playerName} a gagné un Sirotage pour ${line.amount}`;
+    case RuleEffectEvent.ATTRAPE_OISEAU_WON:
+      return `${line.playerName} a gagné un Attrape-Oiseau pour ${line.amount}`;
+    case RuleEffectEvent.ATTRAPE_OISEAU_LOST:
+      return `${line.playerName} a perdu un Attrape-Oiseau pour ${line.amount}`;
     case RuleEffectEvent.SIROP_BET_LOST:
       return `${line.playerName} a perdu un pari de Sirotage pour ${line.amount}`;
     case RuleEffectEvent.SIROP_BET_WON:
@@ -191,8 +216,17 @@ function historyLineToMessage(line: HistoryLineApply): string {
     case RuleEffectEvent.SIROP_BET_WON_BUT_NOT_CLAIMED:
       return `${line.playerName} n'a pas annoncé "Sirop Gagnant!"`;
 
-    case RuleEffectEvent.BEVUE:
-      return `${line.playerName} a pris une Bévue`;
+    case RuleEffectEvent.ADD_CIVET:
+    case RuleEffectEvent.REMOVE_CIVET:
+    case RuleEffectEvent.CIVET_WON:
+    case RuleEffectEvent.CIVET_LOST:
+    case RuleEffectEvent.VERDIER_WON:
+    case RuleEffectEvent.VERDIER_LOST:
+    case RuleEffectEvent.ADD_JARRET:
+    case RuleEffectEvent.REMOVE_JARRET:
+    case RuleEffectEvent.BLEU_ROUGE_BET_WON:
+      return `${line.designation} pour ${line.playerName}`;
+
     default:
       return `${JSON.stringify(line)}`;
   }
