@@ -18,6 +18,8 @@ export interface CurrentGameState {
 export type Scoreboard = ReadonlyArray<{
   playerName: string;
   score: number;
+  positiveScoresSum: number;
+  negativeScoresSum: number;
 }>;
 
 export interface SavedCurrentGame extends CurrentGameState {
