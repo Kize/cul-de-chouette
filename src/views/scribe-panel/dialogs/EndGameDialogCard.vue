@@ -5,26 +5,31 @@
     <v-card-text>
       <v-row>
         <v-col cols="6">
-          <v-list>
-            <v-subheader>Classements des joueurs</v-subheader>
+          <v-simple-table>
+            <template v-slot:default>
+              <thead>
+                <tr>
+                  <th class="text-left">Position</th>
+                  <th class="text-left">Joueur</th>
+                  <th class="text-left"><b>Score</b></th>
+                  <th class="text-left">Somme positive</th>
+                  <th class="text-left">Somme négative</th>
+                </tr>
+              </thead>
 
-            <v-list-item-group>
-              <v-list-item v-for="(player, index) in scoreboard" :key="index">
-                <v-list-item-icon>
-                  <v-icon
-                    v-text="`mdi-numeric-${index + 1}-circle-outline`"
-                  ></v-icon>
-                </v-list-item-icon>
-
-                <v-list-item-content>
-                  <v-list-item-title>{{ player.playerName }}</v-list-item-title>
-                  <v-list-item-subtitle
-                    >{{ player.score }}
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
+              <tbody>
+                <tr v-for="(player, index) in scoreboard" :key="index">
+                  <td>{{ index }}</td>
+                  <td>{{ player.playerName }}</td>
+                  <td>
+                    <b>{{ player.score }}</b>
+                  </td>
+                  <td>{{ player.positiveScoresSum }}</td>
+                  <td>{{ player.negativeScoresSum }}</td>
+                </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
         </v-col>
 
         <v-col cols="6">

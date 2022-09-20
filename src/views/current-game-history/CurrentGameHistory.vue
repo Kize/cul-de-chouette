@@ -40,6 +40,7 @@
             </th>
           </tr>
         </thead>
+
         <tbody>
           <tr v-for="historyLine in historyView" :key="historyLine.eventId">
             <td
@@ -52,16 +53,17 @@
                   v-for="(playerLine, lineIndex) in playerLines"
                   :key="lineIndex"
                 >
-                  <td class="pr-4">{{ playerLine.designation }}</td>
-                  <td class="pl-4 text-right">
+                  <td class="pr-3">{{ playerLine.currentTotal }}</td>
+
+                  <td class="px-3">{{ playerLine.designation }}</td>
+
+                  <td class="pl-3 text-right">
                     <span class="line-amount">
                       {{ playerLine.amount }} points
                     </span>
                   </td>
                 </tr>
               </table>
-
-              <!--INSERT PROGRESS HERE-->
             </td>
           </tr>
         </tbody>
@@ -74,7 +76,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import { ROUTES } from "@/router";
 import { mapGetters, mapState } from "vuex";
-import { computePlayerScore, Player } from "../../../domain/player";
 
 @Component({
   components: {},
@@ -90,10 +91,6 @@ import { computePlayerScore, Player } from "../../../domain/player";
 export default class CurrentGameHistory extends Vue {
   readonly scribePanelRoutePath = ROUTES.SCRIBE_PANEL.path;
 
-  getPlayerScoreAtLine(player: Player, lineIndex: number): number {
-    return computePlayerScore(player, lineIndex);
-  }
-
   removeLastEvent(): void {
     this.$store.dispatch("currentGame/play/cancelLastEvent");
   }
@@ -108,8 +105,6 @@ export default class CurrentGameHistory extends Vue {
 }
 
 .history-table {
-  //border: thin solid rgba(0, 0, 0, 0.12);
-
   .line-table {
     width: 100%;
   }

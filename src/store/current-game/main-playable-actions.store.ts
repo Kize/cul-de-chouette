@@ -17,7 +17,6 @@ import {
   suiteRuleResolver,
   verdierRuleResolver,
 } from "@/store/current-game/game-rule-runner";
-import { DiceRoll, DieValue } from "../../../domain/rules/dice-rule";
 import { RuleEffects } from "../../../domain/rules/rule-effect";
 import {
   ApplyBevueGameContext,
@@ -31,27 +30,9 @@ import { BleuRougeResolution } from "../../../domain/rules/level-3/bleu-rouge-ru
 import { CivetResolution } from "../../../domain/rules/level-1/civet-rule";
 import { ArtichetteResolution } from "../../../domain/rules/level-2/artichette-rule";
 import { VerdierResolution } from "../../../domain/rules/level-3/verdier-rule";
+import { PlayATurnPayload } from "@/store/current-game/play-a-turn-payload";
 
 type MainPlayableState = Record<string, unknown>;
-
-export type PlayATurnPayload =
-  | PlayADiceRollPayload
-  | PlayACivetPayload
-  | StartVerdierPayload;
-
-export interface PlayADiceRollPayload {
-  event: GameContextEvent.DICE_ROLL;
-  diceRoll: DiceRoll;
-}
-
-export interface PlayACivetPayload {
-  event: GameContextEvent.CIVET_BET;
-}
-
-export interface StartVerdierPayload {
-  event: GameContextEvent.VERDIER;
-  diceValues: [DieValue, DieValue];
-}
 
 export const MainPlayableActionsStoreModule: Module<
   MainPlayableState,
@@ -167,11 +148,12 @@ export const MainPlayableActionsStoreModule: Module<
     async cancelLastEvent({ rootState, commit, dispatch }): Promise<void> {
       const { events } = rootState.currentGame!;
 
-      if (events.length === 0) {
+      const eventToCancel = events[events.length - 1];
+
+      if (!eventToCancel) {
         return;
       }
 
-      const eventToCancel = events[events.length - 1];
       commit("currentGame/removeEvent", eventToCancel, { root: true });
       commit("currentGame/removeHistoryLines", eventToCancel, { root: true });
 

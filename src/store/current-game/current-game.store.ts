@@ -12,7 +12,9 @@ import {
 } from "@/store/current-game/current-game.interface";
 import {
   byName,
+  computeNegativeScoresSum,
   computePlayerScore,
+  computePositiveScoresSum,
   getCurrentPlayerName,
   Player,
   toPlayerWithNumberOfTurnsPlayed,
@@ -172,10 +174,12 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     },
     scoreboard(state, getters): Scoreboard {
       return state.players
-        .map((player) => {
+        .map<Scoreboard[0]>((player) => {
           return {
             playerName: player.name,
             score: getters["getPlayerScore"](player.name),
+            positiveScoresSum: computePositiveScoresSum(player),
+            negativeScoresSum: computeNegativeScoresSum(player),
           };
         })
         .sort((p1, p2) => p2.score - p1.score);
@@ -196,6 +200,18 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     },
     historyView(state): HistoryView {
       return getHistoryView(state.events, state.players);
+    },
+    lastEventLines(state): Array<HistoryLineApply> {
+      const event = state.events.slice(-1)[0];
+
+      return state.players.reduce((lines: Array<HistoryLineApply>, player) => {
+        return [
+          ...lines,
+          ...player.history
+            .filter((line) => line.eventId === event)
+            .map((line) => ({ ...line, playerName: player.name })),
+        ];
+      }, []);
     },
   },
   mutations: {

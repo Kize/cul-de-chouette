@@ -48,7 +48,7 @@ export enum RuleEffectEvent {
   VERDIER_LOST = "Pari du Verdier perdu",
 
   BLEU_ROUGE = "Bleu-rouge",
-  BLEU_ROUGE_BET_WON = "Annone de Bleu-rouge gagnée",
+  BLEU_ROUGE_BET_WON = "Annonce de Bleu-rouge gagnée",
   ADD_JARRET = "Ajout d'un Jarret",
   REMOVE_JARRET = "Retrait du Jarret",
 }

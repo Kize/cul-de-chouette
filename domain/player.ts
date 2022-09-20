@@ -19,6 +19,26 @@ export function computePlayerScore(
   }, 0);
 }
 
+export function computePositiveScoresSum(player: Player): number {
+  return player.history.reduce((sum: number, historyLine) => {
+    if (historyLine.amount > 0) {
+      return sum + historyLine.amount;
+    }
+
+    return sum;
+  }, 0);
+}
+
+export function computeNegativeScoresSum(player: Player): number {
+  return player.history.reduce((sum: number, historyLine) => {
+    if (historyLine.amount < 0) {
+      return sum + historyLine.amount;
+    }
+
+    return sum;
+  }, 0);
+}
+
 export function byName(name: string): (p: Player) => boolean {
   return (player: Player) => {
     return player.name === name;
