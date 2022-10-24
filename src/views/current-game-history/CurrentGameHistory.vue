@@ -7,7 +7,9 @@
 
       <v-col>
         <router-link :to="scribePanelRoutePath">
-          <v-btn x-large>Revenir à la partie en cours</v-btn>
+          <v-btn tile color="grey darken-3" dark>
+            Revenir à la partie en cours
+          </v-btn>
         </router-link>
       </v-col>
 
