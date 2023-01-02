@@ -9,7 +9,7 @@
       </v-col>
       <v-col>
         <router-link :to="currentGameHistoryRoutePath">
-          <v-btn tile>
+          <v-btn tile color="grey darken-3" dark>
             <v-icon class="mr-2" small>mdi-table-large</v-icon>
             Afficher l'historique
           </v-btn>

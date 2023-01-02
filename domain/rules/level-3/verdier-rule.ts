@@ -76,13 +76,15 @@ export class VerdierRule implements Rule {
 }
 
 export function isVerdierApplicable(diceForm: DiceForm): boolean {
-  const numberOfValidDieValue = diceForm.reduce((acc: number, dieFormValue) => {
-    if (dieFormValue === 2 || dieFormValue === 4 || dieFormValue === 6) {
-      return acc + 1;
-    }
+  const invalidValues = diceForm.filter((dieValue) => {
+    return dieValue === 1 || dieValue === 3 || dieValue === 5;
+  });
 
-    return acc;
-  }, 0);
+  if (invalidValues.length > 0) {
+    return false;
+  }
 
-  return numberOfValidDieValue > 1;
+  const [d1, d2, d3] = diceForm;
+
+  return d1 !== d2 && d1 !== d3 && d2 !== d3;
 }

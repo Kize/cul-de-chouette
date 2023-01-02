@@ -1,6 +1,7 @@
 import { Resolver } from "../rule-resolver";
 import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
 import {
+  isVerdierApplicable,
   VerdierResolution,
   VerdierResolutionPayload,
   VerdierRule,
@@ -8,7 +9,6 @@ import {
 import { RuleEffect, RuleEffectEvent } from "../rule-effect";
 import { ChouetteRule } from "../basic-rules/chouette-rule";
 import { RuleRunner } from "../../rule-runner";
-import { VeluteRule } from "../basic-rules/velute-rule";
 
 describe("isApplicableToGameContext", () => {
   let dummyResolver: Resolver<VerdierResolution, VerdierResolutionPayload>;
@@ -38,7 +38,7 @@ describe("isApplicableToGameContext", () => {
 });
 
 describe("applyRule", () => {
-  it("applies the dice roll rule effets to the player", async () => {
+  it("applies the dice roll rule effects to the player", async () => {
     const resolver: Resolver<VerdierResolution, VerdierResolutionPayload> = {
       getResolution: jest.fn().mockResolvedValue({
         bettingPlayerNames: [],
@@ -121,5 +121,31 @@ describe("applyRule", () => {
       playerName: "Delphin",
       score: -5,
     });
+  });
+});
+
+describe("isVerdierApplicable", () => {
+  it("returns false when given 0-0-0", () => {
+    const result = isVerdierApplicable([0, 0, 0]);
+
+    expect(result).toBe(false);
+  });
+
+  it("returns false when given 0-0-5", () => {
+    const result = isVerdierApplicable([0, 0, 5]);
+
+    expect(result).toBe(false);
+  });
+
+  it("returns true when given 4-0-2", () => {
+    const result = isVerdierApplicable([4, 0, 2]);
+
+    expect(result).toBe(true);
+  });
+
+  it("returns false when given 2-2-0", () => {
+    const result = isVerdierApplicable([0, 2, 2]);
+
+    expect(result).toBe(false);
   });
 });
