@@ -23,8 +23,8 @@ import {
   GameLineType,
   getNewEventId,
   HistoryLine,
-  HistoryLineApply,
-} from "@/domain/history";
+  PlayerHistoryLine,
+} from "../../../domain/history/history-line";
 import { RootState } from "@/store/app.state";
 import { MainPlayableActionsStoreModule } from "@/store/current-game/main-playable-actions.store";
 import { RulesState, RulesStoreModule } from "@/store/current-game/rules.store";
@@ -34,12 +34,12 @@ import {
   BASIC_RULE_NAMES,
   gameRuleRunner,
 } from "@/store/current-game/game-rule-runner";
-import { RuleEffectEvent } from "../../../domain/rules/rule-effect";
+import { RuleEffectEvent } from "../../../domain/rule-runner/rules/rule-effect";
 import {
   getHistoryView,
   HistoryView,
 } from "@/views/current-game-history/history-view";
-import { Rules } from "../../../domain/rules/rule";
+import { Rules } from "../../../domain/rule-runner/rules/rule";
 
 export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
   namespaced: true,
@@ -201,10 +201,10 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     historyView(state): HistoryView {
       return getHistoryView(state.events, state.players);
     },
-    lastEventLines(state): Array<HistoryLineApply> {
+    lastEventLines(state): Array<PlayerHistoryLine> {
       const event = state.events.slice(-1)[0];
 
-      return state.players.reduce((lines: Array<HistoryLineApply>, player) => {
+      return state.players.reduce((lines: Array<PlayerHistoryLine>, player) => {
         return [
           ...lines,
           ...player.history
@@ -243,7 +243,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     removeEvent(state, eventId: string): void {
       state.events = state.events.filter((event) => event !== eventId);
     },
-    addHistoryLine(state, apply: HistoryLineApply): void {
+    addHistoryLine(state, apply: PlayerHistoryLine): void {
       const player = state.players.find(byName(apply.playerName));
 
       if (player) {
@@ -279,8 +279,6 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         players: notEmptyPlayerNames.map((name) => ({
           name,
           history: [],
-          hasGrelottine: false,
-          hasJarret: false,
         })),
       };
       commit("setGame", newGame);
@@ -370,7 +368,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       const isGameFinished = await dispatch("checkEndGame");
 
       if (!isGameFinished) {
-        const playTurnHistoryLine: HistoryLineApply = {
+        const playTurnHistoryLine: PlayerHistoryLine = {
           eventId,
           amount: 0,
           playerName: getters.currentPlayerName,
@@ -413,7 +411,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       commit("addEvent", eventId);
 
       actionPayload.operations.forEach((operation) => {
-        const apply: HistoryLineApply = {
+        const apply: PlayerHistoryLine = {
           eventId,
           designation: operation.designation,
           playerName: operation.playerName,

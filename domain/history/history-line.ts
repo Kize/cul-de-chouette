@@ -1,7 +1,7 @@
 import {
   NotImplementedRuleEffectEvent,
   RuleEffectEvent,
-} from "../../domain/rules/rule-effect";
+} from "../rule-runner/rules/rule-effect";
 import { nanoid } from "nanoid";
 
 export enum GodModLineType {
@@ -24,7 +24,7 @@ export interface HistoryLine {
   amount: number;
 }
 
-export interface HistoryLineApply extends HistoryLine {
+export interface PlayerHistoryLine extends HistoryLine {
   playerName: string;
 }
 

@@ -65,8 +65,8 @@ import MainDialogCard from "../../../../components/MainDialogCard.vue";
 import BevueMenuAction from "../../../../components/BevueMenuAction.vue";
 import DieCard from "@/components/dice/DieCard.vue";
 import { DialogsState } from "@/store/current-game/dialogs.store";
-import { DieValue } from "../../../../../domain/rules/dice-rule";
-import { VerdierResolution } from "../../../../../domain/rules/level-3/verdier-rule";
+import { DieValue } from "../../../../../domain/rule-runner/rules/dice-rule";
+import { VerdierResolution } from "../../../../../domain/rule-runner/rules/level-3/verdier-rule";
 
 interface VerdierForm {
   bettingPlayerNames: Array<string>;

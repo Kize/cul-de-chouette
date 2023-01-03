@@ -1,6 +1,6 @@
 import { getHistoryView } from "@/views/current-game-history/history-view";
 import { Player } from "../../../domain/player";
-import { RuleEffectEvent } from "../../../domain/rules/rule-effect";
+import { RuleEffectEvent } from "../../../domain/rule-runner/rules/rule-effect";
 
 describe("getHistoryView", () => {
   it("returns an history view", () => {

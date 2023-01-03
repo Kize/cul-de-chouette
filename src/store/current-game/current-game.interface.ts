@@ -1,5 +1,5 @@
 import { Player } from "../../../domain/player";
-import { AllHistoryLineTypes } from "@/domain/history";
+import { AllHistoryLineTypes } from "../../../domain/history/history-line";
 import { RulesState } from "@/store/current-game/rules.store";
 
 export enum GameStatus {

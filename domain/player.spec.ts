@@ -4,8 +4,8 @@ import {
   getCurrentPlayerName,
   Player,
 } from "./player";
-import { GameLineType } from "../src/domain/history";
-import { RuleEffectEvent } from "./rules/rule-effect";
+import { GameLineType } from "./history/history-line";
+import { RuleEffectEvent } from "./rule-runner/rules/rule-effect";
 
 describe("getCurrentPlayerName", () => {
   it("returns the first player when no one has played", () => {

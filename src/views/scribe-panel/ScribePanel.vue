@@ -75,7 +75,7 @@ import { GameStatus } from "@/store/current-game/current-game.interface";
 import { mapGetters, mapState } from "vuex";
 import { ROUTES } from "@/router";
 import { Player } from "../../../domain/player";
-import { GameContextEvent } from "../../../domain/game-context-event";
+import { GameContextEvent } from "../../../domain/rule-runner/game-context-event";
 import RulesButton from "@/components/RulesButton.vue";
 import PlayersBanner from "@/views/scribe-panel/components/PlayersBanner.vue";
 import CurrentPlayerPanel from "@/views/scribe-panel/panels/CurrentPlayerPanel.vue";

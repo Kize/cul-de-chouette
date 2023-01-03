@@ -1,9 +1,9 @@
 import store from "@/store/app.state";
-import { RuleResolver } from "../../../../domain/rules/rule-resolver";
+import { RuleResolver } from "../../../../domain/rule-runner/rules/rule-resolver";
 import {
   VerdierResolution,
   VerdierResolutionPayload,
-} from "../../../../domain/rules/level-3/verdier-rule";
+} from "../../../../domain/rule-runner/rules/level-3/verdier-rule";
 
 export class VerdierRuleResolver extends RuleResolver<
   VerdierResolution,

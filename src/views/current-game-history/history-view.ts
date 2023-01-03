@@ -1,4 +1,7 @@
-import { GameLineType, HistoryLine } from "@/domain/history";
+import {
+  GameLineType,
+  HistoryLine,
+} from "../../../domain/history/history-line";
 import { computePlayerScore, Player } from "../../../domain/player";
 
 export type HistoryView = Array<CurrentGameHistoryLine>;

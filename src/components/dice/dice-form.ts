@@ -1,4 +1,7 @@
-import { DiceRoll, DieValue } from "../../../domain/rules/dice-rule";
+import {
+  DiceRoll,
+  DieValue,
+} from "../../../domain/rule-runner/rules/dice-rule";
 
 export type DiceForm = [DieValue | 0, DieValue | 0, DieValue | 0];
 

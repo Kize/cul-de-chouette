@@ -1,7 +1,7 @@
-import { RuleResolver } from "../../../../domain/rules/rule-resolver";
+import { RuleResolver } from "../../../../domain/rule-runner/rules/rule-resolver";
 import store from "@/store/app.state";
-import { AttrapeOiseauResolution } from "../../../../domain/rules/level-1/attrape-oiseau-rule";
-import { SiropResolutionPayload } from "../../../../domain/rules/level-1/sirotage-rule";
+import { AttrapeOiseauResolution } from "../../../../domain/rule-runner/rules/level-1/attrape-oiseau-rule";
+import { SiropResolutionPayload } from "../../../../domain/rule-runner/rules/level-1/sirotage-rule";
 
 export class SiropRuleResolver extends RuleResolver<
   AttrapeOiseauResolution,

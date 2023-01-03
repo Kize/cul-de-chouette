@@ -1,6 +1,6 @@
 import { SuiteRule } from "./suite-rule";
 import { RuleEffectEvent, RuleEffects } from "../rule-effect";
-import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
+import { DummyContextBuilder } from "../../../tests/dummy-game-context-builder";
 import { VeluteRule } from "./velute-rule";
 import { RuleRunner } from "../../rule-runner";
 

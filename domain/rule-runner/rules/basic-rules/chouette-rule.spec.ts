@@ -1,6 +1,6 @@
 import { ChouetteRule } from "./chouette-rule";
 import { RuleEffectEvent, RuleEffects } from "../rule-effect";
-import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
+import { DummyContextBuilder } from "../../../tests/dummy-game-context-builder";
 
 describe("isApplicableToDiceRoll", () => {
   it("returns true if two dice have the same value", () => {

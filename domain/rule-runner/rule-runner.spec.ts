@@ -2,7 +2,7 @@ import { RuleRunner } from "./rule-runner";
 import { Rule, Rules } from "./rules/rule";
 import { DiceRoll } from "./rules/dice-rule";
 import { RuleEffects } from "./rules/rule-effect";
-import { DummyContextBuilder } from "./tests/dummy-game-context-builder";
+import { DummyContextBuilder } from "../tests/dummy-game-context-builder";
 import { ChouetteRule } from "./rules/basic-rules/chouette-rule";
 
 describe("handleDiceRoll", () => {

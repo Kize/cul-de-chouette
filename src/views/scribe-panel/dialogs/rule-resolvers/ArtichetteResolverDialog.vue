@@ -42,7 +42,7 @@ import { Component, Vue } from "vue-property-decorator";
 import BevueMenuAction from "@/components/BevueMenuAction.vue";
 import { mapState } from "vuex";
 import { DialogsState } from "@/store/current-game/dialogs.store";
-import { ArtichetteResolution } from "../../../../../domain/rules/level-2/artichette-rule";
+import { ArtichetteResolution } from "../../../../../domain/rule-runner/rules/level-2/artichette-rule";
 
 @Component({
   components: { BevueMenuAction },

@@ -1,5 +1,5 @@
 import { Resolver } from "../rule-resolver";
-import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
+import { DummyContextBuilder } from "../../../tests/dummy-game-context-builder";
 import {
   CivetBet,
   CivetResolution,

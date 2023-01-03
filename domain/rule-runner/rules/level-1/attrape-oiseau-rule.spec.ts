@@ -6,7 +6,7 @@ import { testSirotageRule } from "./sirotage-rule.spec";
 import { RuleResolver } from "../rule-resolver";
 import { SiropResolutionPayload } from "./sirotage-rule";
 import { RuleEffect, RuleEffectEvent } from "../rule-effect";
-import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
+import { DummyContextBuilder } from "../../../tests/dummy-game-context-builder";
 import { BidType, SiropBid } from "./sirotage-rule.types";
 
 describe("has the sirotage behaviour if there is no attrape oiseau", () => {

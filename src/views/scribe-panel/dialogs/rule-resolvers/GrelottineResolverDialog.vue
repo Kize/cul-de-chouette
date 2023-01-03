@@ -169,12 +169,12 @@ import {
 import { Player } from "../../../../../domain/player";
 import DiceRollInput from "@/components/dice/DiceRollInput.vue";
 import { SelectItemsType, VForm } from "@/vuetify.interface";
-import { DiceRoll } from "../../../../../domain/rules/dice-rule";
+import { DiceRoll } from "../../../../../domain/rule-runner/rules/dice-rule";
 import {
   getMaxGrelottinePossibleAmount,
   GrelottineBet,
   GrelottineResolution,
-} from "../../../../../domain/rules/basic-rules/grelottine-rule";
+} from "../../../../../domain/rule-runner/rules/basic-rules/grelottine-rule";
 import {
   DiceForm,
   getInitialDiceForm,

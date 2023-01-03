@@ -1,4 +1,4 @@
-import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
+import { DummyContextBuilder } from "../../../tests/dummy-game-context-builder";
 import { BleuRougeResolution, BleuRougeRule } from "./bleu-rouge-rule";
 import { RuleEffect, RuleEffectEvent } from "../rule-effect";
 import { RuleRunner } from "../../rule-runner";

@@ -103,8 +103,11 @@ import { mapGetters } from "vuex";
 import SloubiDialogCard from "@/views/scribe-panel/dialogs/SloubiDialogCard.vue";
 import GrelottineDialogCard from "@/views/scribe-panel/dialogs/rule-resolvers/GrelottineResolverDialog.vue";
 import AddOperationLinesDialog from "@/views/scribe-panel/components/AddOperationLinesDialog.vue";
-import { GameLineType, HistoryLineApply } from "@/domain/history";
-import { RuleEffectEvent } from "../../../../domain/rules/rule-effect";
+import {
+  GameLineType,
+  PlayerHistoryLine,
+} from "../../../../domain/history/history-line";
+import { RuleEffectEvent } from "../../../../domain/rule-runner/rules/rule-effect";
 
 @Component({
   components: {
@@ -123,7 +126,7 @@ import { RuleEffectEvent } from "../../../../domain/rules/rule-effect";
 })
 export default class MainActionsPanel extends Vue {
   @Prop() currentPlayer!: Player;
-  lastEventLines!: Array<HistoryLineApply>;
+  lastEventLines!: Array<PlayerHistoryLine>;
 
   showSloubiDialog = false;
 
@@ -165,7 +168,7 @@ export default class MainActionsPanel extends Vue {
   }
 }
 
-export function historyLineToMessage(line: HistoryLineApply): string {
+export function historyLineToMessage(line: PlayerHistoryLine): string {
   switch (line.designation) {
     case RuleEffectEvent.NEANT:
       return `${line.playerName} a fait un Néant. Il obtient une Grelottine.`;

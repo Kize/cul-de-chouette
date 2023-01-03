@@ -1,5 +1,5 @@
 import { BevueRule } from "./bevue-rule";
-import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
+import { DummyContextBuilder } from "../../../tests/dummy-game-context-builder";
 import { RuleEffectEvent, RuleEffects } from "../rule-effect";
 
 describe("isApplicableToGameContext", () => {

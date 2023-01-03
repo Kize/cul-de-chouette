@@ -1,5 +1,8 @@
-import { GameContextEvent } from "../../../domain/game-context-event";
-import { DiceRoll, DieValue } from "../../../domain/rules/dice-rule";
+import { GameContextEvent } from "../../../domain/rule-runner/game-context-event";
+import {
+  DiceRoll,
+  DieValue,
+} from "../../../domain/rule-runner/rules/dice-rule";
 
 export type PlayATurnPayload =
   | PlayADiceRollPayload

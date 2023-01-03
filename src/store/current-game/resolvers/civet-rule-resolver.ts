@@ -1,9 +1,9 @@
-import { RuleResolver } from "../../../../domain/rules/rule-resolver";
+import { RuleResolver } from "../../../../domain/rule-runner/rules/rule-resolver";
 import store from "@/store/app.state";
 import {
   CivetResolution,
   CivetResolutionPayload,
-} from "../../../../domain/rules/level-1/civet-rule";
+} from "../../../../domain/rule-runner/rules/level-1/civet-rule";
 
 export class CivetRuleResolver extends RuleResolver<
   CivetResolution,

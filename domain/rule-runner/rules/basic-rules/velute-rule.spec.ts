@@ -1,6 +1,6 @@
 import { VeluteRule } from "./velute-rule";
 import { RuleEffectEvent, RuleEffects } from "../rule-effect";
-import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
+import { DummyContextBuilder } from "../../../tests/dummy-game-context-builder";
 
 describe("isApplicableToDiceRoll", () => {
   it("returns true if two dice sum equals the third one", () => {
