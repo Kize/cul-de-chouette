@@ -166,7 +166,7 @@ import {
   rulesOfSelectChallengeInput,
   rulesOfSelectNameInput,
 } from "@/form-validation/form-validation-rules";
-import { Player } from "../../../../../domain/player";
+import { OldPlayerInterface } from "../../../../../domain/player";
 import DiceRollInput from "@/components/dice/DiceRollInput.vue";
 import { SelectItemsType, VForm } from "@/vuetify.interface";
 import { DiceRoll } from "../../../../../domain/rule-runner/rules/dice-rule";
@@ -204,7 +204,7 @@ const INITIAL_FORM: GrelottineForm = {
 export default class GrelottineResolverDialog extends Vue {
   readonly rulesOfSelectChallengeInput = rulesOfSelectChallengeInput;
 
-  readonly players!: Array<Player>;
+  readonly players!: Array<OldPlayerInterface>;
   readonly isSiropEnabled!: boolean;
   readonly getPlayerScore!: (name: string) => number;
   readonly hasGrelottine!: (name: string) => boolean;

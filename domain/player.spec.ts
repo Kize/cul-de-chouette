@@ -2,14 +2,14 @@ import {
   computeNegativeScoresSum,
   computePositiveScoresSum,
   getCurrentPlayerName,
-  Player,
+  OldPlayerInterface,
 } from "./player";
 import { GameLineType } from "./history/history-line";
 import { RuleEffectEvent } from "./rule-runner/rules/rule-effect";
 
 describe("getCurrentPlayerName", () => {
   it("returns the first player when no one has played", () => {
-    const players: Array<Player> = [
+    const players: Array<OldPlayerInterface> = [
       { name: "Alban", history: [] },
       { name: "Delphin", history: [] },
       { name: "Luc", history: [] },
@@ -20,7 +20,7 @@ describe("getCurrentPlayerName", () => {
   });
 
   it("returns the first player when the last player has played", () => {
-    const players: Array<Player> = [
+    const players: Array<OldPlayerInterface> = [
       {
         name: "Alban",
         history: [
@@ -46,7 +46,7 @@ describe("getCurrentPlayerName", () => {
   });
 
   it("returns the second player when the first player has played its second turn", () => {
-    const players: Array<Player> = [
+    const players: Array<OldPlayerInterface> = [
       {
         name: "Alban",
         history: [
@@ -75,7 +75,7 @@ describe("getCurrentPlayerName", () => {
 
 describe("computePositiveScoresSum", () => {
   it("returns 50 when the user gained two sirop bets, and has a Bevue", () => {
-    const player: Player = {
+    const player: OldPlayerInterface = {
       name: "Alban",
       history: [
         {
@@ -104,7 +104,7 @@ describe("computePositiveScoresSum", () => {
 
 describe("computeNegativeScoresSum", () => {
   it("returns -10 when the user has 2 Bevue and a sirop bet won", () => {
-    const player: Player = {
+    const player: OldPlayerInterface = {
       name: "Alban",
       history: [
         {

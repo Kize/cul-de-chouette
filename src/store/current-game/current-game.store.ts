@@ -16,7 +16,7 @@ import {
   computePlayerScore,
   computePositiveScoresSum,
   getCurrentPlayerName,
-  Player,
+  OldPlayerInterface,
   toPlayerWithNumberOfTurnsPlayed,
 } from "../../../domain/player";
 import {
@@ -64,7 +64,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
       return state.players.map((player) => player.name);
     },
     getPlayer(state) {
-      return (playerName: string): Player | undefined => {
+      return (playerName: string): OldPlayerInterface | undefined => {
         return state.players.find(byName(playerName));
       };
     },
@@ -226,7 +226,10 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
     },
     addPlayer(
       state,
-      { player, previousPlayer }: { player: Player; previousPlayer?: string }
+      {
+        player,
+        previousPlayer,
+      }: { player: OldPlayerInterface; previousPlayer?: string }
     ): void {
       const indexToInsert = !previousPlayer
         ? state.players.length
@@ -458,7 +461,7 @@ export const CurrentGameStoreModule: Module<CurrentGameState, RootState> = {
         eventId,
       }));
 
-      const player: Player = {
+      const player: OldPlayerInterface = {
         name: sloubi.name,
         history: [
           {

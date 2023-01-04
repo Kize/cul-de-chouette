@@ -1,12 +1,17 @@
 import { GameLineType, HistoryLine } from "./history/history-line";
 
-export interface Player {
+export interface OldPlayerInterface {
   name: string;
   history: Array<HistoryLine>;
 }
 
+export interface Player {
+  id: string;
+  name: string;
+}
+
 export function computePlayerScore(
-  player: Player,
+  player: OldPlayerInterface,
   lastLineIndex?: number
 ): number {
   const history =
@@ -19,7 +24,7 @@ export function computePlayerScore(
   }, 0);
 }
 
-export function computePositiveScoresSum(player: Player): number {
+export function computePositiveScoresSum(player: OldPlayerInterface): number {
   return player.history.reduce((sum: number, historyLine) => {
     if (historyLine.amount > 0) {
       return sum + historyLine.amount;
@@ -29,7 +34,7 @@ export function computePositiveScoresSum(player: Player): number {
   }, 0);
 }
 
-export function computeNegativeScoresSum(player: Player): number {
+export function computeNegativeScoresSum(player: OldPlayerInterface): number {
   return player.history.reduce((sum: number, historyLine) => {
     if (historyLine.amount < 0) {
       return sum + historyLine.amount;
@@ -39,13 +44,15 @@ export function computeNegativeScoresSum(player: Player): number {
   }, 0);
 }
 
-export function byName(name: string): (p: Player) => boolean {
-  return (player: Player) => {
+export function byName(name: string): (p: OldPlayerInterface) => boolean {
+  return (player: OldPlayerInterface) => {
     return player.name === name;
   };
 }
 
-export function getCurrentPlayerName(players: Array<Player>): string {
+export function getCurrentPlayerName(
+  players: Array<OldPlayerInterface>
+): string {
   const currentPlayer = players
     .map(toPlayerWithNumberOfTurnsPlayed)
     .find((player, index, array) => {
@@ -63,7 +70,7 @@ export function getCurrentPlayerName(players: Array<Player>): string {
 }
 
 export function toPlayerWithNumberOfTurnsPlayed(
-  player: Player
+  player: OldPlayerInterface
 ): PlayerWithNumberOfTurnsPlayed {
   return {
     name: player.name,

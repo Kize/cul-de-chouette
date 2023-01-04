@@ -74,7 +74,7 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import { GameStatus } from "@/store/current-game/current-game.interface";
 import { mapGetters, mapState } from "vuex";
 import { ROUTES } from "@/router";
-import { Player } from "../../../domain/player";
+import { OldPlayerInterface } from "../../../domain/player";
 import { GameContextEvent } from "../../../domain/rule-runner/game-context-event";
 import RulesButton from "@/components/RulesButton.vue";
 import PlayersBanner from "@/views/scribe-panel/components/PlayersBanner.vue";
@@ -124,7 +124,7 @@ import VerdierResolverDialog from "@/views/scribe-panel/dialogs/rule-resolvers/V
   },
 })
 export default class ScribePanel extends Vue {
-  players!: Array<Player>;
+  players!: Array<OldPlayerInterface>;
   currentPlayerName!: string;
   hasCivet!: (playerName: string) => boolean;
   readonly isCivetEnabled!: boolean;
@@ -145,7 +145,7 @@ export default class ScribePanel extends Vue {
     }
   }
 
-  getCurrentPlayer(): Player {
+  getCurrentPlayer(): OldPlayerInterface {
     return this.players.filter(
       (player) => player.name === this.currentPlayerName
     )[0];

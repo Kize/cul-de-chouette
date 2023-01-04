@@ -2,7 +2,7 @@
 
 ## Actions
 
-- Create a new game
++ Create a new game
 - Resume a game
 - Configure rules to enable/disable wile in game (ie: `game-rule-runner.ts`)
 - Make an action
@@ -16,22 +16,23 @@
 
 ## State to retrieve from a game's instance
 
-- Get Game's status
++ Get Game's status
 - Get the last event's description in a readable manner (maybe in history)
+- Get the current player
+- Get the number of turns played
 
 # Cul de Chouette History
 
 ## Actions
 
-- Create an history
-- Resume an history
-- Add an event
-- Cancel last event
-- Cancel a specific event by id
++ Create an history
++ Resume an history
++ Add an event
++ Cancel last event
++ Cancel a specific event by id
 
 ## State to retrieve from an history's instance
 
-- Get the current player
-- Get the current score of a player
-- Get the number of turns played
-- Get the list of the players
++ Get the current score of a player
++ Get the current score of a player at a specific event
++ Get the number of turns played by a player

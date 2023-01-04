@@ -98,7 +98,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import BevueMenuAction from "@/components/BevueMenuAction.vue";
 import { SloubiActionPayload } from "@/store/current-game/current-game.interface";
-import { Player } from "../../../../domain/player";
+import { OldPlayerInterface } from "../../../../domain/player";
 import { mapGetters } from "vuex";
 import SloubiDialogCard from "@/views/scribe-panel/dialogs/SloubiDialogCard.vue";
 import GrelottineDialogCard from "@/views/scribe-panel/dialogs/rule-resolvers/GrelottineResolverDialog.vue";
@@ -125,7 +125,7 @@ import { RuleEffectEvent } from "../../../../domain/rule-runner/rules/rule-effec
   },
 })
 export default class MainActionsPanel extends Vue {
-  @Prop() currentPlayer!: Player;
+  @Prop() currentPlayer!: OldPlayerInterface;
   lastEventLines!: Array<PlayerHistoryLine>;
 
   showSloubiDialog = false;

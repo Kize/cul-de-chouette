@@ -84,7 +84,7 @@
 
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from "vue-property-decorator";
-import { Player } from "../../../../domain/player";
+import { OldPlayerInterface } from "../../../../domain/player";
 import { mapGetters, mapState } from "vuex";
 
 @Component({
@@ -100,11 +100,11 @@ import { mapGetters, mapState } from "vuex";
   },
 })
 export default class PlayersBanner extends Vue {
-  @Prop() players!: Array<Player>;
+  @Prop() players!: Array<OldPlayerInterface>;
   readonly isBleuRougeEnabled!: boolean;
   readonly isCivetEnabled!: boolean;
 
-  applyBevue(player: Player): void {
+  applyBevue(player: OldPlayerInterface): void {
     this.$store.dispatch("currentGame/play/applyBevue", player.name);
   }
 

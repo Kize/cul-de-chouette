@@ -60,7 +60,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import MainDialogCard from "@/components/MainDialogCard.vue";
-import { Player } from "../../../../../domain/player";
+import { OldPlayerInterface } from "../../../../../domain/player";
 import { rulesOfSelectNameInput } from "@/form-validation/form-validation-rules";
 import { getInitialForm, SouffletteForm } from "@/domain/level-1/soufflette";
 import { RulesState } from "@/store/current-game/rules.store";
@@ -86,7 +86,7 @@ import { DialogsState } from "@/store/current-game/dialogs.store";
 })
 export default class SouffletteResolverDialog extends Vue {
   souffletteResolverDialog!: DialogsState["souffletteResolverDialog"];
-  players!: Array<Player>;
+  players!: Array<OldPlayerInterface>;
   playerNames!: Array<string>;
   rules!: RulesState;
   turnNumber?: number;
