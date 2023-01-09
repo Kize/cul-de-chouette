@@ -11,7 +11,7 @@ describe("getPlayerScore", () => {
       historyLines: [
         {
           designation: RuleEffectEvent.CUL_DE_CHOUETTE,
-          playerName: "Delphin",
+          player: { id: "d", name: "Delphin" },
           amount: 100,
         },
       ],
@@ -29,7 +29,7 @@ describe("getPlayerScore", () => {
         historyLines: [
           {
             designation: RuleEffectEvent.CUL_DE_CHOUETTE,
-            playerName: "Delphin",
+            player: { id: "d", name: "Delphin" },
             amount: 100,
           },
         ],
@@ -39,7 +39,7 @@ describe("getPlayerScore", () => {
         historyLines: [
           {
             designation: GodModLineType.GOD_MOD,
-            playerName: "Alban",
+            player: { id: "a", name: "Alban" },
             amount: 25,
           },
         ],
@@ -49,17 +49,17 @@ describe("getPlayerScore", () => {
         historyLines: [
           {
             designation: RuleEffectEvent.BEVUE,
-            playerName: "Alban",
+            player: { id: "a", name: "Alban" },
             amount: -5,
           },
           {
             designation: RuleEffectEvent.GRELOTTINE_CHALLENGE_WON,
-            playerName: "Alban",
+            player: { id: "a", name: "Alban" },
             amount: 30,
           },
           {
             designation: RuleEffectEvent.GRELOTTINE_CHALLENGE_LOST,
-            playerName: "Delphin",
+            player: { id: "d", name: "Delphin" },
             amount: -30,
           },
         ],
@@ -80,7 +80,7 @@ describe("getPlayerScoreAtEvent", () => {
         historyLines: [
           {
             designation: RuleEffectEvent.CUL_DE_CHOUETTE,
-            playerName: "Delphin",
+            player: { id: "d", name: "Delphin" },
             amount: 100,
           },
         ],
@@ -90,7 +90,7 @@ describe("getPlayerScoreAtEvent", () => {
         historyLines: [
           {
             designation: GodModLineType.GOD_MOD,
-            playerName: "Alban",
+            player: { id: "a", name: "Alban" },
             amount: 25,
           },
         ],
@@ -100,7 +100,7 @@ describe("getPlayerScoreAtEvent", () => {
         historyLines: [
           {
             designation: RuleEffectEvent.BEVUE,
-            playerName: "Alban",
+            player: { id: "a", name: "Alban" },
             amount: -5,
           },
         ],
@@ -120,7 +120,11 @@ describe("getNumberOfTurnsPlayed", () => {
     history.events.push({
       id: "1",
       historyLines: [
-        { designation: GameLineType.PLAY_TURN, playerName: "Jules", amount: 0 },
+        {
+          designation: GameLineType.PLAY_TURN,
+          player: { id: "3", name: "Jules" },
+          amount: 0,
+        },
       ],
     });
 
@@ -135,7 +139,7 @@ describe("getNumberOfTurnsPlayed", () => {
         historyLines: [
           {
             designation: GameLineType.PLAY_TURN,
-            playerName: "Alban",
+            player: { id: "a", name: "Alban" },
             amount: 0,
           },
         ],
@@ -145,7 +149,7 @@ describe("getNumberOfTurnsPlayed", () => {
         historyLines: [
           {
             designation: GameLineType.PLAY_TURN,
-            playerName: "Jules",
+            player: { id: "3", name: "Jules" },
             amount: 0,
           },
         ],
@@ -155,7 +159,7 @@ describe("getNumberOfTurnsPlayed", () => {
         historyLines: [
           {
             designation: GameLineType.PLAY_TURN,
-            playerName: "Alban",
+            player: { id: "a", name: "Alban" },
             amount: 0,
           },
         ],

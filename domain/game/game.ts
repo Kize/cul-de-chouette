@@ -1,16 +1,30 @@
 import { Player } from "../player";
 import { GameStatus } from "../../src/store/current-game/current-game.interface";
-import { History } from "../history/history";
+import { GameEvent, History } from "../history/history";
+import { RuleRunner } from "../rule-runner/rule-runner";
+import { Rule } from "../rule-runner/rules/rule";
+import { UnknownGameContext } from "../rule-runner/game-context-event";
 
 export class Game {
   status: GameStatus;
   history: History;
   players: Array<Player>;
+  ruleRunner: RuleRunner;
 
   constructor(public name: string, players: Array<Player>) {
     this.status = GameStatus.IN_GAME;
     this.players = [...players];
     this.history = new History();
+    this.ruleRunner = new RuleRunner([]);
+  }
+
+  resumeGame(events: Array<GameEvent>, rules: Array<Rule>): void {
+    this.history.resumeHistory(events);
+    this.updateRules(rules);
+  }
+
+  updateRules(rules: Array<Rule>): void {
+    this.ruleRunner = new RuleRunner(rules);
   }
 
   getCurrentPlayer(): Player {
@@ -60,5 +74,26 @@ export class Game {
     }
 
     return turnNumbersPerPlayer[0];
+  }
+
+  async doSomething(context: UnknownGameContext): Promise<void> {
+    if (this.status !== GameStatus.IN_GAME) {
+      return;
+    }
+
+    await this.ruleRunner.handleGameEvent(context);
+
+    this.checkEndGame();
+  }
+
+  private checkEndGame(): void {
+    const playerScores = this.players.map((player) =>
+      this.history.getPlayerScore(player)
+    );
+
+    const maxScore = Math.max(...playerScores);
+    if (maxScore >= 343) {
+      this.status = GameStatus.FINISHED;
+    }
   }
 }

@@ -3,13 +3,13 @@
 ## Actions
 
 + Create a new game
-- Resume a game
-- Configure rules to enable/disable wile in game (ie: `game-rule-runner.ts`)
++ Resume a game
++ Configure rules to enable/disable while in game (ie: `game-rule-runner.ts`)
 - Make an action
-  - Play a turn
-  - Apply Bevue
-  - Start a Grelottine Challenge
-  - Start a Verdier Challenge
+  + Play a turn
+  + Apply Bevue
+  + Start a Grelottine Challenge
+  + Start a Verdier Challenge
   - Sing Sloubi Challenge
   - Add god mod operations
     - (god mod operations after a game is finished)
@@ -18,8 +18,8 @@
 
 + Get Game's status
 - Get the last event's description in a readable manner (maybe in history)
-- Get the current player
-- Get the number of turns played
++ Get the current player
++ Get the number of turns played
 
 # Cul de Chouette History
 

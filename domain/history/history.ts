@@ -11,7 +11,7 @@ interface HistoryLine {
   amount: number;
 }
 
-interface GameEvent {
+export interface GameEvent {
   id: string;
   historyLines: Array<HistoryLine>;
 }
@@ -21,6 +21,10 @@ export class History {
 
   constructor() {
     this.events = [];
+  }
+
+  resumeHistory(events: Array<GameEvent>): void {
+    this.events = [...events];
   }
 
   getPlayerScore(player: Player): number {
