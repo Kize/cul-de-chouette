@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Module } from "vuex";
-import { SuiteResolution } from "../../../domain/rules/basic-rules/suite-rule";
-import { getNewEventId, HistoryLineApply } from "@/domain/history";
-import { ChouetteVeluteResolution } from "../../../domain/rules/basic-rules/chouette-velute-rule";
+import { SuiteResolution } from "../../../domain/rule-runner/rules/basic-rules/suite-rule";
+import {
+  getNewEventId,
+  PlayerHistoryLine,
+} from "../../../domain/history/history-line";
+import { ChouetteVeluteResolution } from "../../../domain/rule-runner/rules/basic-rules/chouette-velute-rule";
 import { RootState } from "@/store/app.state";
-import { AttrapeOiseauResolution } from "../../../domain/rules/level-1/attrape-oiseau-rule";
+import { AttrapeOiseauResolution } from "../../../domain/rule-runner/rules/level-1/attrape-oiseau-rule";
 import {
   artichetteRuleResolver,
   bleuRougeRuleResolver,
@@ -17,19 +20,19 @@ import {
   suiteRuleResolver,
   verdierRuleResolver,
 } from "@/store/current-game/game-rule-runner";
-import { RuleEffects } from "../../../domain/rules/rule-effect";
+import { RuleEffects } from "../../../domain/rule-runner/rules/rule-effect";
 import {
   ApplyBevueGameContext,
   ChallengeGrelottineGameContext,
   GameContextEvent,
   UnknownGameContext,
-} from "../../../domain/game-context-event";
-import { GrelottineResolution } from "../../../domain/rules/basic-rules/grelottine-rule";
-import { SouffletteResolution } from "../../../domain/rules/level-1/soufflette-rule";
-import { BleuRougeResolution } from "../../../domain/rules/level-3/bleu-rouge-rule";
-import { CivetResolution } from "../../../domain/rules/level-1/civet-rule";
-import { ArtichetteResolution } from "../../../domain/rules/level-2/artichette-rule";
-import { VerdierResolution } from "../../../domain/rules/level-3/verdier-rule";
+} from "../../../domain/rule-runner/game-context-event";
+import { GrelottineResolution } from "../../../domain/rule-runner/rules/basic-rules/grelottine-rule";
+import { SouffletteResolution } from "../../../domain/rule-runner/rules/level-1/soufflette-rule";
+import { BleuRougeResolution } from "../../../domain/rule-runner/rules/level-3/bleu-rouge-rule";
+import { CivetResolution } from "../../../domain/rule-runner/rules/level-1/civet-rule";
+import { ArtichetteResolution } from "../../../domain/rule-runner/rules/level-2/artichette-rule";
+import { VerdierResolution } from "../../../domain/rule-runner/rules/level-3/verdier-rule";
 import { PlayATurnPayload } from "@/store/current-game/play-a-turn-payload";
 
 type MainPlayableState = Record<string, unknown>;
@@ -130,7 +133,7 @@ export const MainPlayableActionsStoreModule: Module<
       commit("currentGame/addEvent", eventId, { root: true });
 
       ruleEffects.forEach((ruleEffect) => {
-        const apply: HistoryLineApply = {
+        const apply: PlayerHistoryLine = {
           eventId,
           playerName: ruleEffect.playerName,
           amount: ruleEffect.score,

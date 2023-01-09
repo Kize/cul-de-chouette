@@ -1,9 +1,9 @@
-import { RuleResolver } from "../../../../domain/rules/rule-resolver";
+import { RuleResolver } from "../../../../domain/rule-runner/rules/rule-resolver";
 import store from "@/store/app.state";
 import {
   ChouetteVeluteResolution,
   ChouetteVeluteResolutionPayload,
-} from "../../../../domain/rules/basic-rules/chouette-velute-rule";
+} from "../../../../domain/rule-runner/rules/basic-rules/chouette-velute-rule";
 
 export class ChouetteVeluteRuleResolver extends RuleResolver<
   ChouetteVeluteResolution,

@@ -1,4 +1,4 @@
-import { GrelottineBet } from "../../domain/rules/basic-rules/grelottine-rule";
+import { GrelottineBet } from "../../domain/rule-runner/rules/basic-rules/grelottine-rule";
 
 export interface GrelottineForm {
   grelottinPlayer?: string;

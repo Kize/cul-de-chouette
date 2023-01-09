@@ -1,5 +1,5 @@
 import { SouffletteResolution, SouffletteRule } from "./soufflette-rule";
-import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
+import { DummyContextBuilder } from "../../../tests/dummy-game-context-builder";
 import { RuleEffect, RuleEffectEvent } from "../rule-effect";
 import { RuleRunner } from "../../rule-runner";
 import {

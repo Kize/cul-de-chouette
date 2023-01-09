@@ -1,6 +1,6 @@
-import { RuleResolver } from "../../../../domain/rules/rule-resolver";
+import { RuleResolver } from "../../../../domain/rule-runner/rules/rule-resolver";
 import store from "@/store/app.state";
-import { BleuRougeResolution } from "../../../../domain/rules/level-3/bleu-rouge-rule";
+import { BleuRougeResolution } from "../../../../domain/rule-runner/rules/level-3/bleu-rouge-rule";
 
 export class BleuRougeRuleResolver extends RuleResolver<BleuRougeResolution> {
   initResolution(): void {

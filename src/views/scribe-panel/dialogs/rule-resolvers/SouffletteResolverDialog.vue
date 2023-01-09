@@ -60,7 +60,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import MainDialogCard from "@/components/MainDialogCard.vue";
-import { Player } from "../../../../../domain/player";
+import { OldPlayerInterface } from "../../../../../domain/player";
 import { rulesOfSelectNameInput } from "@/form-validation/form-validation-rules";
 import { getInitialForm, SouffletteForm } from "@/domain/level-1/soufflette";
 import { RulesState } from "@/store/current-game/rules.store";
@@ -69,7 +69,7 @@ import { VForm } from "@/vuetify.interface";
 import DiceRollInput from "@/components/dice/DiceRollInput.vue";
 import { DiceForm, isDiceFormValid } from "@/components/dice/dice-form";
 import { mapGetters, mapState } from "vuex";
-import { SouffletteResolution } from "../../../../../domain/rules/level-1/soufflette-rule";
+import { SouffletteResolution } from "../../../../../domain/rule-runner/rules/level-1/soufflette-rule";
 import { DialogsState } from "@/store/current-game/dialogs.store";
 
 @Component({
@@ -86,7 +86,7 @@ import { DialogsState } from "@/store/current-game/dialogs.store";
 })
 export default class SouffletteResolverDialog extends Vue {
   souffletteResolverDialog!: DialogsState["souffletteResolverDialog"];
-  players!: Array<Player>;
+  players!: Array<OldPlayerInterface>;
   playerNames!: Array<string>;
   rules!: RulesState;
   turnNumber?: number;

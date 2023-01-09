@@ -6,7 +6,7 @@ import {
 import { ChouetteRule } from "../basic-rules/chouette-rule";
 import { Resolver, RuleResolver } from "../rule-resolver";
 import { RuleEffect, RuleEffectEvent } from "../rule-effect";
-import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
+import { DummyContextBuilder } from "../../../tests/dummy-game-context-builder";
 import {
   CivetResolution,
   CivetResolutionPayload,

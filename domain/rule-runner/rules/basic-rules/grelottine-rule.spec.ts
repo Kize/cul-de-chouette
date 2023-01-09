@@ -3,7 +3,7 @@ import {
   GrelottineResolution,
   GrelottineRule,
 } from "./grelottine-rule";
-import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
+import { DummyContextBuilder } from "../../../tests/dummy-game-context-builder";
 import { RuleEffect, RuleEffectEvent } from "../rule-effect";
 import { Resolver } from "../rule-resolver";
 import { RuleRunner } from "../../rule-runner";

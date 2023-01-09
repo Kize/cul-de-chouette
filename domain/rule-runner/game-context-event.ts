@@ -1,21 +1,6 @@
 import { DiceRoll, DieValue } from "./rules/dice-rule";
 import { RuleRunner } from "./rule-runner";
 
-export type UnknownGameContext =
-  | DiceRollGameContext
-  | ChallengeGrelottineGameContext
-  | ApplyBevueGameContext
-  | CivetGameContext
-  | VerdierGameContext;
-
-export enum GameContextEvent {
-  DICE_ROLL,
-  CHALLENGE_GRELOTTINE,
-  APPLY_BEVUE,
-  CIVET_BET,
-  VERDIER,
-}
-
 export class GameContextWrapper {
   constructor(private gameContext: UnknownGameContext) {}
 
@@ -58,6 +43,21 @@ export class GameContextWrapper {
     throw new Error("The given game context should be a Civet");
   }
 }
+
+export enum GameContextEvent {
+  DICE_ROLL,
+  CHALLENGE_GRELOTTINE,
+  APPLY_BEVUE,
+  CIVET_BET,
+  VERDIER,
+}
+
+export type UnknownGameContext =
+  | DiceRollGameContext
+  | ChallengeGrelottineGameContext
+  | ApplyBevueGameContext
+  | CivetGameContext
+  | VerdierGameContext;
 
 export interface ApplyBevueGameContext {
   event: GameContextEvent.APPLY_BEVUE;

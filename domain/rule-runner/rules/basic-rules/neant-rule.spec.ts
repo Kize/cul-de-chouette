@@ -1,6 +1,6 @@
 import { NeantRule } from "./neant-rule";
 import { RuleEffect, RuleEffectEvent } from "../rule-effect";
-import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
+import { DummyContextBuilder } from "../../../tests/dummy-game-context-builder";
 
 describe("isApplicableToDiceRoll", () => {
   it("returns always true", function () {

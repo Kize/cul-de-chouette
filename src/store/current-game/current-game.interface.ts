@@ -1,5 +1,5 @@
-import { Player } from "../../../domain/player";
-import { AllHistoryLineTypes } from "@/domain/history";
+import { OldPlayerInterface } from "../../../domain/player";
+import { AllHistoryLineTypes } from "../../../domain/history/history-line";
 import { RulesState } from "@/store/current-game/rules.store";
 
 export enum GameStatus {
@@ -12,7 +12,7 @@ export interface CurrentGameState {
   name: string;
   status: GameStatus;
   events: Array<string>;
-  players: Array<Player>;
+  players: Array<OldPlayerInterface>;
 }
 
 export type Scoreboard = ReadonlyArray<{

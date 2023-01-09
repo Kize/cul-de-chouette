@@ -1,11 +1,11 @@
-import { DiceRoll, DieValue } from "../rules/dice-rule";
+import { DiceRoll, DieValue } from "../rule-runner/rules/dice-rule";
 import {
   GameContextEvent,
   GameContextWrapper,
   UnknownGameContext,
-} from "../game-context-event";
-import { RuleRunner } from "../rule-runner";
-import { NeantRule } from "../rules/basic-rules/neant-rule";
+} from "../rule-runner/game-context-event";
+import { RuleRunner } from "../rule-runner/rule-runner";
+import { NeantRule } from "../rule-runner/rules/basic-rules/neant-rule";
 
 export class DummyContextBuilder {
   static aDiceRollContext(): DummyDiceRollContextBuilder {

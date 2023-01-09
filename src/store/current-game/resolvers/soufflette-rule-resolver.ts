@@ -1,9 +1,9 @@
-import { RuleResolver } from "../../../../domain/rules/rule-resolver";
+import { RuleResolver } from "../../../../domain/rule-runner/rules/rule-resolver";
 import store from "@/store/app.state";
 import {
   SouffletteResolution,
   SouffletteResolutionPayload,
-} from "../../../../domain/rules/level-1/soufflette-rule";
+} from "../../../../domain/rule-runner/rules/level-1/soufflette-rule";
 
 export class SouffletteRuleResolver extends RuleResolver<
   SouffletteResolution,

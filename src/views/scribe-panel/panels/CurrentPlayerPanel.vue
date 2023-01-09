@@ -36,10 +36,13 @@
 <script lang="ts">
 import { mapGetters, mapState } from "vuex";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { Player } from "../../../../domain/player";
-import { isVerdierApplicable } from "../../../../domain/rules/level-3/verdier-rule";
-import { DiceRoll, DieValue } from "../../../../domain/rules/dice-rule";
-import { GameContextEvent } from "../../../../domain/game-context-event";
+import { OldPlayerInterface } from "../../../../domain/player";
+import { isVerdierApplicable } from "../../../../domain/rule-runner/rules/level-3/verdier-rule";
+import {
+  DiceRoll,
+  DieValue,
+} from "../../../../domain/rule-runner/rules/dice-rule";
+import { GameContextEvent } from "../../../../domain/rule-runner/game-context-event";
 import MenuAction from "@/components/MenuAction.vue";
 import DiceRollInput from "@/components/dice/DiceRollInput.vue";
 import {
@@ -66,7 +69,7 @@ import { StartVerdierPayload } from "@/store/current-game/play-a-turn-payload";
   },
 })
 export default class CurrentPlayerPanel extends Vue {
-  @Prop() currentPlayer!: Player;
+  @Prop() currentPlayer!: OldPlayerInterface;
 
   readonly isVerdierEnabled!: boolean;
 

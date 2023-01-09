@@ -66,12 +66,15 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import { mapGetters, mapState } from "vuex";
 import AmountInput from "../../../components/AmountInput.vue";
 import MainDialogCard from "../../../components/MainDialogCard.vue";
-import { AllHistoryLineTypes, GodModLineType } from "@/domain/history";
+import {
+  AllHistoryLineTypes,
+  GodModLineType,
+} from "../../../../domain/history/history-line";
 import {
   AddOperationLinesActionPayload,
   OperationLineActionPayload,
 } from "@/store/current-game/current-game.interface";
-import { RuleEffectEvent } from "../../../../domain/rules/rule-effect";
+import { RuleEffectEvent } from "../../../../domain/rule-runner/rules/rule-effect";
 
 interface OperationLineForm {
   playerName: string;

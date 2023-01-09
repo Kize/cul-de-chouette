@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Module } from "vuex";
 import { RootState } from "@/store/app.state";
-import { SiropResolutionPayload } from "../../../domain/rules/level-1/sirotage-rule";
-import { DieValue } from "../../../domain/rules/dice-rule";
-import { SouffletteResolutionPayload } from "../../../domain/rules/level-1/soufflette-rule";
-import { SuiteResolutionPayload } from "../../../domain/rules/basic-rules/suite-rule";
-import { ChouetteVeluteResolutionPayload } from "../../../domain/rules/basic-rules/chouette-velute-rule";
-import { CivetResolutionPayload } from "../../../domain/rules/level-1/civet-rule";
-import { PlayableBid } from "../../../domain/rules/level-1/sirotage-rule.types";
-import { ArtichetteResolutionPayload } from "../../../domain/rules/level-2/artichette-rule";
-import { VerdierResolutionPayload } from "../../../domain/rules/level-3/verdier-rule";
+import { SiropResolutionPayload } from "../../../domain/rule-runner/rules/level-1/sirotage-rule";
+import { DieValue } from "../../../domain/rule-runner/rules/dice-rule";
+import { SouffletteResolutionPayload } from "../../../domain/rule-runner/rules/level-1/soufflette-rule";
+import { SuiteResolutionPayload } from "../../../domain/rule-runner/rules/basic-rules/suite-rule";
+import { ChouetteVeluteResolutionPayload } from "../../../domain/rule-runner/rules/basic-rules/chouette-velute-rule";
+import { CivetResolutionPayload } from "../../../domain/rule-runner/rules/level-1/civet-rule";
+import { PlayableBid } from "../../../domain/rule-runner/rules/level-1/sirotage-rule.types";
+import { ArtichetteResolutionPayload } from "../../../domain/rule-runner/rules/level-2/artichette-rule";
+import { VerdierResolutionPayload } from "../../../domain/rule-runner/rules/level-3/verdier-rule";
 
 export interface DialogsState {
   addOperationLinesDialog: {

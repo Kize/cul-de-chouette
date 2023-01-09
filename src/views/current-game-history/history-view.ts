@@ -1,5 +1,8 @@
-import { GameLineType, HistoryLine } from "@/domain/history";
-import { computePlayerScore, Player } from "../../../domain/player";
+import {
+  GameLineType,
+  HistoryLine,
+} from "../../../domain/history/history-line";
+import { computePlayerScore, OldPlayerInterface } from "../../../domain/player";
 
 export type HistoryView = Array<CurrentGameHistoryLine>;
 
@@ -14,7 +17,7 @@ export interface CurrentGameHistoryLine {
 
 export function getHistoryView(
   events: Array<string>,
-  players: Array<Player>
+  players: Array<OldPlayerInterface>
 ): HistoryView {
   return events.map<CurrentGameHistoryLine>((eventId) => {
     return {

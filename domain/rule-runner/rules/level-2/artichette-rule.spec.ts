@@ -1,4 +1,4 @@
-import { DummyContextBuilder } from "../../tests/dummy-game-context-builder";
+import { DummyContextBuilder } from "../../../tests/dummy-game-context-builder";
 import { ArtichetteResolution, ArtichetteRule } from "./artichette-rule";
 import { RuleEffect, RuleEffectEvent } from "../rule-effect";
 

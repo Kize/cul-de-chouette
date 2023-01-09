@@ -8,7 +8,7 @@ import { RuleEffect, RuleEffectEvent, RuleEffects } from "../rule-effect";
 import { DiceRoll, DieValue } from "../dice-rule";
 import { Resolver } from "../rule-resolver";
 import { isVelute } from "../basic-rules/velute-rule";
-import { DiceForm } from "@/components/dice/dice-form";
+import { DiceForm } from "src/components/dice/dice-form";
 
 export interface VerdierResolution {
   bettingPlayerNames: Array<string>;

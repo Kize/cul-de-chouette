@@ -68,13 +68,13 @@
 import { Component, Vue } from "vue-property-decorator";
 import { mapGetters, mapState } from "vuex";
 import { VForm } from "../../../../vuetify.interface";
-import { DieValue } from "../../../../../domain/rules/dice-rule";
+import { DieValue } from "../../../../../domain/rule-runner/rules/dice-rule";
 import {
   CivetBet,
   CivetResolution,
-} from "../../../../../domain/rules/level-1/civet-rule";
+} from "../../../../../domain/rule-runner/rules/level-1/civet-rule";
 import { CivetForm, getInitialForm } from "../../../../domain/level-1/civet";
-import { isVerdierApplicable } from "../../../../../domain/rules/level-3/verdier-rule";
+import { isVerdierApplicable } from "../../../../../domain/rule-runner/rules/level-3/verdier-rule";
 import { rulesOfSelectChallengeInput } from "../../../../form-validation/form-validation-rules";
 import MainDialogCard from "../../../../components/MainDialogCard.vue";
 import BevueMenuAction from "../../../../components/BevueMenuAction.vue";
